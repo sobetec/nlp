@@ -1,5 +1,5 @@
 // menu
-$('.main_menu .btn_close, .sub_menu .btn_close').on('click',function (){
+$('.main_menu .btn_close, .sub_menu .btn_close').on('click', function (){
   $(this).parent().toggleClass('is_fold');
 });
 
