@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="sampleMapper">
+
+	<select id="selectSampleList" parameterType="com.sobetec.nlp.sample.model.SampleVO" resultType="com.sobetec.nlp.sample.model.SampleVO">
+		SELECT SEQ
+			 , TTL
+			 , CONT
+		  FROM SAMPLE_BOARD
+		 WHERE 1 = 1
+		<if test='pTtl != null and !pTtl.equals("")'>
+		   AND TTL LIKE '%' || #{pTtl} || '%' 
+		</if>
+		<if test='pCont != null and !pCont.equals("")'>
+		   AND CONT LIKE '%' || #{pCont} || '%' 
+		</if>
+	</select>
+	
+	<select id="selectSampleDtl"  parameterType="com.sobetec.nlp.sample.model.SampleVO" resultType="com.sobetec.nlp.sample.model.SampleVO">
+		SELECT SEQ
+			 , TTL
+			 , CONT
+		  FROM SAMPLE_BOARD
+		 WHERE SEQ = #{pSeq}
+	</select>
+	
+	<insert id="insertSample" parameterType="com.sobetec.nlp.sample.model.SampleVO" >
+		INSERT
+		  INTO SAMPLE_BOARD
+			 ( SEQ
+			 , TTL
+			 , CONT
+		) VALUES (
+			   ( SELECT IFNULL(MAX(SEQ), 0) + 1 FROM SAMPLE_BOARD )
+			 , #{pTtl}
+			 , #{pCont}
+		)
+	</insert>
+	
+	<delete id="deleteSample" parameterType="com.sobetec.nlp.sample.model.SampleVO">
+		DELETE
+		  FROM SAMPLE_BOARD
+	     WHERE SEQ = #{pSeq}
+	</delete>
+	
+	<update id="updateSample" parameterType="com.sobetec.nlp.sample.model.SampleVO"> 
+		UPDATE SAMPLE_BOARD
+		   SET TTL	= #{pTtl}
+			 , CONT	= #{pCont}
+		 WHERE SEQ = #{pSeq}
+	</update>
+	
+</mapper>

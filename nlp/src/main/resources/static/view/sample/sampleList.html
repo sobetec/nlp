@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>[프로젝트명]</title>
+
+<script src="/js/jquery-3.4.1.js"></script>
+
+<script type="text/javascript">
+
+function fnload() {
+	fnSearch();
+}
+
+function fnSearch(){
+
+	$.ajax({
+		  url: "/getSampleList"
+		, type: "POST"
+		, data: $('#frmData').serialize()
+		, dataType: "json"
+		, success: function(resultList){
+			
+        	var html = "<table width=\"1000\" border=\"1\" cellspacing=\"0\">";
+			
+			if( resultList.length == 0 ){
+	        	html += "<tr>";
+	        	html += "<td>검색 된 정보가 없습니다.</td>";
+	        	html += "</tr>";
+			} else {
+	        	for (var i=0; i<resultList.length; i++){
+		        	html += "<tr>";
+	        		html += "<td width=60 align=\"center\"><input type=\"checkbox\" id=\"chkSeq\" name=\"chkSeq\" value=\"" + resultList[i].seq  + "\"></td>";
+	        		html += "<td width=40 align=\"center\">" + resultList[i].seq  + "</td>";
+	        		html += "<td width=250><a href=\"javascript:goDtl('" + resultList[i].seq  + "')\" >" + resultList[i].ttl  + "</a></td>";
+	        		html += "<td>" + resultList[i].cont + "</td>";
+		        	html += "</tr>";
+	        	}
+			}
+        	html += "</table>";
+        	
+        	document.getElementById('content').innerHTML = html;
+        }
+    })
+
+}
+
+/**
+ * 등록페이지 이동
+ */
+function goIns() {
+	$('#chagCtir').load('/view/sample/sampleIns.html');
+}
+
+/**
+ * 상세페이지 이동
+ */
+function goDtl(pSeq){
+/*
+	$('#chagCtir').load('/view/sample/sampleUpd.html');
+	 localStorage.setItem('pSeq', pSeq);
+*/
+}
+
+/**
+ * 선택 정보 삭제
+ */
+function fnDel(){
+	
+}
+
+</script>
+
+</head>
+
+<body leftmargin=0 topmargin=0 marginwidth=0 marginheight=0 onload="fnload()">
+
+
+Sample
+ 
+<div id="chagCtir">
+
+<form id="frmData" name="frmData">
+	<table width="1000" border="1" cellspacing="0">
+		<tr>
+			<th>재목</th>
+			<td><input type="text" id="pTtl" name="pTtl" value=""></td>
+			<th>내용 </th>
+			<td><input type="text" id="pCont" name="pCont" value=""></td>
+			<td><input type="button" value="조회" onclick="fnSearch()"></td>
+		</tr>	
+	</table>
+	
+	<input type="hidden" id="pSeq" name="pSeq" value="">
+</form>
+
+<br/>
+
+	<table width="1000" border="1" cellspacing="0" >
+		<tr align="center">
+			<td width=60>선택</td>
+			<td width=40>순번</td>
+			<td width=250>제목</td>
+			<td >내용</td>
+		</tr>
+	</table>
+	
+	<div id="content">
+	<table width="1000" border="1" cellspacing="0" >
+		<tr align="center">
+			<td>검색 된 정보가 없습니다.</td>
+		</tr>
+	</table>
+	</div>
+	
+	<table width="1000" border="0" cellspacing="0" >
+		<tr>
+			<td align="right">
+				<input type="button" value="등록" onclick="goIns()">
+			</td>
+		</tr>
+	</table>
+</div>
+
+</body>
+</html>
