@@ -52,42 +52,21 @@
 			<!-- menu -->
 			<nav class="main_menu">
 				<ul class="menu_list">
-					<li><a href="#" class="link_menu active"><i class="icon_01"></i><span class="menu">Home</span></a></li>
-					<li><a href="#" class="link_menu"><i class="icon_05"></i><span class="menu">Article Mgt   <button onclick="myFunction()" style="color:white">▼</button></span></a></li>
+					<li><a href="#" class="link_menu active"><i class="icon_01"></i><span class="menu" onclick="myFunction('mu00')">Home</span></a></li>
+					<li><a href="#" class="link_menu"><i class="icon_05"></i><span class="menu">Article Mgt   <button onclick="myFunction('mu01')" style="color:white">▼</button></span></a></li>
                         <div id="myDIV">
                             <li><a href="#" class="link_menu active">뉴스 목록 조회</a></li>
                             <li><a href="#" class="link_menu active">보고서 목록 조회</a></li>
                         </div>
-                        <script>
-                        function myFunction() {
-                        var x = document.getElementById("myDIV");
-                        if (x.style.display === "none") {
-                            x.style.display = "block";
-                        } else {
-                            x.style.display = "none";
-                        }
-                        }
-                        </script>
                     
-					<li><a href="#" class="link_menu"><i class="icon_04"></i><span class="menu">T/A Analysis Mgt   <button onclick="myFunction()" style="color:white">▼</button></span></a></li>
+					<li><a href="#" class="link_menu"><i class="icon_04"></i><span class="menu">T/A Analysis Mgt   <button onclick="myFunction('mu02')" style="color:white">▼</button></span></a></li>
                         <div id="myDIV1">
-							<li>1. 산업별 분석</li>
-                            <li><a href="#" class="link_menu active">산업별 동향정보 조회</a></li>
-							<li>2. 계열사별 기업분석</li>
-							<li><a href="#" class="link_menu active">계열사별 분석결과 조회</a></li>
-                            <li><a href="#" class="link_menu active">기업 분석결과 조회</a></li>
+							<li class="link_menu">1. 산업별 분석</li>
+                            <li>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" class="link_menu active">산업별 동향정보 조회</a></li>
+							<li class="link_menu">2. 계열사별 기업분석</li>
+							<li>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" class="link_menu">계열사별 분석결과 조회</a></li>
+                            <li>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" class="link_menu">기업 분석결과 조회</a></li>
                         </div>
-                        <script>
-                        function myFunction() {
-                        var x = document.getElementById("myDIV1");
-                        if (x.style.display === "none") {
-                            x.style.display = "block";
-                        } else {
-                            x.style.display = "none";
-                        }
-                        }
-                        </script>                      
-                    
 				</ul>
 
 				<button class="btn_close"><span class="blind">메인메뉴 닫기</span></button>
@@ -159,6 +138,33 @@
 
 	</div>
 </div>
+
+
+<script>
+function myFunction( munum ) {
+	var mu1 = document.getElementById("myDIV");
+	var mu2 = document.getElementById("myDIV1");
+
+	if ( munum == "mu00" ) {
+		mu1.style.display = "none";
+		mu2.style.display = "none";
+	} if ( munum == "mu01" ) {
+		if (mu1.style.display === "none") {
+			mu1.style.display = "block";
+		} else {
+			mu1.style.display = "none";
+		}
+		mu2.style.display = "none";
+	} if ( munum == "mu02" ) {
+		if (mu2.style.display === "none") {
+			mu2.style.display = "block";
+		} else {
+			mu2.style.display = "none";
+		}
+		mu1.style.display = "none";
+	}
+}
+</script>
 
 <!-- [D] 마크업 확인용 js, 개발시 제거하세요. -->
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
