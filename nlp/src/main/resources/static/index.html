@@ -29,8 +29,19 @@
     }
     </style>
 
+<script type="text/javascript">
+
+	window.onload = function () {
+	    $("#mainCtir").load("/view/main.html");
+	};
+
+
+</script>
+
 </head>
+
 <body>
+
 <div class="wrap">
 	<header class="header">
 		<!-- logo -->
@@ -56,13 +67,13 @@
 					<li><a href="javascript:myFunction('mu00');" class="title_menu active"><i class="icon_01"></i><span class="menu">Home</span></a></li>
 
 					<li><a href="javascript:myFunction('mu01');" class="title_menu active"><i class="icon_05"></i><span class="menu">Article Mgt<button style="color:white">&nbsp;&nbsp;▼</button></span></a></li>
-                        <div id="myDIV">
+                        <div id="myDIV" style="display:none">
                             <li><a href="#" class="link_menu">뉴스 목록 조회</a></li>
                             <li><a href="#" class="link_menu">보고서 목록 조회</a></li>
                         </div>
                     
 					<li><a href="javascript:myFunction('mu02');" class="title_menu active"><i class="icon_04"></i><span class="menu">T/A Analysis Mgt<button style="color:white">&nbsp;&nbsp;▼</button></span></a></li>
-                        <div id="myDIV1">
+                        <div id="myDIV1" style="display:none">
 							<li class="sub_title active">1. 산업별 분석</li>
                             <li><a href="#" class="link_menu80">산업별 동향정보 조회</a></li>
 							<li class="sub_title active">2. 계열사별 기업분석</li>
@@ -77,67 +88,8 @@
 
 		</div>
 
-		<div class="main_panel" role="main">
-			<div class="contents_panel">
-				<h3 class="main_title">전반적인 산업동향</h3>
-
-				<div class="dash_board">
-					<div class="card_list">
-						<div class="card_item">
-							<div class="card_box">
-								<div class="card_head">
-									<span class="title">타이틀 1</span>
-								</div>
-								<div class="card_content">
-									<div class="chart_area"><div class="chart">chart 영역</div></div>
-								</div>
-							</div>
-						</div>
-						<div class="card_item">
-							<div class="card_box">
-								<div class="card_head">
-									<span class="title">T/A score</span>
-								</div>
-								<div class="card_content">
-									<div class="chart_area"><div class="chart">chart 영역</div></div>
-								</div>
-							</div>
-						</div>
-						<div class="card_item">
-							<div class="card_box">
-								<div class="card_head">
-									<span class="title">긍정 / 부정</span>
-								</div>
-								<div class="card_content">
-									<div class="chart_area"><div class="chart">chart 영역</div></div>
-								</div>
-							</div>
-						</div>
-						<div class="card_item">
-							<div class="card_box">
-								<div class="card_head">
-									<span class="title">T/A 결과</span>
-								</div>
-								<div class="card_content">
-									<div class="chart_area"><div class="chart">chart 영역</div></div>
-								</div>
-							</div>
-						</div>
-                        <div class="card_item">
-							<div class="card_box">
-								<div class="card_head">
-									<span class="title">긍/부정 타임라인</span>
-								</div>
-								<div class="card_content">
-									<div class="chart_area"><div class="chart">chart 영역</div></div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-
-		</div>
+		<!-- 내용 -->
+		<div id="mainCtir" class="main_panel" role="main"></div>
 
 	</div>
 </div>
@@ -146,7 +98,7 @@
 <script type="text/javascript" src="/js/jquery-3.4.1.js"></script>
 <script type="text/javascript" src="/js/jquery-ui.min.js"></script>
 <script type="text/javascript" src="/js/ui-common.js"></script>
-<script>
+<script type="text/javascript">
 function myFunction( munum ) {
 	var mu1 = document.getElementById("myDIV");
 	var mu2 = document.getElementById("myDIV1");
@@ -170,7 +122,6 @@ function myFunction( munum ) {
 		mu2.style.display = "none";
 	}
 }
-myFunction("");
 
 </script>
 
