@@ -1,49 +1,49 @@
 package com.sobetec.nlp.sample.model;
 
 public class SampleVO {
+	
+	private String pSmplSeq;	/* 조건-순번 */
+	private String pSmplTtl;	/* 조회조건-순번 */
+	private String pSmplCont;	/* 조최조건-제목 */
+	private String smplSeq;	/* 순번 */
+	private String smplTtl;	/* 제목 */
+	private String smplCont;	/* 내용 */
 
-	private String pSeq;	/* 조건-순번 */
-	private String pTtl;	/* 조회조건-순번 */
-	private String pCont;	/* 조최조건-제목 */
-	private String seq;		/* 순번 */
-	private String ttl;		/* 제목 */
-	private String cont;	/* 내용 */
-
-	public String getpSeq() {
-		return pSeq;
+	public String getpSmplSeq() {
+		return pSmplSeq;
 	}
-	public void setpSeq(String pSeq) {
-		this.pSeq = pSeq;
+	public void setpSmplSeq(String pSmplSeq) {
+		this.pSmplSeq = pSmplSeq;
 	}
-	public String getpTtl() {
-		return pTtl;
+	public String getpSmplTtl() {
+		return pSmplTtl;
 	}
-	public void setpTtl(String pTtl) {
-		this.pTtl = pTtl;
+	public void setpSmplTtl(String pSmplTtl) {
+		this.pSmplTtl = pSmplTtl;
 	}
-	public String getpCont() {
-		return pCont;
+	public String getpSmplCont() {
+		return pSmplCont;
 	}
-	public void setpCont(String pCont) {
-		this.pCont = pCont;
+	public void setpSmplCont(String pSmplCont) {
+		this.pSmplCont = pSmplCont;
 	}
-	public String getSeq() {
-		return seq;
+	public String getSmplSeq() {
+		return smplSeq;
 	}
-	public void setSeq(String seq) {
-		this.seq = seq;
+	public void setSmplSeq(String smplSeq) {
+		this.smplSeq = smplSeq;
 	}
-	public String getTtl() {
-		return ttl;
+	public String getSmplTtl() {
+		return smplTtl;
 	}
-	public void setTtl(String ttl) {
-		this.ttl = ttl;
+	public void setSmplTtl(String smplTtl) {
+		this.smplTtl = smplTtl;
 	}
-	public String getCont() {
-		return cont;
+	public String getSmplCont() {
+		return smplCont;
 	}
-	public void setCont(String cont) {
-		this.cont = cont;
+	public void setSmplCont(String smplCont) {
+		this.smplCont = smplCont;
 	}
 	
 }

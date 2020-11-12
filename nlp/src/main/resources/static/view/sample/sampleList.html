@@ -31,9 +31,9 @@ function fnSearch(){
 	        	for (var i=0; i<resultList.length; i++){
 		        	html += "<tr>";
 	        		html += "<td width=60 align=\"center\"><input type=\"checkbox\" id=\"chkSeq\" name=\"chkSeq\" value=\"" + resultList[i].seq  + "\"></td>";
-	        		html += "<td width=40 align=\"center\">" + resultList[i].seq  + "</td>";
-	        		html += "<td width=250><a href=\"javascript:goDtl('" + resultList[i].seq  + "')\" >" + resultList[i].ttl  + "</a></td>";
-	        		html += "<td>" + resultList[i].cont + "</td>";
+	        		html += "<td width=40 align=\"center\">" + resultList[i].smplSeq  + "</td>";
+	        		html += "<td width=250><a href=\"javascript:goDtl('" + resultList[i].smplSeq  + "')\" >" + resultList[i].smplTtl  + "</a></td>";
+	        		html += "<td>" + resultList[i].smplCont + "</td>";
 		        	html += "</tr>";
 	        	}
 			}
@@ -84,9 +84,9 @@ Sample
 	<table width="1000" border="1" cellspacing="0">
 		<tr>
 			<th>재목</th>
-			<td><input type="text" id="pTtl" name="pTtl" value=""></td>
+			<td><input type="text" id="pSmplTtl" name="pSmplTtl" value=""></td>
 			<th>내용 </th>
-			<td><input type="text" id="pCont" name="pCont" value=""></td>
+			<td><input type="text" id="pSmplCont" name="pSmplCont" value=""></td>
 			<td><input type="button" value="조회" onclick="fnSearch()"></td>
 		</tr>	
 	</table>
