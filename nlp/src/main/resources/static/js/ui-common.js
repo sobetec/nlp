@@ -53,3 +53,25 @@ $( "#date_to" ).datepicker({
     $( "#date_from" ).datepicker( "option", "maxDate", selectedDate );
   }
 });
+
+// menu link
+function linkMu( linkSeq ) {
+	var linkUrl = "/view";
+	
+	if ( linkSeq == "0101" ) {
+		linkUrl += "/alys/newsList.html";
+	} else if ( linkSeq == "0102" ) {
+		linkUrl += "/alys/reptList.html";
+	} else if ( linkSeq == "0201" ) {
+		linkUrl += "/atcl/elstTrndInfo.html";
+	} else if ( linkSeq == "0301" ) {
+		linkUrl += "/atcl/ealtAnisRest.html";
+	} else if ( linkSeq == "0302" ) {
+		linkUrl += "/atcl/cprnAnisRest.html";
+	} else {
+		linkUrl += "/main.html";
+	}
+    $("#mainCtir").load(linkUrl);
+
+}
+
