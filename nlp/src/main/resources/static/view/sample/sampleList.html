@@ -69,6 +69,19 @@ function fnDel(){
 	
 }
 
+function getJson() {
+	$.ajax({
+		  url: "/jsonViewTest"
+		, type: "POST"
+		, data: $('#frmData').serialize()
+		, dataType: "json"
+		, success: function(resultList){
+			
+        	alert( "" + resultList + "" );
+        }
+    })
+}
+
 </script>
 
 </head>
@@ -121,6 +134,14 @@ Sample
 		</tr>
 	</table>
 </div>
+
+<table border="0" cellspacing="0" >
+	<tr>
+		<td>
+			<input type="button" value="JsonReturn" onclick="getJson()">
+		</td>
+	</tr>
+</table>
 
 </body>
 </html>

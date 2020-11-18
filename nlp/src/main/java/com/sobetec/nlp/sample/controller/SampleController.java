@@ -4,14 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sobetec.nlp.sample.model.SampleVO;
 import com.sobetec.nlp.sample.service.SampleService;
 
@@ -116,6 +118,22 @@ public class SampleController {
 		result = service.deleteMultiSample(list);
 		
 		return result;
+	}
+
+	
+	@PostMapping(value="/jsonViewTest")
+	public String jsonViewTest(SampleVO vo, HttpServletRequest request) throws Exception {
+	    
+		ModelAndView mv = new ModelAndView();
+	    List<SampleVO> resultList = new ArrayList<SampleVO>();
+	        
+		resultList = service.getSampleList(vo);
+		String result = new ObjectMapper().writeValueAsString(resultList);
+
+		logger.debug("########## resultList : [" + result + "]");
+
+	    
+	    return result;
 	}
 
 	
