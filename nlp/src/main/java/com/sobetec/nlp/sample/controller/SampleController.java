@@ -124,7 +124,6 @@ public class SampleController {
 	@PostMapping(value="/jsonViewTest")
 	public String jsonViewTest(SampleVO vo, HttpServletRequest request) throws Exception {
 	    
-		ModelAndView mv = new ModelAndView();
 	    List<SampleVO> resultList = new ArrayList<SampleVO>();
 	        
 		resultList = service.getSampleList(vo);
