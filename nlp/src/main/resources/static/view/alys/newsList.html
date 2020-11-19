@@ -1,8 +1,161 @@
 <!-- 뉴스 목록 조회 -->
 <meta charset="UTF-8">
+<script src="https://code.jquery.com/jquery-latest.js"></script>
+
+<script type="text/javascript">
+
+	function viewNewsContents(i){
+		console.log(window.newsResponseData[i]);
+
+		var modalhtml =
+		`
+			<div class="modal-content">
+				<p style="text-align: center;"><span style="font-size: 14pt;"><b><span style="font-size: 24pt;">` + window.newsResponseData[i].newsTtl + `</span></b></span></p>
+				<button type="button" class="close" onClick="close_pop();"></button>
+				<p style="text-align: center; line-height: 1.5;"><br />` + window.newsResponseData[i].rawData + `</p>
+				<p><br /></p>
+				<div style="cursor:pointer;background-color:#DDDDDD;text-align: center;padding-bottom: 10px;padding-top: 10px;" onClick="close_pop();">
+					<span class="pop_bt" style="font-size: 13pt;" >
+						닫기
+					</span>
+				</div>
+			</div>
+		`;
+		document.getElementById('myModal').innerHTML = modalhtml;
+		$('#myModal').show();
+	}
+
+	function getNewsList() {
+		console.log("!!!")
+		$.ajax({
+			url: "/getNewsList",
+	        type: "POST",
+	        data: '',
+	        enctype: '',
+	        processData: false,
+	        contentType: false,
+	        success: function (responseData) {
+				alert('조회 성공');
+				console.log(responseData.length);
+				window.newsResponseData = responseData;
+				console.log(window.newsResponseData[0]);
+
+				
+
+				var htmlStart =
+				`
+				<table border="1" >
+					<th>인덱스</th>
+					<th>컴포짓키</th>
+					<th>날짜</th>
+					<th>기업명</th>
+					<th>제목</th>
+					<th style='color:red;'>스코어</th>
+				`;
+
+				
+				//var blueb = `<td style='color:red;'>` + responseData[i].taScre + `</td>`;
+				//var ggreen = `<td style='color:red;'>` + responseData[i].taScre + `</td>`;
+
+				for(var i = 0; i < responseData.length; i++){
+					var indexNum = i+1;
+					var sscore = responseData[i].taScre;
+					var rred = ''
+
+					if (sscore == '긍정') {
+						rred = `<td style='color:red;'>` + responseData[i].taScre + `</td>`;	
+					}
+					if (sscore == '중립') {
+						rred = `<td style='color:green;'>` + responseData[i].taScre + `</td>`;	
+					}
+					if (sscore == '부정') {
+						rred = `<td style='color:blue;'>` + responseData[i].taScre + `</td>`;	
+					}
+
+					var htmlContents =
+					`
+						<tr>
+							<td>` + indexNum + `</td>
+							<td>` + responseData[i].cmpyKey + `</td>
+							<td>` + responseData[i].newsDate + `</td>
+							<td>` + responseData[i].cmpyName + `</td>
+							<td><a href="javascript:viewNewsContents(` + i +`);">` + responseData[i].newsTtl + `</a></td>
+							`+ rred +`
+						</tr>
+					`;
+					htmlStart = htmlStart + htmlContents;
+				}
+
+				var htmlEnd = 
+				`
+				</table>
+				`;
+				
+				document.getElementById('result_area').innerHTML = htmlStart+htmlEnd;
+			},
+			error: function () {
+				alert('조회 실패');
+			}
+		});
+	}
+
+
+
+</script>
+
+
+<style>
+	/* The Modal (background) */
+	.modal {
+		display: none; /* Hidden by default */
+		position: fixed; /* Stay in place */
+		z-index: 1; /* Sit on top */
+		left: 0;
+		top: 0;
+		width: 100%; /* Full width */
+		height: 100%; /* Full height */
+		overflow: auto; /* Enable scroll if needed */
+		background-color: rgb(0,0,0); /* Fallback color */
+		background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+	}
+
+	/* Modal Content/Box */
+	.modal-content {
+		background-color: #fefefe;
+		margin: 10% auto; /* 15% from the top and centered */
+		padding: 20px;
+		border: 1px solid #888;
+		width: 70%; /* Could be more or less, depending on screen size */                          
+	}
+</style>
+
 
 <div class="contents_panel">
 	<h3 class="main_title">뉴스 목록 조회</h3>
+	<div> 조건 넣을것임 </div>
+	<span class="col-lg-3">
+		<a id="newsList" class="btn btn-primary " href="javascript:getNewsList();">조회</a>
+	</span>
+	<div id = "result_area"> </div>
+
+
+	<div id="myModal" class="modal">
+		<!-- Modal content -->
+		
+	</div>
+
 
 </div>
 
+
+<script type="text/javascript">
+      
+//	jQuery(document).ready(function() {
+//			$('#myModal').show();
+//	});
+	//팝업 Close 기능
+	function close_pop(flag) {
+		 $('#myModal').hide();
+	};
+	
+  </script>
