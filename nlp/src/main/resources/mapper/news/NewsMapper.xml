@@ -23,7 +23,7 @@
 			 , "ext_morphs"		AS "extMorp"
 		  FROM NLP."nlp_news"
 		 <!-- where seq = 93307 -->
-		 limit 50
+		 limit 200
 		<!--  WHERE 1 = 1 -->
 		<!-- <if test='pSmplTtl != null and !pSmplTtl.equals("")'>
 		   AND "SMPL_TTL" LIKE '%' || #{pSmplTtl} || '%' 

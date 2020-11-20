@@ -29,7 +29,7 @@ public class NewsRepository implements NewsRepositoryImpl  {
 		String mapId = "newsMapper.selectNewsList";
 		List<News> sqlResultList = sqlSession.selectList(mapId, vo);
 		
-		log.debug("size:"+sqlResultList);
+//		log.debug("size:"+sqlResultList);
 		
 		return sqlResultList;
 	}
