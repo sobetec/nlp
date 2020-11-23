@@ -33,15 +33,12 @@
 		
 
 		
-		var search_company = document.getElementById('search_company').value 
-
+		var search_company = document.getElementById('search_company').value; 
+		console.log(search_company);
 		$.ajax({
-			url: "/getNewsList",
-	        type: "get",
-	        data: search_company,
-	        enctype: '',
-	        processData: false,
-	        contentType: false,
+			url: "/getNewsListByCompany/"+search_company,
+			method: 'GET',
+	        dataType: 'json',
 	        success: function (responseData) {
 				alert('조회 성공');
 				console.log(responseData.length);
@@ -86,7 +83,10 @@
 					if (sscore == '부정') {
 						rred = `<td style='color:blue;'>` + responseData[i].taScre + `</td>`;	
 					}
-
+					if (sscore == '없음') {
+						rred = `<td style='color:black'>` + responseData[i].taScre + `</td>`;	
+					}
+					
 					var htmlContents =
 					`
 						<tr>
@@ -226,8 +226,8 @@
 							</select>
 						</div>
 						<div class="search_box">
-							<input type="text" placeholder="검색">
-							<button id="search_company" class="btn_search"><span class="blind" value="">검색</span></button>
+							<input id="search_company" type="text" placeholder="검색" value="" >
+							<button  class="btn_search"><span class="blind" >검색</span></button>
 						</div>
 						
 						<div class="buttons">

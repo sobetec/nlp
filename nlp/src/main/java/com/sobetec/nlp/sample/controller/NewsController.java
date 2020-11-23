@@ -8,15 +8,18 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sobetec.nlp.sample.model.News;
+import com.sobetec.nlp.sample.repository.NewsRepositoryImpl;
 import com.sobetec.nlp.sample.service.NewsService;
 
 /**
@@ -28,7 +31,9 @@ import com.sobetec.nlp.sample.service.NewsService;
 public class NewsController {
 
 	protected Log logger = LogFactory.getLog(NewsController.class);
-
+	
+	@Autowired
+	private NewsRepositoryImpl repository;
 	@Resource(name="newsService")
 	private NewsService service;
 
@@ -38,21 +43,20 @@ public class NewsController {
 	 * @return List
 	 * @throws Exception
 	 */
-	@PostMapping(path ="/getNewsList")
-	public List<News> getSampleList(News vo) throws Exception {
-		logger.debug("########## start Controller getNewsList");
-		List<News> resultList = new ArrayList<News>();
+//	@PostMapping(path ="/getNewsList")
+//	public List<News> getSampleList(News vo) throws Exception {
+//		logger.debug("########## start Controller getNewsList");
+//		List<News> resultList = new ArrayList<News>();
+//
+//		resultList = service.getNewsList(vo);
+//
+//	    return resultList;
+//	}
 
-		resultList = service.getNewsList(vo);
-
-	    return resultList;
+	
+	@GetMapping(path ="/getNewsListByCompany/{cmpyNameOnly}") 
+	public List<News> getNewsListByCompany(@PathVariable String cmpyNameOnly) throws Exception {
+		 
+	return service.getNewsList(cmpyNameOnly);
 	}
-
-	
-	@GetMapping(path ="/getNewsList/{cmpyNameOnly}") public List<News>
-	getSampleListBycmpy(@PathVariable String cmpyNameOnly) throws Exception {
-	List<News> resultList = new ArrayList<News>();
-	
-	resultList = service.getNewsList(vo); return resultList; }
-	
 }

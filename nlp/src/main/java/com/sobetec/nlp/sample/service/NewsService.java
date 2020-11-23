@@ -21,28 +21,38 @@ public class NewsService {
 	protected Log logger = LogFactory.getLog(NewsController.class);
 
 	@Autowired
-	private NewsRepositoryImpl INewsRepository;
+	private NewsRepositoryImpl repository;
     
 	/**
 	 * 
 	 * @param file
 	 * @return
 	 */
-    public List<News> getNewsList(News vo) throws Exception {
+
+    
+    public List<News> getNewsList(String cmpyNameOnly) throws Exception {
     	logger.debug("########## start Service getNewsList");
     	List<News> listNews = new ArrayList<News>();
-    	listNews = INewsRepository.getNewsList(vo);
+    	listNews = repository.getNewsListByCompany(cmpyNameOnly);
+    	
     	for(int i = 0; i < listNews.size(); i++) {
-    		Double tempScore = Double.parseDouble(listNews.get(i).getTaScre());
     		
-    		if (tempScore > 60) {
-    			listNews.get(i).setTaScre("긍정");
-    		}
-    		else if (tempScore < 40) {
-    			listNews.get(i).setTaScre("부정");
-    		}
-    		else {	
-    			listNews.get(i).setTaScre("중립");
+    		if (listNews.get(i).getTaScre() != null) {
+
+        		Double tempScore = Double.parseDouble(listNews.get(i).getTaScre());
+        		
+        		if (tempScore > 60) {
+        			listNews.get(i).setTaScre("긍정");
+        		}
+        		else if (tempScore < 40) {
+        			listNews.get(i).setTaScre("부정");
+        		}
+        		else {	
+        			listNews.get(i).setTaScre("중립");
+        		}
+    		} else {
+    		
+    		listNews.get(i).setTaScre("없음");
     		}
     	}
     	
