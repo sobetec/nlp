@@ -22,8 +22,8 @@
 			 , "ext_data"		AS "extData"
 			 , "ext_morphs"		AS "extMorp"
 		  FROM NLP."nlp_news"
-		 <!-- where seq = 93307 -->
-		 limit 200
+		 where company_name_only = #{cmpyNameOnly}
+		 limit 120
 		<!--  WHERE 1 = 1 -->
 		<!-- <if test='pSmplTtl != null and !pSmplTtl.equals("")'>
 		   AND "SMPL_TTL" LIKE '%' || #{pSmplTtl} || '%' 

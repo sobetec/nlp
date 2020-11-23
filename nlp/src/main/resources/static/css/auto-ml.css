@@ -1409,6 +1409,13 @@ body {
 
 .option_set .search_box {
 	margin-left: 10px;
+	border-color: #117e84;
+}
+
+.option_set .btn {
+	margin-left: 10px;
+	border-color: #117e84;
+	color: #117e84;
 }
 
 .option_set .data_set .select {

@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
@@ -45,4 +47,12 @@ public class NewsController {
 
 	    return resultList;
 	}
+
+	
+	@GetMapping(path ="/getNewsList/{cmpyNameOnly}") public List<News>
+	getSampleListBycmpy(@PathVariable String cmpyNameOnly) throws Exception {
+	List<News> resultList = new ArrayList<News>();
+	
+	resultList = service.getNewsList(vo); return resultList; }
+	
 }
