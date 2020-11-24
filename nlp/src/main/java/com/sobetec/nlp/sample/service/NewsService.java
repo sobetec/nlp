@@ -42,17 +42,17 @@ public class NewsService {
         		Double tempScore = Double.parseDouble(listNews.get(i).getTaScre());
         		
         		if (tempScore > 60) {
-        			listNews.get(i).setTaScre("긍정");
+        			listNews.get(i).setTaScreWord("긍정");
         		}
         		else if (tempScore < 40) {
-        			listNews.get(i).setTaScre("부정");
+        			listNews.get(i).setTaScreWord("부정");
         		}
         		else {	
-        			listNews.get(i).setTaScre("중립");
+        			listNews.get(i).setTaScreWord("중립");
         		}
     		} else {
     		
-    		listNews.get(i).setTaScre("없음");
+    		listNews.get(i).setTaScreWord("없음");
     		}
     	}
     	
