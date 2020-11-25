@@ -1,29 +1,25 @@
 package com.sobetec.nlp.sample.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
-
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sobetec.nlp.sample.model.ChartQuery;
 import com.sobetec.nlp.sample.model.News;
 import com.sobetec.nlp.sample.repository.NewsRepositoryImpl;
+import com.sobetec.nlp.sample.service.ChartQueryService;
 import com.sobetec.nlp.sample.service.NewsService;
 
 /**
  * 데이터 관리
+ * 
  * @author YUJH
  * 
  */
@@ -31,14 +27,17 @@ import com.sobetec.nlp.sample.service.NewsService;
 public class NewsController {
 
 	protected Log logger = LogFactory.getLog(NewsController.class);
-	
+
 	@Autowired
 	private NewsRepositoryImpl repository;
-	@Resource(name="newsService")
-	private NewsService service;
+	@Resource(name = "newsService")
+	private NewsService newsService;
+	@Resource(name = "chartQueryService")
+	private ChartQueryService chartQueryService;
 
 	/**
-	 * 목록조회 Sample 
+	 * 목록조회 Sample
+	 * 
 	 * @param SampleVO
 	 * @return List
 	 * @throws Exception
@@ -53,10 +52,16 @@ public class NewsController {
 //	    return resultList;
 //	}
 
-	
-	@GetMapping(path ="/getNewsListByCompany/{cmpyNameOnly}") 
+	@GetMapping(path = "/getNewsListByCompany/{cmpyNameOnly}")
 	public List<News> getNewsListByCompany(@PathVariable String cmpyNameOnly) throws Exception {
-		 
-	return service.getNewsList(cmpyNameOnly);
+
+		return newsService.getNewsList(cmpyNameOnly);
+	}
+
+	@GetMapping(path = "/getChartQueryByCompany/{cmpyNameOnly}")
+	public ChartQuery getChartQueryByCompany(@PathVariable String cmpyNameOnly) throws Exception {
+		System.out.println("Test:" + cmpyNameOnly);
+
+		return chartQueryService.getChartQuery(cmpyNameOnly);
 	}
 }

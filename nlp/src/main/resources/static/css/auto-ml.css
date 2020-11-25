@@ -15,7 +15,7 @@ html, body {
 }
 
 body, input, textarea, select, button, pre {
-	font-family: NotoSans, -apple-system, BlinkMacSystemFont, Avenir Next, Helvetica Neue, Apple SD Gothic Neo, Malgun Gothic, sans-serif;
+	font-family: -apple-system, BlinkMacSystemFont, Avenir Next, Helvetica Neue, Apple SD Gothic Neo, Malgun Gothic, sans-serif;
 	font-size: 13px;
 	font-weight: 400;
 	color: #484d55;
@@ -1336,7 +1336,7 @@ body {
 	-webkit-flex: none;
 	        flex: none;
 	min-width: 333px;
-	width: 25%;
+	width: 50%;
 }
 
 .card_list .card_item.active .card_box {

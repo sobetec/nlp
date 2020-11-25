@@ -7,8 +7,9 @@ import com.sobetec.nlp.sample.model.News;
 public interface NewsRepositoryImpl {
 
 	List<News> getNewsList(News req) throws Exception;
-	
+
 	List<News> getNewsListByCompany(String cmpyNameOnly) throws Exception;
 
+	List<News> getChartNewsByCompany(String cmpyNameOnly) throws Exception;
 
 }

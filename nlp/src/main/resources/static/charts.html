@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>SBT AUTOML</title>
+	<style>
+		body {
+			font-family: Helvetica, Arial, sans-serif;
+			margin: 32px;
+		}
+
+		.axis-grid line {
+			stroke: rgb(190, 190, 190);
+			stroke-width: 0.5;
+		}
+
+		#power-gauge g.arc {
+			fill: steelblue;
+		}
+
+		#power-gauge g.pointer {
+			fill: #e85116;
+			stroke: #b64011;
+		}
+
+		#power-gauge g.label text {
+			text-anchor: middle;
+			font-size: 14px;
+			font-weight: bold;
+			fill: #666;
+		}
+	</style>
+	<script type="text/javascript" src="./js/d3.v4.min.js"></script>
+	<link rel="stylesheet" href="./css/auto-ml.css">
+</head>
+
+<body>
+	<div class="wrap">
+		<header class="header">
+
+			<div class="right_area">
+				<!-- user -->
+				<div class="buttons">
+					<button class="btn_shortcut"><span class="blind">바로가기</span></button>
+					<a href="#" class="btn">로그아웃</a>
+					<a href="#" class="btn">사용자 등록</a>
+				</div>
+			</div>
+		</header>
+		<div class="layer_dimmed">
+			<div class="layer_box" id='entirePopupBox'>
+				<div class="layer_body">
+					<div class="chart_detail">
+						<div>
+							<button type="button" id='resetChart'>Reset</button></div>
+						<div id='wordCloudSettings' class='enlargedChartSettings' style='display:none'>
+							<span>패딩 선택: </span>
+							<span id='paddingValue'></span>
+							<input id="paddingSlider" type="range" min="1" max="4" step="0.25" value="1.5">
+							<span>숫자 선택: </span>
+							<span id='textMaxValue'></span>
+							<input id="textNumberSlider" type="range" min="1" max="50" step="1" value="50">
+							<span>글자 크기: </span>
+							<span id='fontSizeValue'></span>
+							<input id="fontSizeSlider" type="range" min="1" max="500" step="1" value="100">
+						</div>
+						<div id='keywordBarSettings' class='enlargedChartSettings' style='display:none'>
+							<span>숫자 선택: </span>
+							<span id='keywordMaxValueBar'></span>
+							<input id="keywordBarSlider" type="range" min="1" max="50" step="1" value="10">
+						</div>
+						<div id='keywordPieSettings' class='enlargedChartSettings' style='display:none'>
+							<span>숫자 선택: </span>
+							<span id='keywordMaxValuePie'></span>
+							<input id="keywordPieSlider" type="range" min="1" max="30" step="1" value="6">
+						</div>
+						<a href="#" class="btn point" target="_blank">다운로드</a>
+						<div class="chart_area" id="enlargedChart">
+							<div class="chart">차트 영역</div>
+						</div>
+					</div>
+				</div>
+				<button class="btn_close"><span class="blind">닫기</span></button>
+			</div>
+		</div>
+
+		<div class="container">
+
+			<div class="side_panel">
+				<h2 class="blind">메뉴</h2>
+				<!-- menu -->
+				<nav class="main_menu">
+					<ul class="menu_list">
+						<li><a href="#" class="link_menu active"><i class="icon_01"></i><span class="menu">데이터
+									관리</span></a></li>
+						<li><a href="#" class="link_menu"><i class="icon_02"></i><span class="menu">데이터 전처리</span></a>
+						</li>
+						<li><a href="#" class="link_menu"><i class="icon_03"></i><span class="menu">데이터 분리</span></a>
+						</li>
+						<li><a href="#" class="link_menu"><i class="icon_04"></i><span class="menu">데이터 분석</span></a>
+						</li>
+						<li><a href="#" class="link_menu"><i class="icon_05"></i><span class="menu">분석 결과</span></a>
+						</li>
+						<li><a href="#" class="link_menu"><i class="icon_06"></i><span class="menu">데이터 진단</span></a>
+						</li>
+						<li><a href="#" class="link_menu"><i class="icon_07"></i><span class="menu">배포</span></a></li>
+					</ul>
+
+					<div class="addition">
+						<div class="row">
+							<label class="label" for="test_data_set">데이터셋</label>
+							<select id="test_data_set" class="select">
+								<option value="">select</option>
+							</select>
+						</div>
+						<div class="row">
+							<input type="file" class="blind" id="file_upload">
+							<label for="file_upload" class="btn medium point file_upload">파일 업로드</label>
+						</div>
+					</div>
+
+					<button class="btn_close"><span class="blind">메인메뉴 닫기</span></button>
+				</nav>
+			</div>
+
+			<div class="main_panel" role="main">
+				<div class="contents_panel">
+					<h3 class="main_title">시각화</h3>
+
+					<div class="contents">
+						<div style="display:none" id="hideAll">&nbsp;</div>
+						<div class="option_set">
+							<div class="data_set">
+								<select class="select">
+									<option value="">기업별</option>
+									<option value="">계열별</option>
+									<option value="">산업별</option>
+								</select>
+							</div>
+							<div class="search_box">
+								<input id="search_company" type="text" placeholder="검색" value=""
+									onkeypress="if( event.keyCode == 13 ){getChartQuery();}">
+								<button class="btn_search" onclick="getChartQuery();"><span
+										class="blind">검색</span></button>
+							</div>
+
+							<div class="buttons">
+								<a id="newsList" class="btn" href="javascript:getChartQuery();">조회</a>
+							</div>
+							<button class="btn line">편집</button>
+							<a href="#" class="btn point" target="_blank">다운로드</a>
+						</div>
+
+						<div class="visualize">
+							<div class="visualize_info">
+								<div class="info_title">Box plot</div>
+								<div class="info_text">
+									설명
+								</div>
+							</div>
+
+							<div class="card_list">
+								<!-- [D] 클릭한 카드에 클래스 active 추가해주세요 -->
+
+								<!-- DANGER GAUGE Extended Version -->
+								<div class="card_item">
+									<div class="card_box">
+										<div class="card_head">
+											<span class="input_check">
+												<input type="checkbox" id="test_edit_01" checked>
+												<label for="test_edit_01" class="label"></label>
+											</span>
+											<span class="title">타이틀 1</span>
+										</div>
+										<div class="card_content">
+											<div class="chart_area">
+												<div class="chart" id="dangerGauge">
+
+													<script type="text/javascript" src='./js/nlp.js'></script>
+
+													<script>
+														var gauge = document.getElementById('dangerGauge');
+
+														var gaugeDirection = 0;
+
+
+
+													</script>
+
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<!-- 스플릿 콩나물 그래프 -->
+								<div class="card_item">
+									<div class="card_box">
+										<div class="card_head">
+											<span class="input_check">
+												<input type="checkbox" id="test_edit_03">
+												<label for="test_edit_03" class="label"></label>
+											</span>
+											<span class="title">타이틀 1</span>
+										</div>
+										<div class="card_content">
+											<div class="chart_area">
+												<div class="chart" id='sentimentTimeTwoLines'>
+													<script>
+														var divID = 'sentimentTimeTwoLines';
+
+
+													</script>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<!-- 키워드 빠 플롯 -->
+								<div class="card_item">
+									<div class="card_box">
+										<div class="card_head">
+											<span class="input_check">
+												<input type="checkbox" id="test_edit_02">
+												<label for="test_edit_02" class="label"></label>
+											</span>
+											<span class="title">타이틀 1</span>
+										</div>
+										<div class="card_content">
+											<div class="chart_area">
+												<div class="chart" id="keywordBar">
+													<script>
+														var divID = 'keywordBar'
+
+														var textSlide = document.getElementById('keywordBarSlider')
+														document.getElementById('keywordMaxValueBar').innerHTML = textSlide.value;
+														textSlide.onchange = function () {
+															document.getElementById('keywordMaxValueBar').innerHTML = document.getElementById('keywordBarSlider').value;
+															makeKeywordBarPlot(window.newsResponseData.keywords, 'enlargedChart', document.getElementById('keywordBarSlider').value)
+														}
+
+													</script>
+
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<!-- 주가 플롯 -->
+								<div class="card_item">
+									<div class="card_box">
+										<div class="card_head">
+											<span class="input_check">
+												<input type="checkbox" id="test_edit_02">
+												<label for="test_edit_02" class="label"></label>
+											</span>
+											<span class="title">타이틀 1</span>
+										</div>
+										<div class="card_content">
+											<div class="chart_area">
+												<div class="chart" id="stockTime">
+													<script>
+														var filepath = './data/news_counts.csv'
+														d3.csv(filepath, function (data) {
+
+															var divID = 'stockTime';
+															stockGraph = document.getElementById(divID)
+															stockGraph.addEventListener('click', function () {
+																document.getElementById('resetChart').addEventListener('click', function () {
+																	console.log('clicked');
+																	makeStockGraph(data, 'enlargedChart');
+																})
+																makeStockGraph(data, 'enlargedChart');
+															})
+															makeStockGraph(data, divID)
+														})
+													</script>
+
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+
+								<!-- 워드 클라우드 -->
+								<div class="card_item">
+									<div class="card_box">
+										<div class="card_head">
+											<span class="input_check">
+												<input type="checkbox" id="test_edit_02">
+												<label for="test_edit_02" class="label"></label>
+											</span>
+											<span class="title">타이틀 1</span>
+
+										</div>
+										<div class="card_content">
+											<div class="chart_area" style="background-color:#f4fbff">
+												<div class="chart" id="wordCloud" style="cursor:default">
+													<script type="text/javascript"
+														src="./js/d3.layout.cloud.js"></script>
+													<script>
+														var divID = 'wordCloud'
+														/* var graphDiv = document.getElementById(divID);
+														document.getElementById('paddingValue').innerHTML = document.getElementById('paddingSlider').value;
+														document.getElementById('textMaxValue').innerHTML = document.getElementById('textNumberSlider').value;
+														var xPadding = 20;
+														var yPadding = 20;
+														var headRadius = 3;
+														var divHeight = graphDiv.clientHeight;
+														var divWidth = graphDiv.clientWidth; */
+
+														var filepath = './data/keywords.csv'
+														d3.csv(filepath, function (words) {
+															
+
+															/* f(); */
+														})
+
+
+
+
+
+
+													</script>
+
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<!-- Keyword Pie chart -->
+								<div class="card_item">
+									<div class="card_box">
+										<div class="card_head">
+											<span class="input_check">
+												<input type="checkbox" id="test_edit_01" checked>
+												<label for="test_edit_01" class="label"></label>
+											</span>
+											<span class="title">타이틀 1</span>
+										</div>
+										<div class="card_content">
+											<div class="chart_area">
+												<div class="chart" id="keywordPie">
+
+													<script>
+														var divID = 'keywordPie'
+
+														var textSlide = document.getElementById('keywordPieSlider')
+														document.getElementById('keywordMaxValuePie').innerHTML = textSlide.value;
+														textSlide.onchange = function () {
+															document.getElementById('keywordMaxValuePie').innerHTML = document.getElementById('keywordPieSlider').value;
+															makePieChart(window.newsResponseData.keywords, 'enlargedChart', document.getElementById('keywordPieSlider').value)
+														}
+
+
+
+
+
+
+
+													</script>
+
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<!-- Related Documents -->
+								<div class="card_item">
+									<div class="card_box">
+										<div class="card_head">
+											<span class="input_check">
+												<input type="checkbox" id="test_edit_01" checked>
+												<label for="test_edit_01" class="label"></label>
+											</span>
+											<span class="title">타이틀 1</span>
+										</div>
+										<div class="card_content">
+											<div class="chart_area">
+												<div class="chart" id="relatedDocNetwork">
+													<div class="vis-network" tabindex="900"
+														style="position: relative; overflow: hidden; touch-action: pan-y; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); width: 100%; height: 100%;">
+														<canvas width="100%" height="100%"
+															style="position: relative; touch-action: none; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); width: 100%; height: 100%;"></canvas>
+													</div>
+
+													<script type="text/javascript"
+														src="./js/vis-network.min.js"></script>
+													<script>
+														var nodes = null;
+														var edges = null;
+														var network = null;
+
+														// create people.
+														// value corresponds with the age of the person
+														nodes = [
+															{ id: 1, value: 10, label: "(주)카카오", color: '#c3aed6', margin: 20, font: { face: 'malgun-gothic', color: "#000000", size: 40 } },
+															{ id: 2, value: 10, label: "서비스", color: '#efbbcf', margin: 15, font: { color: "#000000", size: 30 } },
+															{ id: 3, value: 10, label: "이모티콘", color: '#efbbcf', margin: 15, font: { color: "#000000", size: 30 } },
+															{ id: 4, value: 10, label: "채팅", color: '#efbbcf', margin: 15, font: { color: "#000000", size: 30 } },
+															{ id: 7, value: 10, label: "기사: 카카오, 리무진서비스\n 스타트업 투자", margin: 10, color: '#ffd5cd', font: { color: "#000000" } },
+															{ id: 8, value: 10, label: "기사: 택시기사 80% \n카카오서비스 이용", margin: 10, color: '#ffd5cd', font: { color: "#000000" } },
+															{ id: 9, value: 10, label: "기사: 다음카카오, 다음 검색광고\n 옐로아이디 연동 서비스", margin: 10, color: '#ffd5cd', font: { color: "#000000" } },
+															{ id: 10, value: 10, label: "기사: 카카오, VOD 시장 진출…\n영화 서비스 시작", margin: 10, color: '#ffd5cd', font: { color: "#000000" } },
+															{ id: 11, value: 10, label: "기사: 카카오스토리에 \n이모티콘 도입", margin: 10, color: '#ffd5cd', font: { color: "#000000" } },
+															{ id: 12, value: 10, label: "기사: 하루 1000만명\n 카톡 이모티콘 이용", margin: 10, color: '#ffd5cd', font: { color: "#000000" } },
+															{ id: 13, value: 10, label: "기사: 카카오, 이모티콘으로\n 기부한다", margin: 10, color: '#ffd5cd', font: { color: "#000000" } },
+															{ id: 14, value: 10, label: "기사: KT올레 고객, \n카카오톡 맘껏 쓰세요", margin: 10, color: '#ffd5cd', font: { color: "#000000" } },
+															{ id: 15, value: 10, label: "기사: [컨콜]카카오, '카카오톡 MAU\n 최초로 4200만 돌파'", margin: 10, color: '#ffd5cd', font: { color: "#000000" } },
+															{ id: 16, value: 10, label: "'카카오톡 메일' \n시범 테스트 시작", margin: 10, color: '#ffd5cd', font: { color: "#000000" } },];
+
+														// create connections between people
+														// value corresponds with the amount of contact between two people
+														edges = [
+															{ from: 1, to: 2, value: 3, color: '#8675a9', smooth: false },
+															{ from: 1, to: 3, value: 5, color: '#8675a9', smooth: false },
+															{ from: 1, to: 4, value: 8, color: '#8675a9', smooth: false },
+															{ from: 1, to: 6, value: 2, color: '#8675a9', smooth: false },
+															{ from: 2, to: 7, value: 2, color: '#d9a0b6', smooth: false },
+															{ from: 2, to: 8, value: 1, color: '#d9a0b6', smooth: false },
+															{ from: 2, to: 9, value: 2, color: '#d9a0b6', smooth: false },
+															{ from: 2, to: 10, value: 5, color: '#d9a0b6', smooth: false },
+															{ from: 3, to: 11, value: 3, color: '#d9a0b6', smooth: false },
+															{ from: 3, to: 12, value: 3, color: '#d9a0b6', smooth: false },
+															{ from: 3, to: 13, value: 2, color: '#d9a0b6', smooth: false },
+															{ from: 4, to: 14, value: 1, color: '#d9a0b6', smooth: false },
+															{ from: 4, to: 16, value: 6, color: '#d9a0b6', smooth: false },
+															{ from: 4, to: 15, value: 2, color: '#d9a0b6', smooth: false },
+														];
+
+														// Instantiate our network object.
+														var container = document.getElementById("relatedDocNetwork");
+														var data = {
+															nodes: nodes,
+															edges: edges,
+														};
+														var options = {
+															nodes: {
+																shape: "box",
+																size: 5,
+															},
+															physics: {
+																enabled: false,
+															},
+														};
+														container.addEventListener('click', function () {
+															options.physics = { enabled: true };
+															network = new vis.Network(document.getElementById("enlargedChart"), data, options);
+														})
+														network = new vis.Network(container, data, options)
+													</script>
+
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- [D] 옵션 활성화시 클래스 is_active 추가해주세요 -->
+				<div class="option_panel">
+					<div class="option_inner">
+						<div class="option_head">
+							<h3 class="option_title">옵션 설정</h3>
+							<button class="btn_close"><span class="blind">닫기</span></button>
+						</div>
+
+						<div class="option_body">
+							<div class="option_part">
+								<h4 class="option_label">Types</h4>
+								<ul class="option_list">
+									<li>
+										<span class="input_check">
+											<input type="checkbox" id="test_option_01" checked>
+											<label for="test_option_01">Bi-Variate Analysis</label>
+										</span>
+									</li>
+									<li>
+										<span class="input_check">
+											<input type="checkbox" id="test_option_02">
+											<label for="test_option_02">Multi-Variate Analysis</label>
+										</span>
+									</li>
+								</ul>
+
+								<h4 class="option_label">Colors</h4>
+								<ul class="option_list">
+									<li>
+										<span class="input_check">
+											<input type="checkbox" id="test_option_03" checked>
+											<label for="test_option_03">Blues</label>
+										</span>
+									</li>
+									<li>
+										<span class="input_check">
+											<input type="checkbox" id="test_option_04">
+											<label for="test_option_04">Reds</label>
+										</span>
+									</li>
+									<li>
+										<span class="input_check">
+											<input type="checkbox" id="test_option_05">
+											<label for="test_option_05">Greens</label>
+										</span>
+									</li>
+								</ul>
+
+								<h4 class="option_label">Plots</h4>
+								<ul class="option_list">
+									<li>
+										<span class="input_check">
+											<input type="checkbox" id="test_option_06">
+											<label for="test_option_06">Scatter plot</label>
+										</span>
+									</li>
+									<li>
+										<span class="input_check">
+											<input type="checkbox" id="test_option_07">
+											<label for="test_option_07">Histogram</label>
+										</span>
+									</li>
+									<li>
+										<span class="input_check">
+											<input type="checkbox" id="test_option_08">
+											<label for="test_option_08">Box plot</label>
+										</span>
+									</li>
+									<li>
+										<span class="input_check">
+											<input type="checkbox" id="test_option_09">
+											<label for="test_option_09">Outliers</label>
+										</span>
+									</li>
+									<li>
+										<span class="input_check">
+											<input type="checkbox" id="test_option_10" checked>
+											<label for="test_option_10">Correlation plot</label>
+										</span>
+									</li>
+									<li>
+										<span class="input_check">
+											<input type="checkbox" id="test_option_11">
+											<label for="test_option_11">Recommendation transformation</label>
+										</span>
+									</li>
+									<li>
+										<span class="input_check">
+											<input type="checkbox" id="test_option_12">
+											<label for="test_option_12">Parallel Coordinates Plot</label>
+										</span>
+									</li>
+									<li>
+										<span class="input_check">
+											<input type="checkbox" id="test_option_13">
+											<label for="test_option_13">Radar plot</label>
+										</span>
+									</li>
+								</ul>
+							</div>
+						</div>
+
+						<div class="option_bottom">
+							<button class="btn medium">취소</button>
+							<button class="btn medium point">완료</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<!-- modal 위치: 활성화시 클래스 is_active 추가 -->
+
+	<!-- [D] 마크업 확인용 js, 개발시 제거하세요. -->
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+	<script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="./js/ui-common.js"></script>
+	<script type="text/javascript">
+		/* $('.option_set .btn:second-child').on('click', function () {
+			$('.option_panel').addClass('is_active');
+		}); */
+		$('.visualize .card_item .chart').on('click', function () {
+			$('.layer_dimmed').addClass('is_active');
+		});
+		$(window).resize(function () {
+			console.log('resized')
+		});
+		$('.stockPoint').on("scroll", function (e) {
+			console.log('scrolling on point')
+			$('.stocksScroller').trigger('scroll', e);
+		})
+	</script>
+</body>
+
+</html>
