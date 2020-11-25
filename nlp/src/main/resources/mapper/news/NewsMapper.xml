@@ -90,7 +90,7 @@
 		  	</when>
 		  
 		  </choose>
-		 limit 500
+		 
 		 limit 1000
 		<!--  WHERE 1 = 1 -->
 		<!-- <if test='pSmplTtl != null and !pSmplTtl.equals("")'>
