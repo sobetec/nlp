@@ -9,6 +9,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sobetec.nlp.sample.model.ChartQuery;
@@ -65,11 +66,11 @@ public class NewsController {
 
 		return chartQueryService.getChartQuery(cmpyNameOnly);
 	}
-	
-	@PostMapping(path ="/getNewsListByCondition") 
+
+	@PostMapping(path = "/getNewsListByCondition")
 	public List<News> getNewsListByCondition(NewsCondition newsCondition) throws Exception {
 		System.out.println(newsCondition);
-	return service.getNewsList(newsCondition);
+		return newsService.getNewsList(newsCondition);
 	}
-	
+
 }
