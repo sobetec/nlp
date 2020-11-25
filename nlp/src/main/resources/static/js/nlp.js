@@ -1059,6 +1059,7 @@ function drawWordcloud(words, divID) {
         var divWidth = graphDiv.clientWidth;
     }
 
+    console.log(wordSlice)
     document.getElementById(divID).innerHTML = "";
     var layout = d3.layout.cloud()
         .size([divWidth - 2 * xPadding, divHeight - 2 * yPadding])
@@ -1247,8 +1248,9 @@ function getChartQuery() {
 }
 
 function makeWordcloud(data) {
-    console.log(words)
+    console.log(data)
     var words = data.sort(function (a, b) { return b.frequency - a.frequency });
+    console.log(words)
     var sizeMax = 20;
     var maxValue = Math.max.apply(Math, words.map(function (o) { return o.frequency }));
     var paddingSlide = document.getElementById('paddingSlider')

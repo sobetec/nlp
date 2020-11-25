@@ -1,4 +1,4 @@
-package com.sobetec.nlp.sample.service;
+package com.sobetec.nlp.chart;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,17 +12,17 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.sobetec.nlp.sample.controller.NewsController;
-import com.sobetec.nlp.sample.model.ChartQuery;
-import com.sobetec.nlp.sample.model.News;
-import com.sobetec.nlp.sample.model.NewsKeyword;
-import com.sobetec.nlp.sample.model.SentimentDate;
-import com.sobetec.nlp.sample.repository.NewsRepositoryImpl;
+import com.sobetec.nlp.chart.ChartNewsController;
+import com.sobetec.nlp.chart.ChartQuery;
+import com.sobetec.nlp.chart.News;
+import com.sobetec.nlp.chart.NewsKeyword;
+import com.sobetec.nlp.chart.SentimentDate;
+import com.sobetec.nlp.chart.NewsRepositoryImpl;
 
 @Service
 public class ChartQueryService {
 
-	protected Log logger = LogFactory.getLog(NewsController.class);
+	protected Log logger = LogFactory.getLog(ChartNewsController.class);
 
 	@Autowired
 	private NewsRepositoryImpl repository;

@@ -1,4 +1,4 @@
-package com.sobetec.nlp.sample.model;
+package com.sobetec.nlp.chart;
 
 public class News {
 	
