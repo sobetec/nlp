@@ -1,0 +1,151 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.newsMapper">
+
+	<select id="selectNewsList" parameterType="com.sobetec.nlp.sample.model.News" resultType="com.sobetec.nlp.sample.model.News">
+		SELECT "composite_key"		AS "cmpyKey"
+			 , "import_date"		AS "imptDate"
+			 , "news_date"		AS "newsDate"
+			 , "year"		AS "year"
+			 , "month"		AS "mont"
+			 , "day"		AS "day"
+			 , "quarter"		AS "qutr"
+			 , "industry_code"		AS "instCode"
+			 , "subsidiary_code"		AS "susiCode"
+			 , "company_code"		AS "cmpyCode"
+			 , "company_name"		AS "cmpyName"
+			 , "company_name_only"		AS "cmpyNameOnly"
+			 , "ta_score"		AS "taScre"
+			 , "news_title"		AS "newsTtl"
+			 , "raw_data"		AS "rawData"
+			 , "ext_data"		AS "extData"
+			 , "ext_morphs"		AS "extMorp"
+		  FROM NLP."nlp_news"
+		 
+		 limit 120
+		<!--  WHERE 1 = 1 -->
+		<!-- <if test='pSmplTtl != null and !pSmplTtl.equals("")'>
+		   AND "SMPL_TTL" LIKE '%' || #{pSmplTtl} || '%' 
+		</if>
+		<if test='pSmplCont != null and !pSmplCont.equals("")'>
+		   AND "SMPL_CONT" LIKE '%' || #{pSmplCont} || '%' 
+		</if> -->
+	</select>
+	
+	<select id="selectNewsListByCompany" parameterType="String" resultType="com.sobetec.nlp.sample.model.News">
+		SELECT "composite_key"		AS "cmpyKey"
+			 , "import_date"		AS "imptDate"
+			 , "news_date"		AS "newsDate"
+			 , "year"		AS "year"
+			 , "month"		AS "mont"
+			 , "day"		AS "day"
+			 , "quarter"		AS "qutr"
+			 , "industry_code"		AS "instCode"
+			 , "subsidiary_code"		AS "susiCode"
+			 , "company_code"		AS "cmpyCode"
+			 , "company_name"		AS "cmpyName"
+			 , "company_name_only"		AS "cmpyNameOnly"
+			 , round(cast(ta_score as numeric),4)		AS "taScre"
+			 , "news_title"		AS "newsTtl"
+			 , "raw_data"		AS "rawData"
+			 , "ext_data"		AS "extData"
+			 , "ext_morphs"		AS "extMorp"
+		  FROM NLP."nlp_news"
+		 where company_name_only like concat('%',#{cmpyNameOnly},'%') or raw_data like concat('%',#{cmpyNameOnly},'%') or news_title like concat('%',#{cmpyNameOnly},'%') 
+		 limit 500
+		<!--  WHERE 1 = 1 -->
+		<!-- <if test='pSmplTtl != null and !pSmplTtl.equals("")'>
+		   AND "SMPL_TTL" LIKE '%' || #{pSmplTtl} || '%' 
+		</if>
+		<if test='pSmplCont != null and !pSmplCont.equals("")'>
+		   AND "SMPL_CONT" LIKE '%' || #{pSmplCont} || '%' 
+		</if> -->
+	</select>
+	
+	
+	<select id="selectNewsListByCondition" parameterType="com.sobetec.nlp.sample.model.NewsCondition" resultType="com.sobetec.nlp.sample.model.News">
+		SELECT "composite_key"		AS "cmpyKey" 
+		 	 , "news_date"		AS "newsDate"
+			 , "company_name"		AS "cmpyName"
+			 , round(cast(ta_score as numeric),4)		AS "taScre"
+			 , "news_title"		AS "newsTtl"
+			 , "raw_data"		AS "rawData"
+		  FROM NLP."nlp_news"
+		 where (company_name_only like concat('%',#{searchWord},'%') or raw_data like concat('%',#{searchWord},'%') or news_title like concat('%',#{searchWord},'%'))
+		  <choose>
+		  	<when test="gubun == 'year'">
+		  		and year = #{newsYear}
+		  	</when>
+		  	<when test="gubun == 'month'">
+		  		and year = #{newsYear}
+		  		and month = #{gubunItem}
+		  	</when>
+		  	<when test="gubun == 'quarter'">
+		  		and year = #{newsYear}
+		  		and quarter = #{gubunItem}
+		  	</when>
+		  	<when test="gubun == 'custom'">
+		  		and news_date between  to_date(#{startDate}, 'yyyy-mm-dd') and to_date(#{endDate}, 'yyyy-mm-dd')
+		  	</when>
+		  
+		  </choose>
+		 
+		 limit 10000
+		<!--  WHERE 1 = 1 -->
+		<!-- <if test='pSmplTtl != null and !pSmplTtl.equals("")'>
+		   AND "SMPL_TTL" LIKE '%' || #{pSmplTtl} || '%' 
+		</if>
+		<if test='pSmplCont != null and !pSmplCont.equals("")'>
+		   AND "SMPL_CONT" LIKE '%' || #{pSmplCont} || '%' 
+		</if> -->
+	</select>
+	
+	<select id="selectNewsListByCompanyCompact" parameterType="String" resultType="com.sobetec.nlp.sample.model.News">
+		SELECT "composite_key"		AS "cmpyKey"
+			 
+			 , "news_date"		AS "newsDate"
+			 , "company_name"		AS "cmpyName"
+			 
+			 , round(cast(ta_score as numeric),4)		AS "taScre"
+			 , "news_title"		AS "newsTtl"
+			 , "raw_data"		AS "rawData"
+			 
+		  FROM NLP."nlp_news"
+		 where company_name_only like concat('%',#{cmpyNameOnly},'%') or raw_data like concat('%',#{cmpyNameOnly},'%') or news_title like concat('%',#{cmpyNameOnly},'%') 
+		 limit 10000
+		<!--  WHERE 1 = 1 -->
+		<!-- <if test='pSmplTtl != null and !pSmplTtl.equals("")'>
+		   AND "SMPL_TTL" LIKE '%' || #{pSmplTtl} || '%' 
+		</if>
+		<if test='pSmplCont != null and !pSmplCont.equals("")'>
+		   AND "SMPL_CONT" LIKE '%' || #{pSmplCont} || '%' 
+		</if> -->
+	</select>
+	
+	<select id="selectChartNewsByCompany" parameterType="String" resultType="com.sobetec.nlp.sample.model.News">
+		SELECT "composite_key"		AS "cmpyKey"
+			 
+			 , "news_date"		AS "newsDate"
+			 , "company_name"		AS "cmpyName"
+			 
+			 , round(cast(ta_score as numeric),4)		AS "taScre"
+			 , "news_title"		AS "newsTtl"
+			 , "raw_data"		AS "rawData"
+			 , "ext_morphs"		AS "extMorp"
+			 
+		  FROM NLP."nlp_news_test"
+		 where company_name_only like concat('%',#{cmpyNameOnly},'%') or raw_data like concat('%',#{cmpyNameOnly},'%') or news_title like concat('%',#{cmpyNameOnly},'%') 
+		 limit 1000
+		<!--  WHERE 1 = 1 -->
+		<!-- <if test='pSmplTtl != null and !pSmplTtl.equals("")'>
+		   AND "SMPL_TTL" LIKE '%' || #{pSmplTtl} || '%' 
+		</if>
+		<if test='pSmplCont != null and !pSmplCont.equals("")'>
+		   AND "SMPL_CONT" LIKE '%' || #{pSmplCont} || '%' 
+		</if> --> 
+	</select>
+	
+	
+</mapper>
