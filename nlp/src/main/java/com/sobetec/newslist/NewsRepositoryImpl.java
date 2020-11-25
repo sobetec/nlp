@@ -1,13 +1,10 @@
-package com.sobetec.nlp.sample.repository;
+package com.sobetec.newslist;
 
 import java.util.List;
 
-import com.sobetec.nlp.sample.model.News;
-import com.sobetec.nlp.sample.model.NewsCondition;
-
 public interface NewsRepositoryImpl {
 
-	List<News> getNewsList(News req) throws Exception;
+//	List<News> getNewsList(News req) throws Exception;
 
 	List<News> getNewsListByCompany(String cmpyNameOnly) throws Exception;
 	

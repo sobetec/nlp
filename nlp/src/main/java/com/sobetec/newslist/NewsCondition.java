@@ -1,4 +1,4 @@
-package com.sobetec.nlp.sample.model;
+package com.sobetec.newslist;
 
 public class NewsCondition {
 	

@@ -1,4 +1,4 @@
-package com.sobetec.nlp.sample.service;
+package com.sobetec.newslist;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,11 +7,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.sobetec.nlp.sample.controller.NewsController;
-import com.sobetec.nlp.sample.model.News;
-import com.sobetec.nlp.sample.model.NewsCondition;
-import com.sobetec.nlp.sample.repository.NewsRepositoryImpl;
 
 
 
