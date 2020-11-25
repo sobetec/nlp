@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sobetec.nlp.sample.model.News;
+import com.sobetec.nlp.sample.model.NewsCondition;
 import com.sobetec.nlp.sample.repository.NewsRepositoryImpl;
 import com.sobetec.nlp.sample.service.NewsService;
 
@@ -59,4 +60,11 @@ public class NewsController {
 		 
 	return service.getNewsList(cmpyNameOnly);
 	}
+	
+	@PostMapping(path ="/getNewsListByCondition") 
+	public List<News> getNewsListByCondition(NewsCondition newsCondition) throws Exception {
+		System.out.println(newsCondition);
+	return service.getNewsList(newsCondition);
+	}
+	
 }
