@@ -13,9 +13,114 @@
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script type="text/javascript" charset="utf8" src="datatables/datatables.js"></script>
 <script>
-	$(document).ready( function () {
-		$('#example').DataTable();
-	} );
+
+$(document).ready( function () {
+	$('#example').DataTable();
+} ); 
+
+
+function getNewsList() {
+	
+
+	
+	var search_company = document.getElementById('search_company').value; 
+	console.log(search_company);
+	$.ajax({
+		url: "/getNewsListByCompany/"+search_company,
+		method: 'GET',
+        dataType: 'json',
+        success: function (responseData) {
+			alert('조회 성공');
+			console.log(responseData.length);
+			/* window.newsResponseData = responseData; */
+			/* console.log(window.newsResponseData[0]); */
+
+			var htmlStart =
+			`
+			<table id="example" class="display" style="width:100%">
+						<colgroup>
+							<col>
+						</colgroup>
+						<thead>
+						<tr>
+							<th>인덱스</th>
+							<th>컴포짓키</th>
+							<th>날짜</th>
+							<th>기업명</th>
+							<th>제목</th>
+							<th >progress</th>
+							<th >스코어</th>
+						</tr>
+						</thead>
+						<tbody id="result_area">
+			`;
+			
+			
+			
+			//var blueb = `<td style='color:red;'>` + responseData[i].taScre + `</td>`;
+			//var ggreen = `<td style='color:red;'>` + responseData[i].taScre + `</td>`;
+
+			for(var i = 0; i < responseData.length; i++){
+				var indexNum = i+1;
+				var sscore = responseData[i].taScreWord;
+				var rred = ''
+
+				
+				if (sscore == '중립') {
+					rred = `<td style='color:green;'>` + responseData[i].taScreWord + `</td>`;	
+				}else if (sscore == '부정') {
+					rred = `<td style='color:blue;'>` + responseData[i].taScreWord + `</td>`;	
+				}else if (sscore == '긍정') {
+					rred = `<td style='color:red;'>` + responseData[i].taScreWord + `</td>`;	
+				}else if (sscore == '없음') {
+					rred = `<td style='color:black'>` + responseData[i].taScreWord + `</td>`;	
+				}
+				
+				var htmlContents =
+				`
+					<tr>
+						<td>`+ indexNum +`</td>
+						<td>` + responseData[i].cmpyKey + `</td>
+						<td>` + responseData[i].newsDate + `</td>
+						<td>` + responseData[i].cmpyName + `</td>
+						<td><a href="javascript:viewNewsContents(` + i +`);">` + responseData[i].newsTtl + `</a></td>
+						<td> <div style="border:0.5px solid grey;height:10px;width:100%;background-color:#f0f0f0;border-radius:5px">
+						<div style="height:100%;width:50%;float:right;transform:translateY(1px)">
+				  		<div style="height:8px;width:`+responseData[i].taScre +`%;border-top-right-radius:5px;border-bottom-right-radius:5px;background-color:red;vertical-align:middle"></div>
+					</div>
+				</div></td>
+						`+ rred +`
+					</tr>
+				`;
+				htmlStart = htmlStart + htmlContents;
+			}
+
+			var htmlEnd = 
+			`
+				</tbody>
+			</table>
+			`;
+			
+			document.getElementById('result_area').innerHTML = htmlStart+htmlEnd;
+			
+			$('#example').DataTable();
+
+			
+
+		},
+		error: function () {
+			alert('조회 실패');
+		}
+	});
+	
+			
+	 
+}
+
+
+
+
+
 </script>
 
 
@@ -32,483 +137,123 @@
 
 </head>
 <body>
-	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.min.css">
+	<div class="search_box">
+							<input id="search_company" type="text" placeholder="검색" value="" onkeypress="if( event.keyCode == 13 ){getNewsList();}">
+							<button  class="btn_search" onclick="getNewsList();"><span class="blind" >검색</span></button>
+						</div>
 
 			<div style="width:70%">
-				<table id="example" class="display" style="width:100%">
-        <thead>
-            <tr>
-                <th>seq</th>
-                <th>key</th>
-                <th>date</th>
-                <th>name</th>
-                <th>title</th>
-                <th>score</th>
-            </tr>
-        </thead>
-        <tbody>
-			<tr>
-				<td>1</td>
-				<td>2017-01-25_380557_rCyuwf</td>
-				<td>2017-01-25</td>
-				<td>(주)하나금융지주</td>
-				<td><a href="javascript:viewNewsContents(0);">"하나금융, 4Q 실적 기대 부합…적극 투자 권유"-동부</a></td>
-				<td style="color:green;">중립</td>
-			</tr>
-		
-			<tr>
-				<td>2</td>
-				<td>2017-02-02_021987_KRmtDI</td>
-				<td>2017-02-02</td>
-				<td>(주)하나투어</td>
-				<td><a href="javascript:viewNewsContents(1);">"하나투어, 1분기 본업 성장 기대…목표가↑"-HMC</a></td>
-				<td style="color:blue;">부정</td>
-			</tr>
-		
-			<tr>
-				<td>3</td>
-				<td>2017-02-02_021987_ZjOTvE</td>
-				<td>2017-02-02</td>
-				<td>(주)하나투어</td>
-				<td><a href="javascript:viewNewsContents(2);">"하나투어, 핵심 사업 수익성 개선될 것"-한국</a></td>
-				<td style="color:green;">중립</td>
-			</tr>
-		
-			<tr>
-				<td>4</td>
-				<td>2017-02-07_196275_ZJFwzo</td>
-				<td>2017-02-07</td>
-				<td>LG전자(주)</td>
-				<td><a href="javascript:viewNewsContents(3);">"한 손에 쏙"… LG전자, 전략 스마트폰 ‘LG G6’ 초청장 발송</a></td>
-				<td style="color:green;">중립</td>
-			</tr>
-		
-			<tr>
-				<td>5</td>
-				<td>2017-01-25_400211_akGoyK</td>
-				<td>2017-01-25</td>
-				<td>한국전력공사</td>
-				<td><a href="javascript:viewNewsContents(4);">"한국전력, 대부분 악재가 반영된 주가" - HMC</a></td>
-				<td style="color:green;">중립</td>
-			</tr>
-		
-			<tr>
-				<td>6</td>
-				<td>2017-02-03_3300_sKWRwr</td>
-				<td>2017-02-03</td>
-				<td>null</td>
-				<td><a href="javascript:viewNewsContents(5);">오늘의 증시 일정 (2월 3일)</a></td>
-				<td style="color:green;">중립</td>
-			</tr>
-		
-			<tr>
-				<td>7</td>
-				<td>2017-02-06_I66472_sDBPSP</td>
-				<td>2017-02-06</td>
-				<td>한국타이어앤테크놀로지(주)</td>
-				<td><a href="javascript:viewNewsContents(6);">"한국타이어, 4분기 실적 부진…투자의견·목표가↓"-하나</a></td>
-				<td style="color:green;">중립</td>
-			</tr>
-		
-			<tr>
-				<td>8</td>
-				<td>2017-02-03_125856_qqHClU</td>
-				<td>2017-02-03</td>
-				<td>한국항공우주산업(주)</td>
-				<td><a href="javascript:viewNewsContents(7);">"한국항공우주, 4분기 실적 예상 하회…목표가↓"-동부</a></td>
-				<td style="color:blue;">부정</td>
-			</tr>
-		
-			<tr>
-				<td>9</td>
-				<td>2017-02-03_125856_EEUSEZ</td>
-				<td>2017-02-03</td>
-				<td>한국항공우주산업(주)</td>
-				<td><a href="javascript:viewNewsContents(8);">"한국항공우주, 4분기 실적 예상치 크게 밑돌아"-KB</a></td>
-				<td style="color:blue;">부정</td>
-			</tr>
-		
-			<tr>
-				<td>10</td>
-				<td>2017-01-24_125856_AdfEYb</td>
-				<td>2017-01-24</td>
-				<td>한국항공우주산업(주)</td>
-				<td><a href="javascript:viewNewsContents(9);">"한국항공우주, 기체부품 수주 회복 기대"-유진</a></td>
-				<td style="color:blue;">부정</td>
-			</tr>
-		
-			<tr>
-				<td>11</td>
-				<td>2017-02-02_125856_dpYANS</td>
-				<td>2017-02-02</td>
-				<td>한국항공우주산업(주)</td>
-				<td><a href="javascript:viewNewsContents(10);">"한국항공우주, 트럼프發 자주국방론 부각…수혜 기대"-토러스</a></td>
-				<td style="color:blue;">부정</td>
-			</tr>
-		
-			<tr>
-				<td>12</td>
-				<td>2017-02-01_380121_zFOzoH</td>
-				<td>2017-02-01</td>
-				<td>(주)한샘</td>
-				<td><a href="javascript:viewNewsContents(11);">"한샘, 대리점 증설 효과로 성장세 지속"-KTB</a></td>
-				<td style="color:red;">긍정</td>
-			</tr>
-		
-			<tr>
-				<td>13</td>
-				<td>2017-01-24_380121_IEccoR</td>
-				<td>2017-01-24</td>
-				<td>(주)한샘</td>
-				<td><a href="javascript:viewNewsContents(12);">"한샘, 올해 사상최대 실적 전망…목표가↑"-NH</a></td>
-				<td style="color:red;">긍정</td>
-			</tr>
-		
-			<tr>
-				<td>14</td>
-				<td>2017-02-03_492466_MaVUxq</td>
-				<td>2017-02-03</td>
-				<td>(주)한진중공업</td>
-				<td><a href="javascript:viewNewsContents(13);">"한진중공업, 4분기 실적 예상 큰 폭 하회…목표가↓"-이베스트</a></td>
-				<td style="color:blue;">부정</td>
-			</tr>
-		
-			<tr>
-				<td>15</td>
-				<td>2017-01-25_350893_VbdzSx</td>
-				<td>2017-01-25</td>
-				<td>(주)한화</td>
-				<td><a href="javascript:viewNewsContents(14);">"한화, 자회사 실적 양호…저평가 요인 해소 중"-유안타</a></td>
-				<td style="color:green;">중립</td>
-			</tr>
-		
-			<tr>
-				<td>16</td>
-				<td>2017-02-07_380784_vrsZNJ</td>
-				<td>2017-02-07</td>
-				<td>한화에어로스페이스(주)</td>
-				<td><a href="javascript:viewNewsContents(15);">"한화테크윈, 올해 수익성 둔화 전망…목표가↓"-하이</a></td>
-				<td style="color:blue;">부정</td>
-			</tr>
-		
-			<tr>
-				<td>17</td>
-				<td>2017-01-31_500577_hAdVEi</td>
-				<td>2017-01-31</td>
-				<td>현대건설(주)</td>
-				<td><a href="javascript:viewNewsContents(16);">"현대건설, 안정적 실적…강한 모멘텀은 없어"-NH</a></td>
-				<td style="color:red;">긍정</td>
-			</tr>
-		
-			<tr>
-				<td>18</td>
-				<td>2017-02-02_500577_ZiGhII</td>
-				<td>2017-02-02</td>
-				<td>현대건설(주)</td>
-				<td><a href="javascript:viewNewsContents(17);">"현대건설, 올해 큰 폭의 실적 개선 기대…목표가↑"-하나</a></td>
-				<td style="color:red;">긍정</td>
-			</tr>
-		
-			<tr>
-				<td>19</td>
-				<td>2017-01-31_163890_ihVRVh</td>
-				<td>2017-01-31</td>
-				<td>현대글로비스(주)</td>
-				<td><a href="javascript:viewNewsContents(18);">"현대글로비스, 4분기 실적 예상 큰 폭 하회…목표가↓"-NH</a></td>
-				<td style="color:blue;">부정</td>
-			</tr>
-		
-			<tr>
-				<td>20</td>
-				<td>2017-01-26_119613_EZhImj</td>
-				<td>2017-01-26</td>
-				<td>현대로템(주)</td>
-				<td><a href="javascript:viewNewsContents(19);">"현대로템, 4분기 깜짝 실적…올해 추가 개선 기대"-신한</a></td>
-				<td style="color:red;">긍정</td>
-			</tr>
-		
-			<tr>
-				<td>21</td>
-				<td>2017-01-26_380954_nkYOfF</td>
-				<td>2017-01-26</td>
-				<td>현대자동차(주)</td>
-				<td><a href="javascript:viewNewsContents(20);">"현대차, 최악의 여건 속 희망에 베팅"-하이</a></td>
-				<td style="color:blue;">부정</td>
-			</tr>
-		
-			<tr>
-				<td>22</td>
-				<td>2017-01-31_380130_cMFCFv</td>
-				<td>2017-01-31</td>
-				<td>현대모비스(주)</td>
-				<td><a href="javascript:viewNewsContents(21);">"현대모비스, 시장 기대치 밑돈 4분기 실적…목표가↓"-이베스트</a></td>
-				<td style="color:blue;">부정</td>
-			</tr>
-		
-			<tr>
-				<td>23</td>
-				<td>2017-01-31_380962_JNcNSe</td>
-				<td>2017-01-31</td>
-				<td>현대위아(주)</td>
-				<td><a href="javascript:viewNewsContents(22);">"현대위아, 4분기 실적 부진…올 하반기 개선 기대"-하나</a></td>
-				<td style="color:blue;">부정</td>
-			</tr>
-		
-			<tr>
-				<td>24</td>
-				<td>2017-01-26_370142_zfJiBR</td>
-				<td>2017-01-26</td>
-				<td>현대제철(주)</td>
-				<td><a href="javascript:viewNewsContents(23);">"현대제철, 4분기 호실적…밸류에이션 매력"-HMC</a></td>
-				<td style="color:red;">긍정</td>
-			</tr>
-		
-			<tr>
-				<td>25</td>
-				<td>2017-01-26_380954_lTYxZZ</td>
-				<td>2017-01-26</td>
-				<td>현대자동차(주)</td>
-				<td><a href="javascript:viewNewsContents(24);">"현대차, 4분기 실적 부진에 조정 불가피…목표가↓"-한국</a></td>
-				<td style="color:blue;">부정</td>
-			</tr>
-		
-			<tr>
-				<td>26</td>
-				<td>2017-01-26_380954_KaExqQ</td>
-				<td>2017-01-26</td>
-				<td>현대자동차(주)</td>
-				<td><a href="javascript:viewNewsContents(25);">"현대차, 올 상반기까지 신중히 접근해야" - 메리츠</a></td>
-				<td style="color:blue;">부정</td>
-			</tr>
-		
-			<tr>
-				<td>27</td>
-				<td>2017-01-26_630039_goJUTz</td>
-				<td>2017-01-26</td>
-				<td>(주)호텔신라</td>
-				<td><a href="javascript:viewNewsContents(26);">"호텔신라, 면세점 단기 경쟁 심화…목표가↓"-이베스트</a></td>
-				<td style="color:red;">긍정</td>
-			</tr>
-		
-			<tr>
-				<td>28</td>
-				<td>2017-01-26_630039_dKPMwo</td>
-				<td>2017-01-26</td>
-				<td>(주)호텔신라</td>
-				<td><a href="javascript:viewNewsContents(27);">"호텔신라, 상반기에는 보수적으로…목표가↓"-신한</a></td>
-				<td style="color:blue;">부정</td>
-			</tr>
-		
-			<tr>
-				<td>29</td>
-				<td>2017-01-26_388655_RiJeeS</td>
-				<td>2017-01-26</td>
-				<td>휴젤(주)</td>
-				<td><a href="javascript:viewNewsContents(28);">"휴젤, 경영권 분쟁 소송…주가 하락 불가피"-한국</a></td>
-				<td style="color:blue;">부정</td>
-			</tr>
-		
-			<tr>
-				<td>30</td>
-				<td>2017-01-25_388655_mOIwFJ</td>
-				<td>2017-01-25</td>
-				<td>휴젤(주)</td>
-				<td><a href="javascript:viewNewsContents(29);">"휴젤·메디톡스, 4분기 최대 실적 전망"-한국</a></td>
-				<td style="color:red;">긍정</td>
-			</tr>
-		
-			<tr>
-				<td>31</td>
-				<td>2017-02-01_D42030_FmHEzA</td>
-				<td>2017-02-01</td>
-				<td>국토교통부</td>
-				<td><a href="javascript:viewNewsContents(30);">''친환경 화물차'에 설치비 일부 지원한다'</a></td>
-				<td style="color:red;">긍정</td>
-			</tr>
-		
-			<tr>
-				<td>32</td>
-				<td>2017-02-06_375480_FsoSjL</td>
-				<td>2017-02-06</td>
-				<td>아우디폭스바겐코리아(주)</td>
-				<td><a href="javascript:viewNewsContents(31);">'3개월째 판매제로' 폭스바겐, 티구안 리콜로 재인증 기대감</a></td>
-				<td style="color:green;">중립</td>
-			</tr>
-		
-			<tr>
-				<td>33</td>
-				<td>2017-02-06_490896_UtOUlu</td>
-				<td>2017-02-06</td>
-				<td>SK이노베이션(주)</td>
-				<td><a href="javascript:viewNewsContents(32);">'7% 배당'에 절세까지…SK이노베이션 주주 '대박'</a></td>
-				<td style="color:red;">긍정</td>
-			</tr>
-		
-			<tr>
-				<td>34</td>
-				<td>2017-01-24_812757_oTctBu</td>
-				<td>2017-01-24</td>
-				<td>한화자산운용(주)</td>
-				<td><a href="javascript:viewNewsContents(33);">'ARIRANG 우량단기채권 ETF' 코스피 신규상장</a></td>
-				<td style="color:red;">긍정</td>
-			</tr>
-		
-			<tr>
-				<td>35</td>
-				<td>2017-02-03_368575_yvndbN</td>
-				<td>2017-02-03</td>
-				<td>(주)제주항공</td>
-				<td><a href="javascript:viewNewsContents(34);">'LCC  상장 1호' 제주항공 날개 꺾였나</a></td>
-				<td style="color:green;">중립</td>
-			</tr>
-		
-			<tr>
-				<td>36</td>
-				<td>2017-01-31_125856_wfPqth</td>
-				<td>2017-01-31</td>
-				<td>한국항공우주산업(주)</td>
-				<td><a href="javascript:viewNewsContents(35);">'L·J·P'로 트럼프 잡아라…하성용 KAI 사장, 17조 배수진</a></td>
-				<td style="color:red;">긍정</td>
-			</tr>
-		
-			<tr>
-				<td>37</td>
-				<td>2017-01-31_812668_RmBual</td>
-				<td>2017-01-31</td>
-				<td>신한카드(주)</td>
-				<td><a href="javascript:viewNewsContents(36);">'SRT 신한카드', 온라인 발급땐 포인트</a></td>
-				<td style="color:green;">중립</td>
-			</tr>
-		
-			<tr>
-				<td>38</td>
-				<td>2017-02-06_C47965_PvuFQj</td>
-				<td>2017-02-06</td>
-				<td>산업통상자원부</td>
-				<td><a href="javascript:viewNewsContents(37);">'갤노트7 대책' 스마트폰 배터리, 2년마다 안전심사 받는다</a></td>
-				<td style="color:green;">중립</td>
-			</tr>
-		
-			<tr>
-				<td>39</td>
-				<td>2017-02-01_D42030_xOfuLt</td>
-				<td>2017-02-01</td>
-				<td>국토교통부</td>
-				<td><a href="javascript:viewNewsContents(38);">'건물 방수성능 강화'·'철근 절약공법', 이달의 건설신기술 선정</a></td>
-				<td style="color:green;">중립</td>
-			</tr>
-		
-			<tr>
-				<td>40</td>
-				<td>2017-01-24_245229_DdpXaN</td>
-				<td>2017-01-24</td>
-				<td>(주)골프존뉴딘홀딩스</td>
-				<td><a href="javascript:viewNewsContents(39);">'골프문화상품권' 기프트카드 이마트에서 5% 할인 판매</a></td>
-				<td style="color:green;">중립</td>
-			</tr>
-		
-			<tr>
-				<td>41</td>
-				<td>2017-02-02_831689_FdhuHg</td>
-				<td>2017-02-02</td>
-				<td>에스케이텔링크(주)</td>
-				<td><a href="javascript:viewNewsContents(40);">'국제전화도 1+1' SK텔링크, 00700 Day 이벤트</a></td>
-				<td style="color:red;">긍정</td>
-			</tr>
-		
-			<tr>
-				<td>42</td>
-				<td>2017-02-01_3300_GVYtIE</td>
-				<td>2017-02-01</td>
-				<td>null</td>
-				<td><a href="javascript:viewNewsContents(41);">'기관의 힘' 코스피, 이틀 만에 2080선 회복</a></td>
-				<td style="color:blue;">부정</td>
-			</tr>
-		
-			<tr>
-				<td>43</td>
-				<td>2017-01-25_860301_yXLrkE</td>
-				<td>2017-01-25</td>
-				<td>엔에이치투자증권(주)</td>
-				<td><a href="javascript:viewNewsContents(42);">'노후준비는 연금저축으로' NH투자증권, 행복 리포트 발간</a></td>
-				<td style="color:green;">중립</td>
-			</tr>
-		
-			<tr>
-				<td>44</td>
-				<td>2017-02-01_D45969_bFptlV</td>
-				<td>2017-02-01</td>
-				<td>산림청</td>
-				<td><a href="javascript:viewNewsContents(43);">'돈 되는 일터', '국민의 삶 터'되는 산림 만들자!</a></td>
-				<td style="color:red;">긍정</td>
-			</tr>
-		
-			<tr>
-				<td>45</td>
-				<td>2017-02-02_116722_CuEMYt</td>
-				<td>2017-02-02</td>
-				<td>서울주택도시공사</td>
-				<td><a href="javascript:viewNewsContents(44);">'둘리 고향' 쌍문동에 만화가 공공주택</a></td>
-				<td style="color:red;">긍정</td>
-			</tr>
-		
-			<tr>
-				<td>46</td>
-				<td>2017-01-31_822167_ICJydS</td>
-				<td>2017-01-31</td>
-				<td>중소기업은행</td>
-				<td><a href="javascript:viewNewsContents(45);">'모텔갈 때 할인받자!'…기업은행 모바일 '엉카드'</a></td>
-				<td style="color:green;">중립</td>
-			</tr>
-		
-			<tr>
-				<td>47</td>
-				<td>2017-02-03_802328_LPIHGo</td>
-				<td>2017-02-03</td>
-				<td>(주)지엔코</td>
-				<td><a href="javascript:viewNewsContents(46);">'반기문 테마주' 13개 모조리 하한가…결국 다 털리는 '대선 테마주'</a></td>
-				<td style="color:blue;">부정</td>
-			</tr>
-		
-			<tr>
-				<td>48</td>
-				<td>2017-01-25_810185_ZTRFoZ</td>
-				<td>2017-01-25</td>
-				<td>SK텔레콤(주)</td>
-				<td><a href="javascript:viewNewsContents(47);">'본인인증 이제 스마트워치로'…SKT, 스마트워치용 인증 기술개발</a></td>
-				<td style="color:red;">긍정</td>
-			</tr>
-		
-			<tr>
-				<td>49</td>
-				<td>2017-02-01_F13895_NlnwcB</td>
-				<td>2017-02-01</td>
-				<td>환경부</td>
-				<td><a href="javascript:viewNewsContents(48);">'세계 습지의 날' 기념 정책세미나, 전남 곡성서 개최</a></td>
-				<td style="color:red;">긍정</td>
-			</tr>
-		
-			<tr>
-				<td>50</td>
-				<td>2017-02-06_310832_QrgUXX</td>
-				<td>2017-02-06</td>
-				<td>사조동아원(주)</td>
-				<td><a href="javascript:viewNewsContents(49);">'사조 품 1년' 동아원, 실적 개선에도 '부채비율' 숙제</a></td>
-				<td style="color:green;">중립</td>
-			</tr>
-
-        </tbody>
-        <tfoot>
-			<tr>
-                <th>seq</th>
-                <th>key</th>
-                <th>date</th>
-                <th>name</th>
-                <th>title</th>
-                <th>score</th>
-            </tr>
-        </tfoot>
-    </table>
+				<div id="result_area">
+						<table id="example" class="display" style="width:100%">
+							<colgroup>
+								<col>
+							</colgroup>
+							<thead>
+							<tr>
+								<th>인덱스</th>
+								<th>컴포짓키</th>
+								<th>날짜</th>
+								<th>기업명</th>
+								<th>제목</th>
+								<th>progress</th>
+								<th>스코어</th>
+							</tr>
+							</thead>
+							<tbody >
+								<tr>
+									<td>　</td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+								</tr>
+								<tr>
+									<td> 　</td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+								</tr>
+								<tr>
+									<td> 　</td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+								</tr>
+								<tr>
+									<td> 　</td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+								</tr>
+								<tr>
+									<td>　 </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+								</tr>
+								<tr>
+									<td>　 </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+								</tr>
+								<tr>
+									<td>　 </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+								</tr>
+								<tr>
+									<td>　 </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+								</tr>
+								<tr>
+									<td>　 </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+								</tr>
+								<tr>
+									<td>　 </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+								</tr>
+								
+							</tbody>
+						</table>
+					</div>
 			</div>	
 
 

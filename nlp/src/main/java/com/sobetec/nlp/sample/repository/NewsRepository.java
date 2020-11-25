@@ -52,7 +52,7 @@ public class NewsRepository implements NewsRepositoryImpl  {
 	@Override
 	public List<News> getNewsListByCompany(String cmpyNameOnly) throws Exception {
 //		String likelike = '%'+cmpyNameOnly+'%';
-		return sqlSession.selectList("mapper.newsMapper.selectNewsListByCompany",cmpyNameOnly);
+		return sqlSession.selectList("mapper.newsMapper.selectNewsListByCompanyCompact",cmpyNameOnly);
 	}
 	
 	@Override
