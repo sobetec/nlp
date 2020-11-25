@@ -1,4 +1,4 @@
-package com.sobetec.nlp.sample.repository;
+package com.sobetec.nlp.newslist;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -11,14 +11,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
+
 import com.sobetec.nlp.sample.controller.NewsController;
 import com.sobetec.nlp.sample.model.News;
 import com.sobetec.nlp.sample.model.NewsCondition;
 
+
 @Primary
 @Repository
-public class NewsRepository implements NewsRepositoryImpl {
-
+public class NewsRepository implements NewsRepositoryImpl  {
+	
 	protected Log log = LogFactory.getLog(NewsController.class);
 
 	@Autowired
@@ -27,15 +29,15 @@ public class NewsRepository implements NewsRepositoryImpl {
 	@Override
 	public List<News> getNewsList(News vo) throws Exception {
 		log.debug("########## start Repository getGetNewsList ");
-
+		
 		String mapId = "newsMapper.selectNewsList";
 		List<News> sqlResultList = sqlSession.selectList(mapId, vo);
-
+		
 //		log.debug("size:"+sqlResultList);
-
+		
 		return sqlResultList;
 	}
-
+	
 //	@Override
 //	public List<News> getNewsListByCompany(News vo) throws Exception {
 //		log.debug("########## start Repository getGetNewsList ");
@@ -50,13 +52,7 @@ public class NewsRepository implements NewsRepositoryImpl {
 	@Override
 	public List<News> getNewsListByCompany(String cmpyNameOnly) throws Exception {
 //		String likelike = '%'+cmpyNameOnly+'%';
-		return sqlSession.selectList("mapper.newsMapper.selectNewsListByCompanyCompact", cmpyNameOnly);
-	}
-
-	@Override
-	public List<News> getChartNewsByCompany(String cmpyNameOnly) throws Exception {
-//		String likelike = '%'+cmpyNameOnly+'%';
-		return sqlSession.selectList("mapper.newsMapper.selectChartNewsByCompany", cmpyNameOnly);
+		return sqlSession.selectList("mapper.newsMapper.selectNewsListByCompanyCompact",cmpyNameOnly);
 	}
 	
 	@Override
