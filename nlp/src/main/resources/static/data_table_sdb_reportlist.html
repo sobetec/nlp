@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>NLP -News List</title>
+	<title>NLP -Report List</title>
 	<link rel="stylesheet" href="css/auto-ml.css">
 	<!-- <link rel="stylesheet" type="text/css" href="datatables/datatables.css"> -->
 	<link rel="stylesheet" type="text/css" href="css/jquery.dataTables.min.css">
@@ -336,9 +336,9 @@
 	} ); 
 	
 	function viewNewsContents(i){
-		console.log(window.newsResponseData[i]);
-		console.log(window.newsResponseData[i].indexNum);
-		console.log(window.newsResponseData.length);
+		console.log(window.reportResponseData[i]);
+		console.log(window.reportResponseData[i].indexNum);
+		console.log(window.reportResponseData.length);
 
 		var prev = ``;
 		var next = ``;
@@ -346,7 +346,7 @@
 		var k = -1;
 		var carouselOption = "";
 		
-		if (i !=0  && i != window.newsResponseData.length-1){
+		if (i !=0  && i != window.reportResponseData.length-1){
 			j = i-1;
 			k = i+1;
 			prev = `<a href="javascript:viewNewsContents(` +j+ `);" class="carousel__prev">Go to last slide</a>`;
@@ -359,7 +359,7 @@
 			next = `<a href="javascript:viewNewsContents(` +k+ `);" class="carousel__next">Go to next slide</a>`;
 			carouselOption = "carouselNoPrev";
 		}
-		else if (i == window.newsResponseData.length-1){
+		else if (i == window.reportResponseData.length-1){
 			j = i-1;
 			prev = `<a href="javascript:viewNewsContents(` +j+ `);" class="carousel__prev">Go to last slide</a>`;
 			next = ``;
@@ -380,7 +380,7 @@
 		var modalhtml =
 		`	
 			<div class="modal-title">
-				<p style="text-align: center; vertical-align: middle;"><b><span style="font-size: 15pt; color:white; vertical-align: middle;">` + window.newsResponseData[i].newsTtl + `</span></b></p>
+				<p style="text-align: center; vertical-align: middle;"><b><span style="font-size: 15pt; color:white; vertical-align: middle;">` + window.reportResponseData[i].newsTtl + `</span></b></p>
 			</div>
 
 			<iframe>
@@ -396,11 +396,11 @@
 								<td>
 									
 
-									<p style="text-align: right; line-height: 1.5;"><br />` + window.newsResponseData[i].newsDate + `</p>
+									<p style="text-align: right; line-height: 1.5;"><br />` + window.reportResponseData[i].newsDate + `</p>
 									<p><br/></p>
 
 									<div style="border: 1px solid #888;">
-										<p style="text-align: center; line-height: 1.5;"><br />` + window.newsResponseData[i].rawData + `</p>
+										<p style="text-align: center; line-height: 1.5;"><br />` + window.reportResponseData[i].rawData + `</p>
 									</div>
 
 									<p><br/></p>
@@ -448,7 +448,7 @@
 		var modalhtml1 =
 		`
 		<div class="modal-loading">
-			<p style="text-align: center;"><span style="font-size: 14pt;"><b><span style="font-size: 24pt;">뉴스 목록 불러오는 중...</span></b></span></p>
+			<p style="text-align: center;"><span style="font-size: 14pt;"><b><span style="font-size: 24pt;">행내 보고서 목록 불러오는 중...</span></b></span></p>
 			<button type="button" class="close" onClick="close_pop();"></button>
 			<p style="text-align: center; line-height: 1.5;"><br />데이터 베이스에서 읽어오고 있습니다.</p>
 			<p style="text-align: center; line-height: 1.5;"><br />잠시만 기다려 주십시오.</p>
@@ -468,7 +468,7 @@
 		var modalhtml2 =
 		`
 			<div class="modal-loading">
-				<p style="text-align: center;"><span style="font-size: 14pt;"><b><span style="font-size: 24pt;">뉴스 목록 불러오는 중...</span></b></span></p>
+				<p style="text-align: center;"><span style="font-size: 14pt;"><b><span style="font-size: 24pt;">행내 보고서 목록 불러오는 중...</span></b></span></p>
 				<button type="button" class="close" onClick="close_pop();"></button>
 				<p style="text-align: center; line-height: 1.5;"><br />화면에 표출중입니다.</p>
 				<p style="text-align: center; line-height: 1.5;"><br />잠시만 기다려 주십시오.</p>
@@ -494,42 +494,46 @@
 						<th>인덱스</th>
 						<th>컴포짓키</th>
 						<th>날짜</th>
-						<th>기업명</th>
 						<th>제목</th>
-						<th >스코어</th>
+						<th>스코어</th>
+						<th>고유명사</th>
+						<th>타입</th>
+						<th></th>
 					</tr>
 					</thead>
 					<tbody id="result_area">
 		`;
 
-		for(var i = 0; i < window.newsResponseData.length; i++){
+		for(var i = 0; i < window.reportResponseData.length; i++){
 			var indexNum = i+1;
-			window.newsResponseData[i].indexNum = indexNum;
-			var sscore = window.newsResponseData[i].taScre;
+			window.reportResponseData[i].indexNum = indexNum;
+			var sscore = window.reportResponseData[i].taScre;
 			var rred = ''
 
 			if (sscore == '긍정') {
-				rred = `<td style='color:red;'>` + window.newsResponseData[i].taScre + `</td>`;	
+				rred = `<td style='color:red;'>` + window.reportResponseData[i].taScre + `</td>`;	
 			}
 			if (sscore == '중립') {
-				rred = `<td style='color:green;'>` + window.newsResponseData[i].taScre + `</td>`;	
+				rred = `<td style='color:green;'>` + window.reportResponseData[i].taScre + `</td>`;	
 			}
 			if (sscore == '부정') {
-				rred = `<td style='color:blue;'>` + window.newsResponseData[i].taScre + `</td>`;	
+				rred = `<td style='color:blue;'>` + window.reportResponseData[i].taScre + `</td>`;	
 			}
 			if (sscore == '없음') {
-				rred = `<td style='color:black'>` + window.newsResponseData[i].taScre + `</td>`;	
+				rred = `<td style='color:black'>` + window.reportResponseData[i].taScre + `</td>`;	
 			}
 			
 			var htmlContents =
 			`
 				<tr>
 					<td>` + indexNum + `</td>
-					<td>` + window.newsResponseData[i].cmpyKey + `</td>
-					<td>` + window.newsResponseData[i].newsDate + `</td>
-					<td>` + window.newsResponseData[i].cmpyName + `</td>
-					<td><a href="javascript:viewNewsContents(` + i +`);">` + window.newsResponseData[i].newsTtl + `</a></td>
+					<td>` + window.reportResponseData[i].cmpyKey + `</td>
+					<td>` + window.reportResponseData[i].reportDate + `</td>
+					<td>` + window.reportResponseData[i].orgnFileName + `</td>
 					`+ rred +`
+					<td>` + window.reportResponseData[i].propNoun + `</td>
+					<td>` + window.reportResponseData[i].docCaty + `</td>
+					<td><button type="submit">Download</button></td>
 				</tr>
 			`;
 			htmlStart = htmlStart + htmlContents;
@@ -550,7 +554,7 @@
 	function getNewsList(){
 		var data = new Object();
 
-		data.newsYear = parseInt($("#newsYear").val());
+		data.reportYear = parseInt($("#reportYear").val());
 		data.gubun = $("#gubun").val();
 
 		if($("#gubun").val() == "month"){
@@ -574,22 +578,22 @@
 		loading1();
 		
 		$.ajax({
-			url: "/getNewsListByCondition",
+			url: "/getReportListByCondition",
 			method: 'POST',
 			data: data,
 			dataType: 'json',
 	        success: function (responseData) {
 				//alert('조회 성공');
 				console.log(responseData.length);
-				window.newsResponseData = responseData;
-				console.log(window.newsResponseData[0]);
+				window.reportResponseData = responseData;
+				console.log(window.reportResponseData[0]);
 
 				$('#myModal').hide();
 
 				var modalhtml2 =
 				`
 					<div class="modal-loading">
-						<p style="text-align: center;"><span style="font-size: 14pt;"><b><span style="font-size: 24pt;">뉴스 목록 불러오는 중...</span></b></span></p>
+						<p style="text-align: center;"><span style="font-size: 14pt;"><b><span style="font-size: 24pt;">행내 보고서 목록 불러오는 중...</span></b></span></p>
 						<button type="button" class="close" onClick="close_pop();"></button>
 						<p style="text-align: center; line-height: 1.5;"><br />화면에 표출중입니다.</p>
 						<p style="text-align: center; line-height: 1.5;"><br />잠시만 기다려 주십시오.</p>
@@ -642,26 +646,26 @@
 		if(selectItem == "quarter"){
 		  changeItem = selectListData.quarter.text;
 		  document.getElementById("choices").disabled = false;
-		  document.getElementById("newsYear").disabled = false;
+		  document.getElementById("reportYear").disabled = false;
 		  $('#date_picker_div').hide();
 		}
 		else if(selectItem == "month"){
 		  changeItem = selectListData.month.text;
 		  document.getElementById("choices").disabled = false;
-		  document.getElementById("newsYear").disabled = false;
+		  document.getElementById("reportYear").disabled = false;
 		  $('#date_picker_div').hide();
 		}
 		else if(selectItem == "year"){
 			changeItem = '';
 			document.getElementById("choices").disabled = true;
-			document.getElementById("newsYear").disabled = false;
+			document.getElementById("reportYear").disabled = false;
 			$('#date_picker_div').hide();
 			//$('#condition').hide();
 		}
 		else if(selectItem == "custom"){
 			changeItem = '';
 			document.getElementById("choices").disabled = true;
-			document.getElementById("newsYear").disabled = true;
+			document.getElementById("reportYear").disabled = true;
 			$('#date_picker_div').show();
 		}
 		
@@ -731,7 +735,7 @@
 				
 
 
-				<h3 class="main_title">뉴스 목록 조회</h3>
+				<h3 class="main_title">행내 보고서 목록 조회</h3>
 
 				
 
@@ -742,7 +746,7 @@
 
 						<div class="data_set" style="float:left">
 							<a>연도 선택</a>
-							<select name="newsYear" id="newsYear" class="select">
+							<select name="reportYear" id="reportYear" class="select">
 								<option value="2025">2025</option>
 								<option value="2024">2024</option>
 								<option value="2023">2023</option>
@@ -813,14 +817,16 @@
 								<th>인덱스</th>
 								<th>컴포짓키</th>
 								<th>날짜</th>
-								<th>기업명</th>
 								<th>제목</th>
-								<th>스코어</th>
+								<th >스코어</th>
+								<th >고유명사</th>
+								<th >타입</th>
 							</tr>
 							</thead>
 							<tbody >
 								<tr>
-									<td>　</td>
+									<td> 　</td>
+									<td> </td>
 									<td> </td>
 									<td> </td>
 									<td> </td>
@@ -834,13 +840,6 @@
 									<td> </td>
 									<td> </td>
 									<td> </td>
-								</tr>
-								<tr>
-									<td> 　</td>
-									<td> </td>
-									<td> </td>
-									<td> </td>
-									<td> </td>
 									<td> </td>
 								</tr>
 								<tr>
@@ -850,25 +849,11 @@
 									<td> </td>
 									<td> </td>
 									<td> </td>
-								</tr>
-								<tr>
-									<td>　 </td>
-									<td> </td>
-									<td> </td>
-									<td> </td>
-									<td> </td>
 									<td> </td>
 								</tr>
 								<tr>
-									<td>　 </td>
+									<td> 　</td>
 									<td> </td>
-									<td> </td>
-									<td> </td>
-									<td> </td>
-									<td> </td>
-								</tr>
-								<tr>
-									<td>　 </td>
 									<td> </td>
 									<td> </td>
 									<td> </td>
@@ -882,6 +867,16 @@
 									<td> </td>
 									<td> </td>
 									<td> </td>
+									<td> </td>
+								</tr>
+								<tr>
+									<td>　 </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
 								</tr>
 								<tr>
 									<td>　 </td>
@@ -890,9 +885,29 @@
 									<td> </td>
 									<td> </td>
 									<td> </td>
+									<td> </td>
 								</tr>
 								<tr>
 									<td>　 </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+								</tr>
+								<tr>
+									<td>　 </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+								</tr>
+								<tr>
+									<td>　 </td>
+									<td> </td>
 									<td> </td>
 									<td> </td>
 									<td> </td>
