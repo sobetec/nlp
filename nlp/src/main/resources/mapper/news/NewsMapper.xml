@@ -113,7 +113,8 @@
 			 
 		  FROM NLP."nlp_news"
 		 where company_name_only like concat('%',#{cmpyNameOnly},'%') or raw_data like concat('%',#{cmpyNameOnly},'%') or news_title like concat('%',#{cmpyNameOnly},'%') 
-		 limit 10000
+		 order by news_date desc 
+		 limit 4000 offset 0
 		<!--  WHERE 1 = 1 -->
 		<!-- <if test='pSmplTtl != null and !pSmplTtl.equals("")'>
 		   AND "SMPL_TTL" LIKE '%' || #{pSmplTtl} || '%' 
