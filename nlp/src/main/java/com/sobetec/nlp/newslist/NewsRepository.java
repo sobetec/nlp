@@ -1,4 +1,4 @@
-package com.sobetec.newslist;
+package com.sobetec.nlp.newslist;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

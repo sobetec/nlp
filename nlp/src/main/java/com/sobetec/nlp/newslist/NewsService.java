@@ -1,4 +1,4 @@
-package com.sobetec.newslist;
+package com.sobetec.nlp.newslist;
 
 import java.util.ArrayList;
 import java.util.List;
