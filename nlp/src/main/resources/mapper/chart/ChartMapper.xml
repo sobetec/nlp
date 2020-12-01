@@ -13,9 +13,9 @@
 			 , "raw_data"		AS "rawData"
 			 , "ext_morphs"		AS "extMorp"
 			 
-		  FROM NLP."nlp_news_test"
-		 where company_name_only like concat('%',#{cmpyNameOnly},'%') or raw_data like concat('%',#{cmpyNameOnly},'%') or news_title like concat('%',#{cmpyNameOnly},'%') 
-		 limit 1000
+		  FROM NLP."nlp_news"
+		 where company_name like concat('%',#{cmpyNameOnly},'%') or raw_data like concat('%',#{cmpyNameOnly},'%') or news_title like concat('%',#{cmpyNameOnly},'%') 
+		 order by news_date desc limit 1000
 		<!--  WHERE 1 = 1 -->
 		<!-- <if test='pSmplTtl != null and !pSmplTtl.equals("")'>
 		   AND "SMPL_TTL" LIKE '%' || #{pSmplTtl} || '%' 

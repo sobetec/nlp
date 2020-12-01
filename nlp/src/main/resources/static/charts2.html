@@ -1,0 +1,590 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>SBT AUTOML</title>
+	<style>
+		body {
+			font-family: Helvetica, Arial, sans-serif;
+			margin: 32px;
+		}
+
+		.axis-grid line {
+			stroke: rgb(190, 190, 190);
+			stroke-width: 0.5;
+		}
+
+		#power-gauge g.arc {
+			fill: steelblue;
+		}
+
+		#power-gauge g.pointer {
+			fill: #e85116;
+			stroke: #b64011;
+		}
+
+		#power-gauge g.label text {
+			text-anchor: middle;
+			font-size: 14px;
+			font-weight: bold;
+			fill: #666;
+		}
+	</style>
+	<script type="text/javascript" src="./js/d3.v4.min.js"></script>
+	<script>
+		var selectListData = {
+			quarter: {
+				name: 'quarter',
+				text: ['1분기', '2분기', '3분기', '4분기'],
+				value: ['q1', 'q2', 'q3', 'q4']
+			},
+			month: {
+				name: 'month',
+				text: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+				value: ['m1', 'm2', 'm3', 'm4', 'm5', 'm6', 'm7', 'm8', 'm9', 'm10', 'm11', 'm12']
+			},
+			year: {
+				value: 'no'
+			},
+			custom: {
+				value: 'no'
+			}
+		};
+		function itemChange() {
+
+			var selectItem = $("#gubun").val();
+			console.log(selectItem);
+
+			var changeItem;
+
+			if (selectItem == "quarter") {
+				changeItem = selectListData.quarter.text;
+				document.getElementById("choices").disabled = false;
+				document.getElementById("newsYear").disabled = false;
+				$("#yearSelect").show();
+				$("#condition").show();
+				$('#date_picker_div').hide();
+			}
+			else if (selectItem == "month") {
+				changeItem = selectListData.month.text;
+				document.getElementById("choices").disabled = false;
+				document.getElementById("newsYear").disabled = false;
+				$("#yearSelect").show();
+				$("#condition").show();
+				$('#date_picker_div').hide();
+			}
+			else if (selectItem == "year") {
+				changeItem = '';
+				document.getElementById("choices").disabled = true;
+				document.getElementById("newsYear").disabled = false;
+				$("#yearSelect").show();
+				$("#condition").show();
+				$('#date_picker_div').hide();
+				//$('#condition').hide();
+			}
+			else if (selectItem == "custom") {
+				changeItem = '';
+				document.getElementById("choices").disabled = true;
+				document.getElementById("newsYear").disabled = true;
+				$("#yearSelect").hide();
+				$("#condition").hide();
+				$('#date_picker_div').show();
+			}
+
+
+			$('#choices').empty();
+
+			for (var count = 0; count < changeItem.length; count++) {
+				var option = $("<option>" + changeItem[count] + "</option>");
+				$('#choices').append(option);
+			}
+
+		}
+	</script>
+	<link rel="stylesheet" href="./css/auto-ml.css">
+</head>
+
+<body>
+	<div class="wrap">
+		<header class="header">
+
+			<div class="right_area">
+				<!-- user -->
+				<div class="buttons">
+					<button class="btn_shortcut"><span class="blind">바로가기</span></button>
+					<a href="#" class="btn">로그아웃</a>
+					<a href="#" class="btn">사용자 등록</a>
+				</div>
+			</div>
+		</header>
+		<div class="layer_dimmed">
+			<div class="layer_box" id='entirePopupBox'>
+				<div class="layer_body">
+					<div class="chart_detail">
+						<div>
+							<button type="button" id='resetChart'>Reset</button></div>
+						<div id='wordCloudSettings' class='enlargedChartSettings' style='display:none'>
+							<span>패딩 선택: </span>
+							<span id='paddingValue'></span>
+							<input id="paddingSlider" type="range" min="1" max="4" step="0.25" value="1.5">
+							<span>숫자 선택: </span>
+							<span id='textMaxValue'></span>
+							<input id="textNumberSlider" type="range" min="1" max="50" step="1" value="50">
+							<span>글자 크기: </span>
+							<span id='fontSizeValue'></span>
+							<input id="fontSizeSlider" type="range" min="1" max="500" step="1" value="50">
+						</div>
+						<div id='keywordBarSettings' class='enlargedChartSettings' style='display:none'>
+							<span>숫자 선택: </span>
+							<input id="keywordBarSlider" type="range" min="1" max="50" step="1" value="10">
+							<span id='keywordMaxValueBar'></span>
+						</div>
+						<div id='keywordPieSettings' class='enlargedChartSettings' style='display:none'>
+							<span>숫자 선택: </span>
+							<input id="keywordPieSlider" type="range" min="1" max="30" step="1" value="6">
+							<span id='keywordMaxValuePie'></span>
+							<br>
+							<span>숫자 선택: </span>
+							<input id="keywordPieSlider2" type="range" min="1" max="100000" step="1" value="300">
+							<span id='keywordMaxValuePie2'></span>
+						</div>
+						<a href="#" class="btn point" target="_blank">다운로드</a>
+						<div class="chart_area" id="enlargedChart">
+							<div class="chart">차트 영역</div>
+						</div>
+					</div>
+				</div>
+				<button class="btn_close"><span class="blind">닫기</span></button>
+			</div>
+		</div>
+
+		<div class="container">
+
+			<div class="side_panel">
+				<h2 class="blind">메뉴</h2>
+				<!-- menu -->
+				<nav class="main_menu is_fold">
+					<ul class="menu_list">
+						<li><a href="#" class="link_menu active"><i class="icon_01"></i><span class="menu">데이터
+									관리</span></a></li>
+						<li><a href="#" class="link_menu"><i class="icon_02"></i><span class="menu">데이터 전처리</span></a>
+						</li>
+						<li><a href="#" class="link_menu"><i class="icon_03"></i><span class="menu">데이터 분리</span></a>
+						</li>
+						<li><a href="#" class="link_menu"><i class="icon_04"></i><span class="menu">데이터 분석</span></a>
+						</li>
+						<li><a href="#" class="link_menu"><i class="icon_05"></i><span class="menu">분석 결과</span></a>
+						</li>
+						<li><a href="#" class="link_menu"><i class="icon_06"></i><span class="menu">데이터 진단</span></a>
+						</li>
+						<li><a href="#" class="link_menu"><i class="icon_07"></i><span class="menu">배포</span></a></li>
+					</ul>
+
+					<div class="addition">
+						<div class="row">
+							<label class="label" for="test_data_set">데이터셋</label>
+							<select id="test_data_set" class="select">
+								<option value="">select</option>
+							</select>
+						</div>
+						<div class="row">
+							<input type="file" class="blind" id="file_upload">
+							<label for="file_upload" class="btn medium point file_upload">파일 업로드</label>
+						</div>
+					</div>
+
+					<button class="btn_close"><span class="blind">메인메뉴 닫기</span></button>
+				</nav>
+			</div>
+
+			<div class="main_panel" role="main">
+				<div class="contents_panel">
+					<h3 class="main_title">시각화</h3>
+
+					<div class="contents">
+						<div class="option_set">
+							<div class="data_set" style="float:left" id='yearSelect'>
+								<a>연도 선택</a>
+								<select name="newsYear" id="newsYear" class="select">
+									<option value="2025">2025</option>
+									<option value="2024">2024</option>
+									<option value="2023">2023</option>
+									<option value="2022">2022</option>
+									<option value="2021">2021</option>
+									<option value="2020" selected="selected">2020</option>
+									<option value="2019">2019</option>
+									<option value="2018">2018</option>
+									<option value="2017">2017</option>
+									<option value="2016">2016</option>
+									<option value="2015">2015</option>
+								</select>
+							</div>
+
+							<div class="data_set" style="float:left">
+								<a>구분</a>
+								<select name="gubun" id="gubun" class="select" onChange="itemChange()">
+									<option value="year" selected="selected">연도별</option>
+									<option value="quarter">분기별</option>
+									<option value="month">월별</option>
+									<option value="custom">사용자 선택</option>
+								</select>
+							</div>
+
+							<div id="condition" class="data_set">
+								<a id="gubunText"></a>
+								<select name="choices" id="choices" class="select">
+								</select>
+							</div>
+
+							<div id="date_picker_div" style="display: none">
+								<span class="date_picker">
+									<label for="date_from" class="label">기간</label>
+									<span class="input_date"><input type="text" class="input_text"
+											id="date_from"></span>
+									<span class="dash">-</span>
+									<span class="input_date"><input type="text" class="input_text" id="date_to"></span>
+								</span>
+							</div>
+							<div class="search_box">
+								<input id="search_company" type="text" placeholder="검색" value=""
+									onkeypress="if( event.keyCode == 13 ){getChartQuery1();}">
+								<button class="btn_search" onclick="getChartQuery1();"><span
+										class="blind">검색</span></button>
+							</div>
+
+							<div class="buttons">
+								<a id="newsList" class="btn" href="javascript:getChartQuery1();">조회</a>
+							</div>
+							<button class="btn line">편집</button>
+							<a href="#" class="btn point" target="_blank">다운로드</a>
+						</div>
+
+						<div class="visualize">
+
+							<div class="card_list">
+								<!-- [D] 클릭한 카드에 클래스 active 추가해주세요 -->
+
+								<!-- DANGER GAUGE Extended Version -->
+								<div class="card_item_small">
+									<div class="card_box">
+										<div class="card_head">
+											T/A 결과
+										</div>
+										<div class="chart_area" style="padding-top: 70%">
+											<div class="chart" id="dangerGauge">
+
+												<script type="text/javascript" src='./js/nlp.js'></script>
+
+												<script>
+													var gauge = document.getElementById('dangerGauge');
+
+													var gaugeDirection = 0;
+
+
+
+												</script>
+
+											</div>
+
+										</div>
+
+
+
+									</div>
+								</div>
+
+
+
+
+
+
+								<!-- 스플릿 콩나물 그래프 -->
+								<div class="card_item_large">
+									<div class="card_box">
+										<div class="card_head">
+											시계열분석
+										</div>
+										<div class="chart_area" style="padding-top: 30%">
+											<div class="chart" id='sentimentTimeTwoLines'>
+												<script>
+													var divID = 'sentimentTimeTwoLines';
+
+
+												</script>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="card_item_small">
+									<div class="card_box">
+										<div class="card_head">
+											키워드
+										</div>
+										<div class="chart_area" style="padding-top: 70%">
+											<div class="chart" id="keywordPie">
+
+												<script>
+													var divID = 'keywordPie'
+
+													var textSlide = document.getElementById('keywordPieSlider')
+													document.getElementById('keywordMaxValuePie').innerHTML = textSlide.value;
+													textSlide.onchange = function () {
+														document.getElementById('keywordMaxValuePie').innerHTML = document.getElementById('keywordPieSlider').value;
+														makePieChart(window.newsResponseData.keywords, 'enlargedChart',
+															document.getElementById('keywordPieSlider').value, document.getElementById('keywordPieSlider2').value)
+													}
+													var textSlide = document.getElementById('keywordPieSlider2')
+													document.getElementById('keywordMaxValuePie2').innerHTML = textSlide.value;
+													textSlide.onchange = function () {
+														document.getElementById('keywordMaxValuePie2').innerHTML = document.getElementById('keywordPieSlider2').value;
+														makePieChart(window.newsResponseData.keywords, 'enlargedChart', document.getElementById('keywordPieSlider').value,
+															document.getElementById('keywordPieSlider2').value)
+													}
+
+
+
+
+
+
+
+												</script>
+
+											</div>
+										</div>
+
+
+
+									</div>
+								</div>
+
+								<!-- news article count -->
+								<div class="card_item_large">
+									<div class="card_box">
+										<div class="card_head">
+											<p>기사수</p>
+											<style>
+												#data {
+													overflow: hidden;
+													padding: 0;
+												}
+
+												select {
+													padding: 0;
+													padding-left: 1px;
+													border: none;
+													background-color: #eee;
+												}
+
+												option {
+													display: inline-block;
+													border: 1px solid #000;
+													background-color: white;
+													padding-left: 5px;
+													padding-right: 5px;
+													margin-left: -1px;
+													display: inline-block;
+												}
+											</style>
+											<div>
+												<select multiple size="1" id='articleCountRange'>
+													<option value='1'>1년</option>
+													<option value='3'>3년</option>
+													<option value='5'>5년</option>
+													<option value='all' selected>전체</option>
+												</select>
+											</div>
+										</div>
+										<div class="chart_area" style="padding-top: 30%">
+											<div class="chart" id='articleCounts'>
+												<script>
+													var divID = 'articleCounts';
+
+
+												</script>
+											</div>
+										</div>
+									</div>
+								</div>
+
+
+								<!-- 주가 플롯 -->
+								<div class="card_item_large">
+									<div class="card_box">
+										<div class="card_head">주가
+										</div>
+										<div class="chart_area" style="padding-top: 70%">
+											<div class="chart" id="stockTime">
+												<script>
+													var filepath = './data/news_counts.csv'
+													d3.csv(filepath, function (data) {
+
+														var divID = 'stockTime';
+														stockGraph = document.getElementById(divID)
+														stockGraph.addEventListener('click', function () {
+															document.getElementById('resetChart').addEventListener('click', function () {
+																console.log('clicked');
+																makeStockGraph(data, 'enlargedChart');
+															})
+															makeStockGraph(data, 'enlargedChart');
+														})
+														makeStockGraph(data, divID)
+													})
+												</script>
+
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- [D] 옵션 활성화시 클래스 is_active 추가해주세요 -->
+				<div class="option_panel">
+					<div class="option_inner">
+						<div class="option_head">
+							<h3 class="option_title">옵션 설정</h3>
+							<button class="btn_close"><span class="blind">닫기</span></button>
+						</div>
+
+						<div class="option_body">
+							<div class="option_part">
+								<h4 class="option_label">Types</h4>
+								<ul class="option_list">
+									<li>
+										<span class="input_check">
+											<input type="checkbox" id="test_option_01" checked>
+											<label for="test_option_01">Bi-Variate Analysis</label>
+										</span>
+									</li>
+									<li>
+										<span class="input_check">
+											<input type="checkbox" id="test_option_02">
+											<label for="test_option_02">Multi-Variate Analysis</label>
+										</span>
+									</li>
+								</ul>
+
+								<h4 class="option_label">Colors</h4>
+								<ul class="option_list">
+									<li>
+										<span class="input_check">
+											<input type="checkbox" id="test_option_03" checked>
+											<label for="test_option_03">Blues</label>
+										</span>
+									</li>
+									<li>
+										<span class="input_check">
+											<input type="checkbox" id="test_option_04">
+											<label for="test_option_04">Reds</label>
+										</span>
+									</li>
+									<li>
+										<span class="input_check">
+											<input type="checkbox" id="test_option_05">
+											<label for="test_option_05">Greens</label>
+										</span>
+									</li>
+								</ul>
+
+								<h4 class="option_label">Plots</h4>
+								<ul class="option_list">
+									<li>
+										<span class="input_check">
+											<input type="checkbox" id="test_option_06">
+											<label for="test_option_06">Scatter plot</label>
+										</span>
+									</li>
+									<li>
+										<span class="input_check">
+											<input type="checkbox" id="test_option_07">
+											<label for="test_option_07">Histogram</label>
+										</span>
+									</li>
+									<li>
+										<span class="input_check">
+											<input type="checkbox" id="test_option_08">
+											<label for="test_option_08">Box plot</label>
+										</span>
+									</li>
+									<li>
+										<span class="input_check">
+											<input type="checkbox" id="test_option_09">
+											<label for="test_option_09">Outliers</label>
+										</span>
+									</li>
+									<li>
+										<span class="input_check">
+											<input type="checkbox" id="test_option_10" checked>
+											<label for="test_option_10">Correlation plot</label>
+										</span>
+									</li>
+									<li>
+										<span class="input_check">
+											<input type="checkbox" id="test_option_11">
+											<label for="test_option_11">Recommendation transformation</label>
+										</span>
+									</li>
+									<li>
+										<span class="input_check">
+											<input type="checkbox" id="test_option_12">
+											<label for="test_option_12">Parallel Coordinates Plot</label>
+										</span>
+									</li>
+									<li>
+										<span class="input_check">
+											<input type="checkbox" id="test_option_13">
+											<label for="test_option_13">Radar plot</label>
+										</span>
+									</li>
+								</ul>
+							</div>
+						</div>
+
+						<div class="option_bottom">
+							<button class="btn medium">취소</button>
+							<button class="btn medium point">완료</button>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<!-- modal 위치: 활성화시 클래스 is_active 추가 -->
+
+	<!-- [D] 마크업 확인용 js, 개발시 제거하세요. -->
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+	<script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="./js/ui-common.js"></script>
+	<script type="text/javascript">
+		/* $('.option_set .btn:second-child').on('click', function () {
+			$('.option_panel').addClass('is_active');
+		}); */
+		$('.visualize .card_item_small .chart').on('click', function () {
+			$('.layer_dimmed').addClass('is_active');
+		});
+		$('.visualize .card_item_large .chart').on('click', function () {
+			$('.layer_dimmed').addClass('is_active');
+		});
+		$(window).resize(function () {
+			console.log('resized')
+		});
+		$('.stockPoint').on("scroll", function (e) {
+			console.log('scrolling on point')
+			$('.stocksScroller').trigger('scroll', e);
+		})
+		$("#keywordBarSlider").on("input", function () {
+			document.getElementById('keywordMaxValueBar').innerHTML = document.getElementById('keywordBarSlider').value;
+			makeKeywordBarPlot(window.newsResponseData.keywords, 'enlargedChart', document.getElementById('keywordBarSlider').value)
+		})
+	</script>
+</body>
+
+</html>
