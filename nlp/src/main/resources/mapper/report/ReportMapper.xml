@@ -30,12 +30,12 @@
 	
 	<select id="selectReportListByCondition" parameterType="com.sobetec.nlp.reportlist.ReportCondition" resultType="com.sobetec.nlp.reportlist.Report">
 		
-		SELECT "composite_key"		AS "cmpyKey" 
-		 	 , "report_date"		AS "reportDate"
+		SELECT "report_date"		AS "reportDate"
 			 , "org_name"		AS "orgnFileName"
-			 , round(cast(ta_score as numeric),4)		AS "taScre"
-			 , "ext_morphs"		AS "extMorp"
-			 , "proper_noun"		AS "propNoun"
+			 , "org_file_path"		AS "orgnFilePath"
+			 , round(cast(avg(ta_score) as numeric),4)		AS "taScre"
+			 , string_agg(ext_morphs, ',')		AS "extMorp"
+			 , string_agg(proper_noun, ',')		AS "propNoun"
 			 , "doc_category"		AS "docCaty"
 		FROM NLP."nlp_report"
 		where (ext_data like concat('%',#{searchWord},'%') or org_name like concat('%',#{searchWord},'%'))
@@ -55,6 +55,7 @@
 			  		and report_date between  to_date(#{startDate}, 'yyyy-mm-dd') and to_date(#{endDate}, 'yyyy-mm-dd')
 			  	</when>
 			</choose>
+		group by report_date, org_name, org_file_path, doc_category
 		order by report_date desc
 		limit 2000 offset 1
 

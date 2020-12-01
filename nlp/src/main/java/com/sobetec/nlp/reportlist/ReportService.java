@@ -1,20 +1,16 @@
 package com.sobetec.nlp.reportlist;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.sobetec.nlp.reportlist.ReportController;
-import com.sobetec.nlp.reportlist.Report;
-import com.sobetec.nlp.reportlist.ReportCondition;
-import com.sobetec.nlp.reportlist.ReportRepositoryImpl;
-
-
-
 
 @Service
 public class ReportService {
@@ -42,19 +38,37 @@ public class ReportService {
         		Double tempScore = Double.parseDouble(listReport.get(i).getTaScre());
         		
         		if (tempScore > 60) {
-        			listReport.get(i).setTaScre("긍정");
+        			listReport.get(i).setTaScreWord("긍정");
         		}
         		else if (tempScore < 40) {
-        			listReport.get(i).setTaScre("부정");
+        			listReport.get(i).setTaScreWord("부정");
         		}
         		else {	
-        			listReport.get(i).setTaScre("중립");
+        			listReport.get(i).setTaScreWord("중립");
         		}
     		} else {
     		
-    			listReport.get(i).setTaScre("없음");
+    			listReport.get(i).setTaScreWord("없음");
     		}
-    	}
+    		
+    		String[] tempArray = listReport.get(i).getPropNoun().split(",");
+    		List asList = Arrays.asList(tempArray);
+        	Set<String> mySet = new HashSet<String>(asList);
+
+        	String tempNoun = "";
+        	int j = 1;
+        	for(String s: mySet){
+        		//System.out.println(s + " " + Collections.frequency(asList,s));
+        		if(j == 1) {
+        			tempNoun = tempNoun + s;
+        			}
+        		else {
+        			tempNoun = tempNoun + "," + s;
+        		}
+        		j++;
+        	}
+        	listReport.get(i).setPropNoun(tempNoun);
+        }    	
     	
         return listReport; 
     }

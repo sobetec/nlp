@@ -1,7 +1,7 @@
 package com.sobetec.nlp.reportlist;
 
 public class Report {
-	
+
 	private String cmpyKey;
 	private String imptDate;
 	private String reportDate;
@@ -14,12 +14,14 @@ public class Report {
 	private String saveFileName;
 	private String saveFilePath;
 	private String pageNum;
+	private String taScreWord;
 	private String taScre;
 	private String rawData;
 	private String extData;
 	private String extMorp;
 	private String propNoun;
 	private String docCaty;
+	
 	public String getCmpyKey() {
 		return cmpyKey;
 	}
@@ -92,6 +94,12 @@ public class Report {
 	public void setPageNum(String pageNum) {
 		this.pageNum = pageNum;
 	}
+	public String getTaScreWord() {
+		return taScreWord;
+	}
+	public void setTaScreWord(String taScreWord) {
+		this.taScreWord = taScreWord;
+	}
 	public String getTaScre() {
 		return taScre;
 	}
@@ -128,21 +136,17 @@ public class Report {
 	public void setDocCaty(String docCaty) {
 		this.docCaty = docCaty;
 	}
+	
 	@Override
 	public String toString() {
 		return "Report [cmpyKey=" + cmpyKey + ", imptDate=" + imptDate + ", reportDate=" + reportDate + ", year=" + year
 				+ ", mont=" + mont + ", day=" + day + ", qutr=" + qutr + ", orgnFileName=" + orgnFileName
 				+ ", orgnFilePath=" + orgnFilePath + ", saveFileName=" + saveFileName + ", saveFilePath=" + saveFilePath
-				+ ", pageNum=" + pageNum + ", taScre=" + taScre + ", rawData=" + rawData + ", extData=" + extData
-				+ ", extMorp=" + extMorp + ", propNoun=" + propNoun + ", docCaty=" + docCaty + "]";
+				+ ", pageNum=" + pageNum + ", taScreWord=" + taScreWord + ", taScre=" + taScre + ", rawData=" + rawData
+				+ ", extData=" + extData + ", extMorp=" + extMorp + ", propNoun=" + propNoun + ", docCaty=" + docCaty
+				+ "]";
 	}
-	
-	
-	
-	
-	
-	
-	
 
+	
 	
 }
