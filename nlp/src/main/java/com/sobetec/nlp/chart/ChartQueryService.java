@@ -51,7 +51,11 @@ public class ChartQueryService {
 					frequencies.put(morph, 1);
 				}
 			}
-			float currTaScore = Float.parseFloat(currNews.getTaScre());
+			float currTaScore = 50;
+			try {
+				currTaScore = Float.parseFloat(currNews.getTaScre());
+			} catch (Exception e) {
+			}
 			totalScore = totalScore + currTaScore;
 			if (allDates.containsKey(currNews.getNewsDate())) {
 				allDates.put(currNews.getNewsDate(),
@@ -79,7 +83,11 @@ public class ChartQueryService {
 //			}
 //			logger.debug("done iterating over docs");
 			NewsKeyword tempKeyword = new NewsKeyword(morph, (float) frequencies.get(morph) / corpusSize, 0);
-			newsKeywords.add(tempKeyword);
+			if (tempKeyword.getFrequency() > 5 / corpusSize) {
+				newsKeywords.add(tempKeyword);
+			} else {
+
+			}
 		}
 		Collections.sort(newsKeywords, (o1, o2) -> Float.compare(o2.getFrequency(), o1.getFrequency()));
 		logger.debug("morpheme iteration done");

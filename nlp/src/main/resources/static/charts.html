@@ -32,8 +32,19 @@
 			font-weight: bold;
 			fill: #666;
 		}
+
+		.card_list {
+			display: -webkit-box;
+			display: -webkit-flex;
+			display: flex;
+			-webkit-flex-wrap: wrap;
+			flex-wrap: wrap;
+			flex-direction: row !important;
+			margin: -24px -24px 0 0;
+		}
 	</style>
 	<script type="text/javascript" src="./js/d3.v4.min.js"></script>
+	<link rel="stylesheet" href="./css/auto-ml.css">
 	<script>
 		var selectListData = {
 			quarter: {
@@ -104,7 +115,6 @@
 
 		}
 	</script>
-	<link rel="stylesheet" href="./css/auto-ml.css">
 </head>
 
 <body>
@@ -140,10 +150,10 @@
 							<input id="paddingSlider" type="range" min="1" max="4" step="0.25" value="1.5">
 							<span>숫자 선택: </span>
 							<span id='textMaxValue'></span>
-							<input id="textNumberSlider" type="range" min="1" max="50" step="1" value="50">
+							<input id="textNumberSlider" type="range" min="1" max="2000" step="1" value="400">
 							<span>글자 크기: </span>
 							<span id='fontSizeValue'></span>
-							<input id="fontSizeSlider" type="range" min="1" max="500" step="1" value="50">
+							<input id="fontSizeSlider" type="range" min="1" max="150" step="1" value="70">
 						</div>
 						<div id='keywordBarSettings' class='enlargedChartSettings' style='display:none'>
 							<span>숫자 선택: </span>
@@ -160,7 +170,7 @@
 							<span id='keywordMaxValuePie2'></span>
 						</div>
 						<a href="#" class="btn point" target="_blank">다운로드</a>
-						<div class="chart_area" style="padding-top: 70%" id="enlargedChart">
+						<div class="chart_area" id="enlargedChart">
 							<div class="chart">차트 영역</div>
 						</div>
 
@@ -260,13 +270,13 @@
 							</div>
 							<div class="search_box">
 								<input id="search_company" type="text" placeholder="검색" value=""
-									onkeypress="if( event.keyCode == 13 ){getChartQuery2();}">
-								<button class="btn_search" onclick="getChartQuery2();"><span
+									onkeypress="if( event.keyCode == 13 ){getChartQuery1();}">
+								<button class="btn_search" onclick="getChartQuery1();"><span
 										class="blind">검색</span></button>
 							</div>
 
 							<div class="buttons">
-								<a id="newsList" class="btn" href="javascript:getChartQuery2();">조회</a>
+								<a id="newsList" class="btn" href="javascript:getChartQuery1();">조회</a>
 							</div>
 							<button class="btn line">편집</button>
 							<a href="#" class="btn point" target="_blank">다운로드</a>
@@ -310,7 +320,7 @@
 								<div class="card_item">
 									<div class="card_box">
 										<div class="card_head">
-											키워드
+											키워드 파이차트
 										</div>
 										<div class="card_content">
 											<div class="chart_area" style="padding-top: 70%">
@@ -355,11 +365,7 @@
 								<div class="card_item">
 									<div class="card_box">
 										<div class="card_head">
-											<span class="input_check">
-												<input type="checkbox" id="test_edit_03">
-												<label for="test_edit_03" class="label"></label>
-											</span>
-											<span class="title">타이틀 1</span>
+											<span class="title">콩나물 시계열 감성지수</span>
 										</div>
 										<div class="card_content">
 											<div class="chart_area" style="padding-top: 70%">
@@ -379,11 +385,7 @@
 								<div class="card_item">
 									<div class="card_box">
 										<div class="card_head">
-											<span class="input_check">
-												<input type="checkbox" id="test_edit_03">
-												<label for="test_edit_03" class="label"></label>
-											</span>
-											<span class="title">타이틀 1</span>
+											<span class="title">기사 수</span>
 										</div>
 										<div class="card_content">
 											<div class="chart_area" style="padding-top: 70%">
@@ -399,15 +401,11 @@
 									</div>
 								</div>
 
-								<!-- 키워드 빠 플롯 -->
+								<!-- 키워드 빠 차트 -->
 								<div class="card_item">
 									<div class="card_box">
 										<div class="card_head">
-											<span class="input_check">
-												<input type="checkbox" id="test_edit_02">
-												<label for="test_edit_02" class="label"></label>
-											</span>
-											<span class="title">타이틀 1</span>
+											<span class="title">키워드 빠 차트</span>
 										</div>
 										<div class="card_content">
 											<div class="chart_area" style="padding-top: 70%">
@@ -434,17 +432,13 @@
 								<div class="card_item">
 									<div class="card_box">
 										<div class="card_head">
-											<span class="input_check">
-												<input type="checkbox" id="test_edit_02">
-												<label for="test_edit_02" class="label"></label>
-											</span>
-											<span class="title">타이틀 1</span>
+											<span class="title">시계열 주가 차트</span>
 										</div>
 										<div class="card_content">
 											<div class="chart_area" style="padding-top: 70%">
 												<div class="chart" id="stockTime">
 													<script>
-														var filepath = './data/news_counts.csv'
+														/* var filepath = './data/news_counts.csv'
 														d3.csv(filepath, function (data) {
 
 															var divID = 'stockTime';
@@ -457,7 +451,7 @@
 																makeStockGraph(data, 'enlargedChart');
 															})
 															makeStockGraph(data, divID)
-														})
+														}) */
 													</script>
 
 												</div>
@@ -467,87 +461,44 @@
 								</div>
 
 
-								<!-- 워드 클라우드 -->
+								<!-- 워드 클라우드 가로만 -->
 								<div class="card_item">
 									<div class="card_box">
 										<div class="card_head">
-											<span class="input_check">
-												<input type="checkbox" id="test_edit_02">
-												<label for="test_edit_02" class="label"></label>
-											</span>
-											<span class="title">타이틀 1</span>
+											<span class="title">워드 클라우드</span>
 
 										</div>
 										<div class="card_content">
-											<div class="chart_area" style="padding-top: 70%" style="background-color:#f4fbff">
+											<div class="chart_area" style="padding-top: 70%"
+												style="background-color:#f4fbff">
 												<div class="chart" id="wordCloud" style="cursor:default">
 													<script type="text/javascript"
 														src="./js/d3.layout.cloud.js"></script>
 													<script>
 														var divID = 'wordCloud'
-														/* var graphDiv = document.getElementById(divID);
-														document.getElementById('paddingValue').innerHTML = document.getElementById('paddingSlider').value;
-														document.getElementById('textMaxValue').innerHTML = document.getElementById('textNumberSlider').value;
-														var xPadding = 20;
-														var yPadding = 20;
-														var headRadius = 3;
-														var divHeight = graphDiv.clientHeight;
-														var divWidth = graphDiv.clientWidth; */
-
-
-
-
-
-
-
 													</script>
-
 												</div>
 											</div>
 										</div>
 									</div>
 								</div>
 
-								<!-- Keyword Pie chart -->
+								<!-- 워드 클라우드 가로 세로 -->
 								<div class="card_item">
 									<div class="card_box">
 										<div class="card_head">
-											<span class="input_check">
-												<input type="checkbox" id="test_edit_01" checked>
-												<label for="test_edit_01" class="label"></label>
-											</span>
-											<span class="title">타이틀 1</span>
+											<span class="title">워드 클라우드</span>
+
 										</div>
 										<div class="card_content">
-											<div class="chart_area" style="padding-top: 70%">
-												<div class="chart" id="keywordPie">
-
+											<div class="chart_area" style="padding-top: 70%"
+												style="background-color:#f4fbff">
+												<div class="chart" id="wordCloud2" style="cursor:default">
+													<script type="text/javascript"
+														src="./js/d3.layout.cloud.js"></script>
 													<script>
-														var divID = 'keywordPie'
-
-														var textSlide = document.getElementById('keywordPieSlider')
-														document.getElementById('keywordMaxValuePie').innerHTML = textSlide.value;
-														textSlide.onchange = function () {
-															document.getElementById('keywordMaxValuePie').innerHTML = document.getElementById('keywordPieSlider').value;
-															makePieChart(window.newsResponseData.keywords, 'enlargedChart',
-																document.getElementById('keywordPieSlider').value, document.getElementById('keywordPieSlider2').value)
-														}
-														var textSlide = document.getElementById('keywordPieSlider2')
-														document.getElementById('keywordMaxValuePie2').innerHTML = textSlide.value;
-														textSlide.onchange = function () {
-															document.getElementById('keywordMaxValuePie2').innerHTML = document.getElementById('keywordPieSlider2').value;
-															makePieChart(window.newsResponseData.keywords, 'enlargedChart', document.getElementById('keywordPieSlider').value,
-																document.getElementById('keywordPieSlider2').value)
-														}
-
-
-
-
-
-
-
+														var divID = 'wordCloud2'
 													</script>
-
 												</div>
 											</div>
 										</div>
@@ -558,11 +509,8 @@
 								<div class="card_item">
 									<div class="card_box">
 										<div class="card_head">
-											<span class="input_check">
-												<input type="checkbox" id="test_edit_01" checked>
-												<label for="test_edit_01" class="label"></label>
-											</span>
-											<span class="title">타이틀 1</span>
+											
+											<span class="title">관련 문서</span>
 										</div>
 										<div class="card_content">
 											<div class="chart_area" style="padding-top: 70%">

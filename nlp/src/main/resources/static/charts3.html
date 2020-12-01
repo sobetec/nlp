@@ -32,8 +32,19 @@
 			font-weight: bold;
 			fill: #666;
 		}
+
+		.card_list {
+			display: -webkit-box;
+			display: -webkit-flex;
+			display: flex;
+			-webkit-flex-wrap: wrap;
+			flex-wrap: wrap;
+			flex-direction: row !important;
+			margin: -24px -24px 0 0;
+		}
 	</style>
 	<script type="text/javascript" src="./js/d3.v4.min.js"></script>
+	<link rel="stylesheet" href="./css/auto-ml.css">
 	<script>
 		var selectListData = {
 			quarter: {
@@ -104,7 +115,6 @@
 
 		}
 	</script>
-	<link rel="stylesheet" href="./css/auto-ml.css">
 </head>
 
 <body>
@@ -124,6 +134,14 @@
 			<div class="layer_box" id='entirePopupBox'>
 				<div class="layer_body">
 					<div class="chart_detail">
+						<div style='display:none'>
+							<select multiple size="1" id='articleCountRange'>
+								<option value='1'>1년</option>
+								<option value='3'>3년</option>
+								<option value='5'>5년</option>
+								<option value='all' selected>전체</option>
+							</select>
+						</div>
 						<div>
 							<button type="button" id='resetChart'>Reset</button></div>
 						<div id='wordCloudSettings' class='enlargedChartSettings' style='display:none'>
@@ -155,6 +173,7 @@
 						<div class="chart_area" id="enlargedChart">
 							<div class="chart">차트 영역</div>
 						</div>
+
 					</div>
 				</div>
 				<button class="btn_close"><span class="blind">닫기</span></button>
@@ -205,6 +224,7 @@
 					<h3 class="main_title">시각화</h3>
 
 					<div class="contents">
+						<div style="display:none" id="hideAll">&nbsp;</div>
 						<div class="option_set">
 							<div class="data_set" style="float:left" id='yearSelect'>
 								<a>연도 선택</a>
@@ -250,13 +270,13 @@
 							</div>
 							<div class="search_box">
 								<input id="search_company" type="text" placeholder="검색" value=""
-									onkeypress="if( event.keyCode == 13 ){getChartQuery2();}">
-								<button class="btn_search" onclick="getChartQuery2();"><span
+									onkeypress="if( event.keyCode == 13 ){getChartQuery1();}">
+								<button class="btn_search" onclick="getChartQuery1();"><span
 										class="blind">검색</span></button>
 							</div>
 
 							<div class="buttons">
-								<a id="newsList" class="btn" href="javascript:getChartQuery2();">조회</a>
+								<a id="newsList" class="btn" href="javascript:getChartQuery1();">조회</a>
 							</div>
 							<button class="btn line">편집</button>
 							<a href="#" class="btn point" target="_blank">다운로드</a>
@@ -267,99 +287,37 @@
 							<div class="card_list">
 								<!-- [D] 클릭한 카드에 클래스 active 추가해주세요 -->
 
-								<!-- DANGER GAUGE Extended Version -->
-								<div class="card_item_small">
+
+								<!-- 워드 클라우드 -->
+								<div class="card_item">
 									<div class="card_box">
 										<div class="card_head">
-											T/A 결과
-										</div>
-										<div class="chart_area" style="padding-top: 70%">
-											<div class="chart" id="dangerGauge">
+											<span class="title">워드 클라우드</span>
 
-												<script type="text/javascript" src='./js/nlp.js'></script>
-
-												<script>
-													var gauge = document.getElementById('dangerGauge');
-
-													var gaugeDirection = 0;
-
-
-
-												</script>
-
-											</div>
-
-										</div>
-
-
-
-									</div>
-								</div>
-								<!-- Keyword Pie -->
-								<!-- <div class="card_item_small">
-									<div class="card_box">
-										<div class="card_head">
-											키워드
-										</div>
-										<div class="chart_area" style="padding-top: 140%">
-											<div class="chart" id="keywordPie">
-
-												<script>
-													var divID = 'keywordPie'
-
-													var textSlide = document.getElementById('keywordPieSlider')
-													document.getElementById('keywordMaxValuePie').innerHTML = textSlide.value;
-													textSlide.onchange = function () {
-														document.getElementById('keywordMaxValuePie').innerHTML = document.getElementById('keywordPieSlider').value;
-														makePieChart(window.newsResponseData.keywords, 'enlargedChart',
-															document.getElementById('keywordPieSlider').value, document.getElementById('keywordPieSlider2').value)
-													}
-													var textSlide = document.getElementById('keywordPieSlider2')
-													document.getElementById('keywordMaxValuePie2').innerHTML = textSlide.value;
-													textSlide.onchange = function () {
-														document.getElementById('keywordMaxValuePie2').innerHTML = document.getElementById('keywordPieSlider2').value;
-														makePieChart(window.newsResponseData.keywords, 'enlargedChart', document.getElementById('keywordPieSlider').value,
-															document.getElementById('keywordPieSlider2').value)
-													}
-
-
-
-
-
-
-
-												</script>
-
-											</div>
-										</div>
-
-
-
-									</div>
-								</div> -->
-
-								<!-- 키워드 빠 플롯 -->
-								<div class="card_item_small">
-									<div class="card_box">
-										<div class="card_head">
-											<span class="input_check">
-												<input type="checkbox" id="test_edit_02">
-												<label for="test_edit_02" class="label"></label>
-											</span>
-											<span class="title">타이틀 1</span>
 										</div>
 										<div class="card_content">
-											<div class="chart_area" style="padding-top: 100%">
-												<div class="chart" id="keywordBar">
+											<div class="chart_area" style="padding-top: 70%"
+												style="background-color:#f4fbff">
+												<div class="chart" id="wordCloud" style="cursor:default">
+													<script type="text/javascript"
+														src="./js/d3.layout.cloud.js"></script>
+													<script type="text/javascript" src='./js/nlp.js'></script>
 													<script>
-														var divID = 'keywordBar'
+														var divID = 'wordCloud'
+														/* var graphDiv = document.getElementById(divID);
+														document.getElementById('paddingValue').innerHTML = document.getElementById('paddingSlider').value;
+														document.getElementById('textMaxValue').innerHTML = document.getElementById('textNumberSlider').value;
+														var xPadding = 20;
+														var yPadding = 20;
+														var headRadius = 3;
+														var divHeight = graphDiv.clientHeight;
+														var divWidth = graphDiv.clientWidth; */
 
-														var textSlide = document.getElementById('keywordBarSlider')
-														document.getElementById('keywordMaxValueBar').innerHTML = textSlide.value;
-														textSlide.onchange = function () {
-															document.getElementById('keywordMaxValueBar').innerHTML = document.getElementById('keywordBarSlider').value;
-															makeKeywordBarPlot(window.newsResponseData.keywords, 'enlargedChart', document.getElementById('keywordBarSlider').value)
-														}
+
+
+
+
+
 
 													</script>
 
@@ -369,105 +327,6 @@
 									</div>
 								</div>
 
-								<!-- news article count -->
-								<div class="card_item_large">
-									<div class="card_box">
-										<div class="card_head">
-											<p>기사수</p>
-											<style>
-												#data {
-													overflow: hidden;
-													padding: 0;
-												}
-
-												select {
-													padding: 0;
-													padding-left: 1px;
-													border: none;
-													background-color: #eee;
-												}
-
-												option {
-													display: inline-block;
-													border: 1px solid #000;
-													background-color: white;
-													padding-left: 5px;
-													padding-right: 5px;
-													margin-left: -1px;
-													display: inline-block;
-												}
-											</style>
-											<div>
-												<select multiple size="1" id='articleCountRange'>
-													<option value='1'>1년</option>
-													<option value='3'>3년</option>
-													<option value='5'>5년</option>
-													<option value='all' selected>전체</option>
-												</select>
-											</div>
-										</div>
-										<div class="chart_area" style="padding-top: 25%">
-											<div class="chart" id='articleCounts'>
-												<script>
-													var divID = 'articleCounts';
-
-
-												</script>
-											</div>
-										</div>
-									</div>
-								</div>
-
-
-
-
-								<!-- 스플릿 콩나물 그래프 -->
-								<!-- <div class="card_item_large">
-									<div class="card_box">
-										<div class="card_head">
-											시계열분석
-										</div>
-										<div class="chart_area" style="padding-top: 30%">
-											<div class="chart" id='sentimentTimeTwoLines'>
-												<script>
-													var divID = 'sentimentTimeTwoLines';
-
-
-												</script>
-											</div>
-										</div>
-									</div>
-								</div> -->
-
-
-								<!-- 주가 플롯 -->
-								<div class="card_item_large">
-									<div class="card_box">
-										<div class="card_head">주가
-										</div>
-										<div class="chart_area" style="padding-top: 25%">
-											<div class="chart" id="stockTime">
-												<script>
-													/* var filepath = './data/news_counts.csv'
-													d3.csv(filepath, function (data) {
-
-														var divID = 'stockTime';
-														stockGraph = document.getElementById(divID)
-														stockGraph.addEventListener('click', function () {
-															document.getElementById('resetChart').addEventListener('click', function () {
-																console.log('clicked');
-																makeStockGraph(data, 'enlargedChart');
-															})
-															makeStockGraph(data, 'enlargedChart');
-														})
-														makeStockGraph(data, divID)
-													}) */
-												</script>
-
-											</div>
-										</div>
-									</div>
-								</div>
 							</div>
 						</div>
 					</div>
@@ -602,6 +461,9 @@
 		$('.visualize .card_item_large .chart').on('click', function () {
 			$('.layer_dimmed').addClass('is_active');
 		});
+		$('.visualize .card_item .chart').on('click', function () {
+			$('.layer_dimmed').addClass('is_active');
+		});
 		$(window).resize(function () {
 			console.log('resized')
 		});
@@ -613,8 +475,8 @@
 			document.getElementById('keywordMaxValueBar').innerHTML = document.getElementById('keywordBarSlider').value;
 			makeKeywordBarPlot(window.newsResponseData.keywords, 'enlargedChart', document.getElementById('keywordBarSlider').value)
 		})
-		$(".card_list").css('max-height', $(".contents_panel:first").height())
-		console.log($(".contents_panel:first").height());
+		
+		getChartQuery3()
 	</script>
 </body>
 
