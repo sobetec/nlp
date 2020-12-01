@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 
 @Primary
 @Repository
-public class NewsRepository implements NewsRepositoryImpl {
+public class ChartNewsRepository implements ChartNewsRepositoryImpl {
 
 	protected Log log = LogFactory.getLog(ChartNewsController.class);
 

@@ -21,7 +21,7 @@ public class ChartNewsController {
 	protected Log logger = LogFactory.getLog(ChartNewsController.class);
 
 	@Autowired
-	private ChartRepositoryImpl repository;
+	private ChartNewsRepositoryImpl repository;
 	@Resource(name = "chartQueryService")
 	private ChartQueryService chartQueryService;
 

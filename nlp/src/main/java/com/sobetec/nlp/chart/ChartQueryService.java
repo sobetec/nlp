@@ -12,20 +12,13 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.sobetec.nlp.chart.ChartNewsController;
-import com.sobetec.nlp.chart.ChartQuery;
-import com.sobetec.nlp.chart.News;
-import com.sobetec.nlp.chart.NewsKeyword;
-import com.sobetec.nlp.chart.SentimentDate;
-import com.sobetec.nlp.chart.NewsRepositoryImpl;
-
 @Service
 public class ChartQueryService {
 
 	protected Log logger = LogFactory.getLog(ChartNewsController.class);
 
 	@Autowired
-	private NewsRepositoryImpl repository;
+	private ChartNewsRepositoryImpl repository;
 
 	/**
 	 * 
