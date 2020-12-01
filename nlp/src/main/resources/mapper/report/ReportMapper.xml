@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.reportMapper">
+
+	<select id="selectReportList" parameterType="com.sobetec.nlp.reportlist.Report" resultType="com.sobetec.nlp.reportlist.Report">
+		SELECT "composite_key"		AS "cmpyKey"
+			 , "import_date"		AS "imptDate"
+			 , "report_date"		AS "reportDate"
+			 , "report_date_year"		AS "year"
+			 , "report_date_month"		AS "mont"
+			 , "report_date_day"		AS "day"
+			 , "report_date_quarter"		AS "qutr"
+			 , "org_name"		AS "orgnFileName"
+			 , "org_file_path"		AS "orgnFilePath"
+			 , "stg_file_name"		AS "saveFileName"
+			 , "file_path"		AS "saveFilePath"
+			 , "page_num"		AS "pageNum"
+			 , "ta_score"		AS "taScre"
+			 , "raw_data"		AS "rawData"
+			 , "ext_data"		AS "extData"
+			 , "ext_morphs"		AS "extMorp"
+			 , "proper_noun"		AS "propNoun"
+			 , "doc_category"		AS "docCaty"
+		  FROM NLP."nlp_report"
+		 
+		 limit 120
+
+	</select>
+	
+	<select id="selectReportListByCondition" parameterType="com.sobetec.nlp.reportlist.ReportCondition" resultType="com.sobetec.nlp.reportlist.Report">
+		
+		SELECT "composite_key"		AS "cmpyKey" 
+		 	 , "report_date"		AS "reportDate"
+			 , "org_name"		AS "orgnFileName"
+			 , round(cast(ta_score as numeric),4)		AS "taScre"
+			 , "ext_morphs"		AS "extMorp"
+			 , "proper_noun"		AS "propNoun"
+			 , "doc_category"		AS "docCaty"
+		FROM NLP."nlp_report"
+		where (ext_data like concat('%',#{searchWord},'%') or org_name like concat('%',#{searchWord},'%'))
+			<choose>
+			  	<when test="gubun == 'year'">
+			  		and report_date_year = #{reportYear}
+			  	</when>
+			  	<when test="gubun == 'month'">
+			  		and report_date_year = #{reportYear}
+			  		and report_date_month = #{gubunItem}
+			  	</when>
+			  	<when test="gubun == 'quarter'">
+			  		and report_date_year = #{reportYear}
+			  		and report_date_quarter = #{gubunItem}
+			  	</when>
+			  	<when test="gubun == 'custom'">
+			  		and report_date between  to_date(#{startDate}, 'yyyy-mm-dd') and to_date(#{endDate}, 'yyyy-mm-dd')
+			  	</when>
+			</choose>
+		order by report_date desc
+		limit 2000 offset 1
+
+	</select>
+	
+	
+</mapper>

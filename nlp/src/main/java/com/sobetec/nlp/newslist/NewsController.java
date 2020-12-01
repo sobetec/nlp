@@ -1,4 +1,6 @@
-package com.sobetec.nlp.chart;
+package com.sobetec.nlp.newslist;
+
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -7,7 +9,9 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 
 /**
  * 데이터 관리
@@ -16,14 +20,15 @@ import org.springframework.web.bind.annotation.RestController;
  * 
  */
 @RestController
-public class ChartNewsController {
+public class NewsController {
 
-	protected Log logger = LogFactory.getLog(ChartNewsController.class);
+	protected Log logger = LogFactory.getLog(NewsController.class);
 
 	@Autowired
-	private ChartRepositoryImpl repository;
-	@Resource(name = "chartQueryService")
-	private ChartQueryService chartQueryService;
+	private NewsRepositoryImpl repository;
+	@Resource(name = "newsService")
+	private NewsService newsService;
+
 
 	/**
 	 * 목록조회 Sample
@@ -42,11 +47,17 @@ public class ChartNewsController {
 //	    return resultList;
 //	}
 
-	@GetMapping(path = "/getChartQueryByCompany/{cmpyNameOnly}")
-	public ChartQuery getChartQueryByCompany(@PathVariable String cmpyNameOnly) throws Exception {
-		System.out.println("Test:" + cmpyNameOnly);
+	@GetMapping(path = "/getNewsListByCompany/{cmpyNameOnly}")
+	public List<News> getNewsListByCompany(@PathVariable String cmpyNameOnly) throws Exception {
 
-		return chartQueryService.getChartQuery(cmpyNameOnly);
+		return newsService.getNewsList(cmpyNameOnly);
+	}
+
+
+	@PostMapping(path = "/getNewsListByCondition")
+	public List<News> getNewsListByCondition(NewsCondition newsCondition) throws Exception {
+		System.out.println(newsCondition);
+		return newsService.getNewsList(newsCondition);
 	}
 
 }
