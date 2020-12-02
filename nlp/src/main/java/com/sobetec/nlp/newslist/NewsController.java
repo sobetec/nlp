@@ -59,5 +59,11 @@ public class NewsController {
 		System.out.println(newsCondition);
 		return newsService.getNewsList(newsCondition);
 	}
+	
+	@GetMapping(path = "/getIndustryList")
+	public List<Industry> getIndustryList() throws Exception {
+
+		return repository.getIndustryList();
+	}
 
 }

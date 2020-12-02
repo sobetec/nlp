@@ -978,7 +978,7 @@ body {
 	padding: 10px;
 }
 
-.side_panel .btn_close:before {
+.side_panel .btn_close::before {
 	content: '';
 	display: block;
 	width: 20px;
@@ -1333,10 +1333,12 @@ body {
 
 .card_list .card_item {
 	-webkit-box-flex: 0;
-	-webkit-flex: none;
-	        flex: none;
-	min-width: 333px;
-	width: 50%;
+	-webkit-flex: wrap;
+	        flex: wrap;
+	min-width: 30px;
+	width: 30%;
+	min-height: 20px;
+	height: 20%;
 }
 
 .card_list .card_item.active .card_box {
@@ -1368,7 +1370,7 @@ body {
 
 .card_list .chart_area {
 	position: relative;
-	padding-top: 70%;
+	padding-top: 20%;
 	border: solid 1px #c9ccd2;
 }
 
