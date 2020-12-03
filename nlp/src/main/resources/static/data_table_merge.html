@@ -11,41 +11,19 @@
     <link rel="stylesheet" href="css/w3.css">
     <style>
         #example {
-            /* width: 100%;
-            padding: 0px 0;*/
             text-align: center; 
             font-size: 11px;
         }
 
         #example_news {
-            /* width: 100%;
-            padding: 0px 0;*/
             text-align: center; 
             font-size: 11px;
         }
 
         #example_report {
-            /* width: 100%;
-            padding: 0px 0;*/
             text-align: center; 
             font-size: 11px;
         }
-        
-/*      progress {
-         -webkit-appearance: none;
-          background-color: #eee;
-          border-radius: 2px;
-          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
-        }
-         
-        progress::-webkit-progress-bar {
-          
-          background-color: red;
-        }
-        progress::-webkit-progress-value {
-          
-          background-color: red;
-        }*/
 
         /* The Modal (background) */
         .modal {
@@ -60,8 +38,6 @@
             background-color: rgb(0,0,0); /* Fallback color */
             background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
         }
-
-    
     
         /* Modal Content/Box */
         .modal-content {
@@ -148,7 +124,7 @@
         .carousel__next {
         position: absolute;
         top: 0;
-        margin-top: 20%;
+        margin-top: 1.2%;
         width: 2rem;
         height: 2rem;
         transform: translateY(-50%);
@@ -159,12 +135,12 @@
         
         .carousel::before,
         .carousel__prev {
-        left: -2.2rem;
+        left: 1rem;
         }
         
         .carousel::after,
         .carousel__next {
-        right: -2.2rem;
+        right: 1rem;
         } 
         
         .carousel::before {
@@ -204,12 +180,8 @@
         background-image: url("img/right-arrow.png");
         } 
 
-
-
         .carouselNoPrev {
         position: relative;
-        /*padding-top: 75%;*/
-        /*filter: drop-shadow(0 0 10px #0003);*/
         perspective: 100px;
         }
         
@@ -219,7 +191,7 @@
         .carouselNoPrev__next {
         position: absolute;
         top: 0;
-        margin-top: 20%;
+        margin-top: 1.2%;
         width: 2rem;
         height: 2rem;
         transform: translateY(-50%);
@@ -230,19 +202,19 @@
         
         .carouselNoPrev::before,
         .carouselNoPrev__prev {
-        left: -2.2rem;
+        left: 1rem;
         }
         
         .carouselNoPrev::after,
         .carouselNoPrev__next {
-        right: -2.2rem;
+        right: 1rem;
         } 
         
         .carouselNoPrev::before {
+        opacity: 0;
         content: '';
         z-index: 1;
-        /*background-color: #333;*/
-        background-color: rgb(255, 255, 255);
+        background-color: rgb(168, 199, 54);
         background-size: 1rem 1rem;
         background-repeat: no-repeat;
         background-position: center center;
@@ -256,7 +228,7 @@
         .carouselNoPrev::after {
         content: '';
         z-index: 1;
-        background-color: rgb(0, 0, 0);
+        background-color: rgb(173, 48, 167);
         background-size: 1rem 1rem;
         background-repeat: no-repeat;
         background-position: center center;
@@ -269,7 +241,7 @@
 
         
         .carouselNoPrev::before {
-        background-image: url("img/left-arrow.png");
+        /*background-image: url("img/left-arrow.png");*/
         }
         
         .carouselNoPrev::after {
@@ -277,13 +249,8 @@
         }
 
 
-
-
-
         .carouselNoNext {
         position: relative;
-        /*padding-top: 75%;*/
-        /*filter: drop-shadow(0 0 10px #0003);*/
         perspective: 100px;
         }
         
@@ -293,7 +260,7 @@
         .carouselNoNext__next {
         position: absolute;
         top: 0;
-        margin-top: 20%;
+        margin-top: 1.2%;
         width: 2rem;
         height: 2rem;
         transform: translateY(-50%);
@@ -304,19 +271,18 @@
         
         .carouselNoNext::before,
         .carouselNoNext__prev {
-        left: -2.2rem;
+        left: 1rem;
         }
         
         .carouselNoNext::after,
         .carouselNoNext__next {
-        right: -2.2rem;
+        right: 1rem;
         } 
         
         .carouselNoNext::before {
         content: '';
         z-index: 1;
-        /*background-color: #333;*/
-        background-color: rgb(0, 0, 0);
+        background-color: rgb(40, 185, 178);
         background-size: 1rem 1rem;
         background-repeat: no-repeat;
         background-position: center center;
@@ -328,6 +294,7 @@
         }
 
         .carouselNoNext::after {
+        opacity: 0;
         content: '';
         z-index: 1;
         background-color: rgb(255, 255, 255);
@@ -347,8 +314,69 @@
         }
         
         .carouselNoNext::after {
-        background-image: url("img/right-arrow.png");
+        /*background-image: url("img/right-arrow.png");*/
         }
+        
+
+
+        /* fold */
+        .menu a {
+			cursor: pointer;
+		}
+		.fold a {
+			cursor: pointer;
+		}
+
+		.menu .hide li:hover {
+			
+			text-decoration: underline;
+			cursor: pointer;
+			font-size: 14px;
+			font-weight: bolder;
+			color: #7c130c;
+		}
+
+		.menu .hide  {
+			display: none;
+			font-size: 14px;
+			
+		}
+
+	
+
+		.visivi {
+			visibility: visible;
+			font-size: 13px; 
+			font-weight: bold;  
+			position: absolute;
+			color: #0d1775;
+		}
+
+		.closed {
+			visibility: hidden;
+			font-size: 13px; 
+			font-weight: bold;
+			position: relative;
+			color: #090b88;
+		}
+
+		.list li:hover {
+			text-decoration: underline;
+			cursor: pointer;
+			font-size: 14px;
+			font-weight: bolder;
+			color: #7c130c;
+		}
+
+		.list li {
+			
+			font-size: 14px;
+
+		}
+
+		.nulls {
+			display: none;
+		}
 
 
 
@@ -359,10 +387,13 @@
 <script>
     
     $(document).ready( function () {
+        createEmptyDatatable();
         $('#example_news').DataTable();
+        $('#example_report').DataTable();
         setDisplay();
         $('#date_picker_div_News').hide();
-        /*$('.btn_close').click();*/
+        $('#condition').hide();
+        $('#condition_report').hide();
 
     } ); 
 
@@ -413,13 +444,11 @@
         var modalhtml =
         `   
             <div class="modal-title">
+                ` + sectionHtml + `
                 <p style="text-align: center; vertical-align: middle;"><b><span style="font-size: 13pt; color:white; vertical-align: middle;">` + window.newsResponseData[i].newsTtl + `</span></b></p>
             </div>
 
             <div class="modal-content">
-
-                ` + sectionHtml + `
-
 
                 <section>
                     <div>
@@ -671,6 +700,18 @@
                 rred = `<td style='color:black'>` + sscoreWord + `</td>`;
             }
 
+            var downImg = '';
+
+            if (window.reportResponseData[i].docCaty == 'pdf'){
+                downImg = `<img src="/img/pdf_down.png" style="width: auto; height: 25px;">`;
+            }
+            else if (window.reportResponseData[i].docCaty == 'hwp'){
+                downImg = `<img src="/img/hwp_down.png" style="width: auto; height: 25px;">`;
+            }
+            else{
+                downImg = `<img src="/img/document_download.png" style="width: auto; height: 25px;">`;
+            }
+
             /*
             <td>
                 <a id="documentFile" href="/data/KDB_화면설계서_v0.6.pdf" download>
@@ -689,7 +730,7 @@
                     `+ rred +`
                     <td>` + window.reportResponseData[i].docCaty + `</td>
                     <td><a id="documentFile" href="C:\\Users\\sdb\\Documents\\doc_down_test\\KDB_ddd_v0.6.pdf" download>
-                        <img src="/img/pdf_download_svg.svg" style="width: auto; height: 25px;">
+                        ` + downImg + `
                     </a>
                     </td>
                 </tr>
@@ -873,25 +914,28 @@
             document.getElementById("choicesNews").disabled = false;
             document.getElementById("newsYear").disabled = false;
             $('#date_picker_div_News').hide();
+            $('#condition').show();
         }
         else if(selectItem == "month"){
             changeItem = selectListData.month.text;
             document.getElementById("choicesNews").disabled = false;
             document.getElementById("newsYear").disabled = false;
             $('#date_picker_div_News').hide();
+            $('#condition').show();
         }
         else if(selectItem == "year"){
             changeItem = '';
             document.getElementById("choicesNews").disabled = true;
             document.getElementById("newsYear").disabled = false;
             $('#date_picker_div_News').hide();
-            //$('#condition').hide();
+            $('#condition').hide();
         }
         else if(selectItem == "custom"){
             changeItem = '';
             document.getElementById("choicesNews").disabled = true;
             document.getElementById("newsYear").disabled = true;
             $('#date_picker_div_News').show();
+            $('#condition').hide();
         }
         
 
@@ -916,25 +960,28 @@
             document.getElementById("choicesReport").disabled = false;
             document.getElementById("reportYear").disabled = false;
             $('#date_picker_div_Report').hide();
+            $('#condition_report').show();
         }
         else if(selectItem == "month"){
             changeItem = selectListData.month.text;
             document.getElementById("choicesReport").disabled = false;
             document.getElementById("reportYear").disabled = false;
             $('#date_picker_div_Report').hide();
+            $('#condition_report').show();
         }
         else if(selectItem == "year"){
             changeItem = '';
             document.getElementById("choicesReport").disabled = true;
             document.getElementById("reportYear").disabled = false;
             $('#date_picker_div_Report').hide();
-            //$('#condition').hide();
+            $('#condition_report').hide();
         }
         else if(selectItem == "custom"){
             changeItem = '';
             document.getElementById("choicesReport").disabled = true;
             document.getElementById("reportYear").disabled = true;
             $('#date_picker_div_Report').show();
+            $('#condition_report').hide();
         }
 
 
@@ -964,6 +1011,251 @@
             $('#example_report').DataTable();
         }
     }
+
+
+
+
+    function getIndustryList() {
+
+        industry_column_list = ["ㄱ","ㄴ","ㄷ","ㄹ","ㅁ","ㅂ","ㅅ","ㅇ","ㅈ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ","기타"];
+        industry_column_list_java = ['responseData[i].giYeok',
+                                    'responseData[i].niEun',
+                                    'responseData[i].diGeut',
+                                    'responseData[i].riEul',
+                                    'responseData[i].miEum',
+                                    'responseData[i].biEup',
+                                    'responseData[i].siOt',
+                                    'responseData[i].iEung',
+                                    'responseData[i].jiEut',
+                                    'responseData[i].chiEut',
+                                    'responseData[i].kiEuk',
+                                    'responseData[i].tiEuk',
+                                    'responseData[i].piEup',
+                                    'responseData[i].hiEut',
+                                    'responseData[i].guiTar'];
+                                    
+
+        console.log(industry_column_list[0]);
+        console.log(industry_column_list_java[0]);
+
+        $.ajax({
+            url: "/getIndustryList/",
+            method: 'GET',
+            dataType: 'json',
+            success: function (responseData) {
+                alert('조회 성공');
+                console.log(responseData);
+                console.log(responseData[0]);
+                
+                //var gigi = eval(industry_column_list_java[0]);
+                //				console.log(gigi);
+
+            var tables = ``;
+
+
+            for (var n = 0; n < 3; n++) {	
+                var htmlTableHead = 
+                        `
+                        <table style="border-style: none none none none; border-width:2px; border-color:#ccc4c3;" rules=cols>
+                            <tr>
+                        `;
+
+                var tds = ``;
+                
+                if (n==0) {m=0; r=5};
+                if (n==1) {m=5; r=10};
+                if (n==2) {m=10; r=15};
+
+                for (var j = m; j < r; j++) {
+                        var colName = industry_column_list[j];
+                        
+                        console.log(colJavaName);
+                        var htmlhead =
+                            `
+                            
+                                    <td style="padding-left: 16px; padding-right:10px;" valign="top" width="270">
+                                        <div>
+                                            <ul >
+                                                <li class="menu">
+                                                    <a style="font-size: large; font-weight: bold;"> `+colName+` </a>
+                                                    
+                                                    <ul class="list">
+                                                        <li style="font-size: 4px;">&nbsp; </li>
+                            `;
+
+                        var htmlmiddle = 
+                                `
+                                    </ul>
+                                    <ul class="hide">
+                                `;
+
+
+                                    k=0;	
+                                    for (var i = 0; i < responseData.length; i++) {
+                                        var colJavaName = eval(industry_column_list_java[j]);
+                                        console.log('컬럼이름 '+colJavaName);
+                                        if (k<5){
+                                            if (colJavaName != null) {
+                                            var htmlli1 =
+                                                `
+                                                <li>`+ colJavaName +`</li>
+                                                `;
+                                            
+                                            htmlhead +=  htmlli1;
+                                                k++;
+                                            }
+
+                                        }else if ((colJavaName != null)){
+                                            var htmlli2 =
+                                                `
+                                                <li>`+ colJavaName +`</li>
+                                                `;
+                                            htmlmiddle += htmlli2;
+                                        };
+                                    };
+
+                            
+                        var htmltail =
+                                `
+                                                            </ul>
+                                                            <a class="visivi"  > 더보기 ▼ </a>
+                                                            <a class="closed"  > 접기 ▲ </a>
+                                                        </li>
+
+
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                                            
+                                                            
+                            `;
+                        var td = htmlhead + htmlmiddle + htmltail;
+
+                        tds += td;
+                };
+                
+                var htmlTableTail = 
+                    `
+                            </tr>
+                        <br/>	
+                        <br/>
+                        </table>	
+
+                    `
+            
+                var htmltable1 = htmlTableHead + tds + htmlTableTail;
+
+                tables += htmltable1;
+            };
+
+
+                document.getElementById('result_area_industry').innerHTML = tables;
+
+                
+                $(".menu>a").click(function (){
+            
+                    //$('directoryresults').find('input');
+                    var lisf = $(this).siblings('ul');
+                    var submenu = $(lisf[1]);
+                    var lista = $(this).siblings('a');
+                    var folda1 = $(lista[0]);
+                    var folda2 = $(lista[1]);
+                    
+                    if (submenu.is(":visible")) {
+                        submenu.slideUp(400);
+                                
+                        if ($(this).hasClass('closed')) {
+                            $(this).css('visibility', 'hidden');
+                        }
+                        if (folda1.hasClass('closed')) {
+                            folda1.css('visibility', 'hidden');
+                        }
+                        if (folda2.hasClass('closed')) {
+                            folda2.css('visibility', 'hidden');
+                        }
+                        if ($(this).hasClass('visivi')) {
+                            $(this).css('visibility', 'visible');
+                        }
+                        if (folda1.hasClass('visivi')) {
+                            folda1.css('visibility', 'visible');
+                        }
+                        if (folda2.hasClass('visivi')) {
+                            folda2.css('visibility', 'visible');
+                        }
+
+                    } else {
+                        submenu.slideDown(400);
+                                    
+                        if ($(this).hasClass('closed')) {
+                            $(this).css('visibility', 'visible');
+                        }
+                        if (folda1.hasClass('closed')) {
+                            folda1.css('visibility', 'visible');
+                        }
+                        if (folda2.hasClass('closed')) {
+                            folda2.css('visibility', 'visible');
+                        }
+                        if ($(this).hasClass('visivi')) {
+                            $(this).css('visibility', 'hidden');
+                        }
+                        if (folda1.hasClass('visivi')) {
+                            folda1.css('visibility', 'hidden');
+                        }
+                        if (folda2.hasClass('visivi')) {
+                            folda2.css('visibility', 'hidden');
+                        }
+                        
+                    }
+                    console.log("im aclick in list");
+                
+            });
+
+
+            },
+            error: function () {
+                alert('조회 실패');
+            }
+        });
+
+    }
+
+
+    function itemChangeFold(){
+
+        var selectItem = $("#fold").val();
+        console.log(selectItem);
+
+        if(selectItem == "company"){
+            $('#result_area_subsidiary').hide();
+            $('#result_area_industry').hide();
+            $('#result_area_news').show();
+        }
+        else if(selectItem == "subsidiary"){
+            $('#result_area_industry').hide();
+            $('#result_area_news').hide();
+            $('#result_area_subsidiary').show();
+            
+        }
+        else if(selectItem == "industry"){
+            getIndustryList();
+            $('#result_area_news').hide();
+            $('#result_area_subsidiary').hide();
+            $('#result_area_industry').show();
+        }
+    }
+
+
+    function createEmptyDatatable(){
+        var tableNews = ``;
+        var tableReport = ``;
+        for (var i = 0; i < 10; i++){
+            tableNews = tableNews + `<tr> <td>　 </td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>`;
+            tableReport = tableReport + `<tr> <td>　 </td><td></td><td></td><td></td><td></td><td></td> </tr>`;
+        }
+        document.getElementById('tbodyNews').innerHTML = tableNews;
+        document.getElementById('tbodyReport').innerHTML = tableReport;    
+    }
+
   
     
 </script>
@@ -1065,16 +1357,16 @@
                        
 
                         <div class="data_set">
-                            <select class="select">
-                                <option value="">기업별</option>
-                                <option value="">계열별</option>
-                                <option value="">산업별</option>
+                            <select class="select" id="fold" style="width:100px;" onChange="itemChangeFold()">
+                                <option value="company">기업별</option>
+                                <option value="subsidiary">계열별</option>
+                                <option value="industry">산업별</option>
                             </select>
                         </div>
  
                         <div class="data_set" style="float:left">
                             <a>연도 선택</a>
-                            <select name="newsYear" id="newsYear" class="select">
+                            <select name="newsYear" id="newsYear" class="select" style="min-width: 80px; width:80px;">
                                 <option value="2025">2025</option>
                                 <option value="2024">2024</option>
                                 <option value="2023">2023</option>
@@ -1145,100 +1437,19 @@
                                 <th>score</th>
                             </tr>
                             </thead>
-                            <tbody >
-                                <tr>
-                                    <td>　</td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                </tr>
-                                <tr>
-                                    <td> 　</td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                </tr>
-                                <tr>
-                                    <td> 　</td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                </tr>
-                                <tr>
-                                    <td> 　</td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                </tr>
-                                <tr>
-                                    <td>　 </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                </tr>
-                                <tr>
-                                    <td>　 </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                </tr>
-                                <tr>
-                                    <td>　 </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                </tr>
-                                <tr>
-                                    <td>　 </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                </tr>
-                                <tr>
-                                    <td>　 </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                </tr>
-                                <tr>
-                                    <td>　 </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                </tr>
+                            <tbody id="tbodyNews">
+                                
                                 
                             </tbody>
                         </table>
+                    </div>
+
+                    <div id="result_area_subsidiary">
+
+                    </div>
+
+                    <div id="result_area_industry">
+
                     </div>
  
                 </div>
@@ -1251,9 +1462,9 @@
                 <div class="section" id="contents_section_report">
                     <div class="option_set">
 
-                        <div class="data_set" style="float:left">
+                        <div class="data_set" style="float:left;">
                             <a>연도 선택</a>
-                            <select name="reportYear" id="reportYear" class="select">
+                            <select name="reportYear" id="reportYear" class="select" style="min-width: 80px; width:80px;">
                                 <option value="2025">2025</option>
                                 <option value="2024">2024</option>
                                 <option value="2023">2023</option>
@@ -1278,7 +1489,7 @@
                             </select>
                         </div>
             
-                        <div id="condition" class="data_set" style="float:left">
+                        <div id="condition_report" class="data_set" style="float:left">
                             <a id="gubunText"></a>
                             <select name="choices" id="choicesReport" class="select">
                             </select>
@@ -1325,87 +1536,7 @@
                                 <th >타입</th>
                             </tr>
                             </thead>
-                            <tbody >
-                                <tr>
-                                    <td> 　</td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                </tr>
-                                <tr>
-                                    <td> 　</td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                </tr>
-                                <tr>
-                                    <td> 　</td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                </tr>
-                                <tr>
-                                    <td> 　</td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                </tr>
-                                <tr>
-                                    <td>　 </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                </tr>
-                                <tr>
-                                    <td>　 </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                </tr>
-                                <tr>
-                                    <td>　 </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                </tr>
-                                <tr>
-                                    <td>　 </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                </tr>
-                                <tr>
-                                    <td>　 </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                </tr>
-                                <tr>
-                                    <td>　 </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                </tr>
+                            <tbody id="tbodyReport">
                                 
                             </tbody>
                         </table>
