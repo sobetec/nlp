@@ -153,7 +153,7 @@
 							<input id="textNumberSlider" type="range" min="1" max="2000" step="1" value="400">
 							<span>글자 크기: </span>
 							<span id='fontSizeValue'></span>
-							<input id="fontSizeSlider" type="range" min="1" max="150" step="1" value="70">
+							<input id="fontSizeSlider" type="range" min="1" max="150" step="1" value="40">
 						</div>
 						<div id='keywordBarSettings' class='enlargedChartSettings' style='display:none'>
 							<span>숫자 선택: </span>
@@ -385,7 +385,38 @@
 								<div class="card_item">
 									<div class="card_box">
 										<div class="card_head">
-											<span class="title">기사 수</span>
+											<p>기사수</p>
+											<style>
+												#data {
+													overflow: hidden;
+													padding: 0;
+												}
+
+												select {
+													padding: 0;
+													padding-left: 1px;
+													border: none;
+													background-color: #eee;
+												}
+
+												option {
+													display: inline-block;
+													border: 1px solid #000;
+													background-color: white;
+													padding-left: 5px;
+													padding-right: 5px;
+													margin-left: -1px;
+													display: inline-block;
+												}
+											</style>
+											<div>
+												<select multiple size="1" id='articleCountRange'>
+													<option value='1'>1년</option>
+													<option value='3'>3년</option>
+													<option value='5'>5년</option>
+													<option value='all' selected>전체</option>
+												</select>
+											</div>
 										</div>
 										<div class="card_content">
 											<div class="chart_area" style="padding-top: 70%">
@@ -433,6 +464,10 @@
 									<div class="card_box">
 										<div class="card_head">
 											<span class="title">시계열 주가 차트</span>
+											<div>
+												<select size="1" id='stockRange'>
+												</select>
+											</div>
 										</div>
 										<div class="card_content">
 											<div class="chart_area" style="padding-top: 70%">

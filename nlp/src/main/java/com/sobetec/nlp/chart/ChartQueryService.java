@@ -30,26 +30,47 @@ public class ChartQueryService {
 	public ChartQuery getChartQuery(String cmpyNameOnly) throws Exception {
 		System.out.println("########## start Service getChartQuery");
 		List<News> allNews = new ArrayList<News>();
+		List<Stocks> allStocks = new ArrayList<Stocks>();
+		List<NewsKeyword> allDocFreqs = new ArrayList<NewsKeyword>();
+
 		logger.debug("call DB for news");
 		allNews = repository.getChartNewsByCompany(cmpyNameOnly);
 		logger.debug("Done getting news");
+		logger.debug("call DB for stock");
+		allStocks = repository.getChartStocksByCompany(cmpyNameOnly);
+		logger.debug("Done getting stock");
+		logger.debug("call DB for keywordFreqs");
+		allDocFreqs = repository.getDocFreqCounts();
+		logger.debug("Done getting KeywordFreqs");
+
 		logger.debug("begin running algos");
 		HashMap<String, String> allDates = new HashMap<String, String>();
 		List<List<String>> documents = new ArrayList<List<String>>();
+		int subsetTermSize = 0;
 		float totalScore = 0;
-		HashMap<String, Integer> frequencies = new HashMap<String, Integer>();
+		HashMap<String, NewsKeyword> newsKeywordMap = new HashMap<String, NewsKeyword>();
 
 		logger.debug("first sweep of all news retrieved");
 		for (int i = 0; i < allNews.size(); i++) {
 			News currNews = allNews.get(i);
 			String[] morphs = currNews.getExtMorp().split(",");
+			subsetTermSize = subsetTermSize + morphs.length;
+			List<String> tokens = new ArrayList<String>();
 			documents.add(Arrays.asList(morphs));
 			for (String morph : morphs) {
-				if (frequencies.containsKey(morph)) {
-					frequencies.put(morph, frequencies.get(morph) + 1);
+				if (newsKeywordMap.containsKey(morph)) {
+					newsKeywordMap.get(morph).setSubsetTermCount(newsKeywordMap.get(morph).getSubsetTermCount() + 1);
+
 				} else {
-					frequencies.put(morph, 1);
+					NewsKeyword tempKeyword = new NewsKeyword(morph, 0, 1);
+					newsKeywordMap.put(morph, tempKeyword);
 				}
+				if (!tokens.contains(morph)) {
+					tokens.add(morph);
+				}
+			}
+			for (String morph : tokens) {
+				newsKeywordMap.get(morph).setSubsetDocFreq(newsKeywordMap.get(morph).getSubsetDocFreq() + 1);
 			}
 			float currTaScore = 50;
 			try {
@@ -66,32 +87,47 @@ public class ChartQueryService {
 		}
 
 		logger.debug("first sweep done");
+		for (int i = 0; i < allDocFreqs.size(); i++) {
+			NewsKeyword currKeyword = allDocFreqs.get(i);
+			if (newsKeywordMap.containsKey(currKeyword.getKeyword())) {
+				newsKeywordMap.get(currKeyword.getKeyword()).setTotalDocFreq(currKeyword.getTotalDocFreq());
+			}
+		}
 
 		logger.debug("iterate over morphemes");
 		// get tf-idfs
+		int fullCorpusSize = 789102;
+		int corpusSize = fullCorpusSize - documents.size() + 1;
+		Iterator<String> morphs = newsKeywordMap.keySet().iterator();
+
 		List<NewsKeyword> newsKeywords = new ArrayList<NewsKeyword>();
-		int corpusSize = documents.size();
-		Iterator<String> morphs = frequencies.keySet().iterator();
+
+		int testMax = 0;
 		while (morphs.hasNext()) {
 			String morph = morphs.next();
-//			int docFreq = 0;
-//			logger.debug("iterate over all docs");
-//			for (int i = 0; i < corpusSize; i++) {
-//				if (documents.get(i).contains(morph)) {
-//					docFreq++;
-//				}
-//			}
-//			logger.debug("done iterating over docs");
-			NewsKeyword tempKeyword = new NewsKeyword(morph, (float) frequencies.get(morph) / corpusSize, 0);
-			if (tempKeyword.getFrequency() > 5 / corpusSize) {
-				newsKeywords.add(tempKeyword);
-			} else {
-
+			// logger.debug(morph);
+			// logger.debug(newsKeywordMap.get(morph).getSubsetTermCount());
+			if (newsKeywordMap.get(morph).getSubsetDocFreq() > testMax) {
+				testMax = newsKeywordMap.get(morph).getSubsetDocFreq();
 			}
+			float termFreq = newsKeywordMap.get(morph).getSubsetTermCount() / (float) subsetTermSize;
+			// logger.debug(termFreq);
+			float invDocFreq = (float) (Math.log((float) corpusSize / (newsKeywordMap.get(morph).getTotalDocFreq()
+					- newsKeywordMap.get(morph).getSubsetDocFreq() + 1)));
+			// logger.debug(invDocFreq);
+			// logger.debug(termFreq * invDocFreq);
+			newsKeywordMap.get(morph).setTf_idf(termFreq * invDocFreq);
+			newsKeywords.add(newsKeywordMap.get(morph));
 		}
-		Collections.sort(newsKeywords, (o1, o2) -> Float.compare(o2.getFrequency(), o1.getFrequency()));
+		logger.debug(testMax);
+
+		Collections.sort(newsKeywords, (o1, o2) -> Float.compare(o2.getTf_idf(), o1.getTf_idf()));
 		logger.debug("morpheme iteration done");
 
+		//
+		//
+		//
+		//
 		logger.debug("iterate over sentiment dates");
 		// Make array of SentimentDates from HashMap
 		List<SentimentDate> sentimentDates = new ArrayList<SentimentDate>();
@@ -113,7 +149,7 @@ public class ChartQueryService {
 		logger.debug("sentiment dates done");
 		logger.debug("done running all algos");
 
-		ChartQuery chartQuery = new ChartQuery(allNews, sentimentDates, averageScore, newsKeywords);
+		ChartQuery chartQuery = new ChartQuery(allNews, sentimentDates, averageScore, newsKeywords, allStocks);
 
 		return chartQuery;
 	}

@@ -24,4 +24,18 @@ public class ChartNewsRepository implements ChartNewsRepositoryImpl {
 		return sqlSession.selectList("mapper.chartMapper.selectChartNewsByCompany", cmpyNameOnly);
 	}
 
+	@Override
+	public List<Stocks> getChartStocksByCompany(String cmpyNameOnly) throws Exception {
+		return sqlSession.selectList("mapper.chartMapper.selectChartStocksByCompany", cmpyNameOnly);
+	}
+
+	@Override
+	public List<NewsKeyword> getDocFreqCounts() throws Exception {
+		return sqlSession.selectList("mapper.chartMapper.getDocFreqCounts");
+	}
+	
+	@Override
+	public List<Integer> getAllNewCount() throws Exception {
+		return sqlSession.selectList("mapper.chartMapper.getAllNewsCount");
+	}
 }

@@ -6,4 +6,9 @@ public interface ChartNewsRepositoryImpl {
 
 	List<News> getChartNewsByCompany(String cmpyNameOnly) throws Exception;
 
+	List<Stocks> getChartStocksByCompany(String cmpyNameOnly) throws Exception;
+
+	List<NewsKeyword> getDocFreqCounts() throws Exception;
+
+	List<Integer> getAllNewCount() throws Exception;
 }

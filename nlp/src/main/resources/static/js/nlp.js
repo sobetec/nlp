@@ -367,9 +367,9 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
     var yPadding = 30;
     var colorVec = ['#83afd5', '#fbbe81', '#80c89c', '#be7cbf']
     var graphDiv = document.getElementById(divID);
-    data.sort(function (a, b) { return b.frequency - a.frequency });
+    data.sort(function (a, b) { return b.tf_idf - a.tf_idf });
     dataSlice = data.slice(0, nCutoff)
-    dataSlice.sort(function (a, b) { return a.frequency - b.frequency });
+    dataSlice.sort(function (a, b) { return a.tf_idf - b.tf_idf });
     //console.log(data)
 
     if (divID == "enlargedChart") {
@@ -393,7 +393,7 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
 
 
     var xScale = d3.scaleLinear()
-        .domain([0, dataSlice[nCutoff - 1].frequency])
+        .domain([0, dataSlice[nCutoff - 1].tf_idf])
         .range([xPadding, divWidth - xPadding])
     var xAxis = d3.axisBottom()
         .scale(xScale)/* 
@@ -441,7 +441,7 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
         .style('fill', function (d, i) { return colorVec[i % colorVec.length] })
         .attr("x", function (d) { return xScale(0) })
         .attr("y", function (d) { return yScale(d.keyword) })
-        .attr("width", function (d) { return xScale(d.frequency) - xScale(0) })
+        .attr("width", function (d) { return xScale(d.tf_idf) - xScale(0) })
         .attr("height", yScale.bandwidth)
         .on("mouseover", onMouseOver)
         .on("mousemove", onMouseMove)
@@ -449,8 +449,13 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
 }
 
 function dateParser(dateString) {
-    var b = dateString.split('-')
-    return new Date(b[0], (parseInt(b[1]) - 1).toString(), b[2]);
+    if (dateString.includes('-')) {
+        var b = dateString.split('-')
+        return new Date(b[0], (parseInt(b[1]) - 1).toString(), b[2]);
+    }
+    else {
+        return new Date(dateString.slice(0,4), dateString.slice(4,6), dateString.slice(6,8));
+    }
 }
 
 function makeArticleCounts(data, divID) {
@@ -810,7 +815,7 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
         .attr("transform", "rotate(-90)")
         .attr("x", -divHeight / 2)
         .attr('y', divWidth - 20)
-        .text("기사수");
+        .text("");
 
     svg.append('g')
         .attr('class', 'y axis-grid')
@@ -1095,13 +1100,15 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
 }
 
 function makeStockGraph(data, divID) {
+    var company = document.getElementById('stockRange').value;
 
     stockData = [];
-    for (var i = 0; i < data.length; i++) {
+    for (var i = 0; i < data[company].length; i++) {
         /* //console.log(data[i].date)
         //console.log(data[i].price) */
-        stockData.push({ time: Date.parse(data[i].date), stock: parseFloat(data[i].price) });
+        stockData.push({ time: dateParser(data[company][i].date), stock: parseFloat(data[company][i].price) });
     }
+    //console.log(stockData)
     var timeVector = [];
     var stockVector = [];
     for (var i = 0; i < stockData.length; i++) {
@@ -1152,7 +1159,7 @@ function makeStockGraph(data, divID) {
         .domain([d3.min(timeVector) - 1, d3.max(timeVector) + 1])
         .range([xPadding, divWidth - xPadding]); */
     var xScale = d3.scaleTime()
-        .domain([d3.min(timeVector) - 1, d3.max(timeVector) + 1])
+        .domain([d3.min(timeVector), d3.max(timeVector)])
         .range([xPadding, divWidth - xPadding]);
     var xAxis = d3.axisBottom()
         .scale(xScale)
@@ -1411,10 +1418,11 @@ function makeStockGraph(data, divID) {
 }
 
 function makePieChart(data, divID, nCutofftoShow, nCutoff) {
-    //console.log(nCutoff)
+    console.log(nCutoff)
+    console.log(nCutofftoShow)
     var dataSlice1 = data.slice(0, nCutoff)
     var pie = d3.pie()
-        .value(function (d) { return d.frequency; })
+        .value(function (d) { return d.tf_idf; })
     var colorVec = ["#F94144", "#F3722C", "#F8961E",
         "#F9C74F", "#90BE6D", "#43AA8B", "#3a34ed"];
     var color = d3.scaleOrdinal()
@@ -1424,23 +1432,27 @@ function makePieChart(data, divID, nCutofftoShow, nCutoff) {
 
 
     var importanceTotal = dataSlice1.reduce(function (a, b) {
-        return parseFloat(a) + parseFloat(b.frequency);
+        return parseFloat(a) + parseFloat(b.tf_idf);
     }, 0);
+    console.log(importanceTotal)
+    
 
-    dataSlice1.sort(function (a, b) { return b.frequency - a.frequency });
+    dataSlice1.sort(function (a, b) { return b.tf_idf - a.tf_idf });
 
     dataSlice = dataSlice1.slice(0, nCutofftoShow);
+    console.log(dataSlice)
 
     var keywordImpTotals = 0;
     var propData = [];
     for (var i = 0; i < dataSlice.length; i++) {
-        keywordImpTotals += dataSlice[i].frequency / importanceTotal;
-        propData.push({ keyword: dataSlice[i].keyword, frequency: dataSlice[i].frequency / importanceTotal });
+        keywordImpTotals += dataSlice[i].tf_idf / importanceTotal;
+        propData.push({ keyword: dataSlice[i].keyword, tf_idf: dataSlice[i].tf_idf / importanceTotal });
     }
     /* propData.push({ keyword: '기타', frequency: 1 - keywordImpTotals }); */
 
     var pieChart = document.getElementById(divID);
     pieChart.innerHTML = "";
+    console.log(propData)
 
     var svg = d3.select("#" + divID).append("svg")
         .attr('class', 'visSVG')
@@ -1557,15 +1569,19 @@ function onMouseOver(d, i) {
     var elementClass = this.getAttribute('class');
     console.log(elementClass)
     if (elementClass == 'stockPoint') {
+        var date = new Date(d.time)
         d3.select(this).style('fill', 'gray');
         tooltip.style('visibility', 'visible');
-        tooltip.text('기사수: ' + d.stock);
+        tooltip.html('날짜: ' + (date.getFullYear() + '년' + (date.getMonth() + 1)
+            + '월' + date.getDate() + '일') + '<br />주가: ' + d.stock)
         tooltip.style('background-color', '#f0f0f0');
     }
     else if (elementClass == 'stockPointEnlarged') {
+        var date = new Date(d.time)
         d3.select(this).style('fill', 'gray');
         tooltipEnlarged.style('visibility', 'visible');
-        tooltipEnlarged.text('기사수: ' + d.stock);
+        tooltip.html('날짜: ' + (date.getFullYear() + '년' + (date.getMonth() + 1)
+            + '월' + date.getDate() + '일') + '<br />주가: ' + d.stock)
         tooltipEnlarged.style('background-color', '#f0f0f0');
     }
     else if (elementClass == 'posSentimentCircle' || elementClass == 'negSentimentCircle') {
@@ -1587,12 +1603,12 @@ function onMouseOver(d, i) {
     else if (elementClass == 'keywordBar') {
         d3.select(this).style('opacity', '70%');
         tooltip.style('visibility', 'visible');
-        tooltip.text(d.keyword + ': ' + d.frequency);
+        tooltip.text(d.keyword + ': ' + d.tf_idf);
     }
     else if (elementClass == 'keywordBarEnlarged') {
         d3.select(this).style('opacity', '70%');
         tooltipEnlarged.style('visibility', 'visible');
-        tooltipEnlarged.text(d.keyword + ': ' + d.frequency);
+        tooltipEnlarged.text(d.keyword + ': ' + d.tf_idf);
     }
     else if (elementClass == 'svgArc') {
         d3.select(this).style('opacity', '70%');
@@ -1607,7 +1623,7 @@ function onMouseOver(d, i) {
         tooltip.text(d.data.keyword);
         tooltip.style('border-color', this.getAttribute('fill'));
         /* document.getElementById('keywordPercent' + divID).innerHTML = (d.data.importance / importanceTotal * 100).toFixed(2) + "%" */
-        document.getElementById('keywordPercentkeywordPie').innerHTML = (d.data.frequency * 100).toFixed(2) + '%'
+        document.getElementById('keywordPercentkeywordPie').innerHTML = (d.data.tf_idf * 100).toFixed(2) + '%'
     }
     else if (elementClass == 'svgArcEnlarged') {
         d3.select(this).style('opacity', '70%');
@@ -1622,7 +1638,7 @@ function onMouseOver(d, i) {
         tooltipEnlarged.text(d.data.keyword);
         tooltip.style('border-color', this.getAttribute('fill'));
         /* document.getElementById('keywordPercent' + divID).innerHTML = (d.data.importance / importanceTotal * 100).toFixed(2) + "%" */
-        document.getElementById('keywordPercentenlargedChart').innerHTML = (d.data.frequency * 100).toFixed(2) + '%'
+        document.getElementById('keywordPercentenlargedChart').innerHTML = (d.data.tf_idf * 100).toFixed(2) + '%'
     }
     else if (elementClass == 'wordCloudWord') {
         d3.select(this).style('opacity', '100%');
@@ -1786,13 +1802,13 @@ async function getMaxWords(words, sizeMax, divID) {
 
 function drawWordcloud(words, divID) {
     var graphDiv = document.getElementById(divID);
-    console.log(words)
+    //console.log(words)
 
-    var maxValue = Math.max.apply(Math, words.map(function (o) { return o.frequency }));
+    var maxValue = Math.max.apply(Math, words.map(function (o) { return o.tf_idf }));
     console.log(maxValue)
     var wordSlice = [];
     for (var i = 0; i < document.getElementById('textNumberSlider').value; i++) {
-        wordSlice.push({ text: words[i].keyword, value: words[i].frequency });
+        wordSlice.push({ text: words[i].keyword, value: words[i].tf_idf });
     }
     var xPadding = 20;
     var yPadding = 20;
@@ -1938,13 +1954,13 @@ function drawWordcloud(words, divID) {
 
 function drawWordcloud2(words, divID) {
     var graphDiv = document.getElementById(divID);
-    console.log(words)
+    //console.log(words)
 
-    var maxValue = Math.max.apply(Math, words.map(function (o) { return o.frequency }));
+    var maxValue = Math.max.apply(Math, words.map(function (o) { return o.tf_idf }));
     console.log(maxValue)
     var wordSlice = [];
     for (var i = 0; i < document.getElementById('textNumberSlider').value; i++) {
-        wordSlice.push({ text: words[i].keyword, value: words[i].frequency });
+        wordSlice.push({ text: words[i].keyword, value: words[i].tf_idf });
     }
     var xPadding = 20;
     var yPadding = 20;
@@ -2159,20 +2175,45 @@ function getChartQuery1() {
                 makePieChart(responseData.keywords, 'enlargedChart', document.getElementById('keywordPieSlider').value, document.getElementById('keywordPieSlider2').value);
             })
 
-            var filepath = './data/news_counts.csv'
-            d3.csv(filepath, function (data) {
-
-                var divID = 'stockTime';
-                stockGraph = document.getElementById(divID)
-                stockGraph.addEventListener('click', function () {
-                    document.getElementById('resetChart').addEventListener('click', function () {
-                        console.log('clicked');
-                        makeStockGraph(data, 'enlargedChart');
-                    })
-                    makeStockGraph(data, 'enlargedChart');
-                })
-                makeStockGraph(data, divID)
+            var companies = [];
+            var allStockData = {};
+            for (var i = 0; i < responseData.stockData.length; i++) {
+                var tempStock = responseData.stockData[i]
+                if (!companies.includes(tempStock.company)) {
+                    companies.push(tempStock.company);
+                    allStockData[tempStock.company] = [];
+                }
+                allStockData[tempStock.company].push({ date: tempStock.date, price: tempStock.price })
+            }
+            console.log(allStockData)
+            var shortestCompany = companies.reduce(function (a, b) {
+                return a.length <= b.length ? a : b;
             })
+            var stockOptions = document.getElementById('stockRange');
+            console.log(stockOptions);
+            for (var i = 0; i < companies.length; i++) {
+                if (companies[i] == shortestCompany) {
+                    var tempHTML = `<option value='${companies[i]}' selected>${companies[i]}</option>`;
+                }
+                else {
+                    var tempHTML = `<option value='${companies[i]}'>${companies[i]}</option>`;
+                }
+                stockOptions.insertAdjacentHTML('beforeend', tempHTML);
+            }
+
+            var divID = 'stockTime';
+            stockGraph = document.getElementById(divID)
+            stockGraph.addEventListener('click', function () {
+                document.getElementById('resetChart').addEventListener('click', function () {
+                    console.log('clicked');
+                    makeStockGraph(allStockData, 'enlargedChart');
+                })
+                makeStockGraph(allStockData, 'enlargedChart');
+            })
+            document.getElementById('stockRange').addEventListener('change', function () {
+                makeStockGraph(allStockData, divID);
+            })
+            makeStockGraph(allStockData, divID);
 
 
             makeWordcloud(responseData.keywords);
@@ -2201,20 +2242,6 @@ function getChartQuery2() {
 
             //console.log(responseData)
             alert('조회 성공: ' + responseData.allNews.length + '개 기사');
-            var filepath = './data/news_counts.csv'
-            d3.csv(filepath, function (data) {
-
-                var divID = 'stockTime';
-                stockGraph = document.getElementById(divID)
-                stockGraph.addEventListener('click', function () {
-                    document.getElementById('resetChart').addEventListener('click', function () {
-                        console.log('clicked');
-                        makeStockGraph(data, 'enlargedChart');
-                    })
-                    makeStockGraph(data, 'enlargedChart');
-                })
-                makeStockGraph(data, divID)
-            })
 
             makeGauge('dangerGauge', responseData.averageScore)
             document.getElementById('dangerGauge').addEventListener('click', function () {
@@ -2263,6 +2290,46 @@ function getChartQuery2() {
                 makeKeywordBarPlot(responseData.keywords, 'enlargedChart', document.getElementById('keywordBarSlider').value)
             })
 
+            var companies = [];
+            var allStockData = {};
+            for (var i = 0; i < responseData.stockData.length; i++) {
+                var tempStock = responseData.stockData[i]
+                if (!companies.includes(tempStock.company)) {
+                    companies.push(tempStock.company);
+                    allStockData[tempStock.company] = [];
+                }
+                allStockData[tempStock.company].push({ date: tempStock.date, price: tempStock.price })
+            }
+            console.log(allStockData)
+            var shortestCompany = companies.reduce(function (a, b) {
+                return a.length <= b.length ? a : b;
+            })
+            var stockOptions = document.getElementById('stockRange');
+            console.log(stockOptions);
+            for (var i = 0; i < companies.length; i++) {
+                if (companies[i] == shortestCompany) {
+                    var tempHTML = `<option value='${companies[i]}' selected>${companies[i]}</option>`;
+                }
+                else {
+                    var tempHTML = `<option value='${companies[i]}'>${companies[i]}</option>`;
+                }
+                stockOptions.insertAdjacentHTML('beforeend', tempHTML);
+            }
+
+            var divID = 'stockTime';
+            stockGraph = document.getElementById(divID)
+            stockGraph.addEventListener('click', function () {
+                document.getElementById('resetChart').addEventListener('click', function () {
+                    console.log('clicked');
+                    makeStockGraph(allStockData, 'enlargedChart');
+                })
+                makeStockGraph(allStockData, 'enlargedChart');
+            })
+            document.getElementById('stockRange').addEventListener('change', function () {
+                makeStockGraph(allStockData, divID);
+            })
+            makeStockGraph(allStockData, divID);
+
 
             /* document.getElementById('keywordPieSlider2').max = responseData.keywords.length;
             var pieChart = document.getElementById('keywordPie');
@@ -2296,12 +2363,12 @@ function getChartQuery3() {
         dataType: 'json',
         success: function (responseData) {
             window.newsResponseData = responseData;
+            console.log(responseData)
 
             //console.log(responseData)
             alert('조회 성공: ' + responseData.allNews.length + '개 기사');
-            
 
-            makeWordcloud(responseData.keywords);
+
 
         },
         error: function () {
@@ -2314,10 +2381,10 @@ function getChartQuery3() {
 
 function makeWordcloud(data) {
     //console.log(data)
-    var words = data.sort(function (a, b) { return b.frequency - a.frequency });
+    var words = data.sort(function (a, b) { return b.tf_idf - a.tf_idf });
     //console.log(words)
     var sizeMax = 20;
-    var maxValue = Math.max.apply(Math, words.map(function (o) { return o.frequency }));
+    var maxValue = Math.max.apply(Math, words.map(function (o) { return o.tf_idf }));
     var paddingSlide = document.getElementById('paddingSlider')
     document.getElementById('paddingValue').innerHTML = this.value;
     paddingSlide.onchange = function () {
@@ -2361,10 +2428,10 @@ function makeWordcloud(data) {
 
 function makeWordcloud2(data) {
     //console.log(data)
-    var words = data.sort(function (a, b) { return b.frequency - a.frequency });
+    var words = data.sort(function (a, b) { return b.tf_idf - a.tf_idf });
     //console.log(words)
     var sizeMax = 20;
-    var maxValue = Math.max.apply(Math, words.map(function (o) { return o.frequency }));
+    var maxValue = Math.max.apply(Math, words.map(function (o) { return o.tf_idf }));
     var paddingSlide = document.getElementById('paddingSlider')
     document.getElementById('paddingValue').innerHTML = paddingSlide.value;
     paddingSlide.onchange = function () {

@@ -8,7 +8,7 @@ public class ChartQuery {
 	private List<SentimentDate> sentimentDates;
 	private float averageScore;
 	private List<NewsKeyword> keywords;
-	private List<Float> stockData;
+	private List<Stocks> stockData;
 
 	public ChartQuery(List<News> allNews, List<SentimentDate> sentimentDates, float averageScore) {
 		super();
@@ -24,6 +24,16 @@ public class ChartQuery {
 		this.sentimentDates = sentimentDates;
 		this.averageScore = averageScore;
 		this.keywords = keywords;
+	}
+
+	public ChartQuery(List<News> allNews, List<SentimentDate> sentimentDates, float averageScore,
+			List<NewsKeyword> keywords, List<Stocks> stockData) {
+		super();
+		this.allNews = allNews;
+		this.sentimentDates = sentimentDates;
+		this.averageScore = averageScore;
+		this.keywords = keywords;
+		this.stockData = stockData;
 	}
 
 	public List<News> getAllNews() {
@@ -58,11 +68,11 @@ public class ChartQuery {
 		this.keywords = keywords;
 	}
 
-	public List<Float> getStockData() {
+	public List<Stocks> getStockData() {
 		return stockData;
 	}
 
-	public void setStockData(List<Float> stockData) {
+	public void setStockData(List<Stocks> stockData) {
 		this.stockData = stockData;
 	}
 
