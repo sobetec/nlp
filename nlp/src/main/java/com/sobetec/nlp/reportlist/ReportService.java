@@ -1,7 +1,11 @@
 package com.sobetec.nlp.reportlist;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -28,7 +32,13 @@ public class ReportService {
     public List<Report> getReportList(ReportCondition reportCondition) throws Exception {
     	logger.debug("########## start Service getReportListCondition");
     	List<Report> listReport = new ArrayList<Report>();
-    	listReport = repository.getReportListByCondition(reportCondition);
+    	
+    	if(reportCondition.getGubun().equals("custom")) {
+    		listReport = repository.getReportListByCustom(reportCondition);
+    	}
+    	else {
+    		listReport = repository.getReportListByCondition(reportCondition);
+    	}    	
     	
     	for(int i = 0; i < listReport.size(); i++) {
     		
@@ -37,19 +47,37 @@ public class ReportService {
         		Double tempScore = Double.parseDouble(listReport.get(i).getTaScre());
         		
         		if (tempScore > 60) {
-        			listReport.get(i).setTaScre("긍정");
+        			listReport.get(i).setTaScreWord("긍정");
         		}
         		else if (tempScore < 40) {
-        			listReport.get(i).setTaScre("부정");
+        			listReport.get(i).setTaScreWord("부정");
         		}
         		else {	
-        			listReport.get(i).setTaScre("중립");
+        			listReport.get(i).setTaScreWord("중립");
         		}
     		} else {
     		
-    			listReport.get(i).setTaScre("없음");
+    			listReport.get(i).setTaScreWord("없음");
     		}
-    	}
+    		
+    		String[] tempArray = listReport.get(i).getPropNoun().split(",");
+    		List asList = Arrays.asList(tempArray);
+        	Set<String> mySet = new HashSet<String>(asList);
+
+        	String tempNoun = "";
+        	int j = 1;
+        	for(String s: mySet){
+        		//System.out.println(s + " " + Collections.frequency(asList,s));
+        		if(j == 1) {
+        			tempNoun = tempNoun + s;
+        			}
+        		else {
+        			tempNoun = tempNoun + "," + s;
+        		}
+        		j++;
+        	}
+        	listReport.get(i).setPropNoun(tempNoun);
+        }    	
     	
         return listReport; 
     }

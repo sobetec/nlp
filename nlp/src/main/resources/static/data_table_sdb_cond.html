@@ -383,7 +383,6 @@
 				<p style="text-align: center; vertical-align: middle;"><b><span style="font-size: 15pt; color:white; vertical-align: middle;">` + window.newsResponseData[i].newsTtl + `</span></b></p>
 			</div>
 
-			<iframe>
 			<div class="modal-content">
 
 				` + sectionHtml + `
@@ -453,9 +452,7 @@
 			<p style="text-align: center; line-height: 1.5;"><br />데이터 베이스에서 읽어오고 있습니다.</p>
 			<p style="text-align: center; line-height: 1.5;"><br />잠시만 기다려 주십시오.</p>
 			<p><br /></p>
-			<img src="https://media1.giphy.com/media/3y0oCOkdKKRi0/giphy.gif"/>
 			<img src="https://media0.giphy.com/media/y1ZBcOGOOtlpC/giphy.gif?cid=ecf05e4775spidwfj635cgpsc33t5trqmeo7y1sllw1o38kt&rid=giphy.gif"/>
-			<img src="https://media0.giphy.com/media/fjxtv0QzVWyfKzZWJh/giphy.gif?cid=ecf05e47m6tatidj318gu7la6xdiobsrxffqxx9rm61zc3mn&rid=giphy.gif"/>
 		</div>
 		`;
 		document.getElementById('myModal').innerHTML =  modalhtml1;
@@ -473,8 +470,7 @@
 				<p style="text-align: center; line-height: 1.5;"><br />화면에 표출중입니다.</p>
 				<p style="text-align: center; line-height: 1.5;"><br />잠시만 기다려 주십시오.</p>
 				<p><br /></p>
-				<img src="https://media1.giphy.com/media/3y0oCOkdKKRi0/giphy.gif"/>
-				<img src="https://media0.giphy.com/media/fjxtv0QzVWyfKzZWJh/giphy.gif?cid=ecf05e47m6tatidj318gu7la6xdiobsrxffqxx9rm61zc3mn&rid=giphy.gif"/>
+				<img src="https://media0.giphy.com/media/y1ZBcOGOOtlpC/giphy.gif?cid=ecf05e4775spidwfj635cgpsc33t5trqmeo7y1sllw1o38kt&rid=giphy.gif"/>
 			</div>
 		`;
 		document.getElementById('myModal').innerHTML =  modalhtml2;
@@ -496,7 +492,8 @@
 						<th>날짜</th>
 						<th>기업명</th>
 						<th>제목</th>
-						<th >스코어</th>
+						<th>progress</th>
+						<th>스코어</th>
 					</tr>
 					</thead>
 					<tbody id="result_area">
@@ -505,22 +502,47 @@
 		for(var i = 0; i < window.newsResponseData.length; i++){
 			var indexNum = i+1;
 			window.newsResponseData[i].indexNum = indexNum;
-			var sscore = window.newsResponseData[i].taScre;
-			var rred = ''
+			var sscoreWord = newsResponseData[i].taScreWord;
+			var sscore = 0;
 
-			if (sscore == '긍정') {
-				rred = `<td style='color:red;'>` + window.newsResponseData[i].taScre + `</td>`;	
+			if (newsResponseData[i].taScre != NaN) {
+				tempSscore = Math.round(newsResponseData[i].taScre).toString();;
+				if (tempSscore.match(/^[0-9]$/) != null) {
+					sscore = '0' + tempSscore;
+				} else {
+					sscore = tempSscore;
+				}
+				console.log(sscore);
+			};
+
+
+			var rred = '';
+			var procc = '';
+
+			if (sscoreWord == '중립') {
+				procc = `<td><div style="width:100%; border:0.5px solid grey; height:7px; color:#000!important; background-color:#dadada!important; border-radius:6px" >
+				<div style="height:7px; padding:0.01em; width:`+ sscore + `%; color: #fff!important;
+				background-color: #32880a!important; border-radius: 7px; font-size: 0%;" >`+ sscore + `</div>
+			</div></td>`
+				rred = `<td style='color:#32880a;'>` + sscoreWord + `</td>`;
+			} else if (sscoreWord == '부정') {
+				procc = `<td><div style="width:100%; border:0.5px solid grey; height:7px; color:#000!important; background-color:#dadada!important; border-radius:6px" >
+				<div style="height:7px; padding:0.01em; width:`+ sscore + `%; color: #fff!important;
+				background-color: #2196F3!important; border-radius: 7px; font-size: 0%;" >`+ sscore + `</div>
+			</div></td>`
+				rred = `<td style='color:#2196F3;'>` + sscoreWord + `</td>`;
+			} else if (sscoreWord == '긍정') {
+				procc = `<td><div style="width:100%; border:0.5px solid grey; height:7px; color:#000!important; background-color:#dadada!important; border-radius:6px" >
+				<div style="height:7px; padding:0.01em; width:`+ sscore + `%; color: #fff!important;
+				background-color: #a31b1b!important; border-radius: 7px; font-size: 0%;" >`+ sscore + `</div>
+			</div></td>`
+				rred = `<td style='color:#a31b1b;'>` + sscoreWord + `</td>`;
+			} else if (sscoreWord == '없음') {
+				procc = `<td>no score</td>`
+				rred = `<td style='color:black'>` + sscoreWord + `</td>`;
 			}
-			if (sscore == '중립') {
-				rred = `<td style='color:green;'>` + window.newsResponseData[i].taScre + `</td>`;	
-			}
-			if (sscore == '부정') {
-				rred = `<td style='color:blue;'>` + window.newsResponseData[i].taScre + `</td>`;	
-			}
-			if (sscore == '없음') {
-				rred = `<td style='color:black'>` + window.newsResponseData[i].taScre + `</td>`;	
-			}
-			
+
+
 			var htmlContents =
 			`
 				<tr>
@@ -529,6 +551,7 @@
 					<td>` + window.newsResponseData[i].newsDate + `</td>
 					<td>` + window.newsResponseData[i].cmpyName + `</td>
 					<td><a href="javascript:viewNewsContents(` + i +`);">` + window.newsResponseData[i].newsTtl + `</a></td>
+					`+ procc + `
 					`+ rred +`
 				</tr>
 			`;
@@ -594,9 +617,7 @@
 						<p style="text-align: center; line-height: 1.5;"><br />화면에 표출중입니다.</p>
 						<p style="text-align: center; line-height: 1.5;"><br />잠시만 기다려 주십시오.</p>
 						<p><br /></p>
-						<img src="https://media1.giphy.com/media/3y0oCOkdKKRi0/giphy.gif"/>
-						<img src="https://media0.giphy.com/media/fjxtv0QzVWyfKzZWJh/giphy.gif?cid=ecf05e47m6tatidj318gu7la6xdiobsrxffqxx9rm61zc3mn&rid=giphy.gif"/>
-						<img src="https://media4.giphy.com/media/lP4jmO461gq9uLzzYc/giphy.gif?cid=ecf05e47erfaoq3yizncbo5lu4qvy0l9p56p4y74im87cvrt&rid=giphy.gif"/>
+						<img src="https://media0.giphy.com/media/y1ZBcOGOOtlpC/giphy.gif?cid=ecf05e4775spidwfj635cgpsc33t5trqmeo7y1sllw1o38kt&rid=giphy.gif" align="center"/>
 					</div>
 				`;
 				document.getElementById('myModal').innerHTML =  modalhtml2;
@@ -704,7 +725,7 @@
 		<div class="side_panel">
 			<h2 class="blind">메뉴</h2>
 			<!-- menu -->
-			<nav class="main_menu">
+			<nav class="main_menu is_fold">
 				<ul class="menu_list">
 					<li><a href="#" class="link_menu active"><i class="icon_01"></i><span class="menu">데이터 관리</span></a></li>
 					<li><a href="#" class="link_menu"><i class="icon_02"></i><span class="menu">데이터 전처리</span></a></li>
@@ -815,6 +836,7 @@
 								<th>날짜</th>
 								<th>기업명</th>
 								<th>제목</th>
+								<th>progress</th>
 								<th>스코어</th>
 							</tr>
 							</thead>
@@ -826,13 +848,6 @@
 									<td> </td>
 									<td> </td>
 									<td> </td>
-								</tr>
-								<tr>
-									<td> 　</td>
-									<td> </td>
-									<td> </td>
-									<td> </td>
-									<td> </td>
 									<td> </td>
 								</tr>
 								<tr>
@@ -842,6 +857,7 @@
 									<td> </td>
 									<td> </td>
 									<td> </td>
+									<td> </td>
 								</tr>
 								<tr>
 									<td> 　</td>
@@ -850,25 +866,11 @@
 									<td> </td>
 									<td> </td>
 									<td> </td>
-								</tr>
-								<tr>
-									<td>　 </td>
-									<td> </td>
-									<td> </td>
-									<td> </td>
-									<td> </td>
 									<td> </td>
 								</tr>
 								<tr>
-									<td>　 </td>
+									<td> 　</td>
 									<td> </td>
-									<td> </td>
-									<td> </td>
-									<td> </td>
-									<td> </td>
-								</tr>
-								<tr>
-									<td>　 </td>
 									<td> </td>
 									<td> </td>
 									<td> </td>
@@ -882,6 +884,16 @@
 									<td> </td>
 									<td> </td>
 									<td> </td>
+									<td> </td>
+								</tr>
+								<tr>
+									<td>　 </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
 								</tr>
 								<tr>
 									<td>　 </td>
@@ -890,9 +902,29 @@
 									<td> </td>
 									<td> </td>
 									<td> </td>
+									<td> </td>
 								</tr>
 								<tr>
 									<td>　 </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+								</tr>
+								<tr>
+									<td>　 </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+									<td> </td>
+								</tr>
+								<tr>
+									<td>　 </td>
+									<td> </td>
 									<td> </td>
 									<td> </td>
 									<td> </td>

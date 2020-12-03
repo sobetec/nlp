@@ -30,12 +30,12 @@
 	
 	<select id="selectReportListByCondition" parameterType="com.sobetec.nlp.reportlist.ReportCondition" resultType="com.sobetec.nlp.reportlist.Report">
 		
-		SELECT "composite_key"		AS "cmpyKey" 
-		 	 , "report_date"		AS "reportDate"
+		SELECT "report_date"		AS "reportDate"
 			 , "org_name"		AS "orgnFileName"
-			 , round(cast(ta_score as numeric),4)		AS "taScre"
-			 , "ext_morphs"		AS "extMorp"
-			 , "proper_noun"		AS "propNoun"
+			 , "org_file_path"		AS "orgnFilePath"
+			 , round(cast(avg(ta_score) as numeric),4)		AS "taScre"
+			 , string_agg(ext_morphs, ',')		AS "extMorp"
+			 , string_agg(proper_noun, ',')		AS "propNoun"
 			 , "doc_category"		AS "docCaty"
 		FROM NLP."nlp_report"
 		where (ext_data like concat('%',#{searchWord},'%') or org_name like concat('%',#{searchWord},'%'))
@@ -51,12 +51,34 @@
 			  		and report_date_year = #{reportYear}
 			  		and report_date_quarter = #{gubunItem}
 			  	</when>
-			  	<when test="gubun == 'custom'">
-			  		and report_date between  to_date(#{startDate}, 'yyyy-mm-dd') and to_date(#{endDate}, 'yyyy-mm-dd')
-			  	</when>
 			</choose>
+		group by report_date, org_name, org_file_path, doc_category
 		order by report_date desc
-		limit 2000 offset 1
+		limit 2000 offset 0
+
+	</select>
+	
+	
+	<select id="selectReportListByCustom" parameterType="com.sobetec.nlp.reportlist.ReportCondition" resultType="com.sobetec.nlp.reportlist.Report">
+		
+		SELECT "report_date"		AS "reportDate"
+			 , "org_name"		AS "orgnFileName"
+			 , "org_file_path"		AS "orgnFilePath"
+			 , round(cast(avg(ta_score) as numeric),4)		AS "taScre"
+			 , string_agg(ext_morphs, ',')		AS "extMorp"
+			 , string_agg(proper_noun, ',')		AS "propNoun"
+			 , "doc_category"		AS "docCaty"
+			 , "report_mdate"	AS "reportMDate"
+		FROM 
+			(
+				select report_date, org_name, org_file_path, ta_score, ext_morphs, proper_noun, doc_category, to_date(concat(report_date_year, '-', report_date_month, '-', report_date_day), 'yyyy-mm-dd') as report_mdate 
+				from nlp.nlp_report
+			) as innerTable
+		where (proper_noun like concat('%',#{searchWord},'%') or org_name like concat('%',#{searchWord},'%'))
+			and report_mdate between to_date(#{startDate}, 'yyyy-mm-dd') and to_date(#{endDate}, 'yyyy-mm-dd') 
+		group by report_date, org_name, org_file_path, doc_category, report_mdate
+		order by report_mdate desc
+		limit 2000 offset 0
 
 	</select>
 	
