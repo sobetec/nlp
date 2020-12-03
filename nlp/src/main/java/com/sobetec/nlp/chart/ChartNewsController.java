@@ -2,8 +2,6 @@ package com.sobetec.nlp.chart;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,8 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class ChartNewsController {
-
-	protected Log logger = LogFactory.getLog(ChartNewsController.class);
 
 	@Autowired
 	private ChartNewsRepositoryImpl repository;

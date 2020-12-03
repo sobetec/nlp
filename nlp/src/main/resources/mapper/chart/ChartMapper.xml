@@ -8,11 +8,11 @@
 			 , "company_name"						AS "cmpyName"
 			 , round(cast(ta_score as numeric),4)	AS "taScre"
 			 , "news_title"							AS "newsTtl"
-			 , "raw_data"							AS "rawData"
 			 , "ext_morphs"							AS "extMorp"
 			 
 		 FROM NLP."nlp_news"
-		 where company_name like concat('%',#{cmpyNameOnly},'%') or raw_data like concat('%',#{cmpyNameOnly},'%') or news_title like concat('%',#{cmpyNameOnly},'%') 
+		 where (company_name like concat('%',#{cmpyNameOnly},'%') or raw_data like concat('%',#{cmpyNameOnly},'%') or news_title like concat('%',#{cmpyNameOnly},'%') )
+		 AND (news_date between '2020-01-01' and '2020-12-31')
 		 order by news_date desc limit 1000
 	</select>
 	<select id="selectChartStocksByCompany" parameterType="String" resultType="com.sobetec.nlp.chart.Stocks">

@@ -7,15 +7,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ChartQueryService {
-
-	protected Log logger = LogFactory.getLog(ChartNewsController.class);
 
 	@Autowired
 	private ChartNewsRepositoryImpl repository;
@@ -33,24 +29,24 @@ public class ChartQueryService {
 		List<Stocks> allStocks = new ArrayList<Stocks>();
 		List<NewsKeyword> allDocFreqs = new ArrayList<NewsKeyword>();
 
-		logger.debug("call DB for news");
+		// logger.debug("call DB for news");
 		allNews = repository.getChartNewsByCompany(cmpyNameOnly);
-		logger.debug("Done getting news");
-		logger.debug("call DB for stock");
+		// logger.debug("Done getting news");
+		// logger.debug("call DB for stock");
 		allStocks = repository.getChartStocksByCompany(cmpyNameOnly);
-		logger.debug("Done getting stock");
-		logger.debug("call DB for keywordFreqs");
+		// logger.debug("Done getting stock");
+		// logger.debug("call DB for keywordFreqs");
 		allDocFreqs = repository.getDocFreqCounts();
-		logger.debug("Done getting KeywordFreqs");
+		// logger.debug("Done getting KeywordFreqs");
 
-		logger.debug("begin running algos");
+		// logger.debug("begin running algos");
 		HashMap<String, String> allDates = new HashMap<String, String>();
 		List<List<String>> documents = new ArrayList<List<String>>();
 		int subsetTermSize = 0;
 		float totalScore = 0;
 		HashMap<String, NewsKeyword> newsKeywordMap = new HashMap<String, NewsKeyword>();
 
-		logger.debug("first sweep of all news retrieved");
+		// logger.debug("first sweep of all news retrieved");
 		for (int i = 0; i < allNews.size(); i++) {
 			News currNews = allNews.get(i);
 			String[] morphs = currNews.getExtMorp().split(",");
@@ -86,7 +82,7 @@ public class ChartQueryService {
 			}
 		}
 
-		logger.debug("first sweep done");
+		// logger.debug("first sweep done");
 		for (int i = 0; i < allDocFreqs.size(); i++) {
 			NewsKeyword currKeyword = allDocFreqs.get(i);
 			if (newsKeywordMap.containsKey(currKeyword.getKeyword())) {
@@ -94,7 +90,7 @@ public class ChartQueryService {
 			}
 		}
 
-		logger.debug("iterate over morphemes");
+		// logger.debug("iterate over morphemes");
 		// get tf-idfs
 		int fullCorpusSize = 789102;
 		int corpusSize = fullCorpusSize - documents.size() + 1;
@@ -105,30 +101,30 @@ public class ChartQueryService {
 		int testMax = 0;
 		while (morphs.hasNext()) {
 			String morph = morphs.next();
-			// logger.debug(morph);
-			// logger.debug(newsKeywordMap.get(morph).getSubsetTermCount());
+			// //logger.debug(morph);
+			// //logger.debug(newsKeywordMap.get(morph).getSubsetTermCount());
 			if (newsKeywordMap.get(morph).getSubsetDocFreq() > testMax) {
 				testMax = newsKeywordMap.get(morph).getSubsetDocFreq();
 			}
 			float termFreq = newsKeywordMap.get(morph).getSubsetTermCount() / (float) subsetTermSize;
-			// logger.debug(termFreq);
+			// //logger.debug(termFreq);
 			float invDocFreq = (float) (Math.log((float) corpusSize / (newsKeywordMap.get(morph).getTotalDocFreq()
 					- newsKeywordMap.get(morph).getSubsetDocFreq() + 1)));
-			// logger.debug(invDocFreq);
-			// logger.debug(termFreq * invDocFreq);
+			// //logger.debug(invDocFreq);
+			// //logger.debug(termFreq * invDocFreq);
 			newsKeywordMap.get(morph).setTf_idf(termFreq * invDocFreq);
 			newsKeywords.add(newsKeywordMap.get(morph));
 		}
-		logger.debug(testMax);
+		// logger.debug(testMax);
 
 		Collections.sort(newsKeywords, (o1, o2) -> Float.compare(o2.getTf_idf(), o1.getTf_idf()));
-		logger.debug("morpheme iteration done");
+		// logger.debug("morpheme iteration done");
 
 		//
 		//
 		//
 		//
-		logger.debug("iterate over sentiment dates");
+		// logger.debug("iterate over sentiment dates");
 		// Make array of SentimentDates from HashMap
 		List<SentimentDate> sentimentDates = new ArrayList<SentimentDate>();
 		Iterator<String> keys = allDates.keySet().iterator();
@@ -146,8 +142,8 @@ public class ChartQueryService {
 		}
 		float averageScore = totalScore / allNews.size();
 
-		logger.debug("sentiment dates done");
-		logger.debug("done running all algos");
+		// logger.debug("sentiment dates done");
+		// logger.debug("done running all algos");
 
 		ChartQuery chartQuery = new ChartQuery(allNews, sentimentDates, averageScore, newsKeywords, allStocks);
 
