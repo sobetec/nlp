@@ -1052,6 +1052,12 @@
 
             var tables = ``;
 
+            var expend_all =`
+				<div class="buttons" align="right" >
+					<a id="toggleee" class="btn" style="min-width: 110px;" href="javascript:togglee();">전체 펼치기</a>
+					
+				</div>
+				`
 
             for (var n = 0; n < 3; n++) {	
                 var htmlTableHead = 
@@ -1149,7 +1155,7 @@
             };
 
 
-                document.getElementById('result_area_industry').innerHTML = tables;
+                document.getElementById('result_area_industry').innerHTML = expend_all + tables;
 
                 
                 $(".menu>a").click(function (){
@@ -1219,6 +1225,80 @@
 
     }
 
+    function rmv(){
+        $(".hide").slideUp();
+        $(".closed").css('visibility', 'hidden');
+        $(".visivi").css('visibility', 'visible');
+        $("#toggleee").text('전체 펼치기');
+
+    }
+
+    function sshow(){
+        $(".hide").slideDown();
+        $(".closed").css('visibility', 'visible');
+        $(".visivi").css('visibility', 'hidden');
+        $("#toggleee").text('전체 접기');
+    }
+    
+    function togglee() {
+        if ($("#toggleee").text()=='전체 펼치기') {
+            sshow();
+        }else if($("#toggleee").text()=='전체 접기'){
+            rmv();
+        };
+    }
+
+    function dataTableSearch() {
+        //$("#dataTableSearch").val('엘지');
+        //$("#dataTableSearch").focus();
+        //$("#dataTableSearch").bind("keydown", function(e) {
+        //    if (e.keyCode == 13) { // enter key
+        //       // yourAction();
+        //        return false
+        //	}
+        //});
+        
+        
+        //$("#dataTableSearch").trigger(e);
+        
+        $("#dataTableSearch").val('엘지');
+        //$("#search_company").trigger(e);
+
+        pressButton();
+    }
+
+    function pressButton() {
+        var e = jQuery.Event( "keyup.DT");
+        //var e = jQuery.Event( "search.DT", { keyCode: 13 } )
+        $("#dataTableSearch").trigger(e);
+        
+        //setTimeout(function () {
+        //	jQuery('#search_company').trigger('click');
+        // }, 1000);
+        console.log('im trigger press enter')
+    }
+
+
+
+    function dataTableSearchSam() {
+        $("#dataTableSearch").val('삼성');
+        //$("#dataTableSearch").focus();
+        //$("#dataTableSearch").bind("keydown", function(e) {
+        //    if (e.keyCode == 13) { // enter key
+        //       // yourAction();
+        //        return false
+        //	}
+        //});
+        
+        
+        //$("#dataTableSearch").trigger(e);
+        
+        //$("#search_company").val('엘지');
+        //$("#search_company").trigger(e);
+
+        pressButton();
+    }
+
 
     function itemChangeFold(){
 
@@ -1228,18 +1308,24 @@
         if(selectItem == "company"){
             $('#result_area_subsidiary').hide();
             $('#result_area_industry').hide();
+            document.getElementById("search_company_news").disabled = false;
+            document.getElementById("search_button_news").disabled = false;
             $('#result_area_news').show();
+            
         }
         else if(selectItem == "subsidiary"){
             $('#result_area_industry').hide();
             $('#result_area_news').hide();
+            document.getElementById("search_company_news").disabled = true;
+            document.getElementById("search_button_news").disabled = true;
             $('#result_area_subsidiary').show();
-            
         }
         else if(selectItem == "industry"){
             getIndustryList();
             $('#result_area_news').hide();
             $('#result_area_subsidiary').hide();
+            document.getElementById("search_company_news").disabled = true;
+            document.getElementById("search_button_news").disabled = true;
             $('#result_area_industry').show();
         }
     }
@@ -1407,13 +1493,9 @@
                         </div>
 
  
-                        <div class="search_box">
+                        <div class="search_box" id="search_box_news">
                             <input id="search_company_news" type="text" placeholder="검색" value="" onkeypress="if( event.keyCode == 13 ){getNewsList();}">
-                            <button  class="btn_search" onclick="getNewsList();"><span class="blind" >검색</span></button>
-                        </div>
-                        
-                        <div class="buttons">
-                            <a id="newsList" class="btn" href="javascript:getNewsList();">조회</a>
+                            <button id="search_button_news" class="btn_search" onclick="getNewsList();"><span class="blind" >검색</span></button>
                         </div>
                         
                     </div>
@@ -1505,18 +1587,12 @@
                             </span>
                        </div>
 
-                        <div class="search_box">
+                        <div class="search_box" id="search_box_report">
                             <input id="search_company_report" type="text" placeholder="검색" value="" onkeypress="if( event.keyCode == 13 ){getReportList();}">
                             <button  class="btn_search" onclick="getReportList();"><span class="blind" >검색</span></button>
                         </div>
-            
-                        <div class="buttons">
-                            <a id="reportList" class="btn" href="javascript:getReportList();">조회</a>
-                        </div>
-            
+        
                     </div>
-            
-            
             
             
             
