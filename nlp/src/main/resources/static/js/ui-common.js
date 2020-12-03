@@ -48,7 +48,7 @@ $('.sub_tab_area .btn_tab').on('click', function () {
 });
 
 // datePicker
-$("#date_from").datepicker({
+$("#date_from_news").datepicker({
   showOn: "button",
   buttonImage: "img/icon_calendar.png",
   buttonImageOnly: true,
@@ -59,10 +59,10 @@ $("#date_from").datepicker({
   changeYear: true,
   numberOfMonths: 1,
   onClose: function (selectedDate) {
-    $("#date_to").datepicker("option", "minDate", selectedDate);
+    $("#date_to_news").datepicker("option", "minDate", selectedDate);
   }
 });
-$("#date_to").datepicker({
+$("#date_to_news").datepicker({
   showOn: "button",
   buttonImage: "img/icon_calendar.png",
   buttonImageOnly: true,
@@ -73,9 +73,40 @@ $("#date_to").datepicker({
   changeYear: true,
   numberOfMonths: 1,
   onClose: function (selectedDate) {
-    $("#date_from").datepicker("option", "maxDate", selectedDate);
+    $("#date_from_news").datepicker("option", "maxDate", selectedDate);
   }
 });
+
+$("#date_from_report").datepicker({
+  showOn: "button",
+  buttonImage: "img/icon_calendar.png",
+  buttonImageOnly: true,
+  buttonText: "날짜 선택",
+  currentText: "Now",
+  defaultDate: "0",
+  changeMonth: true,
+  changeYear: true,
+  numberOfMonths: 1,
+  onClose: function (selectedDate) {
+    $("#date_to_report").datepicker("option", "minDate", selectedDate);
+  }
+});
+$("#date_to_report").datepicker({
+  showOn: "button",
+  buttonImage: "img/icon_calendar.png",
+  buttonImageOnly: true,
+  buttonText: "날짜 선택",
+  currentText: "Now",
+  defaultDate: "0",
+  changeMonth: true,
+  changeYear: true,
+  numberOfMonths: 1,
+  onClose: function (selectedDate) {
+    $("#date_from+report").datepicker("option", "maxDate", selectedDate);
+  }
+});
+
+
 
 // menu link
 function linkMu(linkSeq) {

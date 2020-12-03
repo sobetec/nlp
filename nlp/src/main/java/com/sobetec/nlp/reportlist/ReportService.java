@@ -29,7 +29,13 @@ public class ReportService {
     public List<Report> getReportList(ReportCondition reportCondition) throws Exception {
     	logger.debug("########## start Service getReportListCondition");
     	List<Report> listReport = new ArrayList<Report>();
-    	listReport = repository.getReportListByCondition(reportCondition);
+    	
+    	if(reportCondition.getGubun().equals("custom")) {
+    		listReport = repository.getReportListByCustom(reportCondition);
+    	}
+    	else {
+    		listReport = repository.getReportListByCondition(reportCondition);
+    	}    	
     	
     	for(int i = 0; i < listReport.size(); i++) {
     		

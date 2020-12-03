@@ -78,7 +78,7 @@
 		  	</when>
 		  
 		  </choose>
-		 
+		 order by news_date desc
 		 limit 500
 
 	</select>

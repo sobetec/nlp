@@ -54,6 +54,7 @@ public class ReportController {
 	@PostMapping(path = "/getReportListByCondition")
 	public List<Report> getReportListByCondition(ReportCondition reportCondition) throws Exception {
 		System.out.println(reportCondition);
+		
 		return reportService.getReportList(reportCondition);
 	}
 

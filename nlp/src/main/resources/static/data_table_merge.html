@@ -16,6 +16,20 @@
             text-align: center; 
             font-size: 11px;
         }
+
+        #example_news {
+            /* width: 100%;
+            padding: 0px 0;*/
+            text-align: center; 
+            font-size: 11px;
+        }
+
+        #example_report {
+            /* width: 100%;
+            padding: 0px 0;*/
+            text-align: center; 
+            font-size: 11px;
+        }
         
 /*      progress {
          -webkit-appearance: none;
@@ -58,13 +72,13 @@
             padding-left: 40px;
             padding-right: 40px;
             width: 72%; /* Could be more or less, depending on screen size */
-            min-height: 600px;
+            min-height: 300px;
             position: relative;   
             vertical-align: middle;                       
         }
         .modal-title {
             margin: 7% auto; /* 15% from the top and centered */
-            min-height: 60px;
+            min-height: 40px;
             background-color: #0508b1;
             text-align: center;
             vertical-align: middle;
@@ -92,7 +106,7 @@
             padding: 40px;
             border: 1px solid #888;
             width: 70%; /* Could be more or less, depending on screen size */
-            min-height: 600px;
+            min-height: 400px;
             position: relative;                          
         }
 
@@ -334,7 +348,9 @@
         
         .carouselNoNext::after {
         background-image: url("img/right-arrow.png");
-        } 
+        }
+
+
 
     </style>
 
@@ -343,9 +359,9 @@
 <script>
     
     $(document).ready( function () {
-        $('#example').DataTable();
+        $('#example_news').DataTable();
         setDisplay();
-        $('#date_picker_div').hide();
+        $('#date_picker_div_News').hide();
         /*$('.btn_close').click();*/
 
     } ); 
@@ -397,7 +413,7 @@
         var modalhtml =
         `   
             <div class="modal-title">
-                <p style="text-align: center; vertical-align: middle;"><b><span style="font-size: 15pt; color:white; vertical-align: middle;">` + window.newsResponseData[i].newsTtl + `</span></b></p>
+                <p style="text-align: center; vertical-align: middle;"><b><span style="font-size: 13pt; color:white; vertical-align: middle;">` + window.newsResponseData[i].newsTtl + `</span></b></p>
             </div>
 
             <div class="modal-content">
@@ -412,8 +428,7 @@
                                 <td>
                                     
 
-                                    <p style="text-align: right; line-height: 1.5;"><br />` + window.newsResponseData[i].newsDate + `</p>
-                                    <p><br/></p>
+                                    <p style="text-align: right; line-height: 1;"><br />` + window.newsResponseData[i].newsDate + `</p>
 
                                     <div style="border: 1px solid #888;">
                                         <p style="text-align: center; line-height: 1.5;"><br />` + window.newsResponseData[i].rawData + `</p>
@@ -460,18 +475,18 @@
     }
 
 
-    function loading1(){
+    function loading1(loading){
         var modalhtml1 =
         `
         <div class="modal-loading">
-            <p style="text-align: center;"><span style="font-size: 14pt;"><b><span style="font-size: 24pt;">뉴스 목록 불러오는 중...</span></b></span></p>
+            <p style="text-align: center;"><span style="font-size: 14pt;"><b><span style="font-size: 24pt;">` + loading + ` 목록 불러오는 중...</span></b></span></p>
             <button type="button" class="close" onClick="close_pop();"></button>
             <p style="text-align: center; line-height: 1.5;"><br />데이터 베이스에서 읽어오고 있습니다.</p>
             <p style="text-align: center; line-height: 1.5;"><br />잠시만 기다려 주십시오.</p>
             <p><br /></p>
-            <img src="https://media1.giphy.com/media/3y0oCOkdKKRi0/giphy.gif"/>
-            <img src="https://media0.giphy.com/media/y1ZBcOGOOtlpC/giphy.gif?cid=ecf05e4775spidwfj635cgpsc33t5trqmeo7y1sllw1o38kt&rid=giphy.gif"/>
-            <img src="https://media0.giphy.com/media/fjxtv0QzVWyfKzZWJh/giphy.gif?cid=ecf05e47m6tatidj318gu7la6xdiobsrxffqxx9rm61zc3mn&rid=giphy.gif"/>
+            <p style="text-align: center; line-height: 1.5;"><br />
+                <img src="/img/loading.gif" align="center"/>
+            </p>
         </div>
         `;
         document.getElementById('myModal').innerHTML =  modalhtml1;
@@ -489,8 +504,9 @@
                 <p style="text-align: center; line-height: 1.5;"><br />화면에 표출중입니다.</p>
                 <p style="text-align: center; line-height: 1.5;"><br />잠시만 기다려 주십시오.</p>
                 <p><br /></p>
-                <img src="https://media1.giphy.com/media/3y0oCOkdKKRi0/giphy.gif"/>
-                <img src="https://media0.giphy.com/media/fjxtv0QzVWyfKzZWJh/giphy.gif?cid=ecf05e47m6tatidj318gu7la6xdiobsrxffqxx9rm61zc3mn&rid=giphy.gif"/>
+                <p style="text-align: center; line-height: 1.5;"><br />
+                    <img src="/img/loading.gif" align="center"/>
+                </p>
             </div>
         `;
         document.getElementById('myModal').innerHTML =  modalhtml2;
@@ -501,7 +517,7 @@
     function drawTable(){   
         var htmlStart =
         `
-        <table id="example" class="display" style="width:100%">
+        <table id="example_news" class="display" style="width:100%">
                     <colgroup>
                         <col>
                     </colgroup>
@@ -586,154 +602,139 @@
         
         document.getElementById('result_area_news').innerHTML = htmlStart+htmlEnd;
         
-        $('#example').DataTable();
+        $('#example_news').DataTable();
+        close_pop();
+    }
+
+
+    function drawTableReport(){   
+        var htmlStart =
+        `
+        <table id="example_report" class="display" style="width:100%">
+                    <colgroup>
+                        <col>
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th>인덱스</th>
+                        <th>날짜</th>
+                        <th>제목</th>
+                        <th>progress</th>
+                        <th>스코어</th>
+                        <th>타입</th>
+                        <th>　</th>
+                    </tr>
+                    </thead>
+                    <tbody id="result_area">
+        `;
+
+        for(var i = 0; i < window.reportResponseData.length; i++){
+            var indexNum = i+1;
+            window.reportResponseData[i].indexNum = indexNum;
+            var sscoreWord = reportResponseData[i].taScreWord;
+            var sscore = 0;
+
+            if (reportResponseData[i].taScre != NaN) {
+                tempSscore = Math.round(reportResponseData[i].taScre).toString();;
+                if (tempSscore.match(/^[0-9]$/) != null) {
+                    sscore = '0' + tempSscore;
+                } else {
+                    sscore = tempSscore;
+                }
+                console.log(sscore);
+            };
+
+
+            var rred = '';
+            var procc = '';
+
+            if (sscoreWord == '중립') {
+                procc = `<td><div style="width:100%; border:0.5px solid grey; height:7px; color:#000!important; background-color:#dadada!important; border-radius:6px" >
+                <div style="height:7px; padding:0.01em; width:`+ sscore + `%; color: #fff!important;
+                background-color: #32880a!important; border-radius: 7px; font-size: 0%;" >`+ sscore + `</div>
+            </div></td>`
+                rred = `<td style='color:#32880a;'>` + sscoreWord + `</td>`;
+            } else if (sscoreWord == '부정') {
+                procc = `<td><div style="width:100%; border:0.5px solid grey; height:7px; color:#000!important; background-color:#dadada!important; border-radius:6px" >
+                <div style="height:7px; padding:0.01em; width:`+ sscore + `%; color: #fff!important;
+                background-color: #2196F3!important; border-radius: 7px; font-size: 0%;" >`+ sscore + `</div>
+            </div></td>`
+                rred = `<td style='color:#2196F3;'>` + sscoreWord + `</td>`;
+            } else if (sscoreWord == '긍정') {
+                procc = `<td><div style="width:100%; border:0.5px solid grey; height:7px; color:#000!important; background-color:#dadada!important; border-radius:6px" >
+                <div style="height:7px; padding:0.01em; width:`+ sscore + `%; color: #fff!important;
+                background-color: #a31b1b!important; border-radius: 7px; font-size: 0%;" >`+ sscore + `</div>
+            </div></td>`
+                rred = `<td style='color:#a31b1b;'>` + sscoreWord + `</td>`;
+            } else if (sscoreWord == '없음') {
+                procc = `<td>no score</td>`
+                rred = `<td style='color:black'>` + sscoreWord + `</td>`;
+            }
+
+            /*
+            <td>
+                <a id="documentFile" href="/data/KDB_화면설계서_v0.6.pdf" download>
+                    <img src="/img/document_download.png" style="width: auto; height: 50px;">
+                </a>
+            </td>
+            */
+
+            var htmlContents =
+            `
+                <tr>
+                    <td>` + indexNum + `</td>
+                    <td>` + window.reportResponseData[i].reportDate + `</td>
+                    <td>` + window.reportResponseData[i].orgnFileName + `</td>
+                    `+ procc + `
+                    `+ rred +`
+                    <td>` + window.reportResponseData[i].docCaty + `</td>
+                    <td><a id="documentFile" href="C:\\Users\\sdb\\Documents\\doc_down_test\\KDB_ddd_v0.6.pdf" download>
+                        <img src="/img/pdf_download_svg.svg" style="width: auto; height: 25px;">
+                    </a>
+                    </td>
+                </tr>
+            `;
+            htmlStart = htmlStart + htmlContents;
+        }
+
+        var htmlEnd = 
+        `
+            </tbody>
+        </table>
+        `;
+        
+        document.getElementById('result_area_report').innerHTML = htmlStart+htmlEnd;
+        
+        $('#example_report').DataTable();
         close_pop();
     }
     
     
-    function getNewsListCompany() {
-
-        
-        var search_company = document.getElementById('search_company').value; 
-        console.log(search_company);
-        $.ajax({
-            url: "/getNewsListByCompany/"+search_company,
-            method: 'GET',
-            dataType: 'json',
-            success: function (responseData) {
-                alert('조회 성공');
-                console.log(responseData.length);
-                window.newsResponseData = responseData;
-                console.log(window.newsResponseData[0]);
-
-                var htmlStart =
-                `
-                <table id="example" class="display" style="width:100%">
-                            <colgroup>
-                                <col>
-                            </colgroup>
-                            <thead>
-                            <tr>
-                                <th>인덱스</th>
-                                <th>컴포짓키</th>
-                                <th>날짜</th>
-                                <th>기업명</th>
-                                <th>제목</th>
-                                <th >progress</th>
-                                <th >score</th>
-                            </tr>
-                            </thead>
-                            <tbody id="result_area_news">
-                `;
-                
-                
-                
-                //var blueb = `<td style='color:red;'>` + responseData[i].taScre + `</td>`;
-                //var ggreen = `<td style='color:red;'>` + responseData[i].taScre + `</td>`;
-
-                for(var i = 0; i < responseData.length; i++){
-                    var indexNum = i+1;
-                    var sscoreWord = responseData[i].taScreWord;
-                    var sscore = 0;
-                    
-                    if (responseData[i].taScre != NaN) {
-                        tempSscore = Math.round(responseData[i].taScre).toString();;
-                        if (tempSscore.match(/^[0-9]$/) != null ) {
-                            sscore = '0' + tempSscore;
-                        }else {
-                            sscore = tempSscore;
-                        }
-                        console.log(sscore);
-                    };
-
-                    
-                    var rred = '';
-                    var procc = '';
-                    
-                    if (sscoreWord == '중립') {
-                        procc = `<td><div style="width:100%; border:0.5px solid grey; height:7px; color:#000!important; background-color:#dadada!important; border-radius:6px" >
-                            <div style="height:7px; padding:0.01em; width:`+sscore+`%; color: #fff!important;
-                            background-color: #32880a!important; border-radius: 7px; font-size: 0%;" >`+sscore+`</div>
-                        </div></td>`
-                        rred = `<td style='color:#32880a;'>` + sscoreWord + `</td>`;
-                    }else if (sscoreWord == '부정') {
-                        procc = `<td><div style="width:100%; border:0.5px solid grey; height:7px; color:#000!important; background-color:#dadada!important; border-radius:6px" >
-                            <div style="height:7px; padding:0.01em; width:`+sscore+`%; color: #fff!important;
-                            background-color: #2196F3!important; border-radius: 7px; font-size: 0%;" >`+sscore+`</div>
-                        </div></td>`
-                        rred = `<td style='color:#2196F3;'>` + sscoreWord + `</td>`;    
-                    }else if (sscoreWord == '긍정') {
-                        procc = `<td><div style="width:100%; border:0.5px solid grey; height:7px; color:#000!important; background-color:#dadada!important; border-radius:6px" >
-                            <div style="height:7px; padding:0.01em; width:`+sscore+`%; color: #fff!important;
-                            background-color: #a31b1b!important; border-radius: 7px; font-size: 0%;" >`+sscore+`</div>
-                        </div></td>`
-                        rred = `<td style='color:#a31b1b;'>` + sscoreWord + `</td>`;    
-                    }else if (sscoreWord == '없음') {
-                        procc = `<td>no score</td>` 
-                        rred = `<td style='color:black'>` + sscoreWord + `</td>`;
-                    }
-                    
-                    var htmlContents =
-                    `
-                        <tr>
-                            <td>`+ indexNum +`</td>
-                            <td>` + responseData[i].cmpyKey + `</td>
-                            <td>` + responseData[i].newsDate + `</td>
-                            <td>` + responseData[i].cmpyName + `</td>
-                            <td><a href="javascript:viewNewsContents(` + i +`);">` + responseData[i].newsTtl + `</a></td>
-                            `+ procc +`
-                            `+ rred +`
-                        </tr>
-                    `;
-                    htmlStart = htmlStart + htmlContents;
-                }
-
-                var htmlEnd = 
-                `
-                    </tbody>
-                </table>
-                `;
-                
-                document.getElementById('result_area_news').innerHTML = htmlStart+htmlEnd;
-                
-                $('#example').DataTable();
-
-                
-
-            },
-            error: function () {
-                alert('조회 실패');
-            }
-        });
-        
-
-    }
-
     function getNewsList(){
         var data = new Object();
 
         data.newsYear = parseInt($("#newsYear").val());
-        data.gubun = $("#gubun").val();
+        data.gubun = $("#gubunNews").val();
 
-        if($("#gubun").val() == "month"){
-            var temp = $("#choices").val().split("월")[0];
+        if($("#gubunNews").val() == "month"){
+            var temp = $("#choicesNews").val().split("월")[0];
             console.log(temp);
             data.gubunItem = parseInt(temp);
         }
-        else if($("#gubun").val() == "quarter"){
-            var temp = $("#choices").val().split("분기")[0];
+        else if($("#gubunNews").val() == "quarter"){
+            var temp = $("#choicesNews").val().split("분기")[0];
             console.log(temp);
             data.gubunItem = parseInt(temp);
         }
         
-        data.startDate = $("#date_from").val();
-        data.endDate = $("#date_to").val();
-        data.searchWord = document.getElementById('search_company').value; 
+        data.startDate = $("#date_from_news").val();
+        data.endDate = $("#date_to_news").val();
+        data.searchWord = document.getElementById('search_company_news').value; 
 
 
         console.log(data);
 
-        loading1();
+        loading1("뉴스");
         
         $.ajax({
             url: "/getNewsListByCondition",
@@ -756,14 +757,80 @@
                         <p style="text-align: center; line-height: 1.5;"><br />화면에 표출중입니다.</p>
                         <p style="text-align: center; line-height: 1.5;"><br />잠시만 기다려 주십시오.</p>
                         <p><br /></p>
-                        <img src="https://media1.giphy.com/media/3y0oCOkdKKRi0/giphy.gif"/>
-                        <img src="https://media0.giphy.com/media/fjxtv0QzVWyfKzZWJh/giphy.gif?cid=ecf05e47m6tatidj318gu7la6xdiobsrxffqxx9rm61zc3mn&rid=giphy.gif"/>
-                        <img src="https://media4.giphy.com/media/lP4jmO461gq9uLzzYc/giphy.gif?cid=ecf05e47erfaoq3yizncbo5lu4qvy0l9p56p4y74im87cvrt&rid=giphy.gif"/>
+                        <p style="text-align: center; line-height: 1.5;"><br />
+                            <img src="/img/loading.gif" align="center"/>
+                        </p>
                     </div>
                 `;
                 document.getElementById('myModal').innerHTML =  modalhtml2;
                 $('#myModal').show();
                 setTimeout(() => drawTable(), 1000);
+
+            },
+            error: function () {
+                alert('조회 실패');
+                $('#myModal').hide();
+            }
+        });
+
+    }
+
+
+    function getReportList(){
+        var data = new Object();
+
+        data.reportYear = parseInt($("#reportYear").val());
+        data.gubun = $("#gubunReport").val();
+
+        if($("#gubunReport").val() == "month"){
+            var temp = $("#choicesReport").val().split("월")[0];
+            console.log(temp);
+            data.gubunItem = parseInt(temp);
+        }
+        else if($("#gubunReport").val() == "quarter"){
+            var temp = $("#choicesReport").val().split("분기")[0];
+            console.log(temp);
+            data.gubunItem = parseInt(temp);
+        }
+        
+        data.startDate = $("#date_from_report").val();
+        data.endDate = $("#date_to_report").val();
+        data.searchWord = document.getElementById('search_company_report').value; 
+
+
+        console.log(data);
+
+        loading1("행내 보고서");
+        
+        $.ajax({
+            url: "/getReportListByCondition",
+            method: 'POST',
+            data: data,
+            dataType: 'json',
+            success: function (responseData) {
+                //alert('조회 성공');
+                console.log(responseData.length);
+                window.reportResponseData = responseData;
+                console.log(window.reportResponseData[0]);
+
+                $('#myModal').hide();
+
+                var modalhtml2 =
+                `
+                    <div class="modal-loading">
+                        <p style="text-align: center;"><span style="font-size: 14pt;"><b><span style="font-size: 24pt;">행내 보고서 목록 불러오는 중...</span></b></span></p>
+                        <button type="button" class="close" onClick="close_pop();"></button>
+                        <p style="text-align: center; line-height: 1.5;"><br />화면에 표출중입니다.</p>
+                        <p style="text-align: center; line-height: 1.5;"><br />잠시만 기다려 주십시오.</p>
+                        <p><br /></p>
+                        <p style="text-align: center; line-height: 1.5;"><br />
+                            <img src="/img/loading.gif" align="center"/>
+                        </p>
+                    </div>
+                `;
+                document.getElementById('myModal').innerHTML =  modalhtml2;
+                $('#myModal').show();
+                setTimeout(() => drawTableReport(), 1000);
 
             },
             error: function () {
@@ -796,482 +863,108 @@
         
     function itemChangeNews(){
 
-        var selectItem = $("#gubun").val();
+        var selectItem = $("#gubunNews").val();
         console.log(selectItem);
 
         var changeItem;
         
         if(selectItem == "quarter"){
             changeItem = selectListData.quarter.text;
-            document.getElementById("choices").disabled = false;
+            document.getElementById("choicesNews").disabled = false;
             document.getElementById("newsYear").disabled = false;
-            $('#date_picker_div').hide();
+            $('#date_picker_div_News').hide();
         }
         else if(selectItem == "month"){
             changeItem = selectListData.month.text;
-            document.getElementById("choices").disabled = false;
+            document.getElementById("choicesNews").disabled = false;
             document.getElementById("newsYear").disabled = false;
-            $('#date_picker_div').hide();
+            $('#date_picker_div_News').hide();
         }
         else if(selectItem == "year"){
             changeItem = '';
-            document.getElementById("choices").disabled = true;
+            document.getElementById("choicesNews").disabled = true;
             document.getElementById("newsYear").disabled = false;
-            $('#date_picker_div').hide();
+            $('#date_picker_div_News').hide();
             //$('#condition').hide();
         }
         else if(selectItem == "custom"){
             changeItem = '';
-            document.getElementById("choices").disabled = true;
+            document.getElementById("choicesNews").disabled = true;
             document.getElementById("newsYear").disabled = true;
-            $('#date_picker_div').show();
+            $('#date_picker_div_News').show();
         }
         
 
-        $('#choices').empty();
+        $('#choicesNews').empty();
         
         for(var count = 0; count < changeItem.length; count++){                
             var option = $("<option>"+changeItem[count]+"</option>");
-            $('#choices').append(option);
+            $('#choicesNews').append(option);
         }
     }
 
     function itemChangeReport(){
 
-        $('#date_picker_div').hide();
-        var selectItem = $("#gubun").val();
+        $('#date_picker_div_Report').hide();
+        var selectItem = $("#gubunReport").val();
         console.log(selectItem);
 
         var changeItem;
         
         if(selectItem == "quarter"){
             changeItem = selectListData.quarter.text;
-            document.getElementById("choices").disabled = false;
+            document.getElementById("choicesReport").disabled = false;
             document.getElementById("reportYear").disabled = false;
-            $('#date_picker_div').hide();
+            $('#date_picker_div_Report').hide();
         }
         else if(selectItem == "month"){
             changeItem = selectListData.month.text;
-            document.getElementById("choices").disabled = false;
+            document.getElementById("choicesReport").disabled = false;
             document.getElementById("reportYear").disabled = false;
-            $('#date_picker_div').hide();
+            $('#date_picker_div_Report').hide();
         }
         else if(selectItem == "year"){
             changeItem = '';
-            document.getElementById("choices").disabled = true;
+            document.getElementById("choicesReport").disabled = true;
             document.getElementById("reportYear").disabled = false;
-            $('#date_picker_div').hide();
+            $('#date_picker_div_Report').hide();
             //$('#condition').hide();
         }
         else if(selectItem == "custom"){
             changeItem = '';
-            document.getElementById("choices").disabled = true;
+            document.getElementById("choicesReport").disabled = true;
             document.getElementById("reportYear").disabled = true;
-            $('#date_picker_div').show();
+            $('#date_picker_div_Report').show();
         }
 
 
-        $('#choices').empty();
+        $('#choicesReport').empty();
         
         for(var count = 0; count < changeItem.length; count++){                
             var option = $("<option>"+changeItem[count]+"</option>");
-            $('#choices').append(option);
+            $('#choicesReport').append(option);
         }
     }
         
-
-    var newsSelect = 
-        `
-        <div class="option_set">
-                       
-
-                       <div class="data_set">
-                           <select class="select">
-                               <option value="">기업별</option>
-                               <option value="">계열별</option>
-                               <option value="">산업별</option>
-                           </select>
-                       </div>
-
-                       <div class="data_set" style="float:left">
-                           <a>연도 선택</a>
-                           <select name="newsYear" id="newsYear" class="select">
-                               <option value="2025">2025</option>
-                               <option value="2024">2024</option>
-                               <option value="2023">2023</option>
-                               <option value="2022">2022</option>
-                               <option value="2021">2021</option>
-                               <option value="2020" selected="selected">2020</option>
-                               <option value="2019">2019</option>
-                               <option value="2018">2018</option>
-                               <option value="2017">2017</option>
-                               <option value="2016">2016</option>
-                               <option value="2015">2015</option>
-                           </select>
-                       </div>
-                           
-                       <div class="data_set" style="float:left">
-                           <a>구분</a>
-                           <select name="gubun" id="gubun" class="select" onChange="itemChangeNews()">
-                               <option value="year" selected="selected">연도별</option>
-                               <option value="quarter">분기별</option>
-                               <option value="month">월별</option>
-                               <option value="custom">사용자 선택</option>
-                           </select>
-                       </div>
-           
-                       <div id="condition" class="data_set" style="float:left">
-                           <a id="gubunText"></a>
-                           <select name="choices" id="choices" class="select">
-                           </select>
-                       </div>
-
-                       <div id="date_picker_div">
-                           <span class="date_picker">
-                               <label for="date_from" class="label">기간</label>
-                               <span class="input_date"><input type="text" class="input_text" id="date_from"></span>
-                               <span class="dash">-</span>
-                               <span class="input_date"><input type="text" class="input_text" id="date_to"></span>
-                           </span>
-                       </div>
-
-                       <div class="search_box">
-                           <input id="search_company" type="text" placeholder="검색" value="" onkeypress="if( event.keyCode == 13 ){getNewsList();}">
-                           <button  class="btn_search" onclick="getNewsList();"><span class="blind" >검색</span></button>
-                       </div>
-                       
-                       <div class="buttons">
-                           <a id="newsList" class="btn" href="javascript:getNewsList();">조회</a>
-                       </div>
-                       
-                   </div>
-
-                   
-
-
-                   <div id="result_area_news">
-                       <table id="example" class="display" style="width:100%">
-                           <colgroup>
-                               <col>
-                           </colgroup>
-                           <thead>
-                           <tr>
-                               <th>인덱스</th>
-                               <th>컴포짓키</th>
-                               <th>날짜</th>
-                               <th>기업명</th>
-                               <th>제목</th>
-                               <th>progress</th>
-                               <th>score</th>
-                           </tr>
-                           </thead>
-                           <tbody >
-                               <tr>
-                                   <td>　</td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                               </tr>
-                               <tr>
-                                   <td> 　</td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                               </tr>
-                               <tr>
-                                   <td> 　</td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                               </tr>
-                               <tr>
-                                   <td> 　</td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                               </tr>
-                               <tr>
-                                   <td>　 </td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                               </tr>
-                               <tr>
-                                   <td>　 </td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                               </tr>
-                               <tr>
-                                   <td>　 </td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                               </tr>
-                               <tr>
-                                   <td>　 </td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                               </tr>
-                               <tr>
-                                   <td>　 </td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                               </tr>
-                               <tr>
-                                   <td>　 </td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                                   <td> </td>
-                               </tr>
-                               
-                           </tbody>
-                       </table>
-                   </div>
-
-               </div>
-        `;
-
-    var reportSelect =
-        `
-        <div class="option_set">
-
-            <div class="data_set" style="float:left">
-                <a>연도 선택</a>
-                <select name="reportYear" id="reportYear" class="select">
-                    <option value="2025">2025</option>
-                    <option value="2024">2024</option>
-                    <option value="2023">2023</option>
-                    <option value="2022">2022</option>
-                    <option value="2021">2021</option>
-                    <option value="2020" selected="selected">2020</option>
-                    <option value="2019">2019</option>
-                    <option value="2018">2018</option>
-                    <option value="2017">2017</option>
-                    <option value="2016">2016</option>
-                    <option value="2015">2015</option>
-                </select>
-            </div>
-                
-            <div class="data_set" style="float:left">
-                <a>구분</a>
-                <select name="gubun" id="gubun" class="select" onChange="itemChangeReport()">
-                    <option value="year" selected="selected">연도별</option>
-                    <option value="quarter">분기별</option>
-                    <option value="month">월별</option>
-                    <option value="custom">사용자 선택</option>
-                </select>
-            </div>
-
-            <div id="condition" class="data_set" style="float:left">
-                <a id="gubunText"></a>
-                <select name="choices" id="choices" class="select">
-                </select>
-            </div>
-
-            <div id="date_picker_div">
-                <span class="date_picker">
-                    <label for="date_from" class="label">기간</label>
-                    <span class="input_date"><input type="text" class="input_text" id="date_from"></span>
-                    <span class="dash">-</span>
-                    <span class="input_date"><input type="text" class="input_text" id="date_to"></span>
-                </span>
-            </div>
-
-
-
-            <div class="search_box">
-                <input id="search_company" type="text" placeholder="검색" value="" >
-                <button  class="btn_search"><span class="blind" >검색</span></button>
-            </div>
-
-            <div class="buttons">
-                <a id="newsList" class="btn" href="javascript:getNewsList();">조회</a>
-            </div>
-
-
-
-
-            </div>
-
-
-
-
-
-
-            <div id="result_area">
-            <table id="example" class="display" style="width:100%">
-                <colgroup>
-                    <col>
-                </colgroup>
-                <thead>
-                <tr>
-                    <th>인덱스</th>
-                    <th>날짜</th>
-                    <th>제목</th>
-                    <th >스코어</th>
-                    <th >progress</th>
-                    <th >고유명사</th>
-                    <th >타입</th>
-                </tr>
-                </thead>
-                <tbody >
-                    <tr>
-                        <td> 　</td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                    </tr>
-                    <tr>
-                        <td> 　</td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                    </tr>
-                    <tr>
-                        <td> 　</td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                    </tr>
-                    <tr>
-                        <td> 　</td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                    </tr>
-                    <tr>
-                        <td>　 </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                    </tr>
-                    <tr>
-                        <td>　 </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                    </tr>
-                    <tr>
-                        <td>　 </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                    </tr>
-                    <tr>
-                        <td>　 </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                    </tr>
-                    <tr>
-                        <td>　 </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                    </tr>
-                    <tr>
-                        <td>　 </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                        <td> </td>
-                    </tr>
-                    
-                </tbody>
-            </table>
-            </div>
-        `;
-
-
-    var datePicker = 
-            `
-                <span class="date_picker">
-                    <label for="date_from" class="label">기간</label>
-                    <span class="input_date"><input type="text" class="input_text" id="date_from"></span>
-                    <span class="dash">-</span>
-                    <span class="input_date"><input type="text" class="input_text" id="date_to"></span>
-                </span>
-            `;
 
 
     function setDisplay(){
         if($('input:radio[id=news_radio]').is(':checked')){
             document.getElementById('main_title').innerText = '뉴스 목록 조회';
-            document.getElementById('contents_section').innerHTML = newsSelect;
-            $('#date_picker_div').hide();
-            $('#example').DataTable();
+            $('#contents_section_news').show();
+            $('#contents_section_report').hide();
+            $('#date_picker_div_News').hide();
+            $('#example_news').DataTable(); 
+
         }else{
             document.getElementById('main_title').innerText = '행내 보고서 목록 조회';
-            document.getElementById('contents_section').innerHTML = reportSelect;
-            $('#date_picker_div').hide();
-            $('#example').DataTable();
+            $('#contents_section_report').show();
+            $('#contents_section_news').hide();      
+            $('#date_picker_div_Report').hide();
+            $('#example_report').DataTable();
         }
     }
-
- 
-    
+  
     
 </script>
 
@@ -1348,36 +1041,383 @@
                 </div>
 
 
+              
 
                 <h3 class="main_title" id="main_title">뉴스 목록 조회</h3>
 
 
-                <input type="radio" id="news_radio" name="news_report" onchange="setDisplay()" checked="checked"> 뉴스
-                <input type="radio" id="report_radio" name="news_report" onchange="setDisplay()"> 보고서
+                
+                <span class="input_radio">
+                    <input type="radio" class="input_radio" id="news_radio" name="news_report" onchange="setDisplay()" checked="checked">
+                    <label for="news_radio" class="label">뉴스</label>
+
+                </span>
+                <span class="input_radio">
+                    <input type="radio" class="input_radio" id="report_radio" name="news_report" onchange="setDisplay()">
+                    <label for="report_radio" class="label">보고서</label>
+                </span>
+
+        
 
 
-                <div id="date_picker_div">
-                    <span class="date_picker">
-                        <label for="date_from" class="label">기간</label>
-                        <span class="input_date"><input type="text" class="input_text" id="date_from"></span>
-                        <span class="dash">-</span>
-                        <span class="input_date"><input type="text" class="input_text" id="date_to"></span>
-                    </span>
-                </div>
+                <div class="section" id="contents_section_news">
+                    <div class="option_set">
+                       
 
-                <div class="section" id="contents_section">
+                        <div class="data_set">
+                            <select class="select">
+                                <option value="">기업별</option>
+                                <option value="">계열별</option>
+                                <option value="">산업별</option>
+                            </select>
+                        </div>
+ 
+                        <div class="data_set" style="float:left">
+                            <a>연도 선택</a>
+                            <select name="newsYear" id="newsYear" class="select">
+                                <option value="2025">2025</option>
+                                <option value="2024">2024</option>
+                                <option value="2023">2023</option>
+                                <option value="2022">2022</option>
+                                <option value="2021">2021</option>
+                                <option value="2020" selected="selected">2020</option>
+                                <option value="2019">2019</option>
+                                <option value="2018">2018</option>
+                                <option value="2017">2017</option>
+                                <option value="2016">2016</option>
+                                <option value="2015">2015</option>
+                            </select>
+                        </div>
+                            
+                        <div class="data_set" style="float:left">
+                            <a>구분</a>
+                            <select name="gubun" id="gubunNews" class="select" onChange="itemChangeNews()">
+                                <option value="year" selected="selected">연도별</option>
+                                <option value="quarter">분기별</option>
+                                <option value="month">월별</option>
+                                <option value="custom">사용자 선택</option>
+                            </select>
+                        </div>
+            
+                        <div id="condition" class="data_set" style="float:left">
+                            <a id="gubunText"></a>
+                            <select name="choices" id="choicesNews" class="select">
+                            </select>
+                        </div>
+ 
+                        <div id="date_picker_div_News">
+                             <span class="date_picker">
+                                 <label for="date_from" class="label">기간</label>
+                                 <span class="input_date"><input type="text" class="input_text" id="date_from_news"></span>
+                                 <span class="dash">-</span>
+                                 <span class="input_date"><input type="text" class="input_text" id="date_to_news"></span>
+                             </span>
+                        </div>
 
-                   
-
+ 
+                        <div class="search_box">
+                            <input id="search_company_news" type="text" placeholder="검색" value="" onkeypress="if( event.keyCode == 13 ){getNewsList();}">
+                            <button  class="btn_search" onclick="getNewsList();"><span class="blind" >검색</span></button>
+                        </div>
+                        
+                        <div class="buttons">
+                            <a id="newsList" class="btn" href="javascript:getNewsList();">조회</a>
+                        </div>
+                        
+                    </div>
+ 
+                    
+ 
+ 
+                    <div id="result_area_news">
+                        <table id="example_news" class="display" style="width:100%">
+                            <colgroup>
+                                <col>
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th>인덱스</th>
+                                <th>컴포짓키</th>
+                                <th>날짜</th>
+                                <th>기업명</th>
+                                <th>제목</th>
+                                <th>progress</th>
+                                <th>score</th>
+                            </tr>
+                            </thead>
+                            <tbody >
+                                <tr>
+                                    <td>　</td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                </tr>
+                                <tr>
+                                    <td> 　</td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                </tr>
+                                <tr>
+                                    <td> 　</td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                </tr>
+                                <tr>
+                                    <td> 　</td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                </tr>
+                                <tr>
+                                    <td>　 </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                </tr>
+                                <tr>
+                                    <td>　 </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                </tr>
+                                <tr>
+                                    <td>　 </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                </tr>
+                                <tr>
+                                    <td>　 </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                </tr>
+                                <tr>
+                                    <td>　 </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                </tr>
+                                <tr>
+                                    <td>　 </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                </tr>
+                                
+                            </tbody>
+                        </table>
+                    </div>
  
                 </div>
 
 
 
+
+
+
+                <div class="section" id="contents_section_report">
+                    <div class="option_set">
+
+                        <div class="data_set" style="float:left">
+                            <a>연도 선택</a>
+                            <select name="reportYear" id="reportYear" class="select">
+                                <option value="2025">2025</option>
+                                <option value="2024">2024</option>
+                                <option value="2023">2023</option>
+                                <option value="2022">2022</option>
+                                <option value="2021">2021</option>
+                                <option value="2020" selected="selected">2020</option>
+                                <option value="2019">2019</option>
+                                <option value="2018">2018</option>
+                                <option value="2017">2017</option>
+                                <option value="2016">2016</option>
+                                <option value="2015">2015</option>
+                            </select>
+                        </div>
+                            
+                        <div class="data_set" style="float:left">
+                            <a>구분</a>
+                            <select name="gubun" id="gubunReport" class="select" onChange="itemChangeReport()">
+                                <option value="year" selected="selected">연도별</option>
+                                <option value="quarter">분기별</option>
+                                <option value="month">월별</option>
+                                <option value="custom">사용자 선택</option>
+                            </select>
+                        </div>
+            
+                        <div id="condition" class="data_set" style="float:left">
+                            <a id="gubunText"></a>
+                            <select name="choices" id="choicesReport" class="select">
+                            </select>
+                        </div>
+
+
+                        <div id="date_picker_div_Report">
+                            <span class="date_picker">
+                                <label for="date_from" class="label">기간</label>
+                                <span class="input_date"><input type="text" class="input_text" id="date_from_report"></span>
+                                <span class="dash">-</span>
+                                <span class="input_date"><input type="text" class="input_text" id="date_to_report"></span>
+                            </span>
+                       </div>
+
+                        <div class="search_box">
+                            <input id="search_company_report" type="text" placeholder="검색" value="" onkeypress="if( event.keyCode == 13 ){getReportList();}">
+                            <button  class="btn_search" onclick="getReportList();"><span class="blind" >검색</span></button>
+                        </div>
+            
+                        <div class="buttons">
+                            <a id="reportList" class="btn" href="javascript:getReportList();">조회</a>
+                        </div>
+            
+                    </div>
+            
+            
+            
+            
+            
+            
+                    <div id="result_area_report">
+                        <table id="example_report" class="display" style="width:100%">
+                            <colgroup>
+                                <col>
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th>인덱스</th>
+                                <th>날짜</th>
+                                <th>제목</th>
+                                <th >스코어</th>
+                                <th >progress</th>
+                                <th >타입</th>
+                            </tr>
+                            </thead>
+                            <tbody >
+                                <tr>
+                                    <td> 　</td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                </tr>
+                                <tr>
+                                    <td> 　</td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                </tr>
+                                <tr>
+                                    <td> 　</td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                </tr>
+                                <tr>
+                                    <td> 　</td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                </tr>
+                                <tr>
+                                    <td>　 </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                </tr>
+                                <tr>
+                                    <td>　 </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                </tr>
+                                <tr>
+                                    <td>　 </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                </tr>
+                                <tr>
+                                    <td>　 </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                </tr>
+                                <tr>
+                                    <td>　 </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                </tr>
+                                <tr>
+                                    <td>　 </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                    <td> </td>
+                                </tr>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+ 
+                </div>
+
+
+
+
+
             </div>
-
-
-           
 
 
 
@@ -1387,11 +1427,6 @@
             </div>
 
         </div>
-
-
-
-
-
 
 
 
@@ -1415,7 +1450,9 @@
     function close_pop(flag) {
         $('#myModal').hide();
    };
-    
+   
+
+ 
 </script>
 </body>
 </html>

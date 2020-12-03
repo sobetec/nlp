@@ -10,6 +10,8 @@ public interface ReportRepositoryImpl {
 	List<Report> getReportList(Report req) throws Exception;
 
 	List<Report> getReportListByCondition(ReportCondition reportCondition) throws Exception;
+	
+	List<Report> getReportListByCustom(ReportCondition reportCondition) throws Exception;
 
 
 }

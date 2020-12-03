@@ -45,8 +45,6 @@ public class NewsRepository implements NewsRepositoryImpl {
 	
 	@Override
 	public List<News> getNewsListByCondition(NewsCondition newsCondition) throws Exception {
-		System.out.println(newsCondition);
-		
 		if (newsCondition.getGubun().equals("custom")) {
 			String startDate = newsCondition.getStartDate();
 			String endDate = newsCondition.getEndDate();

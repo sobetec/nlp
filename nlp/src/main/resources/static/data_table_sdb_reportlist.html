@@ -380,7 +380,7 @@
     return location.href.substring( hostIndex, location.href.indexOf('/', hostIndex + 1) );
     }
     
-    function drawTable(){   
+    function drawTableReport(){   
         var htmlStart =
         `
         <table id="example" class="display" style="width:100%">
@@ -489,7 +489,7 @@
         console.log(window.reportResponseData[i].orgnFilePath);
     }
     
-    function getNewsList(){
+    function getReportList(){
         var data = new Object();
 
         data.reportYear = parseInt($("#reportYear").val());
@@ -543,7 +543,7 @@
                 `;
                 document.getElementById('myModal').innerHTML =  modalhtml2;
                 $('#myModal').show();
-                setTimeout(() => drawTable(), 1000);
+                setTimeout(() => drawTableReport(), 1000);
 
             },
             error: function () {
@@ -614,7 +614,6 @@
                         var option = $("<option>"+changeItem[count]+"</option>");
                         $('#choices').append(option);
                     }
-         
     }
 
 
@@ -757,7 +756,7 @@
                         </div>
                         
                         <div class="buttons">
-                            <a id="newsList" class="btn" href="javascript:getNewsList();">조회</a>
+                            <a id="reportList" class="btn" href="javascript:getReportList();">조회</a>
                         </div>
 
 
