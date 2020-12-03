@@ -58,4 +58,9 @@ public class NewsRepository implements NewsRepositoryImpl {
 		
 		return sqlSession.selectList("mapper.newsMapper.selectNewsListByCondition",newsCondition);
 	}
+	
+	@Override
+	public List<Industry> getIndustryList() throws Exception {
+		return sqlSession.selectList("mapper.newsMapper.selectIndustryList");
+	}
 }

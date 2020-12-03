@@ -12,4 +12,6 @@ public interface NewsRepositoryImpl {
 
 	List<News> getChartNewsByCompany(String cmpyNameOnly) throws Exception;
 
+	List<Industry> getIndustryList() throws Exception;
+
 }

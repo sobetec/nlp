@@ -42,8 +42,6 @@
 			
 		}
 
-	
-
 		.visivi {
 			visibility: visible;
 			font-size: 13px; 
@@ -147,7 +145,7 @@
 							} else {
 								sscore = tempSscore;
 							}
-							console.log(sscore);
+							//console.log(sscore);
 						};
 
 
@@ -233,8 +231,8 @@
 										 'responseData[i].guiTar'];
 										
 
-			console.log(industry_column_list[0]);
-			console.log(industry_column_list_java[0]);
+			//console.log(industry_column_list[0]);
+			//console.log(industry_column_list_java[0]);
 			
 			$.ajax({
 				url: "/getIndustryList/",
@@ -242,18 +240,25 @@
 				dataType: 'json',
 				success: function (responseData) {
 					alert('조회 성공');
-					console.log(responseData);
-					console.log(responseData[0]);
+					//console.log(responseData);
+					//console.log(responseData[0]);
 					
 					//var gigi = eval(industry_column_list_java[0]);
 					//				console.log(gigi);
 
 				var tables = ``;
 
-
+				var expend_all =`
+				<div class="buttons" align="right" >
+					<a id="toggleee" class="btn" style="min-width: 110px;" href="javascript:togglee();">전체 펼치기</a>
+					
+				</div>
+				`
 				for (var n = 0; n < 3; n++) {	
 					var htmlTableHead = 
 							`
+							
+							<br/>
 							<table style="border-style: none none none none; border-width:2px; border-color:#ccc4c3;" rules=cols>
 								<tr>
 							`;
@@ -267,7 +272,7 @@
 					for (var j = m; j < r; j++) {
 							var colName = industry_column_list[j];
 							
-							console.log(colJavaName);
+							//console.log(colJavaName);
 							var htmlhead =
 								`
 								
@@ -291,7 +296,7 @@
 										k=0;	
 										for (var i = 0; i < responseData.length; i++) {
 											var colJavaName = eval(industry_column_list_java[j]);
-											console.log('컬럼이름 '+colJavaName);
+											//console.log('컬럼이름 '+colJavaName);
 											if (k<5){
 												if (colJavaName != null) {
 												var htmlli1 =
@@ -335,10 +340,10 @@
 					var htmlTableTail = 
 						`
 								</tr>
-							<br/>	
-							<br/>
+								
 							</table>	
-
+								
+							<br/>
 						`
 				
 					var htmltable1 = htmlTableHead + tds + htmlTableTail;
@@ -347,7 +352,7 @@
 				};
 
 
-					document.getElementById('result_area').innerHTML = tables;
+					document.getElementById('result_area').innerHTML = expend_all + tables;
 
 					
 					$(".menu>a").click(function (){
@@ -417,7 +422,79 @@
 
 		}
 
+		function rmv(){
+			$(".hide").slideUp();
+			$(".closed").css('visibility', 'hidden');
+			$(".visivi").css('visibility', 'visible');
+			$("#toggleee").text('전체 펼치기');
+
+			}
+
+		function sshow(){
+			$(".hide").slideDown();
+			$(".closed").css('visibility', 'visible');
+			$(".visivi").css('visibility', 'hidden');
+			$("#toggleee").text('전체 접기');
+			}
 		
+		function togglee() {
+			if ($("#toggleee").text()=='전체 펼치기') {
+				sshow();
+			}else if($("#toggleee").text()=='전체 접기'){
+				rmv();
+			};
+		}
+
+		function dataTableSearch() {
+			//$("#dataTableSearch").val('엘지');
+			//$("#dataTableSearch").focus();
+			//$("#dataTableSearch").bind("keydown", function(e) {
+            //    if (e.keyCode == 13) { // enter key
+            //       // yourAction();
+            //        return false
+			//	}
+			//});
+			
+			
+			//$("#dataTableSearch").trigger(e);
+			
+			$("#dataTableSearch").val('엘지');
+			//$("#search_company").trigger(e);
+
+			pressButton();
+		}
+
+		function pressButton() {
+			var e = jQuery.Event( "keyup.DT");
+			//var e = jQuery.Event( "search.DT", { keyCode: 13 } )
+			$("#dataTableSearch").trigger(e);
+			
+			//setTimeout(function () {
+			//	jQuery('#search_company').trigger('click');
+			// }, 1000);
+			console.log('im trigger press enter')
+		}
+
+
+
+		function dataTableSearchSam() {
+			$("#dataTableSearch").val('삼성');
+			//$("#dataTableSearch").focus();
+			//$("#dataTableSearch").bind("keydown", function(e) {
+            //    if (e.keyCode == 13) { // enter key
+            //       // yourAction();
+            //        return false
+			//	}
+			//});
+			
+			
+			//$("#dataTableSearch").trigger(e);
+			
+			//$("#search_company").val('엘지');
+			//$("#search_company").trigger(e);
+
+			pressButton();
+		}
 
 	</script>
 
@@ -530,12 +607,26 @@
 
 							<div class="buttons">
 								<a id="newsList" class="btn" href="javascript:getNewsList();">조회</a>
+								
 							</div>
+							<div class="buttons">
+								<a id="dataSearch" class="btn" href="javascript:dataTableSearch();">엘지</a>
+								
+							</div>
+
+							<div class="buttons">
+								<a id="dataSearch" class="btn" href="javascript:dataTableSearchSam();">삼성</a>
+								
+							</div>
+							
+							
+
+							
 
 						</div>
 
 
-
+						
 
 						<div id="result_area">
 
@@ -544,552 +635,7 @@
 														
 						</div>
 
-						
 
-						
-				
-
-					<div class='nulls' > 
-						<br>
-						<br>
-						<br>
-						<table  style="border-style: none none none none; border-width:2px; border-color:#ccc4c3;" rules=cols>>
-
-							<tr>
-								<td valign="top" width="200" > 
-									<div>
-										<ul >
-											<li class="menu">
-												<a style="font-size: large; font-weight: bold;"> ㄱ </a>
-												
-												<ul class="list">
-													<li style="font-size: 4px;">&nbsp; </li>
-													<li>메뉴1-1</li>
-													<li>메뉴1-2</li>
-													<li>메뉴1-3</li>
-													<li>메뉴1-4</li>
-													<li>메뉴1-5</li>
-													<li>메뉴1-6</li>
-
-												</ul>
-
-												<ul class="hide">
-													<li>메뉴1-7</li>
-													<li>메뉴1-8</li>
-													<li> 메뉴1-9</li>
-													<li>메뉴1-10</li>
-													<li>메뉴1-11</li>
-													<li>메뉴1-12</li>
-													
-												</ul>
-												
-												<a class="visivi"  > 더보기 ▼ </a>
-												<a class="closed"  > 접기 ▲ </a>
-												
-											</li>
-
-
-										</ul>
-									</div>
-								</td>
-
-								<td valign="top" width="200">
-									<div>
-										<ul >
-											<li class="menu">
-												<a style="font-size: large; font-weight: bold;"> ㄴ </a>
-												
-												<ul class="list">
-													<li style="font-size: 4px;">&nbsp; </li>
-													<li>메뉴1-1</li>
-													<li>메뉴1-2</li>
-													<li>메뉴1-3</li>
-													<li>메뉴1-4</li>
-													<li>메뉴1-5</li>
-													<li>메뉴1-6</li>
-
-												</ul>
-
-												<ul class="hide">
-													<li>메뉴1-7</li>
-													<li>메뉴1-8</li>
-													<li>메뉴1-9</li>
-													<li>메뉴1-10</li>
-													<li>메뉴1-11</li>
-													<li>메뉴1-12</li>
-													
-												</ul>
-												
-												<a class="visivi"  > 더보기 ▼ </a>
-												<a class="closed"  > 접기 ▲ </a>
-												
-											</li>
-
-
-										</ul>
-									</div>
-								</td>
-
-								<td valign="top" width="200">
-									<div>
-										<ul >
-											<li class="menu">
-												<a style="font-size: large; font-weight: bold;"> ㄷ </a>
-												
-												<ul class="list">
-													<li style="font-size: 4px;">&nbsp; </li>
-													<li>메뉴1-1</li>
-													<li>메뉴1-2</li>
-													<li>메뉴1-3</li>
-													<li>메뉴1-4</li>
-													<li>메뉴1-5</li>
-													<li>메뉴1-6</li>
-
-												</ul>
-
-												<ul class="hide">
-													<li>메뉴1-7</li>
-													<li>메뉴1-8</li>
-													<li>메뉴1-9</li>
-													<li>메뉴1-10</li>
-													<li>메뉴1-11</li>
-													<li>메뉴1-12</li>
-													
-												</ul>
-												
-												<a class="visivi"  > 더보기 ▼ </a>
-												<a class="closed"  > 접기 ▲ </a>
-												
-											</li>
-
-
-										</ul>
-									</div>
-								</td>
-
-								<td valign="top" width="200">
-									<div>
-										<ul >
-											<li class="menu">
-												<a style="font-size: large; font-weight: bold;"> ㄹ </a>
-												
-												<ul class="list">
-													<li style="font-size: 4px;">&nbsp; </li>
-													<li>메뉴1-1</li>
-													<li>메뉴1-2</li>
-													<li>메뉴1-3</li>
-													<li>메뉴1-4</li>
-													<li>메뉴1-5</li>
-													<li>메뉴1-6</li>
-
-												</ul>
-
-												<ul class="hide">
-													<li>메뉴1-7</li>
-													<li>메뉴1-8</li>
-													<li>메뉴1-9</li>
-													<li>메뉴1-10</li>
-													<li>메뉴1-11</li>
-													<li>메뉴1-12</li>
-													
-												</ul>
-												
-												<a class="visivi"  > 더보기 ▼ </a>
-												<a class="closed"  > 접기 ▲ </a>
-												
-											</li>
-
-
-										</ul>
-									</div>
-								</td>
-
-								<td valign="top" width="200">
-									<div>
-										<ul >
-											<li class="menu">
-												<a style="font-size: large; font-weight: bold;"> ㅁ </a>
-												
-												<ul class="list">
-													<li style="font-size: 4px;">&nbsp; </li>
-													<li>메뉴1-1</li>
-													<li>메뉴1-2</li>
-													<li>메뉴1-3</li>
-													<li>메뉴1-4</li>
-													<li>메뉴1-5</li>
-													<li>메뉴1-6</li>
-
-												</ul>
-
-												<ul class="hide">
-													<li>메뉴1-7</li>
-													<li>메뉴1-8</li>
-													<li>메뉴1-9</li>
-													<li>메뉴1-10</li>
-													<li>메뉴1-11</li>
-													<li>메뉴1-12</li>
-													
-												</ul>
-												
-												<a class="visivi"  > 더보기 ▼ </a>
-												<a class="closed"  > 접기 ▲ </a>
-												
-											</li>
-
-
-										</ul>
-									</div>
-								</td>
-
-								<td valign="top" width="200">
-									<div>
-										<ul >
-											<li class="menu">
-												<a style="font-size: large; font-weight: bold;"> ㅂ </a>
-												
-												<ul class="list">
-													<li style="font-size: 4px;">&nbsp; </li>
-													<li>메뉴1-1</li>
-													<li>메뉴1-2</li>
-													<li>메뉴1-3</li>
-													<li>메뉴1-4</li>
-													<li>메뉴1-5</li>
-													<li>메뉴1-6</li>
-
-												</ul>
-
-												<ul class="hide">
-													<li>메뉴1-7</li>
-													<li>메뉴1-8</li>
-													<li>메뉴1-9</li>
-													<li>메뉴1-10</li>
-													<li>메뉴1-11</li>
-													<li>메뉴1-12</li>
-													
-												</ul>
-												
-												<a class="visivi"  > 더보기 ▼ </a>
-												<a class="closed"  > 접기 ▲ </a>
-												
-											</li>
-
-
-										</ul>
-									</div>
-								</td>
-
-								<td valign="top" width="200">
-									<div>
-										<ul >
-											<li class="menu">
-												<a style="font-size: large; font-weight: bold;"> ㅅ </a>
-												
-												<ul class="list">
-													<li style="font-size: 4px;">&nbsp; </li>
-													<li>메뉴1-1</li>
-													<li>메뉴1-2</li>
-													<li>메뉴1-3</li>
-													<li>메뉴1-4</li>
-													<li>메뉴1-5</li>
-													<li>메뉴1-6</li>
-
-												</ul>
-
-												<ul class="hide">
-													<li>메뉴1-7</li>
-													<li>메뉴1-8</li>
-													<li>메뉴1-9</li>
-													<li>메뉴1-10</li>
-													<li>메뉴1-11</li>
-													<li>메뉴1-12</li>
-													
-												</ul>
-												
-												<a class="visivi"  > 더보기 ▼ </a>
-												<a class="closed"  > 접기 ▲ </a>
-												
-											</li>
-
-
-										</ul>
-									</div>
-								</td>
-
-							</tr>
-						</table>
-						<br>
-
-						<br>
-						<table border="0" style="border-style:dotted;">
-
-							<tr>
-								<td valign="top" width="200">
-									<div>
-										<ul >
-											<li class="menu">
-												<a style="font-size: large; font-weight: bold;"> ㅇ </a>
-												
-												<ul class="list">
-													<li style="font-size: 4px;">&nbsp; </li>
-													<li>메뉴1-1</li>
-													<li>메뉴1-2</li>
-													<li>메뉴1-3</li>
-													<li>메뉴1-4</li>
-													<li>메뉴1-5</li>
-													<li>메뉴1-6</li>
-
-												</ul>
-
-												<ul class="hide">
-													<li>메뉴1-7</li>
-													<li>메뉴1-8</li>
-													<li>메뉴1-9</li>
-													<li>메뉴1-10</li>
-													<li>메뉴1-11</li>
-													<li>메뉴1-12</li>
-													
-												</ul>
-												
-												<a class="visivi"  > 더보기 ▼ </a>
-												<a class="closed"  > 접기 ▲ </a>
-												
-											</li>
-
-
-										</ul>
-									</div>
-								</td>
-
-								<td valign="top" width="200">
-									<div>
-										<ul >
-											<li class="menu">
-												<a style="font-size: large; font-weight: bold;"> ㅈ </a>
-												
-												<ul class="list">
-													<li style="font-size: 4px;">&nbsp; </li>
-													<li>메뉴1-1</li>
-													<li>메뉴1-2</li>
-													<li>메뉴1-3</li>
-													<li>메뉴1-4</li>
-													<li>메뉴1-5</li>
-													<li>메뉴1-6</li>
-
-												</ul>
-
-												<ul class="hide">
-													<li>메뉴1-7</li>
-													<li>메뉴1-8</li>
-													<li>메뉴1-9</li>
-													<li>메뉴1-10</li>
-													<li>메뉴1-11</li>
-													<li>메뉴1-12</li>
-													
-												</ul>
-												
-												<a class="visivi"  > 더보기 ▼ </a>
-												<a class="closed"  > 접기 ▲ </a>
-												
-											</li>
-
-
-										</ul>
-									</div>
-								</td>
-
-								<td valign="top" width="200">
-									<div>
-										<ul >
-											<li class="menu">
-												<a style="font-size: large; font-weight: bold;"> ㅊ </a>
-												
-												<ul class="list">
-													<li style="font-size: 4px;">&nbsp; </li>
-													<li>메뉴1-1</li>
-													<li>메뉴1-2</li>
-													<li>메뉴1-3</li>
-													<li>메뉴1-4</li>
-													<li>메뉴1-5</li>
-													<li>메뉴1-6</li>
-
-												</ul>
-
-												<ul class="hide">
-													<li>메뉴1-7</li>
-													<li>메뉴1-8</li>
-													<li>메뉴1-9</li>
-													<li>메뉴1-10</li>
-													<li>메뉴1-11</li>
-													<li>메뉴1-12</li>
-													
-												</ul>
-												
-												<a class="visivi"  > 더보기 ▼ </a>
-												<a class="closed"  > 접기 ▲ </a>
-												
-											</li>
-
-
-										</ul>
-									</div>
-								</td>
-
-								<td valign="top" width="200">
-									<div>
-										<ul >
-											<li class="menu">
-												<a style="font-size: large; font-weight: bold;"> ㅋ </a>
-												
-												<ul class="list">
-													<li style="font-size: 4px;">&nbsp; </li>
-													<li>메뉴1-1</li>
-													<li>메뉴1-2</li>
-													<li>메뉴1-3</li>
-													<li>메뉴1-4</li>
-													<li>메뉴1-5</li>
-													<li>메뉴1-6</li>
-
-												</ul>
-
-												<ul class="hide">
-													<li>메뉴1-7</li>
-													<li>메뉴1-8</li>
-													<li>메뉴1-9</li>
-													<li>메뉴1-10</li>
-													<li>메뉴1-11</li>
-													<li>메뉴1-12</li>
-													
-												</ul>
-												
-												<a class="visivi"  > 더보기 ▼ </a>
-												<a class="closed"  > 접기 ▲ </a>
-												
-											</li>
-
-
-										</ul>
-									</div>
-								</td>
-
-								<td valign="top" width="200">
-									<div>
-										<ul >
-											<li class="menu">
-												<a style="font-size: large; font-weight: bold;"> ㅌ </a>
-												
-												<ul class="list">
-													<li style="font-size: 4px;">&nbsp; </li>
-													<li>메뉴1-1</li>
-													<li>메뉴1-2</li>
-													<li>메뉴1-3</li>
-													<li>메뉴1-4</li>
-													<li>메뉴1-5</li>
-													<li>메뉴1-6</li>
-
-												</ul>
-
-												<ul class="hide">
-													<li>메뉴1-7</li>
-													<li>메뉴1-8</li>
-													<li>메뉴1-9</li>
-													<li>메뉴1-10</li>
-													<li>메뉴1-11</li>
-													<li>메뉴1-12</li>
-													
-												</ul>
-												
-												<a class="visivi"  > 더보기 ▼ </a>
-												<a class="closed"  > 접기 ▲ </a>
-												
-											</li>
-
-
-										</ul>
-									</div>
-								</td>
-
-								<td valign="top" width="200">
-									<div>
-										<ul >
-											<li class="menu">
-												<a style="font-size: large; font-weight: bold;"> ㅍ </a>
-												
-												<ul class="list">
-													<li style="font-size: 4px;">&nbsp; </li>
-													<li>메뉴1-1</li>
-													<li>메뉴1-2</li>
-													<li>메뉴1-3</li>
-													<li>메뉴1-4</li>
-													<li>메뉴1-5</li>
-													<li>메뉴1-6</li>
-
-												</ul>
-
-												<ul class="hide">
-													<li>메뉴1-7</li>
-													<li>메뉴1-8</li>
-													<li>메뉴1-9</li>
-													<li>메뉴1-10</li>
-													<li>메뉴1-11</li>
-													<li>메뉴1-12</li>
-													
-												</ul>
-												
-												<a class="visivi"  > 더보기 ▼ </a>
-												<a class="closed"  > 접기 ▲ </a>
-												
-											</li>
-
-
-										</ul>
-									</div>
-								</td>
-
-								<td valign="top" width="200">
-									<div>
-										<ul >
-											<li class="menu">
-												<a style="font-size: large; font-weight: bold;"> ㅎ </a>
-												
-												<ul class="list">
-													<li style="font-size: 4px;">&nbsp; </li>
-													<li>메뉴1-1</li>
-													<li>메뉴1-2</li>
-													<li>메뉴1-3</li>
-													<li>메뉴1-4</li>
-													<li>메뉴1-5</li>
-													<li>메뉴1-6</li>
-
-												</ul>
-
-												<ul class="hide">
-													<li>메뉴1-7</li>
-													<li>메뉴1-8</li>
-													<li>메뉴1-9</li>
-													<li>메뉴1-10</li>
-													<li>메뉴1-11</li>
-													<li>메뉴1-12</li>
-													
-												</ul>
-												
-												<a class="visivi"  > 더보기 ▼ </a>
-												<a class="closed"  > 접기 ▲ </a>
-												
-											</li>
-
-
-										</ul>
-									</div>
-								</td>
-
-							</tr>
-						</table>
-						
-					
-
-					
-
-				</div>
 
 			</div>
 
