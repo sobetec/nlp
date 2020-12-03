@@ -1346,10 +1346,12 @@ body {
 
 .card_list .card_item_large {
 	-webkit-box-flex: 0;
-	-webkit-flex: none;
-	flex: none;
-	min-width: 50px;
-	width: 75%;
+	-webkit-flex: wrap;
+	        flex: wrap;
+	min-width: 30px;
+	width: 30%;
+	min-height: 20px;
+	height: 20%;
 }
 
 .card_list .card_item.active .card_box {

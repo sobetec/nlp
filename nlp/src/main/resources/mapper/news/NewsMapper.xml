@@ -3,29 +3,7 @@
 
 <mapper namespace="mapper.newsMapper">
 
-	<select id="selectNewsList" parameterType="com.sobetec.nlp.newslist.News" resultType="com.sobetec.nlp.newslist.News">
-		SELECT "composite_key"		AS "cmpyKey"
-			 , "import_date"		AS "imptDate"
-			 , "news_date"		AS "newsDate"
-			 , "year"		AS "year"
-			 , "month"		AS "mont"
-			 , "day"		AS "day"
-			 , "quarter"		AS "qutr"
-			 , "industry_code"		AS "instCode"
-			 , "subsidiary_code"		AS "susiCode"
-			 , "company_code"		AS "cmpyCode"
-			 , "company_name"		AS "cmpyName"
-			 , "company_name_only"		AS "cmpyNameOnly"
-			 , "ta_score"		AS "taScre"
-			 , "news_title"		AS "newsTtl"
-			 , "raw_data"		AS "rawData"
-			 , "ext_data"		AS "extData"
-			 , "ext_morphs"		AS "extMorp"
-		  FROM NLP."nlp_news"
-		 
-		 limit 120
-
-	</select>
+	
 	
 	<select id="selectNewsListByCompany" parameterType="String" resultType="com.sobetec.nlp.newslist.News">
 		SELECT "composite_key"		AS "cmpyKey"
@@ -95,7 +73,7 @@
 			 
 		  FROM NLP."nlp_news"
 		 where company_name_only like concat('%',#{cmpyNameOnly},'%') or raw_data like concat('%',#{cmpyNameOnly},'%') or news_title like concat('%',#{cmpyNameOnly},'%') 
-		 limit 10000
+		 limit 1000
 
 	</select>
 	
@@ -116,5 +94,24 @@
 
 	</select>
 	
-	
+	<select id="selectIndustryList" resultType="com.sobetec.nlp.newslist.Industry">
+		SELECT "ㄱ"		AS "giYeok"
+			 , "ㄴ"		AS "niEun"
+			 , "ㄷ"		AS "diGeut"
+			 , "ㄹ"		AS "riEul"
+			 , "ㅁ"		AS "miEum"
+			 , "ㅂ"		AS "biEup"
+			 , "ㅅ"		AS "siOt"
+			 , "ㅇ"		AS "iEung"
+			 , "ㅈ"		AS "jiEut"
+			 , "ㅊ"		AS "chiEut"
+			 , "ㅋ"		AS "kiEuk"
+			 , "ㅌ"		AS "tiEuk"
+			 , "ㅍ"		AS "piEup"
+			 , "ㅎ"		AS "hiEut"
+			 , "기타"   AS "guiTar"
+			 
+			 FROM NLP."industry_list"
+		 
+	</select>
 </mapper>
