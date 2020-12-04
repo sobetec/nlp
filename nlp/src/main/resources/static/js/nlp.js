@@ -395,8 +395,9 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
     var xScale = d3.scaleLinear()
         .domain([0, dataSlice[nCutoff - 1].tf_idf])
         .range([xPadding, divWidth - xPadding])
-    var xAxis = d3.axisBottom()
-        .scale(xScale)/* 
+    /* var xAxis = d3.axisBottom()
+        .scale(xScale)
+        .ticks([])
         
                                                         .tickSize(0) */;
 
@@ -421,9 +422,9 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
         .attr("transform", "translate(" + xPadding + ",0)")
         .call(yAxis);
 
-    svg.append('g')
+    /* svg.append('g')
         .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
-        .call(xAxis);
+        .call(xAxis); */
 
 
 
@@ -445,7 +446,20 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
         .attr("height", yScale.bandwidth)
         .on("mouseover", onMouseOver)
         .on("mousemove", onMouseMove)
-        .on("mouseout", onMouseOut);
+        .on("mouseout", onMouseOut)
+        .on('click', function (d) {
+            if (divID == 'enlargedChart') {
+                $('.layer_dimmed').removeClass('is_active');
+                $('.enlargedChartSettings').css("display", "none");
+                dataTableSearch(d.keyword);
+                document.getElementById('dataTableSearch').scrollIntoView();
+                console.log(d.keyword);
+
+            }
+            else {
+
+            }
+        });
 }
 
 function dateParser(dateString) {
@@ -454,7 +468,7 @@ function dateParser(dateString) {
         return new Date(b[0], (parseInt(b[1]) - 1).toString(), b[2]);
     }
     else {
-        return new Date(dateString.slice(0,4), dateString.slice(4,6), dateString.slice(6,8));
+        return new Date(dateString.slice(0, 4), dateString.slice(4, 6), dateString.slice(6, 8));
     }
 }
 
@@ -1435,7 +1449,7 @@ function makePieChart(data, divID, nCutofftoShow, nCutoff) {
         return parseFloat(a) + parseFloat(b.tf_idf);
     }, 0);
     console.log(importanceTotal)
-    
+
 
     dataSlice1.sort(function (a, b) { return b.tf_idf - a.tf_idf });
 
@@ -2233,15 +2247,16 @@ function getChartQuery2() {
     d3.selectAll('.visSVG').remove();
     var search_company = document.getElementById('search_company').value;
     //console.log(search_company);
+    loading1('뉴스')
     $.ajax({
         url: "/getChartQueryByCompany/" + search_company,
         method: 'GET',
         dataType: 'json',
         success: function (responseData) {
-            window.newsResponseData = responseData;
+            //window.newsResponseData = responseData;
 
             //console.log(responseData)
-            alert('조회 성공: ' + responseData.allNews.length + '개 기사');
+            //alert('조회 성공: ' + responseData.allNews.length + '개 기사');
 
             makeGauge('dangerGauge', responseData.averageScore)
             document.getElementById('dangerGauge').addEventListener('click', function () {
@@ -2329,6 +2344,9 @@ function getChartQuery2() {
                 makeStockGraph(allStockData, divID);
             })
             makeStockGraph(allStockData, divID);
+
+            $('#myModal').hide();
+
 
 
             /* document.getElementById('keywordPieSlider2').max = responseData.keywords.length;

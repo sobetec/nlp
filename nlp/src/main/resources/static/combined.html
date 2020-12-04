@@ -1284,7 +1284,7 @@
             };
         }
 
-        function dataTableSearch() {
+        function dataTableSearch(keyword) {
             //$("#dataTableSearch").val('엘지');
             //$("#dataTableSearch").focus();
             //$("#dataTableSearch").bind("keydown", function(e) {
@@ -1297,7 +1297,7 @@
 
             //$("#dataTableSearch").trigger(e);
 
-            $("#dataTableSearch").val('엘지');
+            $("#dataTableSearch").val(keyword);
             //$("#search_company").trigger(e);
 
             pressButton();
@@ -1928,6 +1928,7 @@
     <script type="text/javascript">
 
         function close_pop(flag) {
+            console.log('closing popup')
             $('#myModal').hide();
         };
 
@@ -1950,6 +1951,38 @@
         })
         $(".card_list").css('max-height', $(".contents_panel:first").height())
         console.log($(".contents_panel:first").height());
+
+        // modal
+        $('.layer_dimmed .btn_close').on('click', function () {
+            $(this).parents('.layer_dimmed').removeClass('is_active');
+            $('.enlargedChartSettings').css("display", "none");
+            /* $('.stockLine').attr('clip-path', 'url(#stockClip)'); */
+        });
+
+
+        //close if click outside
+        $(document).mouseup(function (e) {
+            var chartEnlargedContainer = $('.layer_dimmed .layer_box');
+            var articlePreviewContainer = $('.modal .modal-content')
+            if (!chartEnlargedContainer.is(e.target) && chartEnlargedContainer.has(e.target).length === 0) {
+                $('.layer_dimmed').removeClass('is_active');
+                $('.enlargedChartSettings').css("display", "none");
+                /*  $('.stockLine').attr('clip-path', 'url(#stockClip)'); */
+            }
+            if (!articlePreviewContainer.is(e.target) && articlePreviewContainer.has(e.target).length === 0) {
+                close_pop();
+            }
+        });
+
+        //close if escape is pressed
+        $(document).on('keydown', function (e) {
+            if (e.keyCode === 27) { // ESC
+                $('.layer_dimmed').removeClass('is_active');
+                $('.enlargedChartSettings').css("display", "none");
+                close_pop();
+                /*  $('.stockLine').attr('clip-path', 'url(#stockClip)'); */
+            }
+        });
 
 
 
