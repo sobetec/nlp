@@ -387,14 +387,13 @@
 <script>
     
     $(document).ready( function () {
-        createEmptyDatatable();
+        createEmptyDatatableNews();
         $('#example_news').DataTable();
         $('#example_report').DataTable();
         setDisplay();
         $('#date_picker_div_News').hide();
         $('#condition').hide();
         $('#condition_report').hide();
-
     } ); 
 
 
@@ -487,7 +486,7 @@
                     <tr>
                         <td>
                             <div style="cursor:pointer;background-color:#DDDDDD;text-align: center;padding-bottom: 10px; padding-top: 10px; position:absolute; bottom:10px; width:85%; left:50%; transform:translate(-50%, 0);" onClick="close_pop();">
-                                <span class="pop_bt" style="font-size: 13pt;" >
+                                <span class="pop_bt" style="font-size: 13pt;">
                                     닫기
                                 </span>
                             </div>
@@ -520,7 +519,6 @@
         `;
         document.getElementById('myModal').innerHTML =  modalhtml1;
         $('#myModal').show();
-        console.log("!@!@!@!1");
     }
 
     
@@ -540,7 +538,6 @@
         `;
         document.getElementById('myModal').innerHTML =  modalhtml2;
         $('#myModal').show();
-        console.log("!@!@!@!2");
     }
     
     function drawTable(){   
@@ -577,7 +574,7 @@
 				} else {
 					sscore = tempSscore;
 				}
-				console.log(sscore);
+				//console.log(sscore);
 			};
 
 
@@ -670,7 +667,7 @@
                 } else {
                     sscore = tempSscore;
                 }
-                console.log(sscore);
+                //console.log(sscore);
             };
 
 
@@ -998,6 +995,7 @@
     function setDisplay(){
         if($('input:radio[id=news_radio]').is(':checked')){
             document.getElementById('main_title').innerText = '뉴스 목록 조회';
+            createEmptyDatatableNews();
             $('#contents_section_news').show();
             $('#contents_section_report').hide();
             $('#date_picker_div_News').hide();
@@ -1005,6 +1003,7 @@
 
         }else{
             document.getElementById('main_title').innerText = '행내 보고서 목록 조회';
+            createEmptyDatatableReport();
             $('#contents_section_report').show();
             $('#contents_section_news').hide();      
             $('#date_picker_div_Report').hide();
@@ -1043,7 +1042,7 @@
             method: 'GET',
             dataType: 'json',
             success: function (responseData) {
-                alert('조회 성공');
+                //alert('조회 성공');
                 console.log(responseData);
                 console.log(responseData[0]);
                 
@@ -1306,6 +1305,7 @@
         console.log(selectItem);
 
         if(selectItem == "company"){
+            createEmptyDatatableNews();
             $('#result_area_subsidiary').hide();
             $('#result_area_industry').hide();
             document.getElementById("search_company_news").disabled = false;
@@ -1318,6 +1318,7 @@
             $('#result_area_news').hide();
             document.getElementById("search_company_news").disabled = true;
             document.getElementById("search_button_news").disabled = true;
+            document.getElementById('search_company_news').value='';
             $('#result_area_subsidiary').show();
         }
         else if(selectItem == "industry"){
@@ -1326,22 +1327,74 @@
             $('#result_area_subsidiary').hide();
             document.getElementById("search_company_news").disabled = true;
             document.getElementById("search_button_news").disabled = true;
-            document.getElementById('search_company_news').value='검색';
+            document.getElementById('search_company_news').value='';
             $('#result_area_industry').show();
         }
     }
 
 
-    function createEmptyDatatable(){
-        var tableNews = ``;
-        var tableReport = ``;
+    function createEmptyDatatableNews(){
+        var newsTableBody = ``;
+
         for (var i = 0; i < 10; i++){
-            tableNews = tableNews + `<tr> <td>　 </td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>`;
-            tableReport = tableReport + `<tr> <td>　 </td><td></td><td></td><td></td><td></td><td></td> </tr>`;
+            newsTableBody = newsTableBody + `<tr> <td>　 </td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>`;
         }
-        document.getElementById('tbodyNews').innerHTML = tableNews;
-        document.getElementById('tbodyReport').innerHTML = tableReport;    
+
+        var newsTable=` <table id="example_news" class="display" style="width:100%">
+                            <colgroup>
+                                <col>
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th>인덱스</th>
+                                <th>컴포짓키</th>
+                                <th>날짜</th>
+                                <th>기업명</th>
+                                <th>제목</th>
+                                <th>progress</th>
+                                <th>score</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tbodyNews">
+                                ` + newsTableBody +`                                
+                            </tbody>
+                        </table>`;
+
+        document.getElementById('result_area_news').innerHTML = newsTable;
     }
+
+    function createEmptyDatatableReport(){
+        var reportTableBody = ``;
+
+        for (var i = 0; i < 10; i++){
+            reportTableBody = reportTableBody + `<tr> <td>　 </td><td></td><td></td><td></td><td></td><td></td> </tr>`;
+        }
+
+        var reportTable=` <table id="example_report" class="display" style="width:100%">
+                            <colgroup>
+                                <col>
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th>인덱스</th>
+                                <th>날짜</th>
+                                <th>제목</th>
+                                <th >스코어</th>
+                                <th >progress</th>
+                                <th >타입</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tbodyReport">
+                                ` + reportTableBody + `                                
+                            </tbody>
+                        </table>`;
+
+        document.getElementById('result_area_report').innerHTML = reportTable;    
+    }
+
+    window.addEventListener('keydown', function (event){
+
+    })
 
   
     
@@ -1438,7 +1491,7 @@
 
         
 
-
+                <!-- news section -->
                 <div class="section" id="contents_section_news">
                     <div class="option_set">
                        
@@ -1505,26 +1558,7 @@
  
  
                     <div id="result_area_news">
-                        <table id="example_news" class="display" style="width:100%">
-                            <colgroup>
-                                <col>
-                            </colgroup>
-                            <thead>
-                            <tr>
-                                <th>인덱스</th>
-                                <th>컴포짓키</th>
-                                <th>날짜</th>
-                                <th>기업명</th>
-                                <th>제목</th>
-                                <th>progress</th>
-                                <th>score</th>
-                            </tr>
-                            </thead>
-                            <tbody id="tbodyNews">
-                                
-                                
-                            </tbody>
-                        </table>
+                        
                     </div>
 
                     <div id="result_area_subsidiary">
@@ -1540,8 +1574,7 @@
 
 
 
-
-
+                <!-- report section -->
                 <div class="section" id="contents_section_report">
                     <div class="option_set">
 
@@ -1595,28 +1628,8 @@
         
                     </div>
             
-            
-            
-            
                     <div id="result_area_report">
-                        <table id="example_report" class="display" style="width:100%">
-                            <colgroup>
-                                <col>
-                            </colgroup>
-                            <thead>
-                            <tr>
-                                <th>인덱스</th>
-                                <th>날짜</th>
-                                <th>제목</th>
-                                <th >스코어</th>
-                                <th >progress</th>
-                                <th >타입</th>
-                            </tr>
-                            </thead>
-                            <tbody id="tbodyReport">
-                                
-                            </tbody>
-                        </table>
+                        
                     </div>
  
                 </div>
