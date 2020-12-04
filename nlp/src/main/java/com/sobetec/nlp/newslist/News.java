@@ -25,6 +25,7 @@ public class News {
 		
 	}
 
+	
 	// 뉴스 목록 조회용
 	public News(String cmpyKey, String newsDate, String cmpyName, String taScre, String taScreWord, String newsTtl,
 			String rawData) {

@@ -62,8 +62,12 @@ public class NewsController {
 	
 	@GetMapping(path = "/getIndustryList")
 	public List<Industry> getIndustryList() throws Exception {
-
 		return repository.getIndustryList();
+	}
+	
+	@GetMapping(path = "/getNewsListByIndustry/{instCode}")
+	public List<News> getNewsListByIndustry(@PathVariable String instCode) throws Exception {
+		return newsService.getNewsListByIndustry(instCode);
 	}
 
 }
