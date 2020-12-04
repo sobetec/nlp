@@ -14,4 +14,6 @@ public interface NewsRepositoryImpl {
 
 	List<Industry> getIndustryList() throws Exception;
 
+	List<News> getNewsListByIndustry(String instCode) throws Exception;
+
 }

@@ -31,7 +31,7 @@ public class NewsRepository implements NewsRepositoryImpl {
 //	}
 	@Override
 	public List<News> getNewsListByCompany(String cmpyNameOnly) throws Exception {
-//		String likelike = '%'+cmpyNameOnly+'%';
+		
 		return sqlSession.selectList("mapper.newsMapper.selectNewsListByCompanyCompact", cmpyNameOnly);
 	}
 
@@ -60,5 +60,11 @@ public class NewsRepository implements NewsRepositoryImpl {
 	@Override
 	public List<Industry> getIndustryList() throws Exception {
 		return sqlSession.selectList("mapper.newsMapper.selectIndustryList");
+	}
+	
+	@Override
+	public List<News> getNewsListByIndustry(String instCode) throws Exception {
+
+		return sqlSession.selectList("mapper.newsMapper.selectNewsListByIndustry", instCode);
 	}
 }

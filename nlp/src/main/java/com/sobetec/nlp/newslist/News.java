@@ -25,29 +25,7 @@ public class News {
 		
 	}
 
-	public News(String cmpyKey, String imptDate, String newsDate, String year, String mont, String day, String qutr,
-			String instCode, String susiCode, String cmpyCode, String cmpyName, String cmpyNameOnly, String taScre,
-			String taScreWord, String newsTtl, String rawData, String extData, String extMorp) {
-		super();
-		this.cmpyKey = cmpyKey;
-		this.imptDate = imptDate;
-		this.newsDate = newsDate;
-		this.year = year;
-		this.mont = mont;
-		this.day = day;
-		this.qutr = qutr;
-		this.instCode = instCode;
-		this.susiCode = susiCode;
-		this.cmpyCode = cmpyCode;
-		this.cmpyName = cmpyName;
-		this.cmpyNameOnly = cmpyNameOnly;
-		this.taScre = taScre;
-		this.taScreWord = taScreWord;
-		this.newsTtl = newsTtl;
-		this.rawData = rawData;
-		this.extData = extData;
-		this.extMorp = extMorp;
-	}
+	
 	
 	// 뉴스 목록 조회용
 	public News(String cmpyKey, String newsDate, String cmpyName, String taScre, String taScreWord, String newsTtl,
