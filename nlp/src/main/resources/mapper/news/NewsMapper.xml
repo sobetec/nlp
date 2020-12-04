@@ -38,7 +38,7 @@
 			 , "news_title"		AS "newsTtl"
 			 , "raw_data"		AS "rawData"
 		  FROM NLP."nlp_news"
-		 where (company_name_only like concat('%',#{searchWord},'%') or raw_data like concat('%',#{searchWord},'%') or news_title like concat('%',#{searchWord},'%'))
+		 where (company_name like concat('%',#{searchWord},'%') or raw_data like concat('%',#{searchWord},'%') or news_title like concat('%',#{searchWord},'%'))
 		  <choose>
 		  	<when test="gubun == 'year'">
 		  		and year = #{newsYear}
@@ -57,7 +57,7 @@
 		  
 		  </choose>
 		 order by news_date desc
-		 limit 500
+		 limit 2000
 
 	</select>
 	
