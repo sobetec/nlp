@@ -38,7 +38,7 @@
 			 , "news_title"		AS "newsTtl"
 			 , "raw_data"		AS "rawData"
 		  FROM NLP."nlp_news"
-		 where (company_name_only like concat('%',#{searchWord},'%') or raw_data like concat('%',#{searchWord},'%') or news_title like concat('%',#{searchWord},'%'))
+		 where (company_name like concat('%',#{searchWord},'%') or raw_data like concat('%',#{searchWord},'%') or news_title like concat('%',#{searchWord},'%'))
 		  <choose>
 		  	<when test="gubun == 'year'">
 		  		and year = #{newsYear}
@@ -114,4 +114,56 @@
 			 FROM NLP."industry_list"
 		 
 	</select>
+	
+	<select id="selectNewsListByIndustry" parameterType="String" resultType="com.sobetec.nlp.newslist.News">
+		SELECT "composite_key"		AS "cmpyKey"
+			 , "news_date"		AS "newsDate"
+			 , "company_name"		AS "cmpyName"
+			 , round(cast(ta_score as numeric),4)		AS "taScre"
+			 , "news_title"		AS "newsTtl"
+			 , "raw_data"		AS "rawData"
+			 , industry_code    AS "instCode"
+			 
+		  FROM NLP."nlp_news"
+		  where industry_code = (select industry_code from nlp.company_code where industry_name like concat('%',#{cmpyNameOnly},'%') limit 1)
+		  order by news_date desc
+ 	</select>
+ 	
+ 	<select id="selectCompanyListByCompany" parameterType="String" resultType="String">
+		SELECT "company"		AS "cmpy"
+		FROM NLP."company_code"
+		where company like concat('%', #{companyName} ,'%')
+ 	</select>
+ 	
+ 	<select id="selectNewsListByCompanyName" parameterType="com.sobetec.nlp.newslist.NewsCondition" resultType="com.sobetec.nlp.newslist.News">
+		SELECT "composite_key"		AS "cmpyKey" 
+		 	 , "news_date"		AS "newsDate"
+			 , "company_name"		AS "cmpyName"
+			 , round(cast(ta_score as numeric),4)		AS "taScre"
+			 , "news_title"		AS "newsTtl"
+			 , "raw_data"		AS "rawData"
+		  FROM NLP."nlp_news"
+		 where (company_name like concat('%',#{searchWord},'%') or raw_data like concat('%',#{searchWord},'%') or news_title like concat('%',#{searchWord},'%'))
+		  <choose>
+		  	<when test="gubun == 'year'">
+		  		and year = #{newsYear}
+		  	</when>
+		  	<when test="gubun == 'month'">
+		  		and year = #{newsYear}
+		  		and month = #{gubunItem}
+		  	</when>
+		  	<when test="gubun == 'quarter'">
+		  		and year = #{newsYear}
+		  		and quarter = #{gubunItem}
+		  	</when>
+		  	<when test="gubun == 'custom'">
+		  		and news_date between  to_date(#{startDate}, 'yyyy-mm-dd') and to_date(#{endDate}, 'yyyy-mm-dd')
+		  	</when>
+		  
+		  </choose>
+		 order by news_date desc
+		 limit 500
+
+	</select>
+ 	
 </mapper>

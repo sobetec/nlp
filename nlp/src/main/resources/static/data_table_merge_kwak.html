@@ -10,10 +10,14 @@
     <link rel="stylesheet" type="text/css" href="css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="css/w3.css">
     <style>
+       
+
         #example_report, #example_news, #example, #industry_news_list {
             text-align: center; 
             font-size: 11px;
         }
+
+
 
         /* The Modal (background) */
         .modal {
@@ -76,44 +80,23 @@
             position: relative;                          
         }
 
-        .modal-list-head {
-            background-color: #fefefe;
-            margin: 5% auto; /* 15% from the top and centered */
-            padding: 20px;
-            border: 1px solid #888;
-            width: 50%; /* Could be more or less, depending on screen size */
-            max-height: 60px;
-            position: relative;                         
-        }
-
-        .modal-list {
-            background-color: #fefefe;
-            margin: -5% auto; /* 15% from the top and centered */
-            padding: 40px;
-            border: 1px solid #888;
-            width: 50%; /* Could be more or less, depending on screen size */
-            max-height: 600px;
-            position: relative; 
-            overflow-y: scroll;                         
-        }
-
 
         * {
         box-sizing: border-box;
-        /*scrollbar-color: transparent transparent;*/ /* thumb and track color */
-        scrollbar-width: 5px;
+        scrollbar-color: transparent transparent; /* thumb and track color */
+        scrollbar-width: 0px;
         }
         
         *::-webkit-scrollbar {
-        width: 5;
+        width: 0;
         }
         
         *::-webkit-scrollbar-track {
-        /*background: transparent;*/
+        background: transparent;
         }
         
         *::-webkit-scrollbar-thumb {
-        /*background: transparent;*/
+        background: transparent;
         border: none;
         }
         
@@ -252,7 +235,7 @@
 
         
         .carouselNoPrev::before {
-        background-image: url("img/left-arrow.png");
+        /*background-image: url("img/left-arrow.png");*/
         }
         
         .carouselNoPrev::after {
@@ -325,7 +308,7 @@
         }
         
         .carouselNoNext::after {
-        background-image: url("img/right-arrow.png");
+        /*background-image: url("img/right-arrow.png");*/
         }
         
 
@@ -398,7 +381,8 @@
 <script>
     
     $(document).ready( function () {
-        createEmptyDatatableNews();
+        createEmptyDatatable();
+        $('#example_news').DataTable();
         $('#example_report').DataTable();
         setDisplay();
         $('#date_picker_div_News').hide();
@@ -465,6 +449,8 @@
                         <table style="width:100%;">
                             <tr>
                                 <td>
+                                    
+
                                     <p style="text-align: right; line-height: 1;"><br />` + window.newsResponseData[i].newsDate + `</p>
 
                                     <div style="border: 1px solid #888;">
@@ -476,6 +462,7 @@
                                     <p><br></p>
                                     <p><br></p>
 
+
                                 </td>
                             </tr>
                         </table>
@@ -484,15 +471,17 @@
 
                 <div>
                 </div>
-
+                
             </div>
             
+
+
             <div class="modal-close">
                 <table style="width:100%;">
                     <tr>
                         <td>
                             <div style="cursor:pointer;background-color:#DDDDDD;text-align: center;padding-bottom: 10px; padding-top: 10px; position:absolute; bottom:10px; width:85%; left:50%; transform:translate(-50%, 0);" onClick="close_pop();">
-                                <span class="pop_bt" style="font-size: 13pt;">
+                                <span class="pop_bt" style="font-size: 13pt;" >
                                     닫기
                                 </span>
                             </div>
@@ -525,77 +514,75 @@
         `;
         document.getElementById('myModal').innerHTML =  modalhtml1;
         $('#myModal').show();
+        
     }
+
+
     
     function drawTable(result_area, table_id){   
 
-        if (table_id === ''){
-            table_id = 'example';
-        }
-
-        /* <table id="`+table_id+`" class="display" style="width:100%"> */
         var htmlStart =
         `
-        <table id="`+ table_id +`" class="display" style="width:100%">
+        <table id="`+table_id+`" class="display" style="width:100%">
                     <colgroup>
                         <col>
                     </colgroup>
                     <thead>
                     <tr>
                         <th>인덱스</th>
-                        <th>컴포짓키</th>
-                        <th>날짜</th>
-                        <th>기업명</th>
-                        <th>제목</th>
-                        <th>progress</th>
-                        <th>스코어</th>
+						<th>컴포짓키</th>
+						<th>날짜</th>
+						<th>기업명</th>
+						<th>제목</th>
+						<th>progress</th>
+						<th>스코어</th>
                     </tr>
                     </thead>
                     <tbody id="`+result_area+`">
         `;
 
         for(var i = 0; i < window.newsResponseData.length; i++){
-            var indexNum = i+1;
-            window.newsResponseData[i].indexNum = indexNum;
-            var sscoreWord = newsResponseData[i].taScreWord;
-            var sscore = 0;
+			var indexNum = i+1;
+			window.newsResponseData[i].indexNum = indexNum;
+			var sscoreWord = newsResponseData[i].taScreWord;
+			var sscore = 0;
 
-            if (newsResponseData[i].taScre != NaN) {
-                tempSscore = Math.round(newsResponseData[i].taScre).toString();;
-                if (tempSscore.match(/^[0-9]$/) != null) {
-                    sscore = '0' + tempSscore;
-                } else {
-                    sscore = tempSscore;
-                }
-                //console.log(sscore);
-            };
+			if (newsResponseData[i].taScre != NaN) {
+				tempSscore = Math.round(newsResponseData[i].taScre).toString();;
+				if (tempSscore.match(/^[0-9]$/) != null) {
+					sscore = '0' + tempSscore;
+				} else {
+					sscore = tempSscore;
+				}
+				//console.log(sscore);
+			};
 
 
-            var rred = '';
-            var procc = '';
+			var rred = '';
+			var procc = '';
 
-            if (sscoreWord == '중립') {
-                procc = `<td><div style="width:100%; border:0.5px solid grey; height:7px; color:#000!important; background-color:#dadada!important; border-radius:6px" >
-                <div style="height:7px; padding:0.01em; width:`+ sscore + `%; color: #fff!important;
-                background-color: #32880a!important; border-radius: 7px; font-size: 0%;" >`+ sscore + `</div>
-            </div></td>`
-                rred = `<td style='color:#32880a;'>` + sscoreWord + `</td>`;
-            } else if (sscoreWord == '부정') {
-                procc = `<td><div style="width:100%; border:0.5px solid grey; height:7px; color:#000!important; background-color:#dadada!important; border-radius:6px" >
-                <div style="height:7px; padding:0.01em; width:`+ sscore + `%; color: #fff!important;
-                background-color: #2196F3!important; border-radius: 7px; font-size: 0%;" >`+ sscore + `</div>
-            </div></td>`
-                rred = `<td style='color:#2196F3;'>` + sscoreWord + `</td>`;
-            } else if (sscoreWord == '긍정') {
-                procc = `<td><div style="width:100%; border:0.5px solid grey; height:7px; color:#000!important; background-color:#dadada!important; border-radius:6px" >
-                <div style="height:7px; padding:0.01em; width:`+ sscore + `%; color: #fff!important;
-                background-color: #a31b1b!important; border-radius: 7px; font-size: 0%;" >`+ sscore + `</div>
-            </div></td>`
-                rred = `<td style='color:#a31b1b;'>` + sscoreWord + `</td>`;
-            } else if (sscoreWord == '없음') {
-                procc = `<td>no score</td>`
-                rred = `<td style='color:black'>` + sscoreWord + `</td>`;
-            }
+			if (sscoreWord == '중립') {
+				procc = `<td><div style="width:100%; border:0.5px solid grey; height:7px; color:#000!important; background-color:#dadada!important; border-radius:6px" >
+				<div style="height:7px; padding:0.01em; width:`+ sscore + `%; color: #fff!important;
+				background-color: #32880a!important; border-radius: 7px; font-size: 0%;" >`+ sscore + `</div>
+			</div></td>`
+				rred = `<td style='color:#32880a;'>` + sscoreWord + `</td>`;
+			} else if (sscoreWord == '부정') {
+				procc = `<td><div style="width:100%; border:0.5px solid grey; height:7px; color:#000!important; background-color:#dadada!important; border-radius:6px" >
+				<div style="height:7px; padding:0.01em; width:`+ sscore + `%; color: #fff!important;
+				background-color: #2196F3!important; border-radius: 7px; font-size: 0%;" >`+ sscore + `</div>
+			</div></td>`
+				rred = `<td style='color:#2196F3;'>` + sscoreWord + `</td>`;
+			} else if (sscoreWord == '긍정') {
+				procc = `<td><div style="width:100%; border:0.5px solid grey; height:7px; color:#000!important; background-color:#dadada!important; border-radius:6px" >
+				<div style="height:7px; padding:0.01em; width:`+ sscore + `%; color: #fff!important;
+				background-color: #a31b1b!important; border-radius: 7px; font-size: 0%;" >`+ sscore + `</div>
+			</div></td>`
+				rred = `<td style='color:#a31b1b;'>` + sscoreWord + `</td>`;
+			} else if (sscoreWord == '없음') {
+				procc = `<td>no score</td>`
+				rred = `<td style='color:black'>` + sscoreWord + `</td>`;
+			}
 
             
             var htmlContents =
@@ -618,9 +605,9 @@
             </tbody>
         </table>
         `;
-
+        
         document.getElementById(result_area).innerHTML = htmlStart+htmlEnd;
-
+        
         $('#'+table_id).DataTable();
         close_pop();
     }
@@ -644,7 +631,7 @@
                         <th>　</th>
                     </tr>
                     </thead>
-                    <tbody id="tbodyReport">
+                    <tbody id="result_area">
         `;
 
         for(var i = 0; i < window.reportResponseData.length; i++){
@@ -660,7 +647,7 @@
                 } else {
                     sscore = tempSscore;
                 }
-                //console.log(sscore);
+                console.log(sscore);
             };
 
 
@@ -693,13 +680,13 @@
             var downImg = '';
 
             if (window.reportResponseData[i].docCaty == 'pdf'){
-                downImg = `<img src="/img/pdf_down.png" style="width: auto; height: 14px;">`;
+                downImg = `<img src="/img/pdf_down.png" style="width: auto; height: 25px;">`;
             }
             else if (window.reportResponseData[i].docCaty == 'hwp'){
-                downImg = `<img src="/img/hwp_down.png" style="width: auto; height: 14px;">`;
+                downImg = `<img src="/img/hwp_down.png" style="width: auto; height: 25px;">`;
             }
             else{
-                downImg = `<img src="/img/document_download.png" style="width: auto; height: 14px;">`;
+                downImg = `<img src="/img/document_download.png" style="width: auto; height: 25px;">`;
             }
 
             /*
@@ -743,7 +730,6 @@
     
     function getNewsList(){
         var data = new Object();
-        var result_area = 'result_area_news';
 
         data.newsYear = parseInt($("#newsYear").val());
         data.gubun = $("#gubunNews").val();
@@ -763,7 +749,8 @@
         data.endDate = $("#date_to_news").val();
         data.searchWord = document.getElementById('search_company_news').value; 
 
-
+        var result_area = 'result_area_news';
+        var table_id = 'example_news';
         console.log(data);
 
         loading1("뉴스");
@@ -781,9 +768,22 @@
 
                 $('#myModal').hide();
 
+                var modalhtml2 =
+                `
+                    <div class="modal-loading">
+                        <p style="text-align: center;"><span style="font-size: 14pt;"><b><span style="font-size: 24pt;">뉴스 목록 불러오는 중...</span></b></span></p>
+                        <button type="button" class="close" onClick="close_pop();"></button>
+                        <p style="text-align: center; line-height: 1.5;"><br />화면에 표출중입니다.</p>
+                        <p style="text-align: center; line-height: 1.5;"><br />잠시만 기다려 주십시오.</p>
+                        <p><br /></p>
+                        <p style="text-align: center; line-height: 1.5;"><br />
+                            <img src="/img/loading.gif" align="center"/>
+                        </p>
+                    </div>
+                `;
                 document.getElementById('myModal').innerHTML =  modalhtml2;
                 $('#myModal').show();
-                setTimeout(() => drawTable(result_area, ''), 1000);
+                setTimeout(() => drawTable(result_area, table_id), 1000);
 
             },
             error: function () {
@@ -794,59 +794,6 @@
 
     }
 
-
-
-    function getNewsListByCompanyName(companyName){
-        var data = new Object();
-        var result_area = 'result_area_news';
-
-        data.newsYear = parseInt($("#newsYear").val());
-        data.gubun = $("#gubunNews").val();
-
-        if($("#gubunNews").val() == "month"){
-            var temp = $("#choicesNews").val().split("월")[0];
-            console.log(temp);
-            data.gubunItem = parseInt(temp);
-        }
-        else if($("#gubunNews").val() == "quarter"){
-            var temp = $("#choicesNews").val().split("분기")[0];
-            console.log(temp);
-            data.gubunItem = parseInt(temp);
-        }
-        
-        data.startDate = $("#date_from_news").val();
-        data.endDate = $("#date_to_news").val();
-        data.searchWord = companyName
-
-        console.log(data);
-
-        loading1("뉴스");
-        
-        $.ajax({
-            url: "/getNewsListByCompanyName",
-            method: 'POST',
-            data: data,
-            dataType: 'json',
-            success: function (responseData) {
-                //alert('조회 성공');
-                console.log(responseData.length);
-                window.newsResponseData = responseData;
-                console.log(window.newsResponseData[0]);
-
-                $('#myModal').hide();
-
-                document.getElementById('myModal').innerHTML =  modalhtml2;
-                $('#myModal').show();
-                setTimeout(() => drawTable(result_area, ''), 1000);
-
-            },
-            error: function () {
-                alert('조회 실패');
-                $('#myModal').hide();
-            }
-        });
-
-    }
 
     function getReportList(){
         var data = new Object();
@@ -887,6 +834,19 @@
 
                 $('#myModal').hide();
 
+                var modalhtml2 =
+                `
+                    <div class="modal-loading">
+                        <p style="text-align: center;"><span style="font-size: 14pt;"><b><span style="font-size: 24pt;">행내 보고서 목록 불러오는 중...</span></b></span></p>
+                        <button type="button" class="close" onClick="close_pop();"></button>
+                        <p style="text-align: center; line-height: 1.5;"><br />화면에 표출중입니다.</p>
+                        <p style="text-align: center; line-height: 1.5;"><br />잠시만 기다려 주십시오.</p>
+                        <p><br /></p>
+                        <p style="text-align: center; line-height: 1.5;"><br />
+                            <img src="/img/loading.gif" align="center"/>
+                        </p>
+                    </div>
+                `;
                 document.getElementById('myModal').innerHTML =  modalhtml2;
                 $('#myModal').show();
                 setTimeout(() => drawTableReport(), 1000);
@@ -897,22 +857,8 @@
                 $('#myModal').hide();
             }
         });
-    }
 
-    
-    var modalhtml2 =
-        `
-            <div class="modal-loading">
-                <p style="text-align: center;"><span style="font-size: 14pt;"><b><span style="font-size: 24pt;">뉴스 목록 불러오는 중...</span></b></span></p>
-                <button type="button" class="close" onClick="close_pop();"></button>
-                <p style="text-align: center; line-height: 1.5;"><br />화면에 표출중입니다.</p>
-                <p style="text-align: center; line-height: 1.5;"><br />잠시만 기다려 주십시오.</p>
-                <p><br /></p>
-                <p style="text-align: center; line-height: 1.5;"><br />
-                    <img src="/img/loading.gif" align="center"/>
-                </p>
-            </div>
-        `;
+    }
 
 
     var selectListData = {
@@ -969,6 +915,7 @@
             $('#date_picker_div_News').show();
             $('#condition').hide();
         }
+        
 
         $('#choicesNews').empty();
         
@@ -1015,6 +962,7 @@
             $('#condition_report').hide();
         }
 
+
         $('#choicesReport').empty();
         
         for(var count = 0; count < changeItem.length; count++){                
@@ -1024,23 +972,75 @@
     }
         
 
+
     function setDisplay(){
         if($('input:radio[id=news_radio]').is(':checked')){
             document.getElementById('main_title').innerText = '뉴스 목록 조회';
-            createEmptyDatatableNews();
             $('#contents_section_news').show();
             $('#contents_section_report').hide();
             $('#date_picker_div_News').hide();
             $('#example_news').DataTable(); 
-        }else{
+
+        }else {
             document.getElementById('main_title').innerText = '행내 보고서 목록 조회';
-            createEmptyDatatableReport();
             $('#contents_section_report').show();
             $('#contents_section_news').hide();      
             $('#date_picker_div_Report').hide();
             $('#example_report').DataTable();
         }
+       
     }
+
+
+
+
+    
+
+    //산업별 뉴스 가져오기
+    function getNewsListByIndustry(industryName){
+        
+        //console.log('산업명'+industryName);
+        loading1("뉴스");
+        var result_area = 'result_area_industry';
+        var table_id = 'industry_news_list';
+        $.ajax({
+            url: "/getNewsListByIndustry/" + industryName,
+            method: 'GET',
+            dataType: 'json',
+            success: function (responseData) {
+                //alert('조회 성공');
+                console.log(responseData.length);
+                window.newsResponseData = responseData;
+                console.log(window.newsResponseData[0]);
+
+                $('#myModal').hide();
+
+                var modalhtml2 =
+                `
+                    <div class="modal-loading">
+                        <p style="text-align: center;"><span style="font-size: 14pt;"><b><span style="font-size: 24pt;">뉴스 목록 불러오는 중...</span></b></span></p>
+                        <button type="button" class="close" onClick="close_pop();"></button>
+                        <p style="text-align: center; line-height: 1.5;"><br />화면에 표출중입니다.</p>
+                        <p style="text-align: center; line-height: 1.5;"><br />잠시만 기다려 주십시오.</p>
+                        <p><br /></p>
+                        <p style="text-align: center; line-height: 1.5;"><br />
+                            <img src="/img/loading.gif" align="center"/>
+                        </p>
+                    </div>
+                `;
+                document.getElementById('myModal').innerHTML =  modalhtml2;
+                $('#myModal').show();
+                setTimeout(() => drawTable(result_area, table_id), 1000);
+
+            },
+            error: function () {
+                alert('조회 실패');
+                $('#myModal').hide();
+            }
+        });
+
+    }
+
 
 
     function getIndustryList() {
@@ -1071,8 +1071,8 @@
             method: 'GET',
             dataType: 'json',
             success: function (responseData) {
-            // alert('조회 성공');
-            // console.log(responseData);
+               // alert('조회 성공');
+               // console.log(responseData);
                 //console.log(responseData[0]);
                 
                 //var gigi = eval(industry_column_list_java[0]);
@@ -1081,11 +1081,11 @@
             var tables = ``;
 
             var expend_all =`
-                <div class="buttons" align="right" >
-                    <a id="toggleee" class="btn" style="min-width: 110px;" href="javascript:togglee();">전체 펼치기</a>
-                    
-                </div>
-                `
+				<div class="buttons" align="right" >
+					<a id="toggleee" class="btn" style="min-width: 110px;" href="javascript:togglee();">전체 펼치기</a>
+					
+				</div>
+				`
 
             for (var n = 0; n < 3; n++) {	
                 var htmlTableHead = 
@@ -1125,10 +1125,11 @@
                                     <ul class="hide">
                                 `;
 
+
                                     k=0;	
                                     for (var i = 0; i < responseData.length; i++) {
                                         var colJavaName = eval(industry_column_list_java[j]);
-                                    // console.log('컬럼이름 '+colJavaName);
+                                       // console.log('컬럼이름 '+colJavaName);
                                         if (k<5){
                                             if (colJavaName != null) {
                                             var htmlli1 =
@@ -1264,7 +1265,12 @@
                 alert('조회 실패');
             }
         });
+
+
+
     }
+
+   
 
 
     function rmv(){
@@ -1342,244 +1348,48 @@
     }
 
 
-    //기업별 뉴스 가져오기
-    function getCompanyListByCompany(){
-        var companyName = document.getElementById('search_company_news').value; 
-        console.log("@#@#@#@#@#@#");
-        console.log('기업명 '+companyName);
-        var result_area = 'result_area_news';
-        var table_id = 'example_news';
-        $.ajax({
-            url: "/getCompanyListByCompany/" + companyName,
-            method: 'GET',
-            dataType: 'json',
-            success: function (responseData) {
-                //alert('조회 성공');
-                console.log(responseData.length);
-                window.companyResponseData = responseData;
-
-                var companyList = [];
-                companyListHTML = ``;
-                var companyliList = [];
-                companyliListHTML = ``;
-
-                for (var i = 0; i < responseData.length; i++){
-                    companyList[i] = `<p> <a href="javascript:getNewsListByCompanyName(` + `'` + window.companyResponseData[i] + `'` + `);" id="modalList` + i + `">` + window.companyResponseData[i] + ` </a> </p>`;
-                    companyListHTML = companyListHTML + companyList[i];
-                    companyliList[i] = `<li>` + window.companyResponseData[i] + `</li>`;
-                    companyliListHTML = companyliListHTML + companyliList[i];
-                }
-
-                $('#myModal').hide();
-
-                var modalContents =
-                `
-                    <div class="modal-list-head">
-                        <p style="text-align: center;"><span style="font-size: 14pt;"><b><span style="font-size: 16pt;">목록 중 하나를 선택해 주세요.</span></b></span></p>
-                    </div>
-
-                    <div class="modal-list">
-                        <ul class="list">
-                            ` + companyliListHTML + `
-                        </ul>
-                    </div>
-                `;
-                document.getElementById('myModal').innerHTML = modalContents;
-                $('#myModal').show();
-
-                $(".list").on("click", "li", function() {
-                var companyName = $(this).text();
-                getNewsListByCompanyName(companyName);
-                });
-                
-            },
-            error: function () {
-                alert('조회 실패');
-                $('#myModal').hide();
-            }
-        });
-    }
-
-
-
-    //산업별 뉴스 가져오기
-    function getNewsListByIndustry(industryName){
-    
-        console.log('산업명'+industryName);
-        loading1("뉴스");
-        var result_area = 'result_area_industry';
-        var table_id = 'industry_news_list';
-        $.ajax({
-            url: "/getNewsListByIndustry/" + industryName,
-            method: 'GET',
-            dataType: 'json',
-            success: function (responseData) {
-                //alert('조회 성공');
-                console.log(responseData.length);
-                window.newsResponseData = responseData;
-                console.log(window.newsResponseData[0]);
-
-                $('#myModal').hide();
-
-                document.getElementById('myModal').innerHTML =  modalhtml2;
-                $('#myModal').show();
-                setTimeout(() => drawTable(result_area, table_id), 1000);
-                document.getElementById('main_title').innerHTML = `뉴스 목록 조회<h4 style="display:inline">(` + industryName + `)</h4>`;
-                
-            },
-            error: function () {
-                alert('조회 실패');
-                $('#myModal').hide();
-            }
-        });
-    }
-
-
     function itemChangeFold(){
+
         var selectItem = $("#fold").val();
         console.log(selectItem);
-        var getFunction = ``;
-        var searchBoxHTML = `<input id="search_company_news" type="text" placeholder="검색" value="" onkeypress="if( event.keyCode == 13 ){` + getFunction + `}">
-            <button id="search_button_news" class="btn_search" onclick="` + getFunction + `"><span class="blind" >검색</span></button>`;
-        document.getElementById('search_box_news').innerHTML = searchBoxHTML;
 
         if(selectItem == "company"){
-            createEmptyDatatableNews();
             $('#result_area_subsidiary').hide();
             $('#result_area_industry').hide();
-            $('#yearSelect').show();
-            $('#gubunSelect').show();
-            $('#search_box_news').show();
             document.getElementById("search_company_news").disabled = false;
             document.getElementById("search_button_news").disabled = false;
-            document.getElementById('search_company_news').value='';
             $('#result_area_news').show();
-            getFunction = `getCompanyListByCompany();`;
+            
         }
         else if(selectItem == "subsidiary"){
             $('#result_area_industry').hide();
             $('#result_area_news').hide();
-            $('#yearSelect').hide();
-            $('#gubunSelect').hide();
-            $('#search_box_news').hide();
             document.getElementById("search_company_news").disabled = true;
             document.getElementById("search_button_news").disabled = true;
-            document.getElementById('search_company_news').value='';
             $('#result_area_subsidiary').show();
         }
         else if(selectItem == "industry"){
             getIndustryList();
             $('#result_area_news').hide();
             $('#result_area_subsidiary').hide();
-            $('#yearSelect').hide();
-            $('#gubunSelect').hide();
-            $('#search_box_news').hide();
             document.getElementById("search_company_news").disabled = true;
             document.getElementById("search_button_news").disabled = true;
-            document.getElementById('search_company_news').value='';
             $('#result_area_industry').show();
         }
-        else if(selectItem == "keyword"){
-            createEmptyDatatableNews();
-            $('#result_area_subsidiary').hide();
-            $('#result_area_industry').hide();
-            $('#yearSelect').show();
-            $('#gubunSelect').show();
-            $('#search_box_news').show();
-            document.getElementById("search_company_news").disabled = false;
-            document.getElementById("search_button_news").disabled = false;
-            document.getElementById('search_company_news').value='';
-            $('#result_area_news').show();
-            getFunction = `getNewsList();`;
-        }
-
-        searchBoxHTML = `<input id="search_company_news" type="text" placeholder="검색" value="" onkeypress="if( event.keyCode == 13 ){` + getFunction + `}">
-            <button id="search_button_news" class="btn_search" onclick="` + getFunction + `"><span class="blind" >검색</span></button>`;
-        document.getElementById('search_box_news').innerHTML = searchBoxHTML;       
     }
 
 
-    function createEmptyDatatableNews(){
-        var newsTableBody = ``;
-
+    function createEmptyDatatable(){
+        var tableNews = ``;
+        var tableReport = ``;
         for (var i = 0; i < 10; i++){
-            newsTableBody = newsTableBody + `<tr> <td>　 </td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>`;
+            tableNews = tableNews + `<tr> <td>　 </td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>`;
+            tableReport = tableReport + `<tr> <td>　 </td><td></td><td></td><td></td><td></td><td></td> </tr>`;
         }
-
-        var newsTable=` <table id="example_news" class="display" style="width:100%">
-                            <colgroup>
-                                <col>
-                            </colgroup>
-                            <thead>
-                            <tr>
-                                <th>인덱스</th>
-                                <th>컴포짓키</th>
-                                <th>날짜</th>
-                                <th>기업명</th>
-                                <th>제목</th>
-                                <th>progress</th>
-                                <th>score</th>
-                            </tr>
-                            </thead>
-                            <tbody id="tbodyNews">
-                                ` + newsTableBody +`                                
-                            </tbody>
-                        </table>`;
-
-        document.getElementById('result_area_news').innerHTML = newsTable;
-        $('#example_news').DataTable();
+        document.getElementById('tbodyNews').innerHTML = tableNews;
+        document.getElementById('tbodyReport').innerHTML = tableReport;    
     }
 
-    function createEmptyDatatableReport(){
-        var reportTableBody = ``;
-
-        for (var i = 0; i < 10; i++){
-            reportTableBody = reportTableBody + `<tr> <td>　 </td><td></td><td></td><td></td><td></td><td></td> </tr>`;
-        }
-
-        var reportTable=` <table id="example_report" class="display" style="width:100%">
-                            <colgroup>
-                                <col>
-                            </colgroup>
-                            <thead>
-                            <tr>
-                                <th>인덱스</th>
-                                <th>날짜</th>
-                                <th>제목</th>
-                                <th >스코어</th>
-                                <th >progress</th>
-                                <th >타입</th>
-                            </tr>
-                            </thead>
-                            <tbody id="tbodyReport">
-                                ` + reportTableBody + `                                
-                            </tbody>
-                        </table>`;
-
-        document.getElementById('result_area_report').innerHTML = reportTable;
-        $('#example_report').DataTable();
-    }
-
-    // modal
-    $(document).on('keydown', function (e) {
-        if (e.keyCode === 27) { // ESC
-            close_pop();
-        }
-    });
-
-    //close if click outside
-    $(document).mouseup(function (e) {
-        var containerTitle = $('.modal .modal-title');
-        var containerContent = $('.modal .modal-content');
-        var containerClose = $('.modal .modal-close');
-        if (!containerTitle.is(e.target) && containerTitle.has(e.target).length === 0 
-            && !containerContent.is(e.target) && containerContent.has(e.target).length === 0
-            && !containerClose.is(e.target) && containerClose.has(e.target).length === 0) {
-            close_pop();
-        }
-    });
-
-   
   
     
 </script>
@@ -1662,20 +1472,20 @@
                 <h3 class="main_title" id="main_title">뉴스 목록 조회</h3>
 
 
-                
-                <span class="input_radio">
+                <span class="input_radio" >
                     <input type="radio" class="input_radio" id="news_radio" name="news_report" onchange="setDisplay()" checked="checked">
                     <label for="news_radio" class="label">뉴스</label>
 
                 </span>
-                <span class="input_radio">
+                <span class="input_radio" >
                     <input type="radio" class="input_radio" id="report_radio" name="news_report" onchange="setDisplay()">
                     <label for="report_radio" class="label">보고서</label>
                 </span>
+                
 
-        
+                
 
-                <!-- news section -->
+
                 <div class="section" id="contents_section_news">
                     <div class="option_set">
                        
@@ -1685,22 +1495,11 @@
                                 <option value="company">기업별</option>
                                 <option value="subsidiary">계열별</option>
                                 <option value="industry">산업별</option>
-                                <option value="keyword">키워드</option>
-                            </select>
-                        </div>
-
-                        <div class="data_set" style="float:left" id="gubunSelect">
-                            <a style="margin-right: -10px; margin-left: 10px;">구분</a>
-                            <select name="gubun" id="gubunNews" class="select" onChange="itemChangeNews()">
-                                <option value="year" selected="selected">연도별</option>
-                                <option value="quarter">분기별</option>
-                                <option value="month">월별</option>
-                                <option value="custom">사용자 선택</option>
                             </select>
                         </div>
  
-                        <div class="data_set" style="float:left" id="yearSelect">
-                            <a style="margin-right: -10px; margin-left: 10px;">연도 선택</a>
+                        <div class="data_set" style="float:left">
+                            <a>연도 선택</a>
                             <select name="newsYear" id="newsYear" class="select" style="min-width: 80px; width:80px;">
                                 <option value="2025">2025</option>
                                 <option value="2024">2024</option>
@@ -1713,6 +1512,16 @@
                                 <option value="2017">2017</option>
                                 <option value="2016">2016</option>
                                 <option value="2015">2015</option>
+                            </select>
+                        </div>
+                            
+                        <div class="data_set" style="float:left">
+                            <a>구분</a>
+                            <select name="gubun" id="gubunNews" class="select" onChange="itemChangeNews()">
+                                <option value="year" selected="selected">연도별</option>
+                                <option value="quarter">분기별</option>
+                                <option value="month">월별</option>
+                                <option value="custom">사용자 선택</option>
                             </select>
                         </div>
             
@@ -1733,16 +1542,48 @@
 
  
                         <div class="search_box" id="search_box_news">
-                            <input id="search_company_news" type="text" placeholder="검색" value="" onkeypress="if( event.keyCode == 13 ){getCompanyListByCompany();}">
-                            <button id="search_button_news" class="btn_search" onclick="getCompanyListByCompany();"><span class="blind" >검색</span></button>
+                            <input id="search_company_news" type="text" placeholder="검색" value="" onkeypress="if( event.keyCode == 13 ){getNewsList();}">
+                            <button id="search_button_news" class="btn_search" onclick="getNewsList();"><span class="blind" >검색</span></button>
                         </div>
                         
                     </div>
- 
                     
+                    <div class="pagination" style="padding-top: 0px;">
+                       
+                        <button class="btn_prev"><span class="blind">이전</span></button>
+                        <!-- [D] 현재 페이지 클래스 active 추가 -->
+                        <a href="#" class="page active">1</a>
+                        <a href="#" class="page">2</a>
+                        <a href="#" class="page">3</a>
+                        <a href="#" class="page">4</a>
+                        <a href="#" class="page">5</a>
+                        <button class="btn_next"><span class="blind">다음</span></button>
+                    </div>
+                   
  
-                    <div id="result_area_news">
-                        
+ 
+                    <div id="result_area_news" >
+
+                        <table id="example_news" class="display" style="width:100%">
+                            <colgroup>
+                                <col>
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th>인덱스</th>
+                                <th>컴포짓키</th>
+                                <th>날짜</th>
+                                <th>기업명</th>
+                                <th>제목</th>
+                                <th>progress</th>
+                                <th>score</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tbodyNews">
+                                
+                                
+                            </tbody>
+                        </table>
                     </div>
 
                     <div id="result_area_subsidiary">
@@ -1752,13 +1593,16 @@
                     <div id="result_area_industry">
 
                     </div>
- 
+                    
+                   
+
                 </div>
 
 
 
 
-                <!-- report section -->
+
+
                 <div class="section" id="contents_section_report">
                     <div class="option_set">
 
@@ -1812,8 +1656,38 @@
         
                     </div>
             
+                    <div class="pagination" style="padding-top: 0px;">
+                       
+                        <button class="btn_prev"><span class="blind">이전</span></button>
+                        <!-- [D] 현재 페이지 클래스 active 추가 -->
+                        <a href="#" class="page active">1</a>
+                        <a href="#" class="page">2</a>
+                        <a href="#" class="page">3</a>
+                        <a href="#" class="page">4</a>
+                        <a href="#" class="page">5</a>
+                        <button class="btn_next"><span class="blind">다음</span></button>
+                    </div>
+            
+            
                     <div id="result_area_report">
-                        
+                        <table id="example_report" class="display" style="width:100%">
+                            <colgroup>
+                                <col>
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th>인덱스</th>
+                                <th>날짜</th>
+                                <th>제목</th>
+                                <th >스코어</th>
+                                <th >progress</th>
+                                <th >타입</th>
+                            </tr>
+                            </thead>
+                            <tbody id="tbodyReport">
+                                
+                            </tbody>
+                        </table>
                     </div>
  
                 </div>

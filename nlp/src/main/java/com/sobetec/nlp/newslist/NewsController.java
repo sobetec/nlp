@@ -62,8 +62,24 @@ public class NewsController {
 	
 	@GetMapping(path = "/getIndustryList")
 	public List<Industry> getIndustryList() throws Exception {
-
 		return repository.getIndustryList();
 	}
+	
+	@GetMapping(path = "/getNewsListByIndustry/{instCode}")
+	public List<News> getNewsListByIndustry(@PathVariable String instCode) throws Exception {
+		return newsService.getNewsListByIndustry(instCode);
+	}
+	
+	@GetMapping(path = "/getCompanyListByCompany/{companyName}")
+	public List<String> getCompanyListByCompany(@PathVariable String companyName) throws Exception {
+		return newsService.getCompanyListByCompany(companyName);
+	}
+	
+	@PostMapping(path = "/getNewsListByCompanyName")
+	public List<News> getNewsListByCompanyName(NewsCondition newsCondition) throws Exception {
+		System.out.println(newsCondition);
+		return newsService.getNewsListByCompanyName(newsCondition);
+	}
 
+	
 }
