@@ -13,7 +13,7 @@
 		 FROM NLP."nlp_news"
 		 where (company_name like concat('%',#{cmpyNameOnly},'%') or raw_data like concat('%',#{cmpyNameOnly},'%') or news_title like concat('%',#{cmpyNameOnly},'%') )
 		 AND (news_date between '2020-01-01' and '2020-12-31')
-		 order by news_date desc limit 1000
+		 order by news_date desc limit 10000
 	</select>
 	<select id="selectChartStocksByCompany" parameterType="String" resultType="com.sobetec.nlp.chart.Stocks">
 		SELECT "company" as "company"

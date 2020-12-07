@@ -202,101 +202,103 @@
 
 			<div class="main_panel" role="main">
 				<div class="contents_panel">
-					<h3 class="main_title">시각화</h3>
+					<div>
+						<h3 class="main_title">시각화</h3>
 
-					<div class="contents">
-						<div class="option_set">
-							<div class="data_set" style="float:left" id='yearSelect'>
-								<a>연도 선택</a>
-								<select name="newsYear" id="newsYear" class="select">
-									<option value="2025">2025</option>
-									<option value="2024">2024</option>
-									<option value="2023">2023</option>
-									<option value="2022">2022</option>
-									<option value="2021">2021</option>
-									<option value="2020" selected="selected">2020</option>
-									<option value="2019">2019</option>
-									<option value="2018">2018</option>
-									<option value="2017">2017</option>
-									<option value="2016">2016</option>
-									<option value="2015">2015</option>
-								</select>
+						<div class="contents">
+							<div class="option_set">
+								<div class="data_set" style="float:left" id='yearSelect'>
+									<a>연도 선택</a>
+									<select name="newsYear" id="newsYear" class="select">
+										<option value="2025">2025</option>
+										<option value="2024">2024</option>
+										<option value="2023">2023</option>
+										<option value="2022">2022</option>
+										<option value="2021">2021</option>
+										<option value="2020" selected="selected">2020</option>
+										<option value="2019">2019</option>
+										<option value="2018">2018</option>
+										<option value="2017">2017</option>
+										<option value="2016">2016</option>
+										<option value="2015">2015</option>
+									</select>
+								</div>
+
+								<div class="data_set" style="float:left">
+									<a>구분</a>
+									<select name="gubun" id="gubun" class="select" onChange="itemChange()">
+										<option value="year" selected="selected">연도별</option>
+										<option value="quarter">분기별</option>
+										<option value="month">월별</option>
+										<option value="custom">사용자 선택</option>
+									</select>
+								</div>
+
+								<div id="condition" class="data_set">
+									<a id="gubunText"></a>
+									<select name="choices" id="choices" class="select">
+									</select>
+								</div>
+
+								<div id="date_picker_div" style="display: none">
+									<span class="date_picker">
+										<label for="date_from" class="label">기간</label>
+										<span class="input_date"><input type="text" class="input_text"
+												id="date_from"></span>
+										<span class="dash">-</span>
+										<span class="input_date"><input type="text" class="input_text"
+												id="date_to"></span>
+									</span>
+								</div>
+								<div class="search_box">
+									<input id="search_company" type="text" placeholder="검색" value=""
+										onkeypress="if( event.keyCode == 13 ){getChartQuery2();}">
+									<button class="btn_search" onclick="getChartQuery2();"><span
+											class="blind">검색</span></button>
+								</div>
+
+								<div class="buttons">
+									<a id="newsList" class="btn" href="javascript:getChartQuery2();">조회</a>
+								</div>
+								<button class="btn line">편집</button>
+								<a href="#" class="btn point" target="_blank">다운로드</a>
 							</div>
 
-							<div class="data_set" style="float:left">
-								<a>구분</a>
-								<select name="gubun" id="gubun" class="select" onChange="itemChange()">
-									<option value="year" selected="selected">연도별</option>
-									<option value="quarter">분기별</option>
-									<option value="month">월별</option>
-									<option value="custom">사용자 선택</option>
-								</select>
-							</div>
+							<div class="visualize">
 
-							<div id="condition" class="data_set">
-								<a id="gubunText"></a>
-								<select name="choices" id="choices" class="select">
-								</select>
-							</div>
+								<div class="card_list">
+									<!-- [D] 클릭한 카드에 클래스 active 추가해주세요 -->
 
-							<div id="date_picker_div" style="display: none">
-								<span class="date_picker">
-									<label for="date_from" class="label">기간</label>
-									<span class="input_date"><input type="text" class="input_text"
-											id="date_from"></span>
-									<span class="dash">-</span>
-									<span class="input_date"><input type="text" class="input_text" id="date_to"></span>
-								</span>
-							</div>
-							<div class="search_box">
-								<input id="search_company" type="text" placeholder="검색" value=""
-									onkeypress="if( event.keyCode == 13 ){getChartQuery2();}">
-								<button class="btn_search" onclick="getChartQuery2();"><span
-										class="blind">검색</span></button>
-							</div>
+									<!-- DANGER GAUGE Extended Version -->
+									<div class="card_item_small">
+										<div class="card_box">
+											<div class="card_head">
+												T/A 결과
+											</div>
+											<div class="chart_area" style="padding-top: 60%">
+												<div class="chart" id="dangerGauge">
 
-							<div class="buttons">
-								<a id="newsList" class="btn" href="javascript:getChartQuery2();">조회</a>
-							</div>
-							<button class="btn line">편집</button>
-							<a href="#" class="btn point" target="_blank">다운로드</a>
-						</div>
+													<script type="text/javascript" src='./js/nlp.js'></script>
 
-						<div class="visualize">
+													<script>
+														var gauge = document.getElementById('dangerGauge');
 
-							<div class="card_list">
-								<!-- [D] 클릭한 카드에 클래스 active 추가해주세요 -->
-
-								<!-- DANGER GAUGE Extended Version -->
-								<div class="card_item_small">
-									<div class="card_box">
-										<div class="card_head">
-											T/A 결과
-										</div>
-										<div class="chart_area" style="padding-top: 70%">
-											<div class="chart" id="dangerGauge">
-
-												<script type="text/javascript" src='./js/nlp.js'></script>
-
-												<script>
-													var gauge = document.getElementById('dangerGauge');
-
-													var gaugeDirection = 0;
+														var gaugeDirection = 0;
 
 
 
-												</script>
+													</script>
+
+												</div>
 
 											</div>
 
+
+
 										</div>
-
-
-
 									</div>
-								</div>
-								<!-- Keyword Pie -->
-								<!-- <div class="card_item_small">
+									<!-- Keyword Pie -->
+									<!-- <div class="card_item_small">
 									<div class="card_box">
 										<div class="card_head">
 											키워드
@@ -338,91 +340,91 @@
 									</div>
 								</div> -->
 
-								<!-- 키워드 빠 플롯 -->
-								<div class="card_item_small">
-									<div class="card_box">
-										<div class="card_head">
-											<span class="input_check">
-												<input type="checkbox" id="test_edit_02">
-												<label for="test_edit_02" class="label"></label>
-											</span>
-											<span class="title">타이틀 1</span>
-										</div>
-										<div class="card_content">
-											<div class="chart_area" style="padding-top: 100%">
-												<div class="chart" id="keywordBar">
-													<script>
-														var divID = 'keywordBar'
+									<!-- 키워드 빠 플롯 -->
+									<div class="card_item_small">
+										<div class="card_box">
+											<div class="card_head">
+												<span class="input_check">
+													<input type="checkbox" id="test_edit_02">
+													<label for="test_edit_02" class="label"></label>
+												</span>
+												<span class="title">타이틀 1</span>
+											</div>
+											<div class="card_content">
+												<div class="chart_area" style="padding-top: 80%">
+													<div class="chart" id="keywordBar">
+														<script>
+															var divID = 'keywordBar'
 
-														var textSlide = document.getElementById('keywordBarSlider')
-														document.getElementById('keywordMaxValueBar').innerHTML = textSlide.value;
-														textSlide.onchange = function () {
-															document.getElementById('keywordMaxValueBar').innerHTML = document.getElementById('keywordBarSlider').value;
-															makeKeywordBarPlot(window.newsResponseData.keywords, 'enlargedChart', document.getElementById('keywordBarSlider').value)
-														}
+															var textSlide = document.getElementById('keywordBarSlider')
+															document.getElementById('keywordMaxValueBar').innerHTML = textSlide.value;
+															textSlide.onchange = function () {
+																document.getElementById('keywordMaxValueBar').innerHTML = document.getElementById('keywordBarSlider').value;
+																makeKeywordBarPlot(window.newsResponseData.keywords, 'enlargedChart', document.getElementById('keywordBarSlider').value)
+															}
 
-													</script>
+														</script>
 
+													</div>
 												</div>
 											</div>
 										</div>
 									</div>
-								</div>
 
-								<!-- news article count -->
-								<div class="card_item_large">
-									<div class="card_box">
-										<div class="card_head">
-											<p>기사수</p>
-											<style>
-												#data {
-													overflow: hidden;
-													padding: 0;
-												}
+									<!-- news article count -->
+									<div class="card_item_large">
+										<div class="card_box">
+											<div class="card_head">
+												<p>기사수</p>
+												<style>
+													#data {
+														overflow: hidden;
+														padding: 0;
+													}
 
-												select {
-													padding: 0;
-													padding-left: 1px;
-													border: none;
-													background-color: #eee;
-												}
+													select {
+														padding: 0;
+														padding-left: 1px;
+														border: none;
+														background-color: #eee;
+													}
 
-												option {
-													display: inline-block;
-													border: 1px solid #000;
-													background-color: white;
-													padding-left: 5px;
-													padding-right: 5px;
-													margin-left: -1px;
-													display: inline-block;
-												}
-											</style>
-											<div>
-												<select multiple size="1" id='articleCountRange'>
-													<option value='1'>1년</option>
-													<option value='3'>3년</option>
-													<option value='5'>5년</option>
-													<option value='all' selected>전체</option>
-												</select>
+													option {
+														display: inline-block;
+														border: 1px solid #000;
+														background-color: white;
+														padding-left: 5px;
+														padding-right: 5px;
+														margin-left: -1px;
+														display: inline-block;
+													}
+												</style>
+												<div>
+													<select multiple size="1" id='articleCountRange'>
+														<option value='1'>1년</option>
+														<option value='3'>3년</option>
+														<option value='5'>5년</option>
+														<option value='all' selected>전체</option>
+													</select>
+												</div>
 											</div>
-										</div>
-										<div class="chart_area" style="padding-top: 25%">
-											<div class="chart" id='articleCounts'>
-												<script>
-													var divID = 'articleCounts';
+											<div class="chart_area" style="padding-top: 20%">
+												<div class="chart" id='articleCounts'>
+													<script>
+														var divID = 'articleCounts';
 
 
-												</script>
+													</script>
+												</div>
 											</div>
 										</div>
 									</div>
-								</div>
 
 
 
 
-								<!-- 스플릿 콩나물 그래프 -->
-								<!-- <div class="card_item_large">
+									<!-- 스플릿 콩나물 그래프 -->
+									<!-- <div class="card_item_large">
 									<div class="card_box">
 										<div class="card_head">
 											시계열분석
@@ -440,34 +442,35 @@
 								</div> -->
 
 
-								<!-- 주가 플롯 -->
-								<div class="card_item_large">
-									<div class="card_box">
-										<div class="card_head">주가
-											<div>
-												<select size="1" id='stockRange'>
-												</select>
+									<!-- 주가 플롯 -->
+									<div class="card_item_large">
+										<div class="card_box">
+											<div class="card_head">주가
+												<div>
+													<select size="1" id='stockRange'>
+													</select>
+												</div>
 											</div>
-										</div>
-										<div class="chart_area" style="padding-top: 25%">
-											<div class="chart" id="stockTime">
-												<script>
-													/* var filepath = './data/news_counts.csv'
-													d3.csv(filepath, function (data) {
-
-														var divID = 'stockTime';
-														stockGraph = document.getElementById(divID)
-														stockGraph.addEventListener('click', function () {
-															document.getElementById('resetChart').addEventListener('click', function () {
-																console.log('clicked');
+											<div class="chart_area" style="padding-top: 20%">
+												<div class="chart" id="stockTime">
+													<script>
+														/* var filepath = './data/news_counts.csv'
+														d3.csv(filepath, function (data) {
+	
+															var divID = 'stockTime';
+															stockGraph = document.getElementById(divID)
+															stockGraph.addEventListener('click', function () {
+																document.getElementById('resetChart').addEventListener('click', function () {
+																	console.log('clicked');
+																	makeStockGraph(data, 'enlargedChart');
+																})
 																makeStockGraph(data, 'enlargedChart');
 															})
-															makeStockGraph(data, 'enlargedChart');
-														})
-														makeStockGraph(data, divID)
-													}) */
-												</script>
+															makeStockGraph(data, divID)
+														}) */
+													</script>
 
+												</div>
 											</div>
 										</div>
 									</div>
@@ -477,114 +480,6 @@
 					</div>
 				</div>
 
-				<!-- [D] 옵션 활성화시 클래스 is_active 추가해주세요 -->
-				<div class="option_panel">
-					<div class="option_inner">
-						<div class="option_head">
-							<h3 class="option_title">옵션 설정</h3>
-							<button class="btn_close"><span class="blind">닫기</span></button>
-						</div>
-
-						<div class="option_body">
-							<div class="option_part">
-								<h4 class="option_label">Types</h4>
-								<ul class="option_list">
-									<li>
-										<span class="input_check">
-											<input type="checkbox" id="test_option_01" checked>
-											<label for="test_option_01">Bi-Variate Analysis</label>
-										</span>
-									</li>
-									<li>
-										<span class="input_check">
-											<input type="checkbox" id="test_option_02">
-											<label for="test_option_02">Multi-Variate Analysis</label>
-										</span>
-									</li>
-								</ul>
-
-								<h4 class="option_label">Colors</h4>
-								<ul class="option_list">
-									<li>
-										<span class="input_check">
-											<input type="checkbox" id="test_option_03" checked>
-											<label for="test_option_03">Blues</label>
-										</span>
-									</li>
-									<li>
-										<span class="input_check">
-											<input type="checkbox" id="test_option_04">
-											<label for="test_option_04">Reds</label>
-										</span>
-									</li>
-									<li>
-										<span class="input_check">
-											<input type="checkbox" id="test_option_05">
-											<label for="test_option_05">Greens</label>
-										</span>
-									</li>
-								</ul>
-
-								<h4 class="option_label">Plots</h4>
-								<ul class="option_list">
-									<li>
-										<span class="input_check">
-											<input type="checkbox" id="test_option_06">
-											<label for="test_option_06">Scatter plot</label>
-										</span>
-									</li>
-									<li>
-										<span class="input_check">
-											<input type="checkbox" id="test_option_07">
-											<label for="test_option_07">Histogram</label>
-										</span>
-									</li>
-									<li>
-										<span class="input_check">
-											<input type="checkbox" id="test_option_08">
-											<label for="test_option_08">Box plot</label>
-										</span>
-									</li>
-									<li>
-										<span class="input_check">
-											<input type="checkbox" id="test_option_09">
-											<label for="test_option_09">Outliers</label>
-										</span>
-									</li>
-									<li>
-										<span class="input_check">
-											<input type="checkbox" id="test_option_10" checked>
-											<label for="test_option_10">Correlation plot</label>
-										</span>
-									</li>
-									<li>
-										<span class="input_check">
-											<input type="checkbox" id="test_option_11">
-											<label for="test_option_11">Recommendation transformation</label>
-										</span>
-									</li>
-									<li>
-										<span class="input_check">
-											<input type="checkbox" id="test_option_12">
-											<label for="test_option_12">Parallel Coordinates Plot</label>
-										</span>
-									</li>
-									<li>
-										<span class="input_check">
-											<input type="checkbox" id="test_option_13">
-											<label for="test_option_13">Radar plot</label>
-										</span>
-									</li>
-								</ul>
-							</div>
-						</div>
-
-						<div class="option_bottom">
-							<button class="btn medium">취소</button>
-							<button class="btn medium point">완료</button>
-						</div>
-					</div>
-				</div>
 			</div>
 
 		</div>

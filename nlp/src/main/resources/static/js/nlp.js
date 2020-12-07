@@ -1,4 +1,17 @@
 function makeGauge(divID, sentimentScore) {
+    var sFactor = 7.1;
+    function sobescore(x) {
+        return 100 / (1 + Math.exp(-(x - 50) / sFactor));
+    }
+    var sFactor2 = 4;
+    function sobescore2(x) {
+        return 50 * ((x - 50) / (sFactor2 + Math.abs(x - 50))) + 50
+    }
+    function sobeDangerScore(x) {
+        return 50 * ((50 - x) / (sFactor2 + Math.abs(50 - x))) + 50
+    }
+    console.log(sentimentScore)
+    sentimentScore = sobeDangerScore(sentimentScore);
 
     var gauge = document.getElementById(divID);
     var divHeight = gauge.scrollHeight;
@@ -20,9 +33,31 @@ function makeGauge(divID, sentimentScore) {
         var divHeight = gauge.offsetHeight;
         var divWidth = gauge.offsetWidth;
     }
+    var defs = gaugeSVG.append("defs");
+    var filter = defs.append('filter')
+        .attr('id', 'drop-shadow')
+        .attr('height', '130%')
 
-    appendArc(gaugeSVG, divWidth, divHeight, 240, 288, "#b7ff90", 'veryLow' + divID);
+    filter.append("feGaussianBlur")
+        .attr("in", "SourceAlpha")
+        .attr("stdDeviation", 1)
+        .attr("result", "blur");
+    filter.append("feOffset")
+        .attr("in", "blur")
+        .attr("dx", 0.0083056478 * divHeight)
+        .attr("dy", 0.0083056478 * divHeight)
+        .attr("result", "offsetBlur");
+
+    var feMerge = filter.append('feMerge')
+
+    feMerge.append("feMergeNode")
+        .attr("in", "offsetBlur")
+    feMerge.append("feMergeNode")
+        .attr("in", "SourceGraphic");
+
+
     appendArc(gaugeSVG, divWidth, divHeight, 288, 336, "#f3ff90", 'low' + divID);
+    appendArc(gaugeSVG, divWidth, divHeight, 240, 288, "#b7ff90", 'veryLow' + divID);
     appendArc(gaugeSVG, divWidth, divHeight, 336, 384, "#ffea90", 'medium' + divID);
     appendArc(gaugeSVG, divWidth, divHeight, 24, 72, "#ffc990", 'high' + divID);
     appendArc(gaugeSVG, divWidth, divHeight, 72, 120, "#ff9090", 'veryHigh' + divID);
@@ -58,16 +93,17 @@ function makeGauge(divID, sentimentScore) {
             .attr("transform", "rotate(180)"); */
 
 
-
+    gaugeSVG.append('rect')
+        .attr('width',)
     gaugeSVG.append('g')
-        .attr('transform', 'translate(' + divWidth / 2.05 + ',' + divWidth / 1.8 + ")")
+        .attr('transform', 'translate(' + divWidth / 2.05 + ',' + divHeight / 1.2 + ")")
         .append('text')
-        .text(sentimentScore.toFixed(1))
+        .text('ƒ(s): ' + String(sentimentScore.toFixed(1)))
         .attr('id', 'sentimentIndicator')
         .style('font-style', 'italic')
         .style('font-weight', 'bold')
         .style('text-anchor', 'middle')
-        .style('font-size', 0.109 * divHeight);
+        .style('font-size', 0.08 * divHeight);
 
 
 
@@ -88,6 +124,8 @@ function makeGauge(divID, sentimentScore) {
         g.append("path")
             .attr("d", arc)
             .attr('id', arcID)
+            .attr('class', 'shadowArc')
+            .style('filter', 'url(#drop-shadow)')
             .attr("transform", "translate(" + divWidth / 2 + ',' + 3 * divHeight / 5 + ")")
             .attr("fill", color);
     }
@@ -389,14 +427,16 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
         .rangeRound([divHeight - yPadding, yPadding])
         .paddingInner(0.1);
     var yAxis = d3.axisLeft()
+        .tickSizeOuter(0)
         .scale(yScale);
 
 
     var xScale = d3.scaleLinear()
         .domain([0, dataSlice[nCutoff - 1].tf_idf])
         .range([xPadding, divWidth - xPadding])
-    var xAxis = d3.axisBottom()
-        .scale(xScale)/* 
+    /* var xAxis = d3.axisBottom()
+        .scale(xScale)
+        .ticks([])
         
                                                         .tickSize(0) */;
 
@@ -414,16 +454,15 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
     svg.append('g')
         .attr('class', 'x axis-grid')
         .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
-        .call(xAxisGrid);
+        .call(xAxisGrid)
+        .call(g => g.select('.domain').remove());
 
 
-    svg.append('g')
-        .attr("transform", "translate(" + xPadding + ",0)")
-        .call(yAxis);
 
-    svg.append('g')
+
+    /* svg.append('g')
         .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
-        .call(xAxis);
+        .call(xAxis); */
 
 
 
@@ -445,7 +484,29 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
         .attr("height", yScale.bandwidth)
         .on("mouseover", onMouseOver)
         .on("mousemove", onMouseMove)
-        .on("mouseout", onMouseOut);
+        .on("mouseout", onMouseOut)
+        .on('click', function (d) {
+            if (divID == 'enlargedChart') {
+                $('.layer_dimmed').removeClass('is_active');
+                $('.enlargedChartSettings').css("display", "none");
+                dataTableSearch(d.keyword);
+                document.getElementById('dataTableSearch').scrollIntoView();
+                console.log(d.keyword);
+
+            }
+            else {
+
+            }
+        });
+
+    var yAxis = svg.append('g')
+        .attr('id', 'keywordYAxis')
+        .attr("transform", "translate(" + xPadding + ",0)")
+        .call(yAxis);
+
+    var leftWidth = document.getElementById('keywordYAxis').getBoundingClientRect().width;
+    svg.attr('transform', 'translate(' + (leftWidth / 4) + ',0)');
+
 }
 
 function dateParser(dateString) {
@@ -454,7 +515,7 @@ function dateParser(dateString) {
         return new Date(b[0], (parseInt(b[1]) - 1).toString(), b[2]);
     }
     else {
-        return new Date(dateString.slice(0,4), dateString.slice(4,6), dateString.slice(6,8));
+        return new Date(dateString.slice(0, 4), dateString.slice(4, 6), dateString.slice(6, 8));
     }
 }
 
@@ -737,7 +798,7 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
         var divWidth = graphDiv.clientWidth;
     }
     var xPadding = 60;
-    var yPadding = 20;
+    var yPadding = 25;
     var INNER_HEIGHT = divHeight - 2 * yPadding;
     var INNER_WIDTH = divWidth - 2 * xPadding;
     var yScale = d3.scaleLinear()
@@ -795,19 +856,29 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
 
     svg.append('g')
         .attr("transform", "translate(" + xPadding + ",0)")
+        .attr('id', 'sentYAxis')
         .call(ySentAxis);
+
+    svg.append('g')
+        .attr('id', 'newsCountYAxis')
+        .attr("transform", "translate(" + (divWidth - xPadding) + ",0)")
+        .call(yAxis);
 
     svg.append("text")
         .attr("class", "y label")
         .attr("text-anchor", "middle")
         .attr("transform", "rotate(-90)")
         .attr("x", -divHeight / 2)
-        .attr('y', '20px')
+        .attr('y', xPadding / 2)
         .text("감성지수");
+    svg.append("text")
+        .attr("class", "y label")
+        .attr("text-anchor", "middle")
+        .attr("transform", "rotate(-90)")
+        .attr("x", -divHeight / 2)
+        .attr('y', divWidth - (xPadding / 4))
+        .text("기사수");
 
-    svg.append('g')
-        .attr("transform", "translate(" + (divWidth - xPadding) + ",0)")
-        .call(yAxis);
 
     svg.append("text")
         .attr("class", "y label")
@@ -1117,7 +1188,7 @@ function makeStockGraph(data, divID) {
     }
 
     var xPadding = 50;
-    var yPadding = 30;
+    var yPadding = 25;
     var graphDiv = document.getElementById(divID);
     graphDiv.innerHTML = '';
 
@@ -1184,6 +1255,7 @@ function makeStockGraph(data, divID) {
 
     var gY = svg.append('g')
         .attr('class', 'yAxis')
+        .attr('id', 'stocksYAxis')
         .attr("transform", "translate(" + xPadding + ",0)")
         .call(yAxis);
     var gYGrid = svg.append('g')
@@ -1280,6 +1352,16 @@ function makeStockGraph(data, divID) {
         .on("mouseover", onMouseOver)
         .on("mousemove", onMouseMove)
         .on("mouseout", onMouseOut);
+
+    svg.append('text')
+        .attr('transform', 'translate(' + (divWidth / 2) + ',' + (3 * yPadding / 4) + ")")
+        .attr('alignment-baseline', 'middle')
+        .attr('text-anchor', 'middle')
+        .text('주가지수 추이');
+
+    var leftWidth = document.getElementById('stocksYAxis').getBoundingClientRect().width;
+    svg.attr('transform', 'translate(' + (leftWidth / 4) + ',0)');
+
 
 
 
@@ -1435,7 +1517,7 @@ function makePieChart(data, divID, nCutofftoShow, nCutoff) {
         return parseFloat(a) + parseFloat(b.tf_idf);
     }, 0);
     console.log(importanceTotal)
-    
+
 
     dataSlice1.sort(function (a, b) { return b.tf_idf - a.tf_idf });
 
@@ -1567,7 +1649,7 @@ var tooltipEnlarged = d3.select('#entirePopupBox')
 
 function onMouseOver(d, i) {
     var elementClass = this.getAttribute('class');
-    console.log(elementClass)
+    //console.log(elementClass)
     if (elementClass == 'stockPoint') {
         var date = new Date(d.time)
         d3.select(this).style('fill', 'gray');
@@ -2233,15 +2315,16 @@ function getChartQuery2() {
     d3.selectAll('.visSVG').remove();
     var search_company = document.getElementById('search_company').value;
     //console.log(search_company);
+    loading1('뉴스')
     $.ajax({
         url: "/getChartQueryByCompany/" + search_company,
         method: 'GET',
         dataType: 'json',
         success: function (responseData) {
-            window.newsResponseData = responseData;
+            window.newsChartData = responseData;
 
             //console.log(responseData)
-            alert('조회 성공: ' + responseData.allNews.length + '개 기사');
+            //alert('조회 성공: ' + responseData.allNews.length + '개 기사');
 
             makeGauge('dangerGauge', responseData.averageScore)
             document.getElementById('dangerGauge').addEventListener('click', function () {
@@ -2290,6 +2373,9 @@ function getChartQuery2() {
                 makeKeywordBarPlot(responseData.keywords, 'enlargedChart', document.getElementById('keywordBarSlider').value)
             })
 
+            if (responseData.stockData.length > 0) {
+                console.log('test')
+            }
             var companies = [];
             var allStockData = {};
             for (var i = 0; i < responseData.stockData.length; i++) {
@@ -2329,6 +2415,9 @@ function getChartQuery2() {
                 makeStockGraph(allStockData, divID);
             })
             makeStockGraph(allStockData, divID);
+
+            $('#myModal').hide();
+
 
 
             /* document.getElementById('keywordPieSlider2').max = responseData.keywords.length;
