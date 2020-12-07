@@ -2313,7 +2313,7 @@ function getChartQuery1() {
 function getChartQuery2() {
     ////console.log(document.getElementById('articleCountRange').value);
     d3.selectAll('.visSVG').remove();
-    var search_company = document.getElementById('search_company').value;
+    var search_company = document.getElementById('search_company_news').value;
     //console.log(search_company);
     loading1('뉴스')
     $.ajax({
