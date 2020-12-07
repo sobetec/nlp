@@ -11,6 +11,11 @@
     <link rel="stylesheet" type="text/css" href="css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="css/w3.css">
     <style>
+        
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+        }
+
         .axis-grid line {
             stroke: rgb(190, 190, 190);
             stroke-width: 0.5;
@@ -1586,14 +1591,6 @@
                                                 <div class="chart_area" style="padding-top: 84%">
                                                     <div class="chart" id="keywordBar">
                                                         <script>
-                                                            var divID = 'keywordBar'
-
-                                                            var textSlide = document.getElementById('keywordBarSlider')
-                                                            document.getElementById('keywordMaxValueBar').innerHTML = textSlide.value;
-                                                            textSlide.onchange = function () {
-                                                                document.getElementById('keywordMaxValueBar').innerHTML = document.getElementById('keywordBarSlider').value;
-                                                                makeKeywordBarPlot(window.newsResponseData.keywords, 'enlargedChart', document.getElementById('keywordBarSlider').value)
-                                                            }
 
                                                         </script>
 
@@ -1657,10 +1654,10 @@
                                         <div class="card_box">
                                             <div class="card_head">
                                                 <span>주가&nbsp;</span>
-                                                <select size="1" id='stockRange'>
+                                                <select size="1" id='stockRange' class='select'>
                                                 </select>
                                             </div>
-                                            <div class="chart_area" style="padding-top: 22.15%">
+                                            <div class="chart_area" style="padding-top: 21%">
                                                 <div class="chart" id="stockTime">
                                                     <script>
                                                     </script>
@@ -1947,7 +1944,7 @@
         })
         $("#keywordBarSlider").on("input", function () {
             document.getElementById('keywordMaxValueBar').innerHTML = document.getElementById('keywordBarSlider').value;
-            makeKeywordBarPlot(window.newsResponseData.keywords, 'enlargedChart', document.getElementById('keywordBarSlider').value)
+            makeKeywordBarPlot(window.newsChartData.keywords, 'enlargedChart', document.getElementById('keywordBarSlider').value)
         })
         $(".card_list").css('max-height', $(".contents_panel:first").height())
         console.log($(".contents_panel:first").height());

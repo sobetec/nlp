@@ -1382,7 +1382,7 @@ body {
 
 .card_list .chart_area {
 	position: relative;
-	border: solid 0.5px #c9ccd2;
+	border: solid 0px #c9ccd2;
 }
 
 .card_list .chart {
@@ -1481,7 +1481,6 @@ body {
 	line-height: 20px;
 	color: #484d55;
 }
-
 
 .layer_dimmed {
 	overflow: auto;
@@ -1586,6 +1585,12 @@ body {
 	height: 602px;
 	border: solid 0.5px #c9ccd2;
 }
+
+/* .chart_detail .chart_area {
+	width: 100%;
+	height: 100%;
+	border: solid 0.5px #c9ccd2;
+} */
 
 .section .option_group {
 	padding-top: 10px;
