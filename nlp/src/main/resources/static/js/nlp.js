@@ -93,25 +93,37 @@ function makeGauge(divID, sentimentScore) {
             .attr("transform", "rotate(180)"); */
 
 
-    gaugeSVG.append('rect')
-        .attr('width',)
     gaugeSVG.append('g')
-        .attr('transform', 'translate(' + divWidth / 2.05 + ',' + divHeight / 1.2 + ")")
+        .attr('transform', 'translate(' + divWidth / 2 + ',' + divHeight / 1.2 + ")")
         .append('text')
         .text('ƒ(s): ' + String(sentimentScore.toFixed(1)))
         .attr('id', 'sentimentIndicator')
+        .style('alignment-baseline', 'middle')
         .style('font-style', 'italic')
         .style('font-weight', 'bold')
         .style('text-anchor', 'middle')
         .style('font-size', 0.08 * divHeight);
 
 
-
+    var textHeight = document.getElementById('sentimentIndicator').getBoundingClientRect().height
+    var textWidth = document.getElementById('sentimentIndicator').getBoundingClientRect().width
     gaugeSVG.append("circle")
         .style("fill", "black")
         .attr("r", 0.02 * divHeight)
         .attr("cx", divWidth / 2)
         .attr("cy", 3 * divHeight / 5)
+
+    /* gaugeSVG.append('g')
+        .append('rect')
+        .attr('class', 'gauge-box')
+        .attr('x', divWidth / 2 - textWidth / 2 - 5)
+        .attr('y', divHeight / 1.2 - textHeight / 2 - 5)
+        .attr('height', textHeight + 10)
+        .attr('width',  textWidth + 10)
+        .attr('fill', 'none')
+        .attr('stroke', 'black')
+        .attr('stroke-width', '0.1px')
+        .attr('box-shadow', '5px 10px 5px black inset') */
 
     document.getElementById('')
 
@@ -145,6 +157,10 @@ function makeGauge(divID, sentimentScore) {
 }
 
 function makeSentimentTimeGraph(data, divID) {
+    var sentimentData = []
+    for (var i = 0; i < data.length; i++) {
+        sentimentData.push({ time: Date.parse(data[i].date), sentiment: data[i].mean })
+    }
     var xPadding = 30;
     var yPadding = 20;
     var headRadius = 3;
@@ -165,9 +181,9 @@ function makeSentimentTimeGraph(data, divID) {
 
     var sentimentVector = [];
     var timeVector = [];
-    for (var i = 0; i < data.length; i++) {
-        timeVector.push(data[i].time);
-        sentimentVector.push(data[i].sentiment)
+    for (var i = 0; i < sentimentData.length; i++) {
+        timeVector.push(sentimentData[i].time);
+        sentimentVector.push(sentimentData[i].sentiment)
     }
     /* var sentimentVector = [20, 34, 15, 52, 48, 73, 25, 78, 83, 42, 58, 85, 68, 15, 35, 41, 75, 95, 50];
     var timeVector = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]; */
@@ -175,7 +191,7 @@ function makeSentimentTimeGraph(data, divID) {
     var INNER_HEIGHT = divHeight - 2 * yPadding;
     var INNER_WIDTH = divWidth - 2 * xPadding;
 
-
+    console.log(timeVector)
     var yScale = d3.scaleLinear()
         .domain([0, 100])
         .range([divHeight - yPadding, yPadding])
@@ -398,6 +414,350 @@ function makeSentimentTimeGraph(data, divID) {
         .attr('y2', yScale(60))
         .attr('stroke-width', 0.25)
         .attr('stroke', 'black');
+}
+
+function makeSentimentBoxPlot(sentimentData, divID) {
+    console.log('making sentiment box')
+    console.log(sentimentData)
+    document.getElementById(divID).innerHTML = "";
+    var timeRange = document.getElementById('articleCountRange').value;
+    if (timeRange == 'all') {
+        var timeRangeStart = new Date('1970-01-01')
+    }
+    else {
+        var currDate = new Date();
+        var timeRangeStart = d3.timeYear.offset(currDate, -timeRange);
+        //console.log(timeRangeStart)
+    }
+
+    sentimentData.sort(function (a, b) { return dateParser(a.date) - dateParser(b.date) });
+
+    sentimentData = sentimentData.filter(x => dateParser(x.date) > timeRangeStart)
+    var dateArray = [];
+    for (var i = sentimentData.length - 1; i > -1; i--) {
+        dateArray.push(dateParser(sentimentData[i].date));
+    }
+    var graphDiv = document.getElementById(divID);
+    if (divID == "enlargedChart") {
+        var divHeight = 602;
+        var divWidth = 944;
+        document.getElementById(divID).innerHTML = "";
+    }
+    else {
+        var divHeight = graphDiv.clientHeight;
+        var divWidth = graphDiv.clientWidth;
+    }
+    var xPadding = 60;
+    var yPadding = 25;
+    var INNER_HEIGHT = divHeight - 2 * yPadding;
+    var INNER_WIDTH = divWidth - 2 * xPadding;
+    var ySentScale = d3.scaleLinear()
+        .domain([0, 100])
+        .range([divHeight - yPadding, yPadding])
+    var ySentAxis = d3.axisLeft(ySentScale)
+        .scale(ySentScale)
+        .ticks(5)
+        .tickSizeOuter(0);
+    var yAxisGrid = d3.axisLeft(ySentScale)
+        .tickSize(-INNER_WIDTH)
+        .ticks(5)
+        .tickFormat('')
+        .tickSizeOuter(0);
+
+    var xScale = d3.scaleBand()
+        .domain(dateArray)
+        .range([xPadding, divWidth - xPadding])
+        .padding(0.05);
+    var xAxis = d3.axisBottom()
+        .scale(xScale)
+        .tickValues(xScale.domain().filter(function (d, i) { return !(i % (Math.floor(sentimentData.length / 8))) }))
+        /* .tickSize(0)
+        .tickValues([]) */
+        .ticks(5)
+        .tickPadding(5)
+        .tickFormat(d3.timeFormat("%Y년%b"))
+
+
+    var zoomBeh = d3.zoom()
+        .scaleExtent([0, 100])
+        /* .translateExtent(extent)
+        .extent(extent) */
+        .on("zoom", zoom);
+
+    var svg = d3.select("#" + divID).append("svg")
+        .attr('class', 'visSVG')
+        .attr("width", "100%")
+        .attr("height", "100%")
+        .attr('pointer-events', 'all')
+        .call(zoomBeh)
+        .append("g");
+
+
+    svg.append('g')
+        .attr("transform", "translate(" + xPadding + ",0)")
+        .attr('id', 'sentYAxis')
+        .call(ySentAxis);
+
+
+    svg.append("text")
+        .attr("class", "y label")
+        .attr("text-anchor", "middle")
+        .attr("transform", "rotate(-90)")
+        .attr("x", -divHeight / 2)
+        .attr('y', xPadding / 2)
+        .text("감성지수");
+
+
+    svg.append('g')
+        .attr('class', 'y axis-grid')
+        .attr("transform", "translate(" + xPadding + ",0)")
+        .call(yAxisGrid);
+
+
+    //console.log(INNER_WIDTH)
+    //console.log(xPadding)
+    //console.log(xScale.domain());
+    var clip = svg.append("defs").append("svg:clipPath")
+        .attr('id', 'articleClip')
+        .append('svg:rect')
+        .attr('width', INNER_WIDTH)
+        .attr('height', divHeight)
+        .attr('x', xPadding)
+        .attr('y', 0);
+
+    var clippedsvg = svg.append('g')
+        .attr('class', 'linechartarea')
+        .attr('clip-path', 'url(#articleClip)')
+
+    /* var iqrBoxes = clippedsvg.selectAll('.iqrBox')
+        .data(sentimentData)
+        .enter()
+        .append('rect')
+        .attr('class', 'iqrBox')
+        .attr('width', function (d, i) {
+            return xScale.bandwidth();
+        })
+        .attr('height', function (d, i) {
+            return ySentScale(d.lower) - ySentScale(d.upper)
+        })
+        .attr('x', function (d, i) {
+            var tempDate = dateParser(d.date)
+            return xScale(tempDate);
+        })
+        .attr('y', function (d, i) {
+            return ySentScale(d.upper)
+        })
+        .attr('fill', '#ffa73b')
+        .style('opacity', '40%'); */
+    /* .on("mouseover", onMouseOver)
+    .on("mousemove", onMouseMove)
+    .on("mouseout", onMouseOut); */
+
+    var iqrBoxes = clippedsvg.selectAll('.iqrBox .upper')
+        .data(sentimentData)
+        .enter()
+        .append('rect')
+        .attr('class', 'iqrBox upper')
+        .attr('width', function (d, i) {
+            return xScale.bandwidth();
+        })
+        .attr('height', function (d, i) {
+            return Math.max(0, Math.min(ySentScale(60), ySentScale(d.lower)) - ySentScale(d.upper))
+        })
+        .attr('x', function (d, i) {
+            var tempDate = dateParser(d.date)
+            return xScale(tempDate);
+        })
+        .attr('y', function (d, i) {
+            return ySentScale(d.upper)
+        })
+        .attr('fill', 'red')
+        .style('opacity', '40%')
+        .on("mouseover", onMouseOver)
+        .on("mousemove", onMouseMove)
+        .on("mouseout", onMouseOut);
+
+    var iqrBoxes = clippedsvg.selectAll('.iqrBox .center')
+        .data(sentimentData)
+        .enter()
+        .append('rect')
+        .attr('class', 'iqrBox center')
+        .attr('width', function (d, i) {
+            return xScale.bandwidth();
+        })
+        .attr('height', function (d, i) {
+            return Math.max(0, Math.min(ySentScale(40), ySentScale(d.lower)) - Math.max(ySentScale(60), ySentScale(d.upper)))
+        })
+        .attr('x', function (d, i) {
+            var tempDate = dateParser(d.date)
+            return xScale(tempDate);
+        })
+        .attr('y', function (d, i) {
+            return Math.max(ySentScale(60), ySentScale(d.upper))
+        })
+        .attr('fill', 'green')
+        .style('opacity', '40%')
+        .on("mouseover", onMouseOver)
+        .on("mousemove", onMouseMove)
+        .on("mouseout", onMouseOut);
+
+    var iqrBoxes = clippedsvg.selectAll('.iqrBox .lower')
+        .data(sentimentData)
+        .enter()
+        .append('rect')
+        .attr('class', 'iqrBox lower')
+        .attr('width', function (d, i) {
+            return xScale.bandwidth();
+        })
+        .attr('height', function (d, i) {
+            return Math.max(0, ySentScale(d.lower) - Math.max(ySentScale(40), ySentScale(d.upper)))
+        })
+        .attr('x', function (d, i) {
+            var tempDate = dateParser(d.date)
+            return xScale(tempDate);
+        })
+        .attr('y', function (d, i) {
+            return Math.max(ySentScale(d.upper), ySentScale(40))
+        })
+        .attr('fill', 'blue')
+        .style('opacity', '40%')
+        .on("mouseover", onMouseOver)
+        .on("mousemove", onMouseMove)
+        .on("mouseout", onMouseOut);
+
+
+    var meanLines = clippedsvg.selectAll('.meanLine')
+        .data(sentimentData)
+        .enter()
+        .append('line')
+        .attr('class', 'meanLine')
+        .attr('x1', function (d) { return xScale(dateParser(d.date)) })
+        .attr('y1', function (d) { return ySentScale(d.median) })
+        .attr('x2', function (d, i) {
+            return xScale(dateParser(d.date)) + xScale.bandwidth()
+        })
+        .attr('y2', function (d, i) {
+            return ySentScale(d.median)
+        })
+        .attr('stroke', 'black')
+        .attr('stroke-width', 1);
+
+    var meanLines = clippedsvg.selectAll('.firstQuartLine')
+        .data(sentimentData)
+        .enter()
+        .append('line')
+        .attr('class', 'firstQuartLine')
+        .attr('x1', function (d) { return xScale(dateParser(d.date)) })
+        .attr('y1', function (d) { return ySentScale(d.min) })
+        .attr('x2', function (d, i) {
+            return xScale(dateParser(d.date)) + xScale.bandwidth()
+        })
+        .attr('y2', function (d, i) {
+            return ySentScale(d.min)
+        })
+        .attr('stroke', '#990000')
+        .attr('stroke-width', 1);
+
+    var meanLines = clippedsvg.selectAll('.thirdQuartLine')
+        .data(sentimentData)
+        .enter()
+        .append('line')
+        .attr('class', 'thirdQuartLine')
+        .attr('x1', function (d) { return xScale(dateParser(d.date)) })
+        .attr('y1', function (d) { return ySentScale(d.max) })
+        .attr('x2', function (d, i) {
+            return xScale(dateParser(d.date)) + xScale.bandwidth()
+        })
+        .attr('y2', function (d, i) {
+            return ySentScale(d.max)
+        })
+        .attr('stroke', '#990000')
+        .attr('stroke-width', 1);
+
+    var meanLines = clippedsvg.selectAll('.centerLine')
+        .data(sentimentData)
+        .enter()
+        .append('line')
+        .attr('class', 'centerLine')
+        .attr('x1', function (d) { return xScale(dateParser(d.date)) + xScale.bandwidth() / 2 })
+        .attr('y1', function (d) { return ySentScale(d.min) })
+        .attr('x2', function (d, i) { return xScale(dateParser(d.date)) + xScale.bandwidth() / 2 })
+        .attr('y2', function (d) { return ySentScale(d.max) })
+        .attr('stroke', '#990000')
+        .attr('stroke-width', 1);
+
+
+
+
+
+
+
+    var gX = svg.append('g')
+        .attr('id', 'articlexAxis')
+        .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
+        .attr('clip-path', 'url(#articleClip)')
+        .call(xAxis);
+
+
+    function zoom() {
+        //console.log('zooming')
+
+        xScale.range([xPadding, divWidth - xPadding].map((d, i) => {
+            if (i == 0) {
+                if (d3.event.transform.applyX(d) > xPadding) {
+                    return xPadding
+                }
+                else {
+                    return d3.event.transform.applyX(d)
+                }
+            }
+            else if (i == 1) {
+                if (d3.event.transform.applyX(d) < (divWidth - xPadding)) {
+                    return divWidth - xPadding
+                }
+                else {
+                    return d3.event.transform.applyX(d)
+                }
+            }
+            else {
+            }
+        }));
+        /* xScale.rangeRound([xPadding, divWidth - xPadding].map((d) => d3.event.transform.applyX(d))); */
+
+        gX.call(xAxis.scale(xScale))
+
+        console.log(this);
+
+        svg.selectAll(".meanLine")
+            .attr('x1', function (d) { return xScale(dateParser(d.date)) })
+            .attr('x2', function (d, i) { return xScale(dateParser(d.date)) + xScale.bandwidth() })
+
+        svg.selectAll(".firstQuartLine")
+            .attr('x1', function (d) { return xScale(dateParser(d.date)) })
+            .attr('x2', function (d, i) { return xScale(dateParser(d.date)) + xScale.bandwidth() })
+
+        svg.selectAll(".thirdQuartLine")
+            .attr('x1', function (d) { return xScale(dateParser(d.date)) })
+            .attr('x2', function (d, i) { return xScale(dateParser(d.date)) + xScale.bandwidth() })
+
+        svg.selectAll('.iqrBox')
+            .attr('width', function (d, i) {
+                return xScale.bandwidth();
+            })
+            .attr('x', function (d, i) {
+                var tempDate = dateParser(d.date)
+                return xScale(tempDate);
+            });
+
+        svg.selectAll(".centerLine")
+            .attr('x1', function (d) { return xScale(dateParser(d.date)) + xScale.bandwidth() / 2 })
+            .attr('x2', function (d, i) { return xScale(dateParser(d.date)) + xScale.bandwidth() / 2 })
+
+
+
+
+
+    }
 }
 
 function makeKeywordBarPlot(data, divID, nCutoff) {
@@ -747,6 +1107,8 @@ function makeArticleCounts(data, divID) {
 }
 
 function makeCombinedGraph(sentimentData, articlesData, divID) {
+    console.log(sentimentData)
+    console.log(articlesData)
     document.getElementById(divID).innerHTML = "";
     var timeRange = document.getElementById('articleCountRange').value;
     if (timeRange == 'all') {
@@ -755,9 +1117,7 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
     else {
         var currDate = new Date();
         var timeRangeStart = d3.timeYear.offset(currDate, -timeRange);
-        //console.log(timeRangeStart)
     }
-
 
     var counts = {};
     for (var i = 0; i < articlesData.length; i++) {
@@ -773,17 +1133,10 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
     }
     sentimentData = sentimentData.filter(x => dateParser(x.date) > timeRangeStart)
     articleCounts = articleCounts.filter(x => dateParser(x.date) > timeRangeStart)
-    //console.log(sentimentData)
-    //console.log(articleCounts)
     var dateArray = [];
     for (var i = articleCounts.length - 1; i > -1; i--) {
         dateArray.push(dateParser(articleCounts[i].date));
     }
-
-
-    /* var maxTime = dateParser(articleCounts[0].date);
-    var minTime = dateParser(articleCounts[articleCounts.length - 1].date);
-    var dateArray = d3.timeDays(minTime, d3.timeDay.offset(maxTime)) */
     var graphDiv = document.getElementById(divID);
 
 
@@ -822,11 +1175,6 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
         .tickFormat('')
         .tickSizeOuter(0);
 
-    /* //console.log(articleCounts) */
-    /* //console.log(dateArray)
-    //console.log(xPadding)
-    //console.log(divWidth - xPadding) */
-    //console.log(dateArray)
     var xScale = d3.scaleBand()
         .domain(dateArray)
         .range([xPadding, divWidth - xPadding])
@@ -851,6 +1199,8 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
         .attr('class', 'visSVG')
         .attr("width", "100%")
         .attr("height", "100%")
+        .attr('pointer-events', 'all')
+        .call(zoomBeh)
         .append("g");
 
 
@@ -893,23 +1243,6 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
         .attr("transform", "translate(" + xPadding + ",0)")
         .call(yAxisGrid);
 
-    svg.append("rect")
-        .attr("class", function () {
-            console.log(divID)
-            if (divID == 'enlargedChart') {
-                console.log('making enlarged chart scroller')
-                return "articleScrollerEnlarged"
-            }
-            else {
-                console.log('making regular scroller')
-                return "articleScroller"
-            }
-        })
-        .attr("width", divWidth)
-        .attr("height", divHeight)
-        .style("fill", "none")
-        .style("pointer-events", "all")
-        .call(zoomBeh);
 
 
     if (divID == 'enlargedChart') {
@@ -949,6 +1282,7 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
                 return yScale(d.count)
             })
             .attr('fill', '#ffa73b')
+            .attr('pointer-events', 'all')
             .style('opacity', '40%')
             .on("mouseover", onMouseOver)
             .on("mousemove", onMouseMove)
@@ -963,7 +1297,7 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
                 return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
             })
             .attr('cy', function (d, i) {
-                return ySentScale(d.sentiment)
+                return ySentScale(d.mean)
             })
             .attr('r', 5)
             .attr('fill', 'blue')
@@ -978,7 +1312,7 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
             .append('line')
             .attr('class', 'sentimentLineEnlarged')
             .attr('x1', function (d) { return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2) })
-            .attr('y1', function (d) { return ySentScale(d.sentiment) })
+            .attr('y1', function (d) { return ySentScale(d.mean) })
             .attr('x2', function (d, i) {
                 if (i == 0) {
                     return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
@@ -986,8 +1320,8 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
                 return xScale(dateParser(sentimentData[i - 1].date)) + (xScale.bandwidth() / 2);
             })
             .attr('y2', function (d, i) {
-                if (i == 0) { return ySentScale(d.sentiment) }
-                return ySentScale(sentimentData[i - 1].sentiment);
+                if (i == 0) { return ySentScale(d.mean) }
+                return ySentScale(sentimentData[i - 1].mean);
             })
             .attr('stroke', '#990000')
             .attr('stroke-width', 1);
@@ -1053,7 +1387,7 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
                 return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
             })
             .attr('cy', function (d, i) {
-                return ySentScale(d.sentiment)
+                return ySentScale(d.mean)
             })
             .attr('r', 5)
             .attr('fill', 'blue')
@@ -1068,7 +1402,7 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
             .append('line')
             .attr('class', 'sentimentLine')
             .attr('x1', function (d) { return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2) })
-            .attr('y1', function (d) { return ySentScale(d.sentiment) })
+            .attr('y1', function (d) { return ySentScale(d.mean) })
             .attr('x2', function (d, i) {
                 if (i == 0) {
                     return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
@@ -1076,8 +1410,8 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
                 return xScale(dateParser(sentimentData[i - 1].date)) + (xScale.bandwidth() / 2);
             })
             .attr('y2', function (d, i) {
-                if (i == 0) { return ySentScale(d.sentiment) }
-                return ySentScale(sentimentData[i - 1].sentiment);
+                if (i == 0) { return ySentScale(d.mean) }
+                return ySentScale(sentimentData[i - 1].mean);
             })
             .attr('stroke', '#990000')
             .attr('stroke-width', 1);
@@ -1120,48 +1454,45 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
 
         console.log(this);
 
-        if (this.getAttribute('class') == 'articleScrollerEnlarged') {
-            svg.selectAll(".articleCountRectEnlarged")
-                .attr("x", function (d) {
-                    var tempDate = dateParser(d.date)
-                    return xScale(tempDate);
-                })
-                .attr("width", xScale.bandwidth())
+        svg.selectAll(".articleCountRectEnlarged")
+            .attr("x", function (d) {
+                var tempDate = dateParser(d.date)
+                return xScale(tempDate);
+            })
+            .attr("width", xScale.bandwidth())
 
-            svg.selectAll(".sentimentLineEnlarged")
-                .attr('x1', function (d) { return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2) })
-                .attr('x2', function (d, i) {
-                    if (i == 0) {
-                        return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
-                    }
-                    return xScale(dateParser(sentimentData[i - 1].date)) + (xScale.bandwidth() / 2);
-                })
-            svg.selectAll(".sentimentPointEnlarged")
-                .attr("cx", function (d) {
+        svg.selectAll(".sentimentLineEnlarged")
+            .attr('x1', function (d) { return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2) })
+            .attr('x2', function (d, i) {
+                if (i == 0) {
                     return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
-                })
-        }
-        else {
-            svg.selectAll(".articleCountRect")
-                .attr("x", function (d) {
-                    var tempDate = dateParser(d.date)
-                    return xScale(tempDate);
-                })
-                .attr("width", xScale.bandwidth())
+                }
+                return xScale(dateParser(sentimentData[i - 1].date)) + (xScale.bandwidth() / 2);
+            })
+        svg.selectAll(".sentimentPointEnlarged")
+            .attr("cx", function (d) {
+                return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
+            })
+        svg.selectAll(".articleCountRect")
+            .attr("x", function (d) {
+                var tempDate = dateParser(d.date)
+                return xScale(tempDate);
+            })
+            .attr("width", xScale.bandwidth())
 
-            svg.selectAll(".sentimentLine")
-                .attr('x1', function (d) { return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2) })
-                .attr('x2', function (d, i) {
-                    if (i == 0) {
-                        return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
-                    }
-                    return xScale(dateParser(sentimentData[i - 1].date)) + (xScale.bandwidth() / 2);
-                })
-            svg.selectAll(".sentimentPoint")
-                .attr("cx", function (d) {
+        svg.selectAll(".sentimentLine")
+            .attr('x1', function (d) { return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2) })
+            .attr('x2', function (d, i) {
+                if (i == 0) {
                     return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
-                })
-        }
+                }
+                return xScale(dateParser(sentimentData[i - 1].date)) + (xScale.bandwidth() / 2);
+            })
+        svg.selectAll(".sentimentPoint")
+            .attr("cx", function (d) {
+                return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
+            })
+    
 
 
 
@@ -1249,6 +1580,8 @@ function makeStockGraph(data, divID) {
         .attr('class', 'visSVG')
         .attr("width", "100%")
         .attr("height", "100%")
+        .attr('pointer-events', 'all')
+        .call(zoomBeh)
         .append("g");
 
 
@@ -1325,13 +1658,6 @@ function makeStockGraph(data, divID) {
         .attr('stroke', '#368dff')
         .attr('stroke-width', 2);
 
-    svg.append("rect")
-        .attr("class", "stocksScroller")
-        .attr("width", divWidth)
-        .attr("height", divHeight)
-        .style("fill", "none")
-        .style("pointer-events", "all")
-        .call(zoomBeh);
 
     var points = svg.selectAll(".stockPoint")
         .data(stockData)
@@ -1649,7 +1975,7 @@ var tooltipEnlarged = d3.select('#entirePopupBox')
 
 function onMouseOver(d, i) {
     var elementClass = this.getAttribute('class');
-    //console.log(elementClass)
+    console.log(elementClass)
     if (elementClass == 'stockPoint') {
         var date = new Date(d.time)
         d3.select(this).style('fill', 'gray');
@@ -1662,7 +1988,7 @@ function onMouseOver(d, i) {
         var date = new Date(d.time)
         d3.select(this).style('fill', 'gray');
         tooltipEnlarged.style('visibility', 'visible');
-        tooltip.html('날짜: ' + (date.getFullYear() + '년' + (date.getMonth() + 1)
+        tooltipEnlarged.html('날짜: ' + (date.getFullYear() + '년' + (date.getMonth() + 1)
             + '월' + date.getDate() + '일') + '<br />주가: ' + d.stock)
         tooltipEnlarged.style('background-color', '#f0f0f0');
     }
@@ -1739,13 +2065,24 @@ function onMouseOver(d, i) {
     }
     else if (elementClass == 'sentimentPoint') {
         tooltip.style('visibility', 'visible');
-        tooltip.text(d.date + ': ' + d.sentiment);
+        tooltip.text(d.date + ': ' + d.mean);
     }
     else if (elementClass == 'sentimentPointEnlarged') {
         console.log('in sent point enlarged')
         tooltipEnlarged.style('visibility', 'visible');
-        tooltipEnlarged.text(d.date + ': ' + d.sentiment);
+        tooltipEnlarged.text(d.date + ': ' + d.mean);
     }
+    else if (elementClass.includes('iqrBox')) {
+        if (elementClass == 'iqrBox upper') {
+            d3.select(this).style('fill', '#820812')
+            d3.select(this).style('opacity', '100%');
+        }
+        else{
+            d3.select(this).style('opacity', '100%');
+        }
+        tooltip.style('visibility', 'visible');
+        tooltip.text(d.date + ': ' + d.mean);
+    } 
     else {
         console.log('in else')
         d3.select(this).style('fill', 'gray');
@@ -1831,6 +2168,16 @@ function onMouseOut(d, i) {
     }
     else if (elementClass == 'sentimentPointEnlarged') {
         tooltipEnlarged.style('visibility', 'hidden');
+    }
+    else if (elementClass.includes('iqrBox')) {
+        if (elementClass == 'iqrBox upper') {
+            d3.select(this).style('fill', 'red')
+            d3.select(this).style('opacity', '40%');
+        }
+        else{
+            d3.select(this).style('opacity', '40%');
+        }
+        tooltip.style('visibility', 'hidden');
     }
     else {
         d3.select(this).style('fill', 'black');
@@ -2207,13 +2554,7 @@ function getChartQuery1() {
             })
 
 
-            var sentimentData = [];
-            for (var i = 0; i < responseData.sentimentDates.length; i++) {
-                sentimentData.push({
-                    time: Date.parse(responseData.sentimentDates[i].date),
-                    sentiment: responseData.sentimentDates[i].sentiment
-                })
-            }
+            var sentimentData = responseData.sentimentDates;
             var chart = document.getElementById('sentimentTimeTwoLines');
             makeSentimentTimeGraph(sentimentData, 'sentimentTimeTwoLines');
             chart.addEventListener('click', function () {
@@ -2221,7 +2562,12 @@ function getChartQuery1() {
                 makeSentimentTimeGraph(sentimentData, 'enlargedChart');
             })
 
-
+            var chart = document.getElementById('sentimentBoxPlot');
+            makeSentimentBoxPlot(sentimentData, 'sentimentBoxPlot');
+            chart.addEventListener('click', function () {
+                console.log('clicked');
+                makeSentimentBoxPlot(sentimentData, 'enlargedChart');
+            })
 
             var chart = document.getElementById('articleCounts');
             makeCombinedGraph(responseData.sentimentDates, responseData.allNews, 'articleCounts');
@@ -2311,6 +2657,137 @@ function getChartQuery1() {
 }
 
 function getChartQuery2() {
+    ////console.log(document.getElementById('articleCountRange').value);
+    d3.selectAll('.visSVG').remove();
+    var search_company = document.getElementById('search_company').value;
+    //console.log(search_company);
+    loading1('뉴스')
+    $.ajax({
+        url: "/getChartQueryByCompany/" + search_company,
+        method: 'GET',
+        dataType: 'json',
+        success: function (responseData) {
+            window.newsChartData = responseData;
+
+            console.log(responseData)
+            //alert('조회 성공: ' + responseData.allNews.length + '개 기사');
+
+            makeGauge('dangerGauge', responseData.averageScore)
+            document.getElementById('dangerGauge').addEventListener('click', function () {
+                //console.log('clicked');
+                makeGauge('enlargedChart', responseData.averageScore);
+            })
+
+
+            var sentimentData = [];
+            for (var i = 0; i < responseData.sentimentDates.length; i++) {
+                sentimentData.push({
+                    time: Date.parse(responseData.sentimentDates[i].date),
+                    sentiment: responseData.sentimentDates[i].mean
+                })
+            }
+            /* var chart = document.getElementById('sentimentTimeTwoLines');
+            makeSentimentTimeGraph(sentimentData, 'sentimentTimeTwoLines');
+            chart.addEventListener('click', function () {
+                //console.log('clicked');
+                makeSentimentTimeGraph(sentimentData, 'enlargedChart');
+            })
+ */
+
+
+            var chart = document.getElementById('articleCounts');
+            makeCombinedGraph(responseData.sentimentDates, responseData.allNews, 'articleCounts');
+            chart.addEventListener('click', function () {
+                //console.log('clicked');
+                makeCombinedGraph(responseData.sentimentDates, responseData.allNews, 'enlargedChart');
+            })
+            document.getElementById('articleCountRange').addEventListener('change', function () {
+                makeCombinedGraph(responseData.sentimentDates, responseData.allNews, 'articleCounts');
+            })
+
+            /* var chart = document.getElementById('articleCounts');
+            makeArticleCounts(responseData.allNews, 'articleCounts');
+            chart.addEventListener('click', function () {
+                //console.log('clicked');
+                makeArticleCounts(responseData.allNews, 'enlargedChart');
+            }) */
+
+            var chart = document.getElementById('keywordBar');
+            makeKeywordBarPlot(responseData.keywords, 'keywordBar', document.getElementById('keywordBarSlider').value)
+            chart.addEventListener('click', function () {
+                document.getElementById('keywordBarSettings').style.display = 'inline';
+                makeKeywordBarPlot(responseData.keywords, 'enlargedChart', document.getElementById('keywordBarSlider').value)
+            })
+
+            if (responseData.stockData.length > 0) {
+                console.log('test')
+            }
+            var companies = [];
+            var allStockData = {};
+            for (var i = 0; i < responseData.stockData.length; i++) {
+                var tempStock = responseData.stockData[i]
+                if (!companies.includes(tempStock.company)) {
+                    companies.push(tempStock.company);
+                    allStockData[tempStock.company] = [];
+                }
+                allStockData[tempStock.company].push({ date: tempStock.date, price: tempStock.price })
+            }
+            console.log(allStockData)
+            var shortestCompany = companies.reduce(function (a, b) {
+                return a.length <= b.length ? a : b;
+            })
+            var stockOptions = document.getElementById('stockRange');
+            console.log(stockOptions);
+            for (var i = 0; i < companies.length; i++) {
+                if (companies[i] == shortestCompany) {
+                    var tempHTML = `<option value='${companies[i]}' selected>${companies[i]}</option>`;
+                }
+                else {
+                    var tempHTML = `<option value='${companies[i]}'>${companies[i]}</option>`;
+                }
+                stockOptions.insertAdjacentHTML('beforeend', tempHTML);
+            }
+
+            var divID = 'stockTime';
+            stockGraph = document.getElementById(divID)
+            stockGraph.addEventListener('click', function () {
+                document.getElementById('resetChart').addEventListener('click', function () {
+                    console.log('clicked');
+                    makeStockGraph(allStockData, 'enlargedChart');
+                })
+                makeStockGraph(allStockData, 'enlargedChart');
+            })
+            document.getElementById('stockRange').addEventListener('change', function () {
+                makeStockGraph(allStockData, divID);
+            })
+            makeStockGraph(allStockData, divID);
+
+            $('#myModal').hide();
+
+
+
+            /* document.getElementById('keywordPieSlider2').max = responseData.keywords.length;
+            var pieChart = document.getElementById('keywordPie');
+            makePieChart(responseData.keywords, 'keywordPie', document.getElementById('keywordPieSlider').value, document.getElementById('keywordPieSlider2').value)
+            pieChart.addEventListener('click', function () {
+                //console.log('clicked');
+                document.getElementById('keywordPieSettings').style.display = 'inline';
+                makePieChart(responseData.keywords, 'enlargedChart', document.getElementById('keywordPieSlider').value, document.getElementById('keywordPieSlider2').value);
+            }) */
+
+
+            /* makeWordcloud(responseData.keywords); */
+
+        },
+        error: function () {
+            alert('조회 실패');
+        }
+    });
+
+    //console.log('test')
+}
+
+function getChartQuery3(companyName) {
     ////console.log(document.getElementById('articleCountRange').value);
     d3.selectAll('.visSVG').remove();
     var search_company = document.getElementById('search_company_news').value;
@@ -2437,35 +2914,6 @@ function getChartQuery2() {
             alert('조회 실패');
         }
     });
-
-    //console.log('test')
-}
-
-function getChartQuery3() {
-    ////console.log(document.getElementById('articleCountRange').value);
-    d3.selectAll('.visSVG').remove();
-    var search_company = '삼성전자'
-    //console.log(search_company);
-    $.ajax({
-        url: "/getChartQueryByCompany/" + search_company,
-        method: 'GET',
-        dataType: 'json',
-        success: function (responseData) {
-            window.newsResponseData = responseData;
-            console.log(responseData)
-
-            //console.log(responseData)
-            alert('조회 성공: ' + responseData.allNews.length + '개 기사');
-
-
-
-        },
-        error: function () {
-            alert('조회 실패');
-        }
-    });
-
-    //console.log('test')
 }
 
 function makeWordcloud(data) {

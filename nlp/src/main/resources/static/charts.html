@@ -7,6 +7,14 @@
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>SBT AUTOML</title>
 	<style>
+		.rect .gauge-box {
+			fill: white;
+			border: red;
+			-moz-box-shadow: inset 0 0 10px #000000;
+			-webkit-box-shadow: inset 0 0 10px #000000;
+			box-shadow: inset 0 0 10px #000000;
+		}
+
 		body {
 			font-family: Helvetica, Arial, sans-serif;
 			margin: 32px;
@@ -292,6 +300,39 @@
 							<div class="card_list">
 								<!-- [D] 클릭한 카드에 클래스 active 추가해주세요 -->
 
+								<!-- sentiment box -->
+								<div class="card_item">
+									<div class="card_box">
+										<div class="card_head">
+											T/A 결과
+										</div>
+										<div class="card_content">
+											<div class="chart_area" style="padding-top: 70%">
+												<div class="chart" id="sentimentBoxPlot">
+
+													<script type="text/javascript" src='./js/nlp.js'></script>
+													<script type="text/javascript" src='./js/nlp2.js'></script>
+
+													<script>
+														
+														
+
+														
+
+
+
+													</script>
+
+												</div>
+
+											</div>
+
+
+										</div>
+
+									</div>
+								</div>
+
 								<!-- DANGER GAUGE Extended Version -->
 								<div class="card_item">
 									<div class="card_box">
@@ -322,6 +363,8 @@
 
 									</div>
 								</div>
+
+
 								<div class="card_item">
 									<div class="card_box">
 										<div class="card_head">
