@@ -2441,31 +2441,133 @@ function getChartQuery2() {
     //console.log('test')
 }
 
-function getChartQuery3() {
+function getChartQuery3(companyName) {
     ////console.log(document.getElementById('articleCountRange').value);
     d3.selectAll('.visSVG').remove();
-    var search_company = '삼성전자'
+    var search_company = document.getElementById('search_company_news').value;
     //console.log(search_company);
+    loading1('뉴스')
     $.ajax({
         url: "/getChartQueryByCompany/" + search_company,
         method: 'GET',
         dataType: 'json',
         success: function (responseData) {
-            window.newsResponseData = responseData;
-            console.log(responseData)
+            window.newsChartData = responseData;
 
             //console.log(responseData)
-            alert('조회 성공: ' + responseData.allNews.length + '개 기사');
+            //alert('조회 성공: ' + responseData.allNews.length + '개 기사');
+
+            makeGauge('dangerGauge', responseData.averageScore)
+            document.getElementById('dangerGauge').addEventListener('click', function () {
+                //console.log('clicked');
+                makeGauge('enlargedChart', responseData.averageScore);
+            })
 
 
+            var sentimentData = [];
+            for (var i = 0; i < responseData.sentimentDates.length; i++) {
+                sentimentData.push({
+                    time: Date.parse(responseData.sentimentDates[i].date),
+                    sentiment: responseData.sentimentDates[i].sentiment
+                })
+            }
+            /* var chart = document.getElementById('sentimentTimeTwoLines');
+            makeSentimentTimeGraph(sentimentData, 'sentimentTimeTwoLines');
+            chart.addEventListener('click', function () {
+                //console.log('clicked');
+                makeSentimentTimeGraph(sentimentData, 'enlargedChart');
+            })
+ */
+
+
+            var chart = document.getElementById('articleCounts');
+            makeCombinedGraph(responseData.sentimentDates, responseData.allNews, 'articleCounts');
+            chart.addEventListener('click', function () {
+                //console.log('clicked');
+                makeCombinedGraph(responseData.sentimentDates, responseData.allNews, 'enlargedChart');
+            })
+            document.getElementById('articleCountRange').addEventListener('change', function () {
+                makeCombinedGraph(responseData.sentimentDates, responseData.allNews, 'articleCounts');
+            })
+
+            /* var chart = document.getElementById('articleCounts');
+            makeArticleCounts(responseData.allNews, 'articleCounts');
+            chart.addEventListener('click', function () {
+                //console.log('clicked');
+                makeArticleCounts(responseData.allNews, 'enlargedChart');
+            }) */
+
+            var chart = document.getElementById('keywordBar');
+            makeKeywordBarPlot(responseData.keywords, 'keywordBar', document.getElementById('keywordBarSlider').value)
+            chart.addEventListener('click', function () {
+                document.getElementById('keywordBarSettings').style.display = 'inline';
+                makeKeywordBarPlot(responseData.keywords, 'enlargedChart', document.getElementById('keywordBarSlider').value)
+            })
+
+            if (responseData.stockData.length > 0) {
+                console.log('test')
+            }
+            var companies = [];
+            var allStockData = {};
+            for (var i = 0; i < responseData.stockData.length; i++) {
+                var tempStock = responseData.stockData[i]
+                if (!companies.includes(tempStock.company)) {
+                    companies.push(tempStock.company);
+                    allStockData[tempStock.company] = [];
+                }
+                allStockData[tempStock.company].push({ date: tempStock.date, price: tempStock.price })
+            }
+            console.log(allStockData)
+            var shortestCompany = companies.reduce(function (a, b) {
+                return a.length <= b.length ? a : b;
+            })
+            var stockOptions = document.getElementById('stockRange');
+            console.log(stockOptions);
+            for (var i = 0; i < companies.length; i++) {
+                if (companies[i] == shortestCompany) {
+                    var tempHTML = `<option value='${companies[i]}' selected>${companies[i]}</option>`;
+                }
+                else {
+                    var tempHTML = `<option value='${companies[i]}'>${companies[i]}</option>`;
+                }
+                stockOptions.insertAdjacentHTML('beforeend', tempHTML);
+            }
+
+            var divID = 'stockTime';
+            stockGraph = document.getElementById(divID)
+            stockGraph.addEventListener('click', function () {
+                document.getElementById('resetChart').addEventListener('click', function () {
+                    console.log('clicked');
+                    makeStockGraph(allStockData, 'enlargedChart');
+                })
+                makeStockGraph(allStockData, 'enlargedChart');
+            })
+            document.getElementById('stockRange').addEventListener('change', function () {
+                makeStockGraph(allStockData, divID);
+            })
+            makeStockGraph(allStockData, divID);
+
+            $('#myModal').hide();
+
+
+
+            /* document.getElementById('keywordPieSlider2').max = responseData.keywords.length;
+            var pieChart = document.getElementById('keywordPie');
+            makePieChart(responseData.keywords, 'keywordPie', document.getElementById('keywordPieSlider').value, document.getElementById('keywordPieSlider2').value)
+            pieChart.addEventListener('click', function () {
+                //console.log('clicked');
+                document.getElementById('keywordPieSettings').style.display = 'inline';
+                makePieChart(responseData.keywords, 'enlargedChart', document.getElementById('keywordPieSlider').value, document.getElementById('keywordPieSlider2').value);
+            }) */
+
+
+            /* makeWordcloud(responseData.keywords); */
 
         },
         error: function () {
             alert('조회 실패');
         }
     });
-
-    //console.log('test')
 }
 
 function makeWordcloud(data) {

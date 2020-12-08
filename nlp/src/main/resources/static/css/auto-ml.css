@@ -1326,7 +1326,7 @@ body {
 	-webkit-flex-wrap: wrap;
 	flex-wrap: wrap;
 	flex-direction: column;
-	margin: -24px -24px 0 0;
+	margin: 0 -12px 0 0;
 }
 
 .card_list .card_item_small {

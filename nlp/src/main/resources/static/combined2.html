@@ -53,7 +53,6 @@
             font-size: 11px;
         }
 
-        
 
         /*news and report part*/
         #example_report, #example_news, #example, #industry_news_list {
@@ -201,6 +200,7 @@
         } 
         
         .carousel::before {
+        opacity: 0;
         content: '';
         z-index: 1;
         /*background-color: #333;*/
@@ -216,6 +216,7 @@
         }
 
         .carousel::after {
+        opacity: 0;
         content: '';
         z-index: 1;
         background-color: rgb(141, 29, 29);
@@ -230,11 +231,11 @@
         }
 
         .carousel::before {
-        background-image: url("img/left-arrow.png");
+        /*background-image: url("img/left-arrow.png");*/
         }
         
         .carousel::after {
-        background-image: url("img/right-arrow.png");
+        /*background-image: url("img/right-arrow.png");*/
         } 
 
         .carouselNoPrev {
@@ -283,6 +284,7 @@
         }
 
         .carouselNoPrev::after {
+        opacity: 0;
         content: '';
         z-index: 1;
         background-color: rgb(173, 48, 167);
@@ -298,11 +300,11 @@
 
         
         .carouselNoPrev::before {
-        background-image: url("img/left-arrow.png");
+        /*background-image: url("img/left-arrow.png");*/
         }
         
         .carouselNoPrev::after {
-        background-image: url("img/right-arrow.png");
+        /*background-image: url("img/right-arrow.png");*/
         }
 
 
@@ -337,6 +339,7 @@
         } 
         
         .carouselNoNext::before {
+        opacity: 0;
         content: '';
         z-index: 1;
         background-color: rgb(40, 185, 178);
@@ -367,11 +370,11 @@
 
         
         .carouselNoNext::before {
-        background-image: url("img/left-arrow.png");
+        /*background-image: url("img/left-arrow.png");*/
         }
         
         .carouselNoNext::after {
-        background-image: url("img/right-arrow.png");
+        /*background-image: url("img/right-arrow.png");*/
         }
 
 
@@ -736,22 +739,22 @@
                 var downImg = '';
 
                 if (window.reportResponseData[i].docCaty == 'pdf'){
-                    downImg = `<img src="/img/pdf_down.png" style="width: auto; height: 14px;">`;
+                    downImg =   `
+                                    <a href="/file/` + window.reportResponseData[i].orgnFileName + `.pdf">
+                                        <img src="/img/pdf_down.png" style="width: auto; height: 14px;">
+                                    </a>
+                                `;
                 }
                 else if (window.reportResponseData[i].docCaty == 'hwp'){
-                    downImg = `<img src="/img/hwp_down.png" style="width: auto; height: 14px;">`;
+                    downImg =   `
+                                    <a href="/file/` + window.reportResponseData[i].orgnFileName + `.hwp">
+                                        <img src="/img/hwp_down.png" style="width: auto; height: 14px;">
+                                    </a>
+                                `;
                 }
                 else{
                     downImg = `<img src="/img/document_download.png" style="width: auto; height: 14px;">`;
                 }
-
-                /*
-                <td>
-                    <a id="documentFile" href="/data/KDB_화면설계서_v0.6.pdf" download>
-                        <img src="/img/document_download.png" style="width: auto; height: 50px;">
-                    </a>
-                </td>
-                */
 
                 var htmlContents =
                 `
@@ -818,6 +821,8 @@
                 dataType: 'json',
                 success: function (responseData) {
                     //alert('조회 성공');
+                    getChartQuery2();
+                    console.log("query2222222");
                     console.log(responseData.length);
                     window.newsResponseData = responseData;
                     console.log(window.newsResponseData[0]);
@@ -830,7 +835,12 @@
 
                 },
                 error: function () {
-                    alert('조회 실패');
+                    if (data.gubun == "custom" && (data.startDate == null || data.endData == null)){
+                        alert('시작 날짜 및 끝 날짜를 입력 해 주세요.');
+                    }
+                    else{
+                        alert('조회 실패');
+                    }
                     $('#myModal').hide();
                 }
             });
@@ -870,6 +880,8 @@
                 dataType: 'json',
                 success: function (responseData) {
                     //alert('조회 성공');
+                    getChartQuery3(companyName);
+                    console.log("query3333");
                     console.log(responseData.length);
                     window.newsResponseData = responseData;
                     console.log(window.newsResponseData[0]);
@@ -882,7 +894,12 @@
 
                 },
                 error: function () {
-                    alert('조회 실패');
+                    if (data.gubun == "custom" && (data.startDate == null || data.endData == null)){
+                        alert('시작 날짜 및 끝 날짜를 입력 해 주세요.');
+                    }
+                    else{
+                        alert('조회 실패');
+                    }
                     $('#myModal').hide();
                 }
             });
@@ -1357,21 +1374,21 @@
             };
         }
 
-        function dataTableSearch() {
-            $("#dataTableSearch").val('엘지');
-            $("#dataTableSearch").focus();
-            $("#dataTableSearch").bind("keydown", function(e) {
-               if (e.keyCode == 13) { // enter key
-                  // yourAction();
-                   return false
-            	}
-            });
-            
-            
-            $("#dataTableSearch").trigger(e);
-            
-            // $("#dataTableSearch").val('엘지');
-            $("#search_company_news").trigger(e);
+        function dataTableSearch(keyword) {
+            //$("#dataTableSearch").val('엘지');
+            //$("#dataTableSearch").focus();
+            //$("#dataTableSearch").bind("keydown", function(e) {
+            //    if (e.keyCode == 13) { // enter key
+            //       // yourAction();
+            //        return false
+            //	}
+            //});
+
+
+            //$("#dataTableSearch").trigger(e);
+
+            $("#dataTableSearch").val(keyword);
+            //$("#search_company").trigger(e);
 
             pressButton();
         }
@@ -1388,25 +1405,6 @@
         }
 
 
-
-        function dataTableSearchSam() {
-            $("#dataTableSearch").val('삼성');
-            //$("#dataTableSearch").focus();
-            //$("#dataTableSearch").bind("keydown", function(e) {
-            //    if (e.keyCode == 13) { // enter key
-            //       // yourAction();
-            //        return false
-            //	}
-            //});
-
-
-            //$("#dataTableSearch").trigger(e);
-
-            //$("#search_company").val('엘지');
-            //$("#search_company").trigger(e);
-
-            pressButton();
-        }
 
         //기업별 뉴스 가져오기
         function getCompanyListByCompany(){
@@ -1554,14 +1552,18 @@
                 document.getElementById("search_button_news").disabled = false;
                 document.getElementById('search_company_news').value='';
                 $('#result_area_news').show();
-                getFunction = `getChartQuery2();getNewsList();`;
+                getFunction = `getNewsList();`;
             }
 
             searchBoxHTML = `<input id="search_company_news" type="text" placeholder="검색" value="" onkeypress="if( event.keyCode == 13 ){` + getFunction + `}">
                 <button id="search_button_news" class="btn_search" onclick="` + getFunction + `"><span class="blind" >검색</span></button>`;
             document.getElementById('search_box_news').innerHTML = searchBoxHTML;       
         }
-
+        
+        function createEmptyChartDiv(){
+            
+            document.getElementById('chartDiv').innerHTML = chartDivHTML;
+        }
 
         function createEmptyDatatableNews(){
             var newsTableBody = ``;
@@ -1810,16 +1812,16 @@
                             <div id="date_picker_div_News">
                                 <span class="date_picker">
                                     <label for="date_from" class="label" style="margin-right: -1px; margin-left: 10px;">기간</label>
-                                    <span class="input_date"><input type="text" class="input_text" id="date_from_news"></span>
+                                    <span class="input_date"><input type="text" class="input_text" id="date_from_news" style="min-width: 120px; width:120px;"></span>
                                     <span class="dash">-</span>
-                                    <span class="input_date"><input type="text" class="input_text" id="date_to_news"></span>
+                                    <span class="input_date"><input type="text" class="input_text" id="date_to_news" style="min-width: 120px; width:120px;"></span>
                                 </span>
                             </div>
 
 
                             <div class="search_box" id="search_box_news">
-                                <input id="search_company_news" type="text" placeholder="검색" value="" onkeypress="if( event.keyCode == 13 ){getChartQuery2();getCompanyListByCompany();}">
-                                <button id="search_button_news" class="btn_search" onclick="getChartQuery2();getCompanyListByCompany();"><span class="blind" >검색</span></button>
+                                <input id="search_company_news" type="text" placeholder="검색" value="" onkeypress="if( event.keyCode == 13 ){getCompanyListByCompany();}">
+                                <button id="search_button_news" class="btn_search" onclick="getCompanyListByCompany();"><span class="blind" >검색</span></button>
                             </div>
                             
                         </div>
@@ -1864,9 +1866,9 @@
                             <div id="date_picker_div_Report">
                                 <span class="date_picker">
                                     <label for="date_from" class="label">기간</label>
-                                    <span class="input_date"><input type="text" class="input_text" id="date_from_report"></span>
+                                    <span class="input_date"><input type="text" class="input_text" id="date_from_report" style="min-width: 120px; width:120px;"></span>
                                     <span class="dash">-</span>
-                                    <span class="input_date"><input type="text" class="input_text" id="date_to_report"></span>
+                                    <span class="input_date"><input type="text" class="input_text" id="date_to_report" style="min-width: 120px; width:120px;"></span>
                                 </span>
                             </div>
 
@@ -1879,12 +1881,9 @@
 
 
                         <div id='chartDiv' style='display:block'>
-                        
-
-                            <p id="linebreak"><br></p>
     
                             <div class="contents">
-    
+
                                 <div class="visualize">
     
                                     <div class="card_list">
@@ -1896,25 +1895,27 @@
                                                 </div>
                                                 <div class="chart_area" style="padding-top: 60%">
                                                     <div class="chart" id="dangerGauge">
-    
+
                                                         <script type="text/javascript" src='./js/nlp.js'></script>
-    
+
                                                         <script>
                                                             var gauge = document.getElementById('dangerGauge');
-    
+
                                                             var gaugeDirection = 0;
-    
+
+
+
                                                         </script>
-    
+
                                                     </div>
-    
+
                                                 </div>
-    
-    
-    
+
+
+
                                             </div>
                                         </div>
-    
+
                                         <!-- 키워드 빠 플롯 -->
                                         <div class="card_item_small">
                                             <div class="card_box">
@@ -1925,15 +1926,15 @@
                                                     <div class="chart_area" style="padding-top: 84%">
                                                         <div class="chart" id="keywordBar">
                                                             <script>
-    
+
                                                             </script>
-    
+
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-    
+
                                         <!-- news article count -->
                                         <div class="card_item_large">
                                             <div class="card_box">
@@ -1944,14 +1945,14 @@
                                                             overflow: hidden;
                                                             padding: 0;
                                                         }
-    
+
                                                         select {
                                                             padding: 0;
                                                             padding-left: 1px;
                                                             border: none;
                                                             background-color: #eee;
                                                         }
-    
+
                                                         option {
                                                             display: inline-block;
                                                             border: 1px solid #000;
@@ -1962,27 +1963,27 @@
                                                             display: inline-block;
                                                         }
                                                     </style>
-    
+
                                                     <select multiple size="1" id='articleCountRange'>
                                                         <option value='1'>1년</option>
                                                         <option value='3'>3년</option>
                                                         <option value='5'>5년</option>
                                                         <option value='all' selected>전체</option>
                                                     </select>
-    
+
                                                 </div>
                                                 <div class="chart_area" style="padding-top: 22.15%">
                                                     <div class="chart" id='articleCounts'>
                                                         <script>
                                                             var divID = 'articleCounts';
-    
-    
+
+
                                                         </script>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-    
+
                                         <!-- 주가 플롯 -->
                                         <div class="card_item_large">
                                             <div class="card_box">
@@ -1995,7 +1996,7 @@
                                                     <div class="chart" id="stockTime">
                                                         <script>
                                                         </script>
-    
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -2004,9 +2005,7 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
-
 
                    
 
