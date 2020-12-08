@@ -143,11 +143,13 @@ public class ChartQueryService {
 			for (int i = 0; i < nTotalScores; i++) {
 				taScore = taScore + Float.parseFloat(scores[i]);
 			}
-			float min = Float.parseFloat(scores[0]);
-			float lower = Float.parseFloat(scores[(int) Math.ceil(nTotalScores * 0.25) - 1]);
+			// float min = Float.parseFloat(scores[0]);
+			float min = Float.parseFloat(scores[(int) Math.ceil(nTotalScores * 0.25) - 1]);
+			float lower = Float.parseFloat(scores[(int) Math.ceil(nTotalScores * 0.30) - 1]);
 			float median = Float.parseFloat(scores[(int) Math.ceil(nTotalScores * 0.5) - 1]);
-			float upper = Float.parseFloat(scores[(int) Math.ceil(nTotalScores * 0.75) - 1]);
-			float max = Float.parseFloat(scores[nTotalScores - 1]);
+			float upper = Float.parseFloat(scores[(int) Math.ceil(nTotalScores * 0.70) - 1]);
+			float max = Float.parseFloat(scores[(int) Math.ceil(nTotalScores * 0.75) - 1]);
+			// float max = Float.parseFloat(scores[nTotalScores - 1]);
 			// mean = mean / nTotalScores;
 			SentimentDate tempSentDate = new SentimentDate(date, taScore / nTotalScores, min, lower, median, upper,
 					max);
