@@ -414,34 +414,34 @@
 
             //페이지 소스 총길이
 
-            var pageLength = 55;
-            var sources = function () {
-                var result = [];
-          
-                for (var i = 1; i <= pageLength; i++) {
-                  result.push(i);
-                }
-          
-                return result;
-              }();
-
-            $('#pagination-container').pagination({
-                dataSource: sources,
-                pageSize: 1,
-                pageRange: 1,
-                showGoInput: true,
-                showGoButton: true,
-                showNavigator: true,
-                callback: function (pagination) {
-                    //    //     var html = _.template($('#template-demo').html(), {
-                    //    //         data: data
-                    //    //     });
-                    //    //$('#data-container').html(html);
-                    var industry_name = "경 인쇄업";
-                    console.log(industry_name);
-                    getNewsListByIndustry(industry_name);
-                }
-            });
+        //   var pageLength = 55;
+        //   var sources = function () {
+        //       var result = [];
+        //  
+        //       for (var i = 1; i <= pageLength; i++) {
+        //         result.push(i);
+        //       }
+        //  
+        //       return result;
+        //     }()
+        //   $('#pagination-container').pagination({
+        //       dataSource: sources,
+        //       pageSize: 1,
+        //       pageRange: 1,
+        //       showGoInput: true,
+        //       showGoButton: true,
+        //       showNavigator: true,
+        //       callback: function (pagination) {
+        //           //    //     var html = _.template($('#template-demo').html(), {
+        //           //    //         data: data
+        //           //    //     });
+        //           //    //$('#data-container').html(html);
+        //           var industry_name = "경 인쇄업";
+        //           console.log(pagination);
+        //           alert(pagination);
+        //           //getNewsListByIndustry(industry_name);
+        //       }
+        //   });
 
         });
 
@@ -782,8 +782,19 @@
             close_pop();
         }
 
+        function countPages(rowCount) {
+            var pageCount = 0;
+            if (rowCount >= 2000){
+                pageCount = parseInt(rowCount / 2000) + 1 ;
+            }else {
+                pageCount = 1;
+            }
 
-        function getNewsList() {
+            return pageCount;
+        }
+
+
+        function getRowCount(){
             var data = new Object();
 
             data.newsYear = parseInt($("#newsYear").val());
@@ -803,9 +814,81 @@
             data.startDate = $("#date_from_news").val();
             data.endDate = $("#date_to_news").val();
             data.searchWord = document.getElementById('search_company_news').value;
+            data.pageNum = 1;
+            data.rowCount = 0;
+            data.pageCount = 1;
+            console.log(data);
 
-            var result_area = 'result_area_news';
-            var table_id = 'example_news';
+            $.ajax({
+                url: "/getRowCount",
+                method: 'POST',
+                data: data,
+                dataType: 'json',
+                success: function (responseData) {
+                    console.log(responseData);
+                    data.rowCount = responseData;
+                    if (data.rowCount == 0) {
+                        alert('뉴스기사가 없습니다');
+                        data.pageCount = 0;
+                        
+                    }else{
+                        alert('총 '+data.rowCount+ ' 건의 뉴스 기사가 검색됨');
+                        data.pageCount = countPages(data.rowCount);
+
+                        paginationByRowCount(data);
+                    }
+                },
+                error: function () {
+                    alert('rowCount 조회실패');
+                    
+                }
+            
+            });
+            
+
+
+        }
+
+
+        function paginationByRowCount(data){
+            var pageLength = data.pageCount;
+            var sources = function () {
+                var result = [];
+          
+                for (var i = 1; i <= pageLength; i++) {
+                  result.push(i);
+                }
+          
+                return result;
+              }();
+
+            $('#pagination-container').pagination({
+                dataSource: sources,
+                pageSize: 1,
+                pageRange: 1,
+                showGoInput: true,
+                showGoButton: true,
+                showNavigator: true,
+                callback: function (pagination) {
+                    //    //     var html = _.template($('#template-demo').html(), {
+                    //    //         data: data
+                    //    //     });
+                    //    //$('#data-container').html(html);
+                    data.pageNum = pagination[0];
+                    //window.data = data ;
+                    //pageData = window.data ;
+                    console.log(pagination);
+                    getNewsList(data);
+                }
+            });
+        }
+
+
+        function getNewsList(data) {
+            
+            
+            var result_area ="result_area_news"
+            var table_id = "example_news"
             console.log(data);
 
             loading1("뉴스");
@@ -1551,13 +1634,7 @@
 
                 
                     
-                        <span class="hiihihihiihidden">
-                            <span  id='pagination-container' width="400px" >
-
-
-                            </span>
-
-                        </span >
+                        
                        
                     
                 
@@ -1624,13 +1701,13 @@
 
                             <div class="search_box" id="search_box_news">
                                 <input id="search_company_news" type="text" placeholder="검색" value=""
-                                    onkeypress="if( event.keyCode == 13 ){getNewsList();}">
-                                <button id="search_button_news" class="btn_search" onclick="getNewsList();"><span
+                                    onkeypress="if( event.keyCode == 13 ){getRowCount();}">
+                                <button id="search_button_news" class="btn_search" onclick="getRowCount();"><span
                                         class="blind">검색</span></button>
                             </div>
-
+                            
                         </div>
-
+                       
 
                        
 
@@ -1645,7 +1722,13 @@
                             <a href="#" class="page">5</a>
                             <button class="btn_next"><span class="blind">다음</span></button>
                         </div> -->
+                        <span class="hiihihihiihidden" >
+                            <span  id='pagination-container'  >
 
+
+                            </span>
+
+                        </span >
 
 
                         <div id="result_area_news">

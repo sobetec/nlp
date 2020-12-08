@@ -19,6 +19,10 @@ public interface NewsRepositoryImpl {
 	List<String> getCompanyListByCompany(String companyName) throws Exception;
 	
 	List<News> getNewsListByCompanyName(NewsCondition newsCondition) throws Exception;
+
+	int getRowCount(NewsCondition newsCondition) throws Exception;
+
+	
 	
 	
 	

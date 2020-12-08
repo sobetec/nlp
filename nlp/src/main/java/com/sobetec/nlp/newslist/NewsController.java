@@ -80,6 +80,12 @@ public class NewsController {
 		System.out.println(newsCondition);
 		return newsService.getNewsListByCompanyName(newsCondition);
 	}
+	
+	@PostMapping(path = "/getRowCount")
+	public int getRowCount(NewsCondition newsCondition) throws Exception {
+		System.out.println(newsCondition);
+		return repository.getRowCount(newsCondition);
+	}
 
 	
 }

@@ -1357,21 +1357,21 @@
             };
         }
 
-        function dataTableSearch() {
-            $("#dataTableSearch").val('엘지');
-            $("#dataTableSearch").focus();
-            $("#dataTableSearch").bind("keydown", function(e) {
-               if (e.keyCode == 13) { // enter key
-                  // yourAction();
-                   return false
-            	}
-            });
-            
-            
-            $("#dataTableSearch").trigger(e);
-            
-            // $("#dataTableSearch").val('엘지');
-            $("#search_company_news").trigger(e);
+        function dataTableSearch(keyword) {
+            //$("#dataTableSearch").val('엘지');
+            //$("#dataTableSearch").focus();
+            //$("#dataTableSearch").bind("keydown", function(e) {
+            //    if (e.keyCode == 13) { // enter key
+            //       // yourAction();
+            //        return false
+            //	}
+            //});
+
+
+            //$("#dataTableSearch").trigger(e);
+
+            $("#dataTableSearch").val(keyword);
+            //$("#search_company").trigger(e);
 
             pressButton();
         }
@@ -1389,24 +1389,7 @@
 
 
 
-        function dataTableSearchSam() {
-            $("#dataTableSearch").val('삼성');
-            //$("#dataTableSearch").focus();
-            //$("#dataTableSearch").bind("keydown", function(e) {
-            //    if (e.keyCode == 13) { // enter key
-            //       // yourAction();
-            //        return false
-            //	}
-            //});
-
-
-            //$("#dataTableSearch").trigger(e);
-
-            //$("#search_company").val('엘지');
-            //$("#search_company").trigger(e);
-
-            pressButton();
-        }
+        
 
         //기업별 뉴스 가져오기
         function getCompanyListByCompany(){

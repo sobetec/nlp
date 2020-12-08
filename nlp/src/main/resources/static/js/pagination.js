@@ -298,9 +298,9 @@
         if (showNavigator) {
           if (formatNavigator) {
             formattedString = self.replaceVariables(formatNavigator, {
-              currentPage: currentPage,
-              totalPage: totalPage,
-              totalNumber: totalNumber
+              currentPage: currentPage *2000,
+              totalPage: totalPage *2000,
+              totalNumber: totalNumber *2000
             });
             html += '<div class="' + classPrefix + '-nav J-paginationjs-nav">' + formattedString + '<\/div>';
           }

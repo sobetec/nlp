@@ -56,8 +56,8 @@
 		  	</when>
 		  
 		  </choose>
-		 order by news_date desc
-		 limit 2000
+		 order by news_date desc limit 2000 offset (#{pageNum}-1)*2000;
+		 
 
 	</select>
 	
@@ -163,6 +163,34 @@
 		  </choose>
 		 order by news_date desc
 		 limit 500
+
+	</select>
+	
+	
+	<select id="selectRowCount" parameterType="com.sobetec.nlp.newslist.NewsCondition" resultType="int">
+		SELECT count(news_date)
+		
+		  FROM NLP."nlp_news"
+		 where (company_name like concat('%',#{searchWord},'%') or raw_data like concat('%',#{searchWord},'%') or news_title like concat('%',#{searchWord},'%'))
+		  <choose>
+		  	<when test="gubun == 'year'">
+		  		and year = #{newsYear}
+		  	</when>
+		  	<when test="gubun == 'month'">
+		  		and year = #{newsYear}
+		  		and month = #{gubunItem}
+		  	</when>
+		  	<when test="gubun == 'quarter'">
+		  		and year = #{newsYear}
+		  		and quarter = #{gubunItem}
+		  	</when>
+		  	<when test="gubun == 'custom'">
+		  		and news_date between  to_date(#{startDate}, 'yyyy-mm-dd') and to_date(#{endDate}, 'yyyy-mm-dd')
+		  	</when>
+		  
+		  </choose>
+		
+		 
 
 	</select>
  	

@@ -8,6 +8,10 @@ public class NewsCondition {
 	private String startDate;
 	private String endDate;
 	private String searchWord;
+	private int pageNum;
+	private int rowCount;
+	private int pageCount;
+	
 	
 	public int getNewsYear() {
 		return newsYear;
@@ -45,12 +49,33 @@ public class NewsCondition {
 	public void setSearchWord(String searchWord) {
 		this.searchWord = searchWord;
 	}
+	public int getPageNum() {
+		return pageNum;
+	}
+	public void setPageNum(int pageNum) {
+		this.pageNum = pageNum;
+	}
+	public int getRowCount() {
+		return rowCount;
+	}
+	public void setRowCount(int rowCount) {
+		this.rowCount = rowCount;
+	}
+	public int getPageCount() {
+		return pageCount;
+	}
+	public void setPageCount(int pageCount) {
+		this.pageCount = pageCount;
+	}
 	
 	@Override
 	public String toString() {
 		return "NewsCondition [newsYear=" + newsYear + ", gubun=" + gubun + ", gubunItem=" + gubunItem + ", startDate="
-				+ startDate + ", endDate=" + endDate + ", searchWord=" + searchWord + "]";
+				+ startDate + ", endDate=" + endDate + ", searchWord=" + searchWord + ", pageNum=" + pageNum
+				+ ", rowCount=" + rowCount + ", pageCount=" + pageCount + "]";
 	}
+	
+	
 	
 
 	

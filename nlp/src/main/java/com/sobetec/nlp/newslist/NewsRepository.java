@@ -89,5 +89,22 @@ public class NewsRepository implements NewsRepositoryImpl {
 		return sqlSession.selectList("mapper.newsMapper.selectNewsListByCompanyName",newsCondition);
 	}
 	
+	@Override
+	public int getRowCount(NewsCondition newsCondition) throws Exception {
+		if (newsCondition.getGubun().equals("custom")) {
+			String startDate = newsCondition.getStartDate();
+			String endDate = newsCondition.getEndDate();
+			String sd[] = startDate.split("/");
+			String ed[] = endDate.split("/");
+			startDate = sd[2] + "-" + sd[0] + "-" + sd[1];
+			endDate = ed[2] + "-" + ed[0] + "-" + ed[1];
+			newsCondition.setStartDate(startDate);
+			newsCondition.setEndDate(endDate);
+		}
+		int rowCount = sqlSession.selectOne("mapper.newsMapper.selectRowCount",newsCondition);
+//		int rows = rowCount.getRowCount();
+		System.out.println("로우카운트="+ rowCount);
+		return rowCount;
+	}
 	
 }
