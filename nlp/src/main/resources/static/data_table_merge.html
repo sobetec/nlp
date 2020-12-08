@@ -1762,6 +1762,16 @@
                 <div class="section" id="contents_section_report">
                     <div class="option_set">
 
+                        <div class="data_set" style="float:left">
+                            <a>구분</a>
+                            <select name="gubun" id="gubunReport" class="select" onChange="itemChangeReport()">
+                                <option value="year" selected="selected">연도별</option>
+                                <option value="quarter">분기별</option>
+                                <option value="month">월별</option>
+                                <option value="custom">사용자 선택</option>
+                            </select>
+                        </div>
+
                         <div class="data_set" style="float:left;">
                             <a>연도 선택</a>
                             <select name="reportYear" id="reportYear" class="select" style="min-width: 80px; width:80px;">
@@ -1776,16 +1786,6 @@
                                 <option value="2017">2017</option>
                                 <option value="2016">2016</option>
                                 <option value="2015">2015</option>
-                            </select>
-                        </div>
-                            
-                        <div class="data_set" style="float:left">
-                            <a>구분</a>
-                            <select name="gubun" id="gubunReport" class="select" onChange="itemChangeReport()">
-                                <option value="year" selected="selected">연도별</option>
-                                <option value="quarter">분기별</option>
-                                <option value="month">월별</option>
-                                <option value="custom">사용자 선택</option>
                             </select>
                         </div>
             
