@@ -1146,7 +1146,7 @@
 
 
         //산업별 뉴스 가져오기
-        function getNewsListByIndustryAndSubsidiary(gubunJaName) {
+        function getNewsListByIndustryAndSubsidiary(gubunJaName,selectedName) {
 
             var result_area = '';
             var table_id = '';
@@ -1154,20 +1154,19 @@
             if (gubunJaName == "industry") {
                 result_area = 'result_area_industry';
                 table_id = 'industry_news_list';
-                
             }else {
                 result_area = 'result_area_subsidiary';
                 table_id = 'subsidiary_news_list';
-                
             };
 
             console.log('산업명'+gubunJaName);
             loading1("뉴스");
            
             $.ajax({
-                url: "/"+controllerUrl+"/" + gubunJaName,
+                url: "/"+controllerUrl+"/" ,
                 method: 'GET',
                 dataType: 'json',
+                data: { gubunJaName: gubunJaName, selectedName: selectedName },
                 success: function (responseData) {
                     //alert('조회 성공');
                     console.log(responseData.length);
@@ -1415,14 +1414,14 @@
                         alert($(this).text());
                         var listName = $(this).text();
                         console.log(listName);
-                        getNewsListByIndustryAndSubsidiary(listName);
+                        getNewsListByIndustryAndSubsidiary(gubunJa,listName);
                     });
 
                     $(".hide").on("click", "li", function () {
                         alert($(this).text());
                         var listName = $(this).text();
                         console.log(listName);
-                        getNewsListByIndustryAndSubsidiary(listName);
+                        getNewsListByIndustryAndSubsidiary(gubunJa,listName);
                     });
 
                 },
