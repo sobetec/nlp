@@ -1,5 +1,6 @@
 package com.sobetec.nlp.newslist;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -60,14 +61,22 @@ public class NewsController {
 		return newsService.getNewsList(newsCondition);
 	}
 	
-	@GetMapping(path = "/getIndustryList")
-	public List<Industry> getIndustryList() throws Exception {
-		return repository.getIndustryList();
+	@GetMapping(path = "/getIndustryAndSubsidiaryList/{gubunJa}")
+	public List<Industry> getIndustryAndSubsidiaryList(@PathVariable String gubunJa) throws Exception {
+		System.out.println("구분자 =" + gubunJa  );
+		List<Industry> resultList = new ArrayList<Industry>();
+		if (gubunJa.equals("industry")) {
+			resultList = repository.getIndustryList();
+		}else {
+			resultList = repository.getSubsidiaryList();
+		};
+		
+		return resultList;
 	}
 	
-	@GetMapping(path = "/getNewsListByIndustry/{instCode}")
+	@GetMapping(path = "/getNewsListByIndustryAndSubsidiary/{instCode}")
 	public List<News> getNewsListByIndustry(@PathVariable String instCode) throws Exception {
-		return newsService.getNewsListByIndustry(instCode);
+		return newsService.getNewsListByIndustryAndSubsidiary(instCode);
 	}
 	
 	@GetMapping(path = "/getCompanyListByCompany/{companyName}")

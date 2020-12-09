@@ -86,31 +86,57 @@ public class NewsService {
         return listNews; 
     }
     
-    public List<News> getNewsListByIndustry(String instCode) throws Exception {
+    public List<News> getNewsListByIndustryAndSubsidiary(String instCode) throws Exception {
     	
     	List<News> listNews = new ArrayList<News>();
-    	listNews = repository.getNewsListByIndustry(instCode);
-    	
-    	for(int i = 0; i < listNews.size(); i++) {
-    		
-    		if (listNews.get(i).getTaScre() != null) {
-
-        		Double tempScore = Double.parseDouble(listNews.get(i).getTaScre());
+    	if (instCode.equals("industry")) {
+    		listNews = repository.getNewsListByIndustry(instCode);
+        	
+        	for(int i = 0; i < listNews.size(); i++) {
         		
-        		if (tempScore > 60) {
-        			listNews.get(i).setTaScreWord("긍정");
+        		if (listNews.get(i).getTaScre() != null) {
+
+            		Double tempScore = Double.parseDouble(listNews.get(i).getTaScre());
+            		
+            		if (tempScore > 60) {
+            			listNews.get(i).setTaScreWord("긍정");
+            		}
+            		else if (tempScore < 40) {
+            			listNews.get(i).setTaScreWord("부정");
+            		}
+            		else {	
+            			listNews.get(i).setTaScreWord("중립");
+            		}
+        		} else {
+        		
+        		listNews.get(i).setTaScreWord("없음");
         		}
-        		else if (tempScore < 40) {
-        			listNews.get(i).setTaScreWord("부정");
+        	}
+    	}else {
+    		listNews = repository.getNewsListBySubsidiary(instCode);
+        	
+        	for(int i = 0; i < listNews.size(); i++) {
+        		
+        		if (listNews.get(i).getTaScre() != null) {
+
+            		Double tempScore = Double.parseDouble(listNews.get(i).getTaScre());
+            		
+            		if (tempScore > 60) {
+            			listNews.get(i).setTaScreWord("긍정");
+            		}
+            		else if (tempScore < 40) {
+            			listNews.get(i).setTaScreWord("부정");
+            		}
+            		else {	
+            			listNews.get(i).setTaScreWord("중립");
+            		}
+        		} else {
+        		
+        		listNews.get(i).setTaScreWord("없음");
         		}
-        		else {	
-        			listNews.get(i).setTaScreWord("중립");
-        		}
-    		} else {
-    		
-    		listNews.get(i).setTaScreWord("없음");
-    		}
+        	}
     	}
+    	
     	
         return listNews; 
     }

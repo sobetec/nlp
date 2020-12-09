@@ -115,6 +115,27 @@
 		 
 	</select>
 	
+	<select id="selectSubsidiaryList" resultType="com.sobetec.nlp.newslist.Industry">
+		SELECT "ㄱ"		AS "giYeok"
+			 , "ㄴ"		AS "niEun"
+			 , "ㄷ"		AS "diGeut"
+			 , "ㄹ"		AS "riEul"
+			 , "ㅁ"		AS "miEum"
+			 , "ㅂ"		AS "biEup"
+			 , "ㅅ"		AS "siOt"
+			 , "ㅇ"		AS "iEung"
+			 , "ㅈ"		AS "jiEut"
+			 , "ㅊ"		AS "chiEut"
+			 , "ㅋ"		AS "kiEuk"
+			 , "ㅌ"		AS "tiEuk"
+			 , "ㅍ"		AS "piEup"
+			 , "ㅎ"		AS "hiEut"
+			 , "기타"   AS "guiTar"
+			 
+			 FROM NLP."subsidiary_list"
+		 
+	</select>
+	
 	<select id="selectNewsListByIndustry" parameterType="String" resultType="com.sobetec.nlp.newslist.News">
 		SELECT "composite_key"		AS "cmpyKey"
 			 , "news_date"		AS "newsDate"
@@ -122,10 +143,24 @@
 			 , round(cast(ta_score as numeric),4)		AS "taScre"
 			 , "news_title"		AS "newsTtl"
 			 , "raw_data"		AS "rawData"
-			 , industry_code    AS "instCode"
+			 
 			 
 		  FROM NLP."nlp_news"
 		  where industry_code = (select industry_code from nlp.company_code where industry_name like concat('%',#{cmpyNameOnly},'%') limit 1)
+		  order by news_date desc
+ 	</select>
+ 	
+	<select id="selectNewsListBySubsidiary" parameterType="String" resultType="com.sobetec.nlp.newslist.News">
+		SELECT "composite_key"		AS "cmpyKey"
+			 , "news_date"		AS "newsDate"
+			 , "company_name"		AS "cmpyName"
+			 , round(cast(ta_score as numeric),4)		AS "taScre"
+			 , "news_title"		AS "newsTtl"
+			 , "raw_data"		AS "rawData"
+			 
+			 
+		  FROM NLP."nlp_news"
+		  where subsidiary_code = (select subsidiary_code from nlp.company_code where subsidiary_name = #{cmpyNameOnly} limit 1)
 		  order by news_date desc
  	</select>
  	
