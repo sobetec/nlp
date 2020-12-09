@@ -2659,9 +2659,9 @@ function getChartQuery1() {
 function getChartQuery2() {
     ////console.log(document.getElementById('articleCountRange').value);
     d3.selectAll('.visSVG').remove();
-    var search_company = document.getElementById('search_company').value;
+    var search_company = document.getElementById('search_company_news').value;
     //console.log(search_company);
-    loading1('뉴스')
+    loading1('차트');
     $.ajax({
         url: "/getChartQueryByCompany/" + search_company,
         method: 'GET',
@@ -2792,7 +2792,9 @@ function getChartQuery3(companyName) {
     d3.selectAll('.visSVG').remove();
     var search_company = document.getElementById('search_company_news').value;
     //console.log(search_company);
-    loading1('뉴스')
+    document.getElementById('chartModal').innerHTML =  modalhtml4;
+    $('#chartModal').show();
+
     $.ajax({
         url: "/getChartQueryByCompany/" + search_company,
         method: 'GET',
@@ -2802,6 +2804,8 @@ function getChartQuery3(companyName) {
 
             //console.log(responseData)
             //alert('조회 성공: ' + responseData.allNews.length + '개 기사');
+
+            
 
             makeGauge('dangerGauge', responseData.averageScore)
             document.getElementById('dangerGauge').addEventListener('click', function () {
@@ -2893,7 +2897,7 @@ function getChartQuery3(companyName) {
             })
             makeStockGraph(allStockData, divID);
 
-            $('#myModal').hide();
+            $('#chartModal').hide();
 
 
 

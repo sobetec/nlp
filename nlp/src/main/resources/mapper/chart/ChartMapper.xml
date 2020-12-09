@@ -31,4 +31,49 @@
 	<select id="getAllNewsCount" resultType="Integer">
 		SELECT COUNT(*) FROM NLP."nlp_news"
 	</select>
+	
+	<select id="selectChartNewsByCondition" parameterType="com.sobetec.nlp.chart.ChartCondition" resultType="com.sobetec.nlp.chart.News">
+		SELECT "composite_key"						AS "cmpyKey"
+			 , "news_date"							AS "newsDate"
+			 , "company_name"						AS "cmpyName"
+			 , round(cast(ta_score as numeric),4)	AS "taScre"
+			 , "news_title"							AS "newsTtl"
+			 , "ext_morphs"							AS "extMorp"
+			 
+		 FROM NLP."nlp_news"
+		 where (company_name like concat('%',#{cmpyNameOnly},'%') or raw_data like concat('%',#{cmpyNameOnly},'%') or news_title like concat('%',#{cmpyNameOnly},'%') )
+		 <choose>
+		  	<when test="gubun == 'year'">
+		  		and year = #{newsYear}
+		  	</when>
+		  	<when test="gubun == 'month'">
+		  		and year = #{newsYear}
+		  		and month = #{gubunItem}
+		  	</when>
+		  	<when test="gubun == 'quarter'">
+		  		and year = #{newsYear}
+		  		and quarter = #{gubunItem}
+		  	</when>
+		  	<when test="gubun == 'custom'">
+		  		and news_date between  to_date(#{startDate}, 'yyyy-mm-dd') and to_date(#{endDate}, 'yyyy-mm-dd')
+		  	</when>
+		  
+		  </choose>
+		 order by news_date desc limit 10000
+	</select>
+	
+	<select id="selectChartStocksByCompany" parameterType="com.sobetec.nlp.chart.ChartCondition" resultType="com.sobetec.nlp.chart.Stocks">
+		SELECT "composite_key"						AS "cmpyKey"
+			 , "news_date"							AS "newsDate"
+			 , "company_name"						AS "cmpyName"
+			 , round(cast(ta_score as numeric),4)	AS "taScre"
+			 , "news_title"							AS "newsTtl"
+			 , "ext_morphs"							AS "extMorp"
+			 
+		 FROM NLP."nlp_news"
+		 where (company_name like concat('%',#{cmpyNameOnly},'%') or raw_data like concat('%',#{cmpyNameOnly},'%') or news_title like concat('%',#{cmpyNameOnly},'%') )
+		 AND (news_date between '2015-01-01' and '2020-12-31')
+		 order by news_date desc limit 10000
+	</select>
+	
 </mapper>
