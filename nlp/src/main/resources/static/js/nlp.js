@@ -1627,8 +1627,6 @@ function makeStockGraph(data, divID) {
         .attr('y', yPadding);
 
 
-
-
     var lines = svg.append('g')
         .attr('class', 'linechartarea')
         .attr('clip-path', function () {
@@ -2872,34 +2870,41 @@ function getChartQuery3(companyName) {
                 allStockData[tempStock.company].push({ date: tempStock.date, price: tempStock.price })
             }
             console.log(allStockData)
-            var shortestCompany = companies.reduce(function (a, b) {
-                return a.length <= b.length ? a : b;
-            })
-            var stockOptions = document.getElementById('stockRange');
-            console.log(stockOptions);
-            for (var i = 0; i < companies.length; i++) {
-                if (companies[i] == shortestCompany) {
-                    var tempHTML = `<option value='${companies[i]}' selected>${companies[i]}</option>`;
+            if (responseData.stockData.length != 0){
+                var shortestCompany = companies.reduce(function (a, b) {
+                    return a.length <= b.length ? a : b;
+                })
+                var stockOptions = document.getElementById('stockRange');
+                console.log(stockOptions);
+                for (var i = 0; i < companies.length; i++) {
+                    if (companies[i] == shortestCompany) {
+                        var tempHTML = `<option value='${companies[i]}' selected>${companies[i]}</option>`;
+                    }
+                    else {
+                        var tempHTML = `<option value='${companies[i]}'>${companies[i]}</option>`;
+                    }
+                    stockOptions.insertAdjacentHTML('beforeend', tempHTML);
                 }
-                else {
-                    var tempHTML = `<option value='${companies[i]}'>${companies[i]}</option>`;
-                }
-                stockOptions.insertAdjacentHTML('beforeend', tempHTML);
-            }
+    
+                var divID = 'stockTime';
+                stockGraph = document.getElementById(divID);
 
-            var divID = 'stockTime';
-            stockGraph = document.getElementById(divID)
-            stockGraph.addEventListener('click', function () {
-                document.getElementById('resetChart').addEventListener('click', function () {
-                    console.log('clicked');
+                stockGraph.addEventListener('click', function () {
+                    document.getElementById('resetChart').addEventListener('click', function () {
+                        console.log('clicked');
+                        makeStockGraph(allStockData, 'enlargedChart');
+                    })
                     makeStockGraph(allStockData, 'enlargedChart');
                 })
-                makeStockGraph(allStockData, 'enlargedChart');
-            })
-            document.getElementById('stockRange').addEventListener('change', function () {
+                document.getElementById('stockRange').addEventListener('change', function () {
+                    makeStockGraph(allStockData, divID);
+                })
                 makeStockGraph(allStockData, divID);
-            })
-            makeStockGraph(allStockData, divID);
+            }
+            else{
+
+            }
+            
 
             $('#chartModal').hide();
 
