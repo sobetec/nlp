@@ -70,10 +70,11 @@ public class ChartCondition {
 	
 	@Override
 	public String toString() {
-		return "NewsCondition [newsYear=" + newsYear + ", gubun=" + gubun + ", gubunItem=" + gubunItem + ", startDate="
+		return "ChartCondition [newsYear=" + newsYear + ", gubun=" + gubun + ", gubunItem=" + gubunItem + ", startDate="
 				+ startDate + ", endDate=" + endDate + ", searchWord=" + searchWord + ", pageNum=" + pageNum
 				+ ", rowCount=" + rowCount + ", pageCount=" + pageCount + "]";
 	}
+	
 	
 	
 	

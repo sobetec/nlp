@@ -165,13 +165,12 @@ public class ChartQueryService {
 		return chartQuery;
 	}
 	
-	@SuppressWarnings("null")
 	public ChartQuery getChartQueryByCondition(ChartCondition chartCondition) throws Exception {
 		System.out.println("########## start Service getChartQueryCondition");
 		List<News> allNews = new ArrayList<News>();
 		List<Stocks> allStocks = new ArrayList<Stocks>();
 		List<NewsKeyword> allDocFreqs = new ArrayList<NewsKeyword>();
-
+		
 		// logger.debug("call DB for news");
 		allNews = repository.getChartNewsByCondition(chartCondition);
 		// logger.debug("Done getting news");
@@ -188,7 +187,6 @@ public class ChartQueryService {
 		int subsetTermSize = 0;
 		float totalScore = 0;
 		HashMap<String, NewsKeyword> newsKeywordMap = new HashMap<String, NewsKeyword>();
-
 		// logger.debug("first sweep of all news retrieved");
 		for (int i = 0; i < allNews.size(); i++) {
 			News currNews = allNews.get(i);
@@ -224,7 +222,6 @@ public class ChartQueryService {
 				allDates.put(currNews.getNewsDate(), String.valueOf(currTaScore));
 			}
 		}
-
 		// logger.debug("first sweep done");
 		for (int i = 0; i < allDocFreqs.size(); i++) {
 			NewsKeyword currKeyword = allDocFreqs.get(i);
@@ -232,7 +229,6 @@ public class ChartQueryService {
 				newsKeywordMap.get(currKeyword.getKeyword()).setTotalDocFreq(currKeyword.getTotalDocFreq());
 			}
 		}
-
 		// logger.debug("iterate over morphemes");
 		// get tf-idfs
 		int fullCorpusSize = 789102;
@@ -298,7 +294,6 @@ public class ChartQueryService {
 			sentimentDates.add(tempSentDate);
 		}
 		float averageScore = totalScore / allNews.size();
-
 		// logger.debug("sentiment dates done");
 		// logger.debug("done running all algos");
 

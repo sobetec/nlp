@@ -2794,10 +2794,12 @@ function getChartQuery3(companyName) {
     //console.log(search_company);
     document.getElementById('chartModal').innerHTML =  modalhtml4;
     $('#chartModal').show();
+    data = parameters();
 
     $.ajax({
-        url: "/getChartQueryByCompany/" + search_company,
-        method: 'GET',
+        url: "/getChartQueryByCondition",
+        method: 'POST',
+        data: data,
         dataType: 'json',
         success: function (responseData) {
             window.newsChartData = responseData;
@@ -2859,6 +2861,8 @@ function getChartQuery3(companyName) {
             }
             var companies = [];
             var allStockData = {};
+            
+            console.log("스톡 길이 :  " + responseData.stockData.length);
             for (var i = 0; i < responseData.stockData.length; i++) {
                 var tempStock = responseData.stockData[i]
                 if (!companies.includes(tempStock.company)) {
