@@ -68,15 +68,15 @@ public class NewsRepository implements NewsRepositoryImpl {
 	}
 	
 	@Override
-	public List<News> getNewsListByIndustry(String instCode) throws Exception {
+	public List<News> getNewsListByIndustry(String selectedName) throws Exception {
 
-		return sqlSession.selectList("mapper.newsMapper.selectNewsListByIndustry", instCode);
+		return sqlSession.selectList("mapper.newsMapper.selectNewsListByIndustry", selectedName);
 	}
 	
 	@Override
-	public List<News> getNewsListBySubsidiary(String instCode) throws Exception {
+	public List<News> getNewsListBySubsidiary(String selectedName) throws Exception {
 
-		return sqlSession.selectList("mapper.newsMapper.selectNewsListBySubsidiary", instCode);
+		return sqlSession.selectList("mapper.newsMapper.selectNewsListBySubsidiary", selectedName);
 	}
 
 	@Override

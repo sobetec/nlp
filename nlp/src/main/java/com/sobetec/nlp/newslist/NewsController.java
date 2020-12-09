@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -74,9 +75,11 @@ public class NewsController {
 		return resultList;
 	}
 	
-	@GetMapping(path = "/getNewsListByIndustryAndSubsidiary/{instCode}")
-	public List<News> getNewsListByIndustry(@PathVariable String instCode) throws Exception {
-		return newsService.getNewsListByIndustryAndSubsidiary(instCode);
+	@GetMapping(path = "/getNewsListByIndustryAndSubsidiary")
+	public List<News> getNewsListByIndustry( @RequestParam(value = "gubunJaName",required = false) String gubunJaName,@RequestParam(value = "selectedName",required = false) String selectedName) throws Exception {
+		System.out.println("구분자 네임=" + gubunJaName  );
+		System.out.println("찍은네임=" + selectedName  );
+		return newsService.getNewsListByIndustryAndSubsidiary(gubunJaName,selectedName);
 	}
 	
 	@GetMapping(path = "/getCompanyListByCompany/{companyName}")

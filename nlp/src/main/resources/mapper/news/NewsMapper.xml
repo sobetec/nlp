@@ -146,7 +146,7 @@
 			 
 			 
 		  FROM NLP."nlp_news"
-		  where industry_code = (select industry_code from nlp.company_code where industry_name like concat('%',#{cmpyNameOnly},'%') limit 1)
+		  where industry_code = (select industry_code from nlp.company_code where industry_name like concat('%',#{selectedName},'%') limit 1)
 		  order by news_date desc
  	</select>
  	
@@ -160,7 +160,7 @@
 			 
 			 
 		  FROM NLP."nlp_news"
-		  where subsidiary_code = (select subsidiary_code from nlp.company_code where subsidiary_name = #{cmpyNameOnly} limit 1)
+		  where subsidiary_code = (select subsidiary_code from nlp.company_code where subsidiary_name = #{selectedName} limit 1)
 		  order by news_date desc
  	</select>
  	
