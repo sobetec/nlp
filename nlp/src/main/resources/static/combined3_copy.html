@@ -419,7 +419,7 @@
             color: #090b88;
         }
 
-        .list li:hover {
+        .list li:hover, .list_company li:hover, .list_subsidiary li:hover, .list_industry li:hover {
             text-decoration: underline;
             cursor: pointer;
             font-size: 14px;
@@ -427,7 +427,7 @@
             color: #7c130c;
         }
 
-        .list li, .list_not li {
+        .list li, .list_company li, .list_subsidiary li, .list_industry li {
             font-size: 14px;
         }
 
@@ -1607,17 +1607,17 @@
                             <table border="1" width="100%">
                                 <tr>
                                     <td>
-                                        <ul class="list">
+                                        <ul class="list_company">
                                             ` + companyliListHTML + `
                                         </ul>
                                     </td>
                                     <td>
-                                        <ul class="list_not">
+                                        <ul class="list_subsidiary">
                                             ` + subsidiaryliListHTML + `
                                         </ul>
                                     </td>
                                     <td>
-                                        <ul class="list_not">
+                                        <ul class="list_industry">
                                             ` + industryliListHTML + `
                                         </ul>
                                     </td>
@@ -1629,9 +1629,19 @@
                     document.getElementById('myModal').innerHTML = modalContents;
                     $('#myModal').show();
 
-                    $(".list").on("click", "li", function() {
-                    var companyName = $(this).text();
-                    getNewsListByCompanyName(companyName);
+                    $(".list_company").on("click", "li", function() {
+                        var companyName = $(this).text();
+                        getNewsListByCompanyName(companyName);
+                    });
+
+                    $(".list_subsidiary").on("click", "li", function() {
+                        var companyName = $(this).text();
+                        getNewsListByIndustryAndSubsidiary('subsidiary', companyName);
+                    });
+
+                    $(".list_industry").on("click", "li", function() {
+                        var companyName = $(this).text();
+                        getNewsListByIndustryAndSubsidiary('industry', companyName);
                     });
                     
                 },
