@@ -7,15 +7,16 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>NLP -News List</title>
     <link rel="stylesheet" href="css/auto-ml.css">
-    <!-- <link rel="stylesheet" type="text/css" href="datatables/datatables.css"> -->
-    <link rel="stylesheet" type="text/css" href="css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="datatables/datatables.css">
+    
     <link rel="stylesheet" href="css/w3.css">
     <link rel="stylesheet" href="css/pagination.css">
     <style>
         #example_report,
         #example_news,
         #example,
-        #industry_news_list {
+        #industry_news_list,
+        #subsidiary_news_list {
             text-align: center;
             font-size: 11px;
         }
@@ -439,7 +440,7 @@
         //           var industry_name = "경 인쇄업";
         //           console.log(pagination);
         //           alert(pagination);
-        //           //getNewsListByIndustry(industry_name);
+        //           //getNewsListByIndustryAndSubsidiary(industry_name);
         //       }
         //   });
 
@@ -794,7 +795,9 @@
         }
 
 
-        function getRowCount(){
+        
+
+        function parameters() {
             var data = new Object();
 
             data.newsYear = parseInt($("#newsYear").val());
@@ -817,25 +820,33 @@
             data.pageNum = 1;
             data.rowCount = 0;
             data.pageCount = 1;
-            console.log(data);
 
+            return data;
+        }
+
+        
+        
+        function getRowCount(){
+            let datassss = parameters();
+           console.log(parameters());
+           
             $.ajax({
                 url: "/getRowCount",
                 method: 'POST',
-                data: data,
+                data: datassss,
                 dataType: 'json',
                 success: function (responseData) {
                     console.log(responseData);
-                    data.rowCount = responseData;
-                    if (data.rowCount == 0) {
+                    datassss.rowCount = responseData;
+                    if (datassss.rowCount == 0) {
                         alert('뉴스기사가 없습니다');
-                        data.pageCount = 0;
+                        datassss.pageCount = 0;
                         
                     }else{
-                        alert('총 '+data.rowCount+ ' 건의 뉴스 기사가 검색됨');
-                        data.pageCount = countPages(data.rowCount);
+                        alert('총 '+datassss.rowCount+ ' 건의 뉴스 기사가 검색됨');
+                        datassss.pageCount = countPages(datassss.rowCount);
 
-                        paginationByRowCount(data);
+                        paginationByRowCount(datassss);
                     }
                 },
                 error: function () {
@@ -1135,16 +1146,27 @@
 
 
         //산업별 뉴스 가져오기
-        function getNewsListByIndustry(industryName) {
+        function getNewsListByIndustryAndSubsidiary(gubunJaName,selectedName) {
 
-            console.log('산업명'+industryName);
+            var result_area = '';
+            var table_id = '';
+            var controllerUrl = "getNewsListByIndustryAndSubsidiary";
+            if (gubunJaName == "industry") {
+                result_area = 'result_area_industry';
+                table_id = 'industry_news_list';
+            }else {
+                result_area = 'result_area_subsidiary';
+                table_id = 'subsidiary_news_list';
+            };
+
+            console.log('산업명'+gubunJaName);
             loading1("뉴스");
-            var result_area = 'result_area_industry';
-            var table_id = 'industry_news_list';
+           
             $.ajax({
-                url: "/getNewsListByIndustry/" + industryName,
+                url: "/"+controllerUrl+"/" ,
                 method: 'GET',
                 dataType: 'json',
+                data: { gubunJaName: gubunJaName, selectedName: selectedName },
                 success: function (responseData) {
                     //alert('조회 성공');
                     console.log(responseData.length);
@@ -1176,12 +1198,13 @@
                     $('#myModal').hide();
                 }
             });
+            
 
         }
 
 
 
-        function getIndustryList() {
+        function getIndustryAndSubsidiaryList(gubunJa) {
 
             industry_column_list = ["ㄱ", "ㄴ", "ㄷ", "ㄹ", "ㅁ", "ㅂ", "ㅅ", "ㅇ", "ㅈ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ", "기타"];
             industry_column_list_java = ['responseData[i].giYeok',
@@ -1200,12 +1223,12 @@
                 'responseData[i].hiEut',
                 'responseData[i].guiTar'];
 
-
+            console.log('구분자 자바스크립'+gubunJa);
             console.log(industry_column_list[0]);
             console.log(industry_column_list_java[0]);
 
             $.ajax({
-                url: "/getIndustryList/",
+                url: "/getIndustryAndSubsidiaryList/" + gubunJa,
                 method: 'GET',
                 dataType: 'json',
                 success: function (responseData) {
@@ -1252,7 +1275,8 @@
                                                     <a style="font-size: large; font-weight: bold;"> `+ colName + ` </a>
                                                     
                                                     <ul class="list">
-                                                        <li style="font-size: 4px;">&nbsp; </li>
+                                                        <br/>
+                                                                                                               
                             `;
 
                             var htmlmiddle =
@@ -1320,8 +1344,12 @@
                         tables += htmltable1;
                     };
 
-
-                    document.getElementById('result_area_industry').innerHTML = expend_all + tables;
+                    if (gubunJa == 'industry') {
+                        document.getElementById('result_area_industry').innerHTML = expend_all + tables;
+                    }else {
+                        document.getElementById('result_area_subsidiary').innerHTML = expend_all + tables;
+                    }
+                    
 
 
                     $(".menu>a").click(function () {
@@ -1384,16 +1412,16 @@
 
                     $(".list").on("click", "li", function () {
                         alert($(this).text());
-                        var industryName = $(this).text();
-                        console.log(industryName);
-                        getNewsListByIndustry(industryName);
+                        var listName = $(this).text();
+                        console.log(listName);
+                        getNewsListByIndustryAndSubsidiary(gubunJa,listName);
                     });
 
                     $(".hide").on("click", "li", function () {
                         alert($(this).text());
-                        var industryName = $(this).text();
-                        console.log(industryName);
-                        getNewsListByIndustry(industryName);
+                        var listName = $(this).text();
+                        console.log(listName);
+                        getNewsListByIndustryAndSubsidiary(gubunJa,listName);
                     });
 
                 },
@@ -1481,6 +1509,8 @@
 
             }
             else if (selectItem == "subsidiary") {
+                var gubunJa = 'subsidiary';
+                getIndustryAndSubsidiaryList(gubunJa);
                 $('#result_area_industry').hide();
                 $('#result_area_news').hide();
                 document.getElementById("search_company_news").disabled = true;
@@ -1488,7 +1518,7 @@
                 $('#result_area_subsidiary').show();
             }
             else if (selectItem == "industry") {
-                getIndustryList();
+                getIndustryAndSubsidiaryList('industry');
                 $('#result_area_news').hide();
                 $('#result_area_subsidiary').hide();
                 document.getElementById("search_company_news").disabled = true;

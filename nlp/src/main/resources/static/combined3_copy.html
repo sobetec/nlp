@@ -7,9 +7,10 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>NLP -News List</title>
     <link rel="stylesheet" href="css/auto-ml.css">
-    <!-- <link rel="stylesheet" type="text/css" href="datatables/datatables.css"> -->
-    <link rel="stylesheet" type="text/css" href="css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="datatables/datatables.css">
+    
     <link rel="stylesheet" href="css/w3.css">
+    <link rel="stylesheet" href="css/pagination.css">
     <style>
         
         /*chart part*/
@@ -53,10 +54,12 @@
             font-size: 11px;
         }
 
-        
-
         /*news and report part*/
-        #example_report, #example_news, #example, #industry_news_list {
+        #example_report, 
+        #example_news, 
+        #example, 
+        #industry_news_list, 
+        #subsidiary_news_list {
             text-align: center; 
             font-size: 11px;
         }
@@ -145,236 +148,234 @@
 
 
         * {
-        box-sizing: border-box;
-        /*scrollbar-color: transparent transparent;*/ /* thumb and track color */
-        scrollbar-width: 5px;
+            box-sizing: border-box;
+            /*scrollbar-color: transparent transparent;*/ /* thumb and track color */
+            scrollbar-width: 5px;
         }
         
         *::-webkit-scrollbar {
-        width: 5;
+            width: 5;
         }
         
         *::-webkit-scrollbar-track {
-        /*background: transparent;*/
+            /*background: transparent;*/
         }
         
         *::-webkit-scrollbar-thumb {
-        /*background: transparent;*/
-        border: none;
+            /*background: transparent;*/
+            border: none;
         }
         
         * {
-        -ms-overflow-style: none;
+            -ms-overflow-style: none;
         }
 
         .carousel {
-        position: relative;
-        /*margin-top: 12%;*/
-        filter: drop-shadow(0 0 10px #0003);
-        perspective: 100px;
-        background-color: rgb(199, 190, 108);
+            position: relative;
+            /*margin-top: 12%;*/
+            filter: drop-shadow(0 0 10px #0003);
+            perspective: 100px;
+            background-color: rgb(199, 190, 108);
         }
         
         .carousel::before,
         .carousel::after,
         .carousel__prev,
         .carousel__next {
-        position: absolute;
-        top: 0;
-        margin-top: 1.2%;
-        width: 2rem;
-        height: 2rem;
-        transform: translateY(-50%);
-        border-radius: 50%;
-        font-size: 0;
-        outline: 0;
+            position: absolute;
+            top: 0;
+            margin-top: 1.2%;
+            width: 2rem;
+            height: 2rem;
+            transform: translateY(-50%);
+            border-radius: 50%;
+            font-size: 0;
+            outline: 0;
         }
         
         .carousel::before,
         .carousel__prev {
-        left: 1rem;
+            left: 1rem;
         }
         
         .carousel::after,
         .carousel__next {
-        right: 1rem;
+            right: 1rem;
         } 
         
         .carousel::before {
-        content: '';
-        z-index: 1;
-        /*background-color: #333;*/
-        background-color: rgb(49, 156, 22);
-        background-size: 1rem 1rem;
-        background-repeat: no-repeat;
-        background-position: center center;
-        color: #fff;
-        font-size: 1rem;
-        line-height: 2rem;
-        text-align: center;
-        pointer-events: none;
+            content: '';
+            z-index: 1;
+            /*background-color: #333;*/
+            background-color: rgb(49, 156, 22);
+            background-size: 1rem 1rem;
+            background-repeat: no-repeat;
+            background-position: center center;
+            color: #fff;
+            font-size: 1rem;
+            line-height: 2rem;
+            text-align: center;
+            pointer-events: none;
         }
 
         .carousel::after {
-        content: '';
-        z-index: 1;
-        background-color: rgb(141, 29, 29);
-        background-size: 1rem 1rem;
-        background-repeat: no-repeat;
-        background-position: center center;
-        color: #fff;
-        font-size: 2rem;
-        line-height: 3rem;
-        text-align: center;
-        pointer-events: none;
+            content: '';
+            z-index: 1;
+            background-color: rgb(141, 29, 29);
+            background-size: 1rem 1rem;
+            background-repeat: no-repeat;
+            background-position: center center;
+            color: #fff;
+            font-size: 2rem;
+            line-height: 3rem;
+            text-align: center;
+            pointer-events: none;
         }
 
         .carousel::before {
-        background-image: url("img/left-arrow.png");
+            background-image: url("img/left-arrow.png");
         }
         
         .carousel::after {
-        background-image: url("img/right-arrow.png");
+            background-image: url("img/right-arrow.png");
         } 
 
         .carouselNoPrev {
-        position: relative;
-        perspective: 100px;
+            position: relative;
+            perspective: 100px;
         }
         
         .carouselNoPrev::before,
         .carouselNoPrev::after,
         .carouselNoPrev__prev,
         .carouselNoPrev__next {
-        position: absolute;
-        top: 0;
-        margin-top: 1.2%;
-        width: 2rem;
-        height: 2rem;
-        transform: translateY(-50%);
-        border-radius: 50%;
-        font-size: 0;
-        outline: 0;
+            position: absolute;
+            top: 0;
+            margin-top: 1.2%;
+            width: 2rem;
+            height: 2rem;
+            transform: translateY(-50%);
+            border-radius: 50%;
+            font-size: 0;
+            outline: 0;
         }
         
         .carouselNoPrev::before,
         .carouselNoPrev__prev {
-        left: 1rem;
+            left: 1rem;
         }
         
         .carouselNoPrev::after,
         .carouselNoPrev__next {
-        right: 1rem;
+            right: 1rem;
         } 
         
         .carouselNoPrev::before {
-        opacity: 0;
-        content: '';
-        z-index: 1;
-        background-color: rgb(168, 199, 54);
-        background-size: 1rem 1rem;
-        background-repeat: no-repeat;
-        background-position: center center;
-        color: #fff;
-        font-size: 1rem;
-        line-height: 2rem;
-        text-align: center;
-        pointer-events: none;
+            opacity: 0;
+            content: '';
+            z-index: 1;
+            background-color: rgb(168, 199, 54);
+            background-size: 1rem 1rem;
+            background-repeat: no-repeat;
+            background-position: center center;
+            color: #fff;
+            font-size: 1rem;
+            line-height: 2rem;
+            text-align: center;
+            pointer-events: none;
         }
 
         .carouselNoPrev::after {
-        content: '';
-        z-index: 1;
-        background-color: rgb(173, 48, 167);
-        background-size: 1rem 1rem;
-        background-repeat: no-repeat;
-        background-position: center center;
-        color: #fff;
-        font-size: 2rem;
-        line-height: 3rem;
-        text-align: center;
-        pointer-events: none;
+            content: '';
+            z-index: 1;
+            background-color: rgb(173, 48, 167);
+            background-size: 1rem 1rem;
+            background-repeat: no-repeat;
+            background-position: center center;
+            color: #fff;
+            font-size: 2rem;
+            line-height: 3rem;
+            text-align: center;
+            pointer-events: none;
         }
 
         
         .carouselNoPrev::before {
-        background-image: url("img/left-arrow.png");
+            background-image: url("img/left-arrow.png");
         }
         
         .carouselNoPrev::after {
-        background-image: url("img/right-arrow.png");
+            background-image: url("img/right-arrow.png");
         }
 
 
         .carouselNoNext {
-        position: relative;
-        perspective: 100px;
+            position: relative;
+            perspective: 100px;
         }
         
         .carouselNoNext::before,
         .carouselNoNext::after,
         .carouselNoNext__prev,
         .carouselNoNext__next {
-        position: absolute;
-        top: 0;
-        margin-top: 1.2%;
-        width: 2rem;
-        height: 2rem;
-        transform: translateY(-50%);
-        border-radius: 50%;
-        font-size: 0;
-        outline: 0;
+            position: absolute;
+            top: 0;
+            margin-top: 1.2%;
+            width: 2rem;
+            height: 2rem;
+            transform: translateY(-50%);
+            border-radius: 50%;
+            font-size: 0;
+            outline: 0;
         }
         
         .carouselNoNext::before,
         .carouselNoNext__prev {
-        left: 1rem;
+            left: 1rem;
         }
         
         .carouselNoNext::after,
         .carouselNoNext__next {
-        right: 1rem;
+            right: 1rem;
         } 
         
         .carouselNoNext::before {
-        content: '';
-        z-index: 1;
-        background-color: rgb(40, 185, 178);
-        background-size: 1rem 1rem;
-        background-repeat: no-repeat;
-        background-position: center center;
-        color: #fff;
-        font-size: 1rem;
-        line-height: 2rem;
-        text-align: center;
-        pointer-events: none;
+            content: '';
+            z-index: 1;
+            background-color: rgb(40, 185, 178);
+            background-size: 1rem 1rem;
+            background-repeat: no-repeat;
+            background-position: center center;
+            color: #fff;
+            font-size: 1rem;
+            line-height: 2rem;
+            text-align: center;
+            pointer-events: none;
         }
 
         .carouselNoNext::after {
-        opacity: 0;
-        content: '';
-        z-index: 1;
-        background-color: rgb(255, 255, 255);
-        background-size: 1rem 1rem;
-        background-repeat: no-repeat;
-        background-position: center center;
-        color: #fff;
-        font-size: 2rem;
-        line-height: 3rem;
-        text-align: center;
-        pointer-events: none;
+            opacity: 0;
+            content: '';
+            z-index: 1;
+            background-color: rgb(255, 255, 255);
+            background-size: 1rem 1rem;
+            background-repeat: no-repeat;
+            background-position: center center;
+            color: #fff;
+            font-size: 2rem;
+            line-height: 3rem;
+            text-align: center;
+            pointer-events: none;
         }
 
         
         .carouselNoNext::before {
-        background-image: url("img/left-arrow.png");
+            background-image: url("img/left-arrow.png");
         }
         
         .carouselNoNext::after {
-        background-image: url("img/right-arrow.png");
+            background-image: url("img/right-arrow.png");
         }
-
-
 
 
         /* fold */
@@ -439,6 +440,7 @@
 
     <script type="text/javascript" src="js/jquery-3.5.1.js"></script>
     <script type="text/javascript" charset="utf8" src="datatables/datatables.js"></script>
+    <script type="text/javascript" src="js/pagination.js"></script>
     <script>
 
         $(document).ready(function () {
@@ -594,7 +596,7 @@
                             <th>스코어</th>
                         </tr>
                         </thead>
-                        <tbody id="`+result_area+`">
+                        <tbody>
             `;
 
             for(var i = 0; i < window.newsResponseData.length; i++){
@@ -639,7 +641,10 @@
                     procc = `<td>no score</td>`
                     rred = `<td style='color:black'>` + sscoreWord + `</td>`;
                 }
+                
 
+                var hiddenData = escapeHtml(window.newsResponseData[i].rawData);
+                console.log(hiddenData);
                 
                 var htmlContents =
                 `
@@ -648,7 +653,9 @@
                         <td>` + window.newsResponseData[i].cmpyKey + `</td>
                         <td>` + window.newsResponseData[i].newsDate + `</td>
                         <td>` + window.newsResponseData[i].cmpyName + `</td>
-                        <td><a href="javascript:viewNewsContents(` + i +`);">` + window.newsResponseData[i].newsTtl + `</a></td>
+                        <td><a href="javascript:viewNewsContents(` + i +`);">` + window.newsResponseData[i].newsTtl + `</a>
+                            <input type="hidden" id="hidden` + i +`" value="` + hiddenData +`"/>
+                            </td>
                         `+ procc + `
                         `+ rred +`
                     </tr>
@@ -666,6 +673,15 @@
 
             $('#'+table_id).DataTable();
             close_pop();
+        }
+
+        var entityMap = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;', '/': '&#x2F;', '`': '&#x60;', '=': '&#x3D;' }; 
+        
+        function escapeHtml (string) { 
+            return String(string).replace(/[&<>"'`=\/]/g, 
+            function (s) { 
+                return entityMap[s]; 
+            }); 
         }
 
 
@@ -736,22 +752,22 @@
                 var downImg = '';
 
                 if (window.reportResponseData[i].docCaty == 'pdf'){
-                    downImg = `<img src="/img/pdf_down.png" style="width: auto; height: 14px;">`;
+                    downImg =   `
+                                    <a href="/file/` + window.reportResponseData[i].orgnFileName + `.pdf">
+                                        <img src="/img/pdf_down.png" style="width: auto; height: 14px;">
+                                    </a>
+                                `;
                 }
                 else if (window.reportResponseData[i].docCaty == 'hwp'){
-                    downImg = `<img src="/img/hwp_down.png" style="width: auto; height: 14px;">`;
+                    downImg =   `
+                                    <a href="/file/` + window.reportResponseData[i].orgnFileName + `.hwp">
+                                        <img src="/img/hwp_down.png" style="width: auto; height: 14px;">
+                                    </a>
+                                `;
                 }
                 else{
                     downImg = `<img src="/img/document_download.png" style="width: auto; height: 14px;">`;
                 }
-
-                /*
-                <td>
-                    <a id="documentFile" href="/data/KDB_화면설계서_v0.6.pdf" download>
-                        <img src="/img/document_download.png" style="width: auto; height: 50px;">
-                    </a>
-                </td>
-                */
 
                 var htmlContents =
                 `
@@ -762,7 +778,7 @@
                         `+ procc + `
                         `+ rred +`
                         <td>` + window.reportResponseData[i].docCaty + `</td>
-                        <td><a id="documentFile" href="C:\\Users\\sdb\\Documents\\doc_down_test\\KDB_ddd_v0.6.pdf" download>
+                        <td>
                             ` + downImg + `
                         </a>
                         </td>
@@ -783,34 +799,120 @@
             close_pop();
         }
 
+        function countPages(rowCount) {
+            var pageCount = 0;
+            if (rowCount >= 2000){
+                pageCount = parseInt(rowCount / 2000) + 1 ;
+            }else {
+                pageCount = 1;
+            }
 
-        function getNewsList(){
+            return pageCount;
+        }
+
+        function parameters() {
             var data = new Object();
-            var result_area = 'result_area_news';
 
             data.newsYear = parseInt($("#newsYear").val());
             data.gubun = $("#gubunNews").val();
 
-            if($("#gubunNews").val() == "month"){
+            if ($("#gubunNews").val() == "month") {
                 var temp = $("#choicesNews").val().split("월")[0];
                 console.log(temp);
                 data.gubunItem = parseInt(temp);
             }
-            else if($("#gubunNews").val() == "quarter"){
+            else if ($("#gubunNews").val() == "quarter") {
                 var temp = $("#choicesNews").val().split("분기")[0];
                 console.log(temp);
                 data.gubunItem = parseInt(temp);
             }
-            
+
             data.startDate = $("#date_from_news").val();
             data.endDate = $("#date_to_news").val();
-            data.searchWord = document.getElementById('search_company_news').value; 
+            data.searchWord = document.getElementById('search_company_news').value;
+            data.pageNum = 1;
+            data.rowCount = 0;
+            data.pageCount = 1;
+
+            return data;
+        }
+
+        function getRowCount(){
+            let datassss = parameters();
+            console.log(parameters());
+
+            $.ajax({
+                url: "/getRowCount",
+                method: 'POST',
+                data: datassss,
+                dataType: 'json',
+                success: function (responseData) {
+                    console.log(responseData);
+                    datassss.rowCount = responseData;
+                    if (datassss.rowCount == 0) {
+                        alert('뉴스기사가 없습니다');
+                        datassss.pageCount = 0;
+                        
+                    }else{
+                        alert('총 '+datassss.rowCount+ ' 건의 뉴스 기사가 검색됨');
+                        datassss.pageCount = countPages(datassss.rowCount);
+                        getChartQuery3(datassss.searchWord);
+                        paginationByRowCount(datassss);
+                    }
+                },
+                error: function () {
+                    alert('rowCount 조회실패');
+                    
+                }
+            
+            });
+            
+        }
+
+        function paginationByRowCount(data){
+            var pageLength = data.pageCount;
+            var sources = function () {
+                var result = [];
+          
+                for (var i = 1; i <= pageLength; i++) {
+                  result.push(i);
+                }
+          
+                return result;
+              }();
+
+            $('#pagination-container').pagination({
+                dataSource: sources,
+                pageSize: 1,
+                pageRange: 1,
+                showGoInput: true,
+                showGoButton: true,
+                showNavigator: true,
+                callback: function (pagination) {
+                    //    //     var html = _.template($('#template-demo').html(), {
+                    //    //         data: data
+                    //    //     });
+                    //    //$('#data-container').html(html);
+                    data.pageNum = pagination[0];
+                    //window.data = data ;
+                    //pageData = window.data ;
+                    console.log(pagination);
+                    getNewsList(data);
+                }
+            });
+        }
 
 
+
+
+        function getNewsList(data) {
+            
+            var result_area ="result_area_news";
+            var table_id = "example_news";
             console.log(data);
 
             loading1("뉴스");
-            
+
             $.ajax({
                 url: "/getNewsListByCondition",
                 method: 'POST',
@@ -824,9 +926,9 @@
 
                     $('#myModal').hide();
 
-                    document.getElementById('myModal').innerHTML =  modalhtml2;
+                    document.getElementById('myModal').innerHTML = modalhtml2;
                     $('#myModal').show();
-                    setTimeout(() => drawTable(result_area, ''), 1000);
+                    setTimeout(() => drawTable(result_area, table_id), 1000);
 
                 },
                 error: function () {
@@ -834,32 +936,14 @@
                     $('#myModal').hide();
                 }
             });
+
         }
 
-
         function getNewsListByCompanyName(companyName){
-            var data = new Object();
-            var result_area = 'result_area_news';
-
-            data.newsYear = parseInt($("#newsYear").val());
-            data.gubun = $("#gubunNews").val();
-
-            if($("#gubunNews").val() == "month"){
-                var temp = $("#choicesNews").val().split("월")[0];
-                console.log(temp);
-                data.gubunItem = parseInt(temp);
-            }
-            else if($("#gubunNews").val() == "quarter"){
-                var temp = $("#choicesNews").val().split("분기")[0];
-                console.log(temp);
-                data.gubunItem = parseInt(temp);
-            }
-            
-            data.startDate = $("#date_from_news").val();
-            data.endDate = $("#date_to_news").val();
-            data.searchWord = companyName
-
+            var data = parameters();
+            data.searchWord = companyName;
             console.log(data);
+            var result_area = 'result_area_news';
 
             loading1("뉴스");
             
@@ -870,19 +954,25 @@
                 dataType: 'json',
                 success: function (responseData) {
                     //alert('조회 성공');
+                    getChartQuery3(companyName);
                     console.log(responseData.length);
                     window.newsResponseData = responseData;
                     console.log(window.newsResponseData[0]);
 
                     $('#myModal').hide();
 
-                    document.getElementById('myModal').innerHTML =  modalhtml2;
+                    document.getElementById('myModal').innerHTML = modalhtml2;
                     $('#myModal').show();
                     setTimeout(() => drawTable(result_area, ''), 1000);
 
                 },
                 error: function () {
-                    alert('조회 실패');
+                    if (data.gubun == "custom" && (data.startDate == null || data.endData == null)){
+                        alert('시작 날짜 및 끝 날짜를 입력 해 주세요.');
+                    }
+                    else{
+                        alert('조회 실패');
+                    }
                     $('#myModal').hide();
                 }
             });
@@ -891,27 +981,7 @@
 
 
         function getReportList(){
-            var data = new Object();
-
-            data.reportYear = parseInt($("#reportYear").val());
-            data.gubun = $("#gubunReport").val();
-
-            if($("#gubunReport").val() == "month"){
-                var temp = $("#choicesReport").val().split("월")[0];
-                console.log(temp);
-                data.gubunItem = parseInt(temp);
-            }
-            else if($("#gubunReport").val() == "quarter"){
-                var temp = $("#choicesReport").val().split("분기")[0];
-                console.log(temp);
-                data.gubunItem = parseInt(temp);
-            }
-            
-            data.startDate = $("#date_from_report").val();
-            data.endDate = $("#date_to_report").val();
-            data.searchWord = document.getElementById('search_company_report').value; 
-
-
+            var data = parameters();
             console.log(data);
 
             loading1("행내 보고서");
@@ -935,7 +1005,12 @@
 
                 },
                 error: function () {
-                    alert('조회 실패');
+                    if (data.gubun == "custom" && (data.startDate == null || data.endData == null)){
+                        alert('시작 날짜 및 끝 날짜를 입력 해 주세요.');
+                    }
+                    else{
+                        alert('조회 실패');
+                    }
                     $('#myModal').hide();
                 }
             });
@@ -959,6 +1034,20 @@
             `
                 <div class="modal-loading">
                     <p style="text-align: center;"><span style="font-size: 14pt;"><b><span style="font-size: 24pt;">보고서 목록 불러오는 중...</span></b></span></p>
+                    <button type="button" class="close" onClick="close_pop();"></button>
+                    <p style="text-align: center; line-height: 1.5;"><br />화면에 표출중입니다.</p>
+                    <p style="text-align: center; line-height: 1.5;"><br />잠시만 기다려 주십시오.</p>
+                    <p><br /></p>
+                    <p style="text-align: center; line-height: 1.5;"><br />
+                        <img src="/img/loading.gif" align="center"/>
+                    </p>
+                </div>
+            `;
+
+        var modalhtml4 =
+            `
+                <div class="modal-loading">
+                    <p style="text-align: center;"><span style="font-size: 14pt;"><b><span style="font-size: 24pt;">차트 데이터 불러오는 중...</span></b></span></p>
                     <button type="button" class="close" onClick="close_pop();"></button>
                     <p style="text-align: center; line-height: 1.5;"><br />화면에 표출중입니다.</p>
                     <p style="text-align: center; line-height: 1.5;"><br />잠시만 기다려 주십시오.</p>
@@ -1083,6 +1172,9 @@
         }
 
         function setDisplay(){
+            itemChangeFold();
+            d3.selectAll('.visSVG').remove();
+
             if($('input:radio[id=news_radio]').is(':checked')){
                 document.getElementById('main_title').innerText = '뉴스 조회';
                 createEmptyDatatableNews();
@@ -1093,10 +1185,9 @@
                 $('.visualize').show();
                 $('#option_set_report').hide();
                 $('#option_set_news').show();
-                $('#linebreak').show();
                 
             }else{
-                document.getElementById('main_title').innerText = '행내 보고서 조회';
+                document.getElementById('main_title').innerText = '행내 보고서 조회';    
                 createEmptyDatatableReport();
                 $('#contents_section_report').show();
                 $('#contents_section_news').hide();      
@@ -1105,119 +1196,163 @@
                 $('.visualize').hide();
                 $('#option_set_news').hide();
                 $('#option_set_report').show();
-                $('#linebreak').hide();
             }
+            document.getElementById('pagination-container').innerHTML=``;
+        }
+
+        //산업별 뉴스 가져오기
+        function getNewsListByIndustryAndSubsidiary(gubunJaName,selectedName) {
+
+            var result_area = '';
+            var table_id = '';
+            var controllerUrl = "getNewsListByIndustryAndSubsidiary";
+            if (gubunJaName == "industry") {
+                result_area = 'result_area_industry';
+                table_id = 'industry_news_list';
+            }else {
+                result_area = 'result_area_subsidiary';
+                table_id = 'subsidiary_news_list';
+            };
+
+            console.log('산업명'+gubunJaName);
+            loading1("뉴스");
+
+            $.ajax({
+                url: "/"+controllerUrl+"/" ,
+                method: 'GET',
+                dataType: 'json',
+                data: { gubunJaName: gubunJaName, selectedName: selectedName },
+                success: function (responseData) {
+                    //alert('조회 성공');
+                    console.log(responseData.length);
+                    window.newsResponseData = responseData;
+                    console.log(window.newsResponseData[0]);
+
+                    $('#myModal').hide();
+
+                    document.getElementById('myModal').innerHTML = modalhtml2;
+                    $('#myModal').show();
+                    setTimeout(() => drawTable(result_area, table_id), 1000);
+
+                },
+                error: function () {
+                    alert('조회 실패');
+                    $('#myModal').hide();
+                }
+            });
+
+
         }
 
 
-        function getIndustryList() {
+            function getIndustryAndSubsidiaryList(gubunJa) {
 
-            industry_column_list = ["ㄱ","ㄴ","ㄷ","ㄹ","ㅁ","ㅂ","ㅅ","ㅇ","ㅈ","ㅊ","ㅋ","ㅌ","ㅍ","ㅎ","기타"];
-            industry_column_list_java = ['responseData[i].giYeok',
-                                        'responseData[i].niEun',
-                                        'responseData[i].diGeut',
-                                        'responseData[i].riEul',
-                                        'responseData[i].miEum',
-                                        'responseData[i].biEup',
-                                        'responseData[i].siOt',
-                                        'responseData[i].iEung',
-                                        'responseData[i].jiEut',
-                                        'responseData[i].chiEut',
-                                        'responseData[i].kiEuk',
-                                        'responseData[i].tiEuk',
-                                        'responseData[i].piEup',
-                                        'responseData[i].hiEut',
-                                        'responseData[i].guiTar'];
-                                        
+                industry_column_list = ["ㄱ", "ㄴ", "ㄷ", "ㄹ", "ㅁ", "ㅂ", "ㅅ", "ㅇ", "ㅈ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ", "기타"];
+                industry_column_list_java = ['responseData[i].giYeok',
+                    'responseData[i].niEun',
+                    'responseData[i].diGeut',
+                    'responseData[i].riEul',
+                    'responseData[i].miEum',
+                    'responseData[i].biEup',
+                    'responseData[i].siOt',
+                    'responseData[i].iEung',
+                    'responseData[i].jiEut',
+                    'responseData[i].chiEut',
+                    'responseData[i].kiEuk',
+                    'responseData[i].tiEuk',
+                    'responseData[i].piEup',
+                    'responseData[i].hiEut',
+                    'responseData[i].guiTar'];
 
-            console.log(industry_column_list[0]);
-            console.log(industry_column_list_java[0]);
+                console.log('구분자 자바스크립'+gubunJa);
+                console.log(industry_column_list[0]);
+                console.log(industry_column_list_java[0]);
 
-            $.ajax({
-                url: "/getIndustryList/",
-                method: 'GET',
-                dataType: 'json',
-                success: function (responseData) {
-                // alert('조회 성공');
-                // console.log(responseData);
-                    //console.log(responseData[0]);
-                    
-                    //var gigi = eval(industry_column_list_java[0]);
-                    //				console.log(gigi);
+                $.ajax({
+                    url: "/getIndustryAndSubsidiaryList/" + gubunJa,
+                    method: 'GET',
+                    dataType: 'json',
+                    success: function (responseData) {
+                        // alert('조회 성공');
+                        // console.log(responseData);
+                        //console.log(responseData[0]);
 
-                var tables = ``;
+                        //var gigi = eval(industry_column_list_java[0]);
+                        //				console.log(gigi);
 
-                var expend_all =`
+                        var tables = ``;
+
+                        var expend_all = `
                     <div class="buttons" align="right" >
                         <a id="toggleee" class="btn" style="min-width: 110px;" href="javascript:togglee();">전체 펼치기</a>
                         
                     </div>
                     `
 
-                for (var n = 0; n < 3; n++) {	
-                    var htmlTableHead = 
-                            `
+                        for (var n = 0; n < 3; n++) {
+                            var htmlTableHead =
+                                `
                             <table style="border-style: none none none none; border-width:2px; border-color:#ccc4c3;" rules=cols>
                                 <tr>
                             `;
 
-                    var tds = ``;
-                    
-                    if (n==0) {m=0; r=5};
-                    if (n==1) {m=5; r=10};
-                    if (n==2) {m=10; r=15};
+                            var tds = ``;
 
-                    
+                            if (n == 0) { m = 0; r = 5 };
+                            if (n == 1) { m = 5; r = 10 };
+                            if (n == 2) { m = 10; r = 15 };
 
-                    for (var j = m; j < r; j++) {
-                            var colName = industry_column_list[j];
-                            
-                            //console.log(colJavaName);
-                            var htmlhead =
-                                `
+                            for (var j = m; j < r; j++) {
+                                var colName = industry_column_list[j];
+
+                                //console.log(colJavaName);
+                                var htmlhead =
+                                    `
                                 
                                         <td style="padding-left: 16px; padding-right:10px;" valign="top" width="270">
                                             <div>
                                                 <ul >
                                                     <li class="menu">
-                                                        <a style="font-size: large; font-weight: bold;"> `+colName+` </a>
+                                                        <a style="font-size: large; font-weight: bold;"> `+ colName + ` </a>
                                                         
                                                         <ul class="list">
-                                                            <li style="font-size: 4px;">&nbsp; </li>
+                                                            <br/>
+                                                                                                                
                                 `;
 
-                            var htmlmiddle = 
+                                var htmlmiddle =
                                     `
                                         </ul>
                                         <ul class="hide">
                                     `;
 
-                                        k=0;	
-                                        for (var i = 0; i < responseData.length; i++) {
-                                            var colJavaName = eval(industry_column_list_java[j]);
-                                        // console.log('컬럼이름 '+colJavaName);
-                                            if (k<5){
-                                                if (colJavaName != null) {
-                                                var htmlli1 =
-                                                    `
-                                                    <li>`+ colJavaName +`</li>
-                                                    `;
-                                                
-                                                htmlhead +=  htmlli1;
-                                                    k++;
-                                                }
 
-                                            }else if ((colJavaName != null)){
-                                                var htmlli2 =
-                                                    `
-                                                    <li>`+ colJavaName +`</li>
+                                k = 0;
+                                for (var i = 0; i < responseData.length; i++) {
+                                    var colJavaName = eval(industry_column_list_java[j]);
+                                    // console.log('컬럼이름 '+colJavaName);
+                                    if (k < 5) {
+                                        if (colJavaName != null) {
+                                            var htmlli1 =
+                                                `
+                                                    <li>`+ colJavaName + `</li>
                                                     `;
-                                                htmlmiddle += htmlli2;
-                                            };
-                                        };
 
-                                
-                            var htmltail =
+                                            htmlhead += htmlli1;
+                                            k++;
+                                        }
+
+                                    } else if ((colJavaName != null)) {
+                                        var htmlli2 =
+                                            `
+                                                    <li>`+ colJavaName + `</li>
+                                                    `;
+                                        htmlmiddle += htmlli2;
+                                    };
+                                };
+
+
+                                var htmltail =
                                     `
                                                                 </ul>
                                                                 <a class="visivi"  > 더보기 ▼ </a>
@@ -1231,107 +1366,114 @@
                                                                 
                                                                 
                                 `;
-                            var td = htmlhead + htmlmiddle + htmltail;
+                                var td = htmlhead + htmlmiddle + htmltail;
 
-                            tds += td;
-                    };
-                    
-                    var htmlTableTail = 
-                        `
+                                tds += td;
+                            };
+
+                            var htmlTableTail =
+                                `
                                 </tr>
                             <br/>	
                             <br/>
                             </table>	
 
                         `
-                
-                    var htmltable1 = htmlTableHead + tds + htmlTableTail;
 
-                    tables += htmltable1;
-                };
+                            var htmltable1 = htmlTableHead + tds + htmlTableTail;
 
+                            tables += htmltable1;
+                        };
 
-                    document.getElementById('result_area_industry').innerHTML = expend_all + tables;
-
-                    
-                    $(".menu>a").click(function (){
-                
-                        //$('directoryresults').find('input');
-                        var lisf = $(this).siblings('ul');
-                        var submenu = $(lisf[1]);
-                        var lista = $(this).siblings('a');
-                        var folda1 = $(lista[0]);
-                        var folda2 = $(lista[1]);
-                        
-                        if (submenu.is(":visible")) {
-                            submenu.slideUp(400);
-                                    
-                            if ($(this).hasClass('closed')) {
-                                $(this).css('visibility', 'hidden');
-                            }
-                            if (folda1.hasClass('closed')) {
-                                folda1.css('visibility', 'hidden');
-                            }
-                            if (folda2.hasClass('closed')) {
-                                folda2.css('visibility', 'hidden');
-                            }
-                            if ($(this).hasClass('visivi')) {
-                                $(this).css('visibility', 'visible');
-                            }
-                            if (folda1.hasClass('visivi')) {
-                                folda1.css('visibility', 'visible');
-                            }
-                            if (folda2.hasClass('visivi')) {
-                                folda2.css('visibility', 'visible');
-                            }
-
-                        } else {
-                            submenu.slideDown(400);
-                                        
-                            if ($(this).hasClass('closed')) {
-                                $(this).css('visibility', 'visible');
-                            }
-                            if (folda1.hasClass('closed')) {
-                                folda1.css('visibility', 'visible');
-                            }
-                            if (folda2.hasClass('closed')) {
-                                folda2.css('visibility', 'visible');
-                            }
-                            if ($(this).hasClass('visivi')) {
-                                $(this).css('visibility', 'hidden');
-                            }
-                            if (folda1.hasClass('visivi')) {
-                                folda1.css('visibility', 'hidden');
-                            }
-                            if (folda2.hasClass('visivi')) {
-                                folda2.css('visibility', 'hidden');
-                            }
-                            
+                        if (gubunJa == 'industry') {
+                            document.getElementById('result_area_industry').innerHTML = expend_all + tables;
+                        }else {
+                            document.getElementById('result_area_subsidiary').innerHTML = expend_all + tables;
                         }
-                        console.log("im aclick in list");
-                    
+                        
+
+
+                        $(".menu>a").click(function () {
+
+                            //$('directoryresults').find('input');
+                            var lisf = $(this).siblings('ul');
+                            var submenu = $(lisf[1]);
+                            var lista = $(this).siblings('a');
+                            var folda1 = $(lista[0]);
+                            var folda2 = $(lista[1]);
+
+                            if (submenu.is(":visible")) {
+                                submenu.slideUp(400);
+
+                                if ($(this).hasClass('closed')) {
+                                    $(this).css('visibility', 'hidden');
+                                }
+                                if (folda1.hasClass('closed')) {
+                                    folda1.css('visibility', 'hidden');
+                                }
+                                if (folda2.hasClass('closed')) {
+                                    folda2.css('visibility', 'hidden');
+                                }
+                                if ($(this).hasClass('visivi')) {
+                                    $(this).css('visibility', 'visible');
+                                }
+                                if (folda1.hasClass('visivi')) {
+                                    folda1.css('visibility', 'visible');
+                                }
+                                if (folda2.hasClass('visivi')) {
+                                    folda2.css('visibility', 'visible');
+                                }
+
+                            } else {
+                                submenu.slideDown(400);
+
+                                if ($(this).hasClass('closed')) {
+                                    $(this).css('visibility', 'visible');
+                                }
+                                if (folda1.hasClass('closed')) {
+                                    folda1.css('visibility', 'visible');
+                                }
+                                if (folda2.hasClass('closed')) {
+                                    folda2.css('visibility', 'visible');
+                                }
+                                if ($(this).hasClass('visivi')) {
+                                    $(this).css('visibility', 'hidden');
+                                }
+                                if (folda1.hasClass('visivi')) {
+                                    folda1.css('visibility', 'hidden');
+                                }
+                                if (folda2.hasClass('visivi')) {
+                                    folda2.css('visibility', 'hidden');
+                                }
+
+                            }
+                            console.log("im aclick in list");
+
+                        });
+
+                        $(".list").on("click", "li", function () {
+                            alert($(this).text());
+                            var listName = $(this).text();
+                            console.log(listName);
+                            getNewsListByIndustryAndSubsidiary(gubunJa, listName);
+                        });
+
+                        $(".hide").on("click", "li", function () {
+                            alert($(this).text());
+                            var listName = $(this).text();
+                            console.log(listName);
+                            getNewsListByIndustryAndSubsidiary(gubunJa, listName);
+                        });
+
+                    },
+                    error: function () {
+                        alert('조회 실패');
+                    }
                 });
 
-                $(".list").on("click", "li", function() {
-                    alert($(this).text());
-                    var industryName = $(this).text();
-                    console.log(industryName);
-                    getNewsListByIndustry(industryName);
-                });
 
-                $(".hide").on("click", "li", function() {
-                    alert($(this).text());
-                    var industryName = $(this).text();
-                    console.log(industryName);
-                    getNewsListByIndustry(industryName);
-                });
 
-                },
-                error: function () {
-                    alert('조회 실패');
                 }
-            });
-        }
 
 
         function rmv() {
@@ -1386,9 +1528,6 @@
             // }, 1000);
             console.log('im trigger press enter')
         }
-
-
-
         
 
         //기업별 뉴스 가져오기
@@ -1468,7 +1607,7 @@
 
                     $('#myModal').hide();
 
-                    document.getElementById('myModal').innerHTML =  modalhtml2;
+                    document.getElementById('myModal').innerHTML = modalhtml2;
                     $('#myModal').show();
                     setTimeout(() => drawTable(result_area, table_id), 1000);
                     document.getElementById('main_title').innerHTML = `뉴스 목록 조회<h4 style="display:inline">(` + industryName + `)</h4>`;
@@ -1486,12 +1625,56 @@
             var selectItem = $("#fold").val();
             console.log(selectItem);
             var getFunction = ``;
+            var gubunSelectHTML = ` <a style="margin-right: -10px; margin-left: 10px;">구분</a>
+                                    <select name="gubun" id="gubunNews" class="select" style="width:120px;" onChange="itemChangeNews()">
+                                        <option value="year" selected="selected">연도별</option>
+                                        <option value="quarter">분기별</option>
+                                        <option value="month">월별</option>
+                                        <option value="custom">사용자 선택</option>
+                                    </select>
+                                    `;
+            var yearSelectHTML = `  
+                                        <a style="margin-right: -10px; margin-left: 10px;">연도 선택</a>
+                                        <select name="newsYear" id="newsYear" class="select" style="min-width: 80px; width:80px;">
+                                            <option value="2025">2025</option>
+                                            <option value="2024">2024</option>
+                                            <option value="2023">2023</option>
+                                            <option value="2022">2022</option>
+                                            <option value="2021">2021</option>
+                                            <option value="2020" selected="selected">2020</option>
+                                            <option value="2019">2019</option>
+                                            <option value="2018">2018</option>
+                                            <option value="2017">2017</option>
+                                            <option value="2016">2016</option>
+                                            <option value="2015">2015</option>
+                                        </select>
+                                    `;
+            var conditionHTML = `   
+                                        <a id="gubunText"></a>
+                                        <select name="choices" id="choicesNews" class="select">
+                                        </select>
+                                    `;
+            var datePickerHTML = `  
+                                        <span class="date_picker">
+                                            <label for="date_from" class="label" style="margin-right: -1px; margin-left: 10px;">기간</label>
+                                            <span class="input_date"><input type="text" class="input_text" id="date_from_news"></span>
+                                            <span class="dash">-</span>
+                                            <span class="input_date"><input type="text" class="input_text" id="date_to_news"></span>
+                                        </span>
+                                    `;
             var searchBoxHTML = `<input id="search_company_news" type="text" placeholder="검색" value="" onkeypress="if( event.keyCode == 13 ){` + getFunction + `}">
                 <button id="search_button_news" class="btn_search" onclick="` + getFunction + `"><span class="blind" >검색</span></button>`;
             document.getElementById('search_box_news').innerHTML = searchBoxHTML;
 
+            document.getElementById('gubunSelect').innerHTML = gubunSelectHTML;
+            document.getElementById('yearSelect').innerHTML = yearSelectHTML;
+            document.getElementById('condition').innerHTML = conditionHTML;
+        
+            itemChangeNews();
+
             if(selectItem == "company"){
                 createEmptyDatatableNews();
+                $('#chartDiv').show();
                 $('#result_area_subsidiary').hide();
                 $('#result_area_industry').hide();
                 $('#yearSelect').show();
@@ -1504,6 +1687,7 @@
                 getFunction = `getCompanyListByCompany();`;
             }
             else if(selectItem == "subsidiary"){
+                getIndustryAndSubsidiaryList('subsidiary');
                 $('#result_area_industry').hide();
                 $('#result_area_news').hide();
                 $('#yearSelect').hide();
@@ -1513,9 +1697,11 @@
                 document.getElementById("search_button_news").disabled = true;
                 document.getElementById('search_company_news').value='';
                 $('#result_area_subsidiary').show();
+                $('#chartDiv').hide();
+                
             }
             else if(selectItem == "industry"){
-                getIndustryList();
+                getIndustryAndSubsidiaryList('industry');
                 $('#result_area_news').hide();
                 $('#result_area_subsidiary').hide();
                 $('#yearSelect').hide();
@@ -1525,9 +1711,11 @@
                 document.getElementById("search_button_news").disabled = true;
                 document.getElementById('search_company_news').value='';
                 $('#result_area_industry').show();
+                $('#chartDiv').hide();
             }
             else if(selectItem == "keyword"){
                 createEmptyDatatableNews();
+                $('#chartDiv').show();
                 $('#result_area_subsidiary').hide();
                 $('#result_area_industry').hide();
                 $('#yearSelect').show();
@@ -1537,7 +1725,7 @@
                 document.getElementById("search_button_news").disabled = false;
                 document.getElementById('search_company_news').value='';
                 $('#result_area_news').show();
-                getFunction = `getChartQuery2();getNewsList();`;
+                getFunction = `getRowCount();`;
             }
 
             searchBoxHTML = `<input id="search_company_news" type="text" placeholder="검색" value="" onkeypress="if( event.keyCode == 13 ){` + getFunction + `}">
@@ -1545,6 +1733,9 @@
             document.getElementById('search_box_news').innerHTML = searchBoxHTML;       
         }
 
+        function createEmptyChartDiv(){
+            document.getElementById('chartDiv').innerHTML = chartDivHTML;
+        }
 
         function createEmptyDatatableNews(){
             var newsTableBody = ``;
@@ -1801,8 +1992,8 @@
 
 
                             <div class="search_box" id="search_box_news">
-                                <input id="search_company_news" type="text" placeholder="검색" value="" onkeypress="if( event.keyCode == 13 ){getChartQuery2();getCompanyListByCompany();}">
-                                <button id="search_button_news" class="btn_search" onclick="getChartQuery2();getCompanyListByCompany();"><span class="blind" >검색</span></button>
+                                <input id="search_company_news" type="text" placeholder="검색" value="" onkeypress="if( event.keyCode == 13 ){getCompanyListByCompany();}">
+                                <button id="search_button_news" class="btn_search" onclick="getCompanyListByCompany();"><span class="blind" >검색</span></button>
                             </div>
                             
                         </div>
@@ -1862,9 +2053,6 @@
 
 
                         <div id='chartDiv' style='display:block'>
-                        
-
-                            <p id="linebreak"><br></p>
     
                             <div class="contents">
     
@@ -1998,6 +2186,12 @@
       
                         <!-- news section -->
                         <div class="section" id="contents_section_news">
+
+                            <span class="hiihihihiihidden" >
+                                <span  id='pagination-container'  >
+    
+                                </span>
+                            </span >
                             
                             <div id="result_area_news">
                                 
@@ -2038,6 +2232,10 @@
 
                 <!-- modal area -->
                 <div id="myModal" class="modal">
+                    <!-- Modal content -->
+                </div>
+
+                <div id="chartModal" class="modal">
                     <!-- Modal content -->
                 </div>
 

@@ -10,6 +10,7 @@
     <!-- <link rel="stylesheet" type="text/css" href="datatables/datatables.css"> -->
     <link rel="stylesheet" type="text/css" href="css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="css/w3.css">
+    <link rel="stylesheet" href="css/pagination.css">
     <style>
         
         /*chart part*/
@@ -145,236 +146,234 @@
 
 
         * {
-        box-sizing: border-box;
-        /*scrollbar-color: transparent transparent;*/ /* thumb and track color */
-        scrollbar-width: 5px;
+            box-sizing: border-box;
+            /*scrollbar-color: transparent transparent;*/ /* thumb and track color */
+            scrollbar-width: 5px;
         }
         
         *::-webkit-scrollbar {
-        width: 5;
+            width: 5;
         }
         
         *::-webkit-scrollbar-track {
-        /*background: transparent;*/
+            /*background: transparent;*/
         }
         
         *::-webkit-scrollbar-thumb {
-        /*background: transparent;*/
-        border: none;
+            /*background: transparent;*/
+            border: none;
         }
         
         * {
-        -ms-overflow-style: none;
+            -ms-overflow-style: none;
         }
 
         .carousel {
-        position: relative;
-        /*margin-top: 12%;*/
-        filter: drop-shadow(0 0 10px #0003);
-        perspective: 100px;
-        background-color: rgb(199, 190, 108);
+            position: relative;
+            /*margin-top: 12%;*/
+            filter: drop-shadow(0 0 10px #0003);
+            perspective: 100px;
+            background-color: rgb(199, 190, 108);
         }
         
         .carousel::before,
         .carousel::after,
         .carousel__prev,
         .carousel__next {
-        position: absolute;
-        top: 0;
-        margin-top: 1.2%;
-        width: 2rem;
-        height: 2rem;
-        transform: translateY(-50%);
-        border-radius: 50%;
-        font-size: 0;
-        outline: 0;
+            position: absolute;
+            top: 0;
+            margin-top: 1.2%;
+            width: 2rem;
+            height: 2rem;
+            transform: translateY(-50%);
+            border-radius: 50%;
+            font-size: 0;
+            outline: 0;
         }
         
         .carousel::before,
         .carousel__prev {
-        left: 1rem;
+            left: 1rem;
         }
         
         .carousel::after,
         .carousel__next {
-        right: 1rem;
+            right: 1rem;
         } 
         
         .carousel::before {
-        content: '';
-        z-index: 1;
-        /*background-color: #333;*/
-        background-color: rgb(49, 156, 22);
-        background-size: 1rem 1rem;
-        background-repeat: no-repeat;
-        background-position: center center;
-        color: #fff;
-        font-size: 1rem;
-        line-height: 2rem;
-        text-align: center;
-        pointer-events: none;
+            content: '';
+            z-index: 1;
+            /*background-color: #333;*/
+            background-color: rgb(49, 156, 22);
+            background-size: 1rem 1rem;
+            background-repeat: no-repeat;
+            background-position: center center;
+            color: #fff;
+            font-size: 1rem;
+            line-height: 2rem;
+            text-align: center;
+            pointer-events: none;
         }
 
         .carousel::after {
-        content: '';
-        z-index: 1;
-        background-color: rgb(141, 29, 29);
-        background-size: 1rem 1rem;
-        background-repeat: no-repeat;
-        background-position: center center;
-        color: #fff;
-        font-size: 2rem;
-        line-height: 3rem;
-        text-align: center;
-        pointer-events: none;
+            content: '';
+            z-index: 1;
+            background-color: rgb(141, 29, 29);
+            background-size: 1rem 1rem;
+            background-repeat: no-repeat;
+            background-position: center center;
+            color: #fff;
+            font-size: 2rem;
+            line-height: 3rem;
+            text-align: center;
+            pointer-events: none;
         }
 
         .carousel::before {
-        background-image: url("img/left-arrow.png");
+            background-image: url("img/left-arrow.png");
         }
         
         .carousel::after {
-        background-image: url("img/right-arrow.png");
+            background-image: url("img/right-arrow.png");
         } 
 
         .carouselNoPrev {
-        position: relative;
-        perspective: 100px;
+            position: relative;
+            perspective: 100px;
         }
         
         .carouselNoPrev::before,
         .carouselNoPrev::after,
         .carouselNoPrev__prev,
         .carouselNoPrev__next {
-        position: absolute;
-        top: 0;
-        margin-top: 1.2%;
-        width: 2rem;
-        height: 2rem;
-        transform: translateY(-50%);
-        border-radius: 50%;
-        font-size: 0;
-        outline: 0;
+            position: absolute;
+            top: 0;
+            margin-top: 1.2%;
+            width: 2rem;
+            height: 2rem;
+            transform: translateY(-50%);
+            border-radius: 50%;
+            font-size: 0;
+            outline: 0;
         }
         
         .carouselNoPrev::before,
         .carouselNoPrev__prev {
-        left: 1rem;
+            left: 1rem;
         }
         
         .carouselNoPrev::after,
         .carouselNoPrev__next {
-        right: 1rem;
+            right: 1rem;
         } 
         
         .carouselNoPrev::before {
-        opacity: 0;
-        content: '';
-        z-index: 1;
-        background-color: rgb(168, 199, 54);
-        background-size: 1rem 1rem;
-        background-repeat: no-repeat;
-        background-position: center center;
-        color: #fff;
-        font-size: 1rem;
-        line-height: 2rem;
-        text-align: center;
-        pointer-events: none;
+            opacity: 0;
+            content: '';
+            z-index: 1;
+            background-color: rgb(168, 199, 54);
+            background-size: 1rem 1rem;
+            background-repeat: no-repeat;
+            background-position: center center;
+            color: #fff;
+            font-size: 1rem;
+            line-height: 2rem;
+            text-align: center;
+            pointer-events: none;
         }
 
         .carouselNoPrev::after {
-        content: '';
-        z-index: 1;
-        background-color: rgb(173, 48, 167);
-        background-size: 1rem 1rem;
-        background-repeat: no-repeat;
-        background-position: center center;
-        color: #fff;
-        font-size: 2rem;
-        line-height: 3rem;
-        text-align: center;
-        pointer-events: none;
+            content: '';
+            z-index: 1;
+            background-color: rgb(173, 48, 167);
+            background-size: 1rem 1rem;
+            background-repeat: no-repeat;
+            background-position: center center;
+            color: #fff;
+            font-size: 2rem;
+            line-height: 3rem;
+            text-align: center;
+            pointer-events: none;
         }
 
         
         .carouselNoPrev::before {
-        background-image: url("img/left-arrow.png");
+            background-image: url("img/left-arrow.png");
         }
         
         .carouselNoPrev::after {
-        background-image: url("img/right-arrow.png");
+            background-image: url("img/right-arrow.png");
         }
 
 
         .carouselNoNext {
-        position: relative;
-        perspective: 100px;
+            position: relative;
+            perspective: 100px;
         }
         
         .carouselNoNext::before,
         .carouselNoNext::after,
         .carouselNoNext__prev,
         .carouselNoNext__next {
-        position: absolute;
-        top: 0;
-        margin-top: 1.2%;
-        width: 2rem;
-        height: 2rem;
-        transform: translateY(-50%);
-        border-radius: 50%;
-        font-size: 0;
-        outline: 0;
+            position: absolute;
+            top: 0;
+            margin-top: 1.2%;
+            width: 2rem;
+            height: 2rem;
+            transform: translateY(-50%);
+            border-radius: 50%;
+            font-size: 0;
+            outline: 0;
         }
         
         .carouselNoNext::before,
         .carouselNoNext__prev {
-        left: 1rem;
+            left: 1rem;
         }
         
         .carouselNoNext::after,
         .carouselNoNext__next {
-        right: 1rem;
+            right: 1rem;
         } 
         
         .carouselNoNext::before {
-        content: '';
-        z-index: 1;
-        background-color: rgb(40, 185, 178);
-        background-size: 1rem 1rem;
-        background-repeat: no-repeat;
-        background-position: center center;
-        color: #fff;
-        font-size: 1rem;
-        line-height: 2rem;
-        text-align: center;
-        pointer-events: none;
+            content: '';
+            z-index: 1;
+            background-color: rgb(40, 185, 178);
+            background-size: 1rem 1rem;
+            background-repeat: no-repeat;
+            background-position: center center;
+            color: #fff;
+            font-size: 1rem;
+            line-height: 2rem;
+            text-align: center;
+            pointer-events: none;
         }
 
         .carouselNoNext::after {
-        opacity: 0;
-        content: '';
-        z-index: 1;
-        background-color: rgb(255, 255, 255);
-        background-size: 1rem 1rem;
-        background-repeat: no-repeat;
-        background-position: center center;
-        color: #fff;
-        font-size: 2rem;
-        line-height: 3rem;
-        text-align: center;
-        pointer-events: none;
+            opacity: 0;
+            content: '';
+            z-index: 1;
+            background-color: rgb(255, 255, 255);
+            background-size: 1rem 1rem;
+            background-repeat: no-repeat;
+            background-position: center center;
+            color: #fff;
+            font-size: 2rem;
+            line-height: 3rem;
+            text-align: center;
+            pointer-events: none;
         }
 
         
         .carouselNoNext::before {
-        background-image: url("img/left-arrow.png");
+            background-image: url("img/left-arrow.png");
         }
         
         .carouselNoNext::after {
-        background-image: url("img/right-arrow.png");
+            background-image: url("img/right-arrow.png");
         }
-
-
 
 
         /* fold */
@@ -439,6 +438,7 @@
 
     <script type="text/javascript" src="js/jquery-3.5.1.js"></script>
     <script type="text/javascript" charset="utf8" src="datatables/datatables.js"></script>
+    <script type="text/javascript" src="js/pagination.js"></script>
     <script>
 
         $(document).ready(function () {
@@ -594,7 +594,7 @@
                             <th>스코어</th>
                         </tr>
                         </thead>
-                        <tbody id="`+result_area+`">
+                        <tbody>
             `;
 
             for(var i = 0; i < window.newsResponseData.length; i++){
@@ -736,22 +736,22 @@
                 var downImg = '';
 
                 if (window.reportResponseData[i].docCaty == 'pdf'){
-                    downImg = `<img src="/img/pdf_down.png" style="width: auto; height: 14px;">`;
+                    downImg =   `
+                                    <a href="/file/` + window.reportResponseData[i].orgnFileName + `.pdf">
+                                        <img src="/img/pdf_down.png" style="width: auto; height: 14px;">
+                                    </a>
+                                `;
                 }
                 else if (window.reportResponseData[i].docCaty == 'hwp'){
-                    downImg = `<img src="/img/hwp_down.png" style="width: auto; height: 14px;">`;
+                    downImg =   `
+                                    <a href="/file/` + window.reportResponseData[i].orgnFileName + `.hwp">
+                                        <img src="/img/hwp_down.png" style="width: auto; height: 14px;">
+                                    </a>
+                                `;
                 }
                 else{
                     downImg = `<img src="/img/document_download.png" style="width: auto; height: 14px;">`;
                 }
-
-                /*
-                <td>
-                    <a id="documentFile" href="/data/KDB_화면설계서_v0.6.pdf" download>
-                        <img src="/img/document_download.png" style="width: auto; height: 50px;">
-                    </a>
-                </td>
-                */
 
                 var htmlContents =
                 `
@@ -762,7 +762,7 @@
                         `+ procc + `
                         `+ rred +`
                         <td>` + window.reportResponseData[i].docCaty + `</td>
-                        <td><a id="documentFile" href="C:\\Users\\sdb\\Documents\\doc_down_test\\KDB_ddd_v0.6.pdf" download>
+                        <td>
                             ` + downImg + `
                         </a>
                         </td>
@@ -783,34 +783,114 @@
             close_pop();
         }
 
+        function countPages(rowCount) {
+            var pageCount = 0;
+            if (rowCount >= 2000){
+                pageCount = parseInt(rowCount / 2000) + 1 ;
+            }else {
+                pageCount = 1;
+            }
 
-        function getNewsList(){
+            return pageCount;
+        }
+
+        function getRowCount(){
             var data = new Object();
-            var result_area = 'result_area_news';
 
             data.newsYear = parseInt($("#newsYear").val());
             data.gubun = $("#gubunNews").val();
 
-            if($("#gubunNews").val() == "month"){
+            if ($("#gubunNews").val() == "month") {
                 var temp = $("#choicesNews").val().split("월")[0];
                 console.log(temp);
                 data.gubunItem = parseInt(temp);
             }
-            else if($("#gubunNews").val() == "quarter"){
+            else if ($("#gubunNews").val() == "quarter") {
                 var temp = $("#choicesNews").val().split("분기")[0];
                 console.log(temp);
                 data.gubunItem = parseInt(temp);
             }
-            
+
             data.startDate = $("#date_from_news").val();
             data.endDate = $("#date_to_news").val();
-            data.searchWord = document.getElementById('search_company_news').value; 
+            data.searchWord = document.getElementById('search_company_news').value;
+            data.pageNum = 1;
+            data.rowCount = 0;
+            data.pageCount = 1;
+            console.log(data);
+
+            $.ajax({
+                url: "/getRowCount",
+                method: 'POST',
+                data: data,
+                dataType: 'json',
+                success: function (responseData) {
+                    console.log(responseData);
+                    data.rowCount = responseData;
+                    if (data.rowCount == 0) {
+                        alert('뉴스기사가 없습니다');
+                        data.pageCount = 0;
+                        
+                    }else{
+                        alert('총 '+data.rowCount+ ' 건의 뉴스 기사가 검색됨');
+                        data.pageCount = countPages(data.rowCount);
+
+                        paginationByRowCount(data);
+                    }
+                },
+                error: function () {
+                    alert('rowCount 조회실패');
+                    
+                }
+            
+            });
+            
+        }
+
+        function paginationByRowCount(data){
+            var pageLength = data.pageCount;
+            var sources = function () {
+                var result = [];
+          
+                for (var i = 1; i <= pageLength; i++) {
+                  result.push(i);
+                }
+          
+                return result;
+              }();
+
+            $('#pagination-container').pagination({
+                dataSource: sources,
+                pageSize: 1,
+                pageRange: 1,
+                showGoInput: true,
+                showGoButton: true,
+                showNavigator: true,
+                callback: function (pagination) {
+                    //    //     var html = _.template($('#template-demo').html(), {
+                    //    //         data: data
+                    //    //     });
+                    //    //$('#data-container').html(html);
+                    data.pageNum = pagination[0];
+                    //window.data = data ;
+                    //pageData = window.data ;
+                    console.log(pagination);
+                    getNewsList(data);
+                }
+            });
+        }
 
 
+
+
+        function getNewsList(data) {
+            
+            var result_area ="result_area_news"
+            var table_id = "example_news"
             console.log(data);
 
             loading1("뉴스");
-            
+
             $.ajax({
                 url: "/getNewsListByCondition",
                 method: 'POST',
@@ -824,9 +904,22 @@
 
                     $('#myModal').hide();
 
-                    document.getElementById('myModal').innerHTML =  modalhtml2;
+                    var modalhtml2 =
+                        `
+                    <div class="modal-loading">
+                        <p style="text-align: center;"><span style="font-size: 14pt;"><b><span style="font-size: 24pt;">뉴스 목록 불러오는 중...</span></b></span></p>
+                        <button type="button" class="close" onClick="close_pop();"></button>
+                        <p style="text-align: center; line-height: 1.5;"><br />화면에 표출중입니다.</p>
+                        <p style="text-align: center; line-height: 1.5;"><br />잠시만 기다려 주십시오.</p>
+                        <p><br /></p>
+                        <p style="text-align: center; line-height: 1.5;"><br />
+                            <img src="/img/loading.gif" align="center"/>
+                        </p>
+                    </div>
+                `;
+                    document.getElementById('myModal').innerHTML = modalhtml2;
                     $('#myModal').show();
-                    setTimeout(() => drawTable(result_area, ''), 1000);
+                    setTimeout(() => drawTable(result_area, table_id), 1000);
 
                 },
                 error: function () {
@@ -834,6 +927,7 @@
                     $('#myModal').hide();
                 }
             });
+
         }
 
 
@@ -870,6 +964,7 @@
                 dataType: 'json',
                 success: function (responseData) {
                     //alert('조회 성공');
+                    getChartQuery3(companyName);
                     console.log(responseData.length);
                     window.newsResponseData = responseData;
                     console.log(window.newsResponseData[0]);
@@ -882,7 +977,12 @@
 
                 },
                 error: function () {
-                    alert('조회 실패');
+                    if (data.gubun == "custom" && (data.startDate == null || data.endData == null)){
+                        alert('시작 날짜 및 끝 날짜를 입력 해 주세요.');
+                    }
+                    else{
+                        alert('조회 실패');
+                    }
                     $('#myModal').hide();
                 }
             });
@@ -935,7 +1035,12 @@
 
                 },
                 error: function () {
-                    alert('조회 실패');
+                    if (data.gubun == "custom" && (data.startDate == null || data.endData == null)){
+                        alert('시작 날짜 및 끝 날짜를 입력 해 주세요.');
+                    }
+                    else{
+                        alert('조회 실패');
+                    }
                     $('#myModal').hide();
                 }
             });
@@ -1085,6 +1190,7 @@
         function setDisplay(){
             if($('input:radio[id=news_radio]').is(':checked')){
                 document.getElementById('main_title').innerText = '뉴스 조회';
+                d3.selectAll('.visSVG').remove();
                 createEmptyDatatableNews();
                 $('#contents_section_news').show();
                 $('#contents_section_report').hide();
@@ -1097,6 +1203,7 @@
                 
             }else{
                 document.getElementById('main_title').innerText = '행내 보고서 조회';
+                d3.selectAll('.visSVG').remove();
                 createEmptyDatatableReport();
                 $('#contents_section_report').show();
                 $('#contents_section_news').hide();      
@@ -1386,9 +1493,6 @@
             // }, 1000);
             console.log('im trigger press enter')
         }
-
-
-
         
 
         //기업별 뉴스 가져오기
@@ -1537,7 +1641,7 @@
                 document.getElementById("search_button_news").disabled = false;
                 document.getElementById('search_company_news').value='';
                 $('#result_area_news').show();
-                getFunction = `getChartQuery2();getNewsList();`;
+                getFunction = `getRowCount();`;
             }
 
             searchBoxHTML = `<input id="search_company_news" type="text" placeholder="검색" value="" onkeypress="if( event.keyCode == 13 ){` + getFunction + `}">
@@ -1545,6 +1649,9 @@
             document.getElementById('search_box_news').innerHTML = searchBoxHTML;       
         }
 
+        function createEmptyChartDiv(){
+            document.getElementById('chartDiv').innerHTML = chartDivHTML;
+        }
 
         function createEmptyDatatableNews(){
             var newsTableBody = ``;
@@ -1801,8 +1908,8 @@
 
 
                             <div class="search_box" id="search_box_news">
-                                <input id="search_company_news" type="text" placeholder="검색" value="" onkeypress="if( event.keyCode == 13 ){getChartQuery2();getCompanyListByCompany();}">
-                                <button id="search_button_news" class="btn_search" onclick="getChartQuery2();getCompanyListByCompany();"><span class="blind" >검색</span></button>
+                                <input id="search_company_news" type="text" placeholder="검색" value="" onkeypress="if( event.keyCode == 13 ){getCompanyListByCompany();}">
+                                <button id="search_button_news" class="btn_search" onclick="getCompanyListByCompany();"><span class="blind" >검색</span></button>
                             </div>
                             
                         </div>
@@ -1862,9 +1969,6 @@
 
 
                         <div id='chartDiv' style='display:block'>
-                        
-
-                            <p id="linebreak"><br></p>
     
                             <div class="contents">
     
@@ -1998,6 +2102,12 @@
       
                         <!-- news section -->
                         <div class="section" id="contents_section_news">
+
+                            <span class="hiihihihiihidden" >
+                                <span  id='pagination-container'  >
+    
+                                </span>
+                            </span >
                             
                             <div id="result_area_news">
                                 

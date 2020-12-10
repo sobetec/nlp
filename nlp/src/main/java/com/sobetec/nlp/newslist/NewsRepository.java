@@ -63,9 +63,20 @@ public class NewsRepository implements NewsRepositoryImpl {
 	}
 	
 	@Override
-	public List<News> getNewsListByIndustry(String instCode) throws Exception {
+	public List<Industry> getSubsidiaryList() throws Exception {
+		return sqlSession.selectList("mapper.newsMapper.selectSubsidiaryList");
+	}
+	
+	@Override
+	public List<News> getNewsListByIndustry(String selectedName) throws Exception {
 
-		return sqlSession.selectList("mapper.newsMapper.selectNewsListByIndustry", instCode);
+		return sqlSession.selectList("mapper.newsMapper.selectNewsListByIndustry", selectedName);
+	}
+	
+	@Override
+	public List<News> getNewsListBySubsidiary(String selectedName) throws Exception {
+
+		return sqlSession.selectList("mapper.newsMapper.selectNewsListBySubsidiary", selectedName);
 	}
 
 	@Override
@@ -89,5 +100,22 @@ public class NewsRepository implements NewsRepositoryImpl {
 		return sqlSession.selectList("mapper.newsMapper.selectNewsListByCompanyName",newsCondition);
 	}
 	
+	@Override
+	public int getRowCount(NewsCondition newsCondition) throws Exception {
+		if (newsCondition.getGubun().equals("custom")) {
+			String startDate = newsCondition.getStartDate();
+			String endDate = newsCondition.getEndDate();
+			String sd[] = startDate.split("/");
+			String ed[] = endDate.split("/");
+			startDate = sd[2] + "-" + sd[0] + "-" + sd[1];
+			endDate = ed[2] + "-" + ed[0] + "-" + ed[1];
+			newsCondition.setStartDate(startDate);
+			newsCondition.setEndDate(endDate);
+		}
+		int rowCount = sqlSession.selectOne("mapper.newsMapper.selectRowCount",newsCondition);
+//		int rows = rowCount.getRowCount();
+		System.out.println("로우카운트="+ rowCount);
+		return rowCount;
+	}
 	
 }

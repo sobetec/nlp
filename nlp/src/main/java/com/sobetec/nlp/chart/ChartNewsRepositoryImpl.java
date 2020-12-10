@@ -11,4 +11,9 @@ public interface ChartNewsRepositoryImpl {
 	List<NewsKeyword> getDocFreqCounts() throws Exception;
 
 	List<Integer> getAllNewCount() throws Exception;
+	
+	List<News> getChartNewsByCondition(ChartCondition chartCondition) throws Exception;
+	
+	List<Stocks> getChartStocksByCondition(ChartCondition chartCondition) throws Exception;
+		
 }

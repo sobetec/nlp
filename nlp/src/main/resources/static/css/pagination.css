@@ -3,8 +3,9 @@
     font-family: Marmelad, "Lucida Grande", Arial, "Hiragino Sans GB", Georgia, sans-serif;
     font-size: 14px;
     box-sizing: initial;
-    width: 600px;  
-    padding-bottom: 5px;
+    width: 650px;  
+    
+    padding-bottom: 10px;
     
     
 }
@@ -345,7 +346,9 @@
 }
 
 .paginationjs .paginationjs-pages li.paginationjs-next {
+    
     border-right: 1px solid #aaa\9
+    
 }
 
 .paginationjs .paginationjs-go-input>input[type=text] {

@@ -12,13 +12,21 @@ public interface NewsRepositoryImpl {
 
 	List<News> getChartNewsByCompany(String cmpyNameOnly) throws Exception;
 
-	List<Industry> getIndustryList() throws Exception;
-
 	List<News> getNewsListByIndustry(String instCode) throws Exception;
 	
 	List<String> getCompanyListByCompany(String companyName) throws Exception;
 	
 	List<News> getNewsListByCompanyName(NewsCondition newsCondition) throws Exception;
+
+	int getRowCount(NewsCondition newsCondition) throws Exception;
+
+	List<Industry> getSubsidiaryList() throws Exception;
+	
+	List<Industry> getIndustryList() throws Exception;
+
+	List<News> getNewsListBySubsidiary(String instCode) throws Exception;
+
+	
 	
 	
 	

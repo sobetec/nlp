@@ -1,6 +1,6 @@
-package com.sobetec.nlp.newslist;
+package com.sobetec.nlp.chart;
 
-public class NewsCondition {
+public class ChartCondition {
 	
 	private int newsYear;
 	private String gubun;
@@ -70,10 +70,11 @@ public class NewsCondition {
 	
 	@Override
 	public String toString() {
-		return "NewsCondition [newsYear=" + newsYear + ", gubun=" + gubun + ", gubunItem=" + gubunItem + ", startDate="
+		return "ChartCondition [newsYear=" + newsYear + ", gubun=" + gubun + ", gubunItem=" + gubunItem + ", startDate="
 				+ startDate + ", endDate=" + endDate + ", searchWord=" + searchWord + ", pageNum=" + pageNum
 				+ ", rowCount=" + rowCount + ", pageCount=" + pageCount + "]";
 	}
+	
 	
 	
 	

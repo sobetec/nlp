@@ -1444,6 +1444,7 @@
         document.getElementById('search_box_news').innerHTML = searchBoxHTML;
 
         if(selectItem == "company"){
+            d3.selectAll('.visSVG').remove();
             createEmptyDatatableNews();
             $('#result_area_subsidiary').hide();
             $('#result_area_industry').hide();
@@ -1480,6 +1481,7 @@
             $('#result_area_industry').show();
         }
         else if(selectItem == "keyword"){
+            d3.selectAll('.visSVG').remove();
             createEmptyDatatableNews();
             $('#result_area_subsidiary').hide();
             $('#result_area_industry').hide();

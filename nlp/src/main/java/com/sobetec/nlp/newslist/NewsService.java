@@ -86,11 +86,15 @@ public class NewsService {
         return listNews; 
     }
     
-    public List<News> getNewsListByIndustry(String instCode) throws Exception {
+    public List<News> getNewsListByIndustryAndSubsidiary(String gubunJaName, String selectedName) throws Exception {
     	
     	List<News> listNews = new ArrayList<News>();
-    	listNews = repository.getNewsListByIndustry(instCode);
-    	
+    	if (gubunJaName.equals("industry")) {
+    		listNews = repository.getNewsListByIndustry(selectedName);
+                	
+    	}else {
+    		listNews = repository.getNewsListBySubsidiary(selectedName);
+    	}
     	for(int i = 0; i < listNews.size(); i++) {
     		
     		if (listNews.get(i).getTaScre() != null) {
@@ -111,7 +115,7 @@ public class NewsService {
     		listNews.get(i).setTaScreWord("없음");
     		}
     	}
-    	
+        	
         return listNews; 
     }
     

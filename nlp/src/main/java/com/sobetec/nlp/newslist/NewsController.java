@@ -1,5 +1,6 @@
 package com.sobetec.nlp.newslist;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -60,14 +62,24 @@ public class NewsController {
 		return newsService.getNewsList(newsCondition);
 	}
 	
-	@GetMapping(path = "/getIndustryList")
-	public List<Industry> getIndustryList() throws Exception {
-		return repository.getIndustryList();
+	@GetMapping(path = "/getIndustryAndSubsidiaryList/{gubunJa}")
+	public List<Industry> getIndustryAndSubsidiaryList(@PathVariable String gubunJa) throws Exception {
+		System.out.println("구분자 =" + gubunJa  );
+		List<Industry> resultList = new ArrayList<Industry>();
+		if (gubunJa.equals("industry")) {
+			resultList = repository.getIndustryList();
+		}else {
+			resultList = repository.getSubsidiaryList();
+		};
+		
+		return resultList;
 	}
 	
-	@GetMapping(path = "/getNewsListByIndustry/{instCode}")
-	public List<News> getNewsListByIndustry(@PathVariable String instCode) throws Exception {
-		return newsService.getNewsListByIndustry(instCode);
+	@GetMapping(path = "/getNewsListByIndustryAndSubsidiary")
+	public List<News> getNewsListByIndustry( @RequestParam(value = "gubunJaName",required = false) String gubunJaName,@RequestParam(value = "selectedName",required = false) String selectedName) throws Exception {
+		System.out.println("구분자 네임=" + gubunJaName  );
+		System.out.println("찍은네임=" + selectedName  );
+		return newsService.getNewsListByIndustryAndSubsidiary(gubunJaName,selectedName);
 	}
 	
 	@GetMapping(path = "/getCompanyListByCompany/{companyName}")
@@ -79,6 +91,12 @@ public class NewsController {
 	public List<News> getNewsListByCompanyName(NewsCondition newsCondition) throws Exception {
 		System.out.println(newsCondition);
 		return newsService.getNewsListByCompanyName(newsCondition);
+	}
+	
+	@PostMapping(path = "/getRowCount")
+	public int getRowCount(NewsCondition newsCondition) throws Exception {
+		System.out.println(newsCondition);
+		return repository.getRowCount(newsCondition);
 	}
 
 	
