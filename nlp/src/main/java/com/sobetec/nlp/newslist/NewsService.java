@@ -119,9 +119,9 @@ public class NewsService {
         return listNews; 
     }
     
-    public List<String> getCompanyListByCompany(String companyName) throws Exception {
+    public List<Company> getCompanyListByCompany(String companyName) throws Exception {
     	
-    	List<String> listCompany = new ArrayList<String>();
+    	List<Company> listCompany = new ArrayList<Company>();
     	listCompany = repository.getCompanyListByCompany(companyName);
         return listCompany; 
     }

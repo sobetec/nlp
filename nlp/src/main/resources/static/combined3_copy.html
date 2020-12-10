@@ -427,10 +427,8 @@
             color: #7c130c;
         }
 
-        .list li {
-
+        .list li, .list_not li {
             font-size: 14px;
-
         }
 
         .nulls {
@@ -450,6 +448,7 @@
             $('#date_picker_div_News').hide();
             $('#condition').hide();
             $('#condition_report').hide();
+            $('#resetContentButton').hide();
         });
 
 
@@ -644,7 +643,6 @@
                 
 
                 var hiddenData = escapeHtml(window.newsResponseData[i].rawData);
-                console.log(hiddenData);
                 
                 var htmlContents =
                 `
@@ -981,7 +979,26 @@
 
 
         function getReportList(){
-            var data = parameters();
+            var data = new Object();
+
+            data.reportYear = parseInt($("#reportYear").val());
+            data.gubun = $("#gubunReport").val();
+
+            if ($("#gubunReport").val() == "month") {
+                var temp = $("#choicesReport").val().split("월")[0];
+                console.log(temp);
+                data.gubunItem = parseInt(temp);
+            }
+            else if ($("#gubunReport").val() == "quarter") {
+                var temp = $("#choicesReport").val().split("분기")[0];
+                console.log(temp);
+                data.gubunItem = parseInt(temp);
+            }
+
+            data.startDate = $("#date_from_report").val();
+            data.endDate = $("#date_to_report").val();
+            data.searchWord = document.getElementById('search_company_report').value;
+
             console.log(data);
 
             loading1("행내 보고서");
@@ -1229,10 +1246,12 @@
                     console.log(window.newsResponseData[0]);
 
                     $('#myModal').hide();
+                    $('#resetContentButton').show();
 
                     document.getElementById('myModal').innerHTML = modalhtml2;
                     $('#myModal').show();
                     setTimeout(() => drawTable(result_area, table_id), 1000);
+                    document.getElementById('main_title').innerHTML = `뉴스 조회<h4 style="display:inline">(` + selectedName + `)</h4>`;
 
                 },
                 error: function () {
@@ -1546,16 +1565,34 @@
                     console.log(responseData.length);
                     window.companyResponseData = responseData;
 
-                    var companyList = [];
-                    companyListHTML = ``;
                     var companyliList = [];
-                    companyliListHTML = ``;
+                    var companyliListHTML = ``;
+
+                    var subsidiaryliList = [];
+                    var subsidiaryliListHTML = ``;
+
+                    var industryliList = [];
+                    var industryliListHTML = ``;
 
                     for (var i = 0; i < responseData.length; i++){
-                        companyList[i] = `<p> <a href="javascript:getNewsListByCompanyName(` + `'` + window.companyResponseData[i] + `'` + `);" id="modalList` + i + `">` + window.companyResponseData[i] + ` </a> </p>`;
-                        companyListHTML = companyListHTML + companyList[i];
-                        companyliList[i] = `<li>` + window.companyResponseData[i] + `</li>`;
+                        companyliList[i] = `<li>` + window.companyResponseData[i].cmpy + `</li>`;
                         companyliListHTML = companyliListHTML + companyliList[i];
+
+                        if (window.companyResponseData[i].subsName == null){
+                            subsidiaryliList[i] = `<li> &nbsp </li>`;    
+                        }
+                        else{
+                            subsidiaryliList[i] = `<li>` + window.companyResponseData[i].subsName + `</li>`;
+                        }
+                        subsidiaryliListHTML = subsidiaryliListHTML + subsidiaryliList[i];
+
+                        if (window.companyResponseData[i].instName == null){
+                            industryliList[i] = `<li> &nbsp </li>`;    
+                        }
+                        else{
+                            industryliList[i] = `<li>` + window.companyResponseData[i].instName + `</li>`;
+                        }
+                        industryliListHTML = industryliListHTML + industryliList[i];
                     }
 
                     $('#myModal').hide();
@@ -1567,11 +1604,28 @@
                         </div>
 
                         <div class="modal-list">
-                            <ul class="list">
-                                ` + companyliListHTML + `
-                            </ul>
+                            <table border="1" width="100%">
+                                <tr>
+                                    <td>
+                                        <ul class="list">
+                                            ` + companyliListHTML + `
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <ul class="list_not">
+                                            ` + subsidiaryliListHTML + `
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <ul class="list_not">
+                                            ` + industryliListHTML + `
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </table>
                         </div>
                     `;
+
                     document.getElementById('myModal').innerHTML = modalContents;
                     $('#myModal').show();
 
@@ -1671,6 +1725,8 @@
             document.getElementById('condition').innerHTML = conditionHTML;
         
             itemChangeNews();
+            $('#resetContentButton').hide();
+            document.getElementById('main_title').innerText = '뉴스 조회';
 
             if(selectItem == "company"){
                 createEmptyDatatableNews();
@@ -1730,7 +1786,8 @@
 
             searchBoxHTML = `<input id="search_company_news" type="text" placeholder="검색" value="" onkeypress="if( event.keyCode == 13 ){` + getFunction + `}">
                 <button id="search_button_news" class="btn_search" onclick="` + getFunction + `"><span class="blind" >검색</span></button>`;
-            document.getElementById('search_box_news').innerHTML = searchBoxHTML;       
+            document.getElementById('search_box_news').innerHTML = searchBoxHTML;
+            document.getElementById('pagination-container').innerHTML=``;    
         }
 
         function createEmptyChartDiv(){
@@ -1995,7 +2052,11 @@
                                 <input id="search_company_news" type="text" placeholder="검색" value="" onkeypress="if( event.keyCode == 13 ){getCompanyListByCompany();}">
                                 <button id="search_button_news" class="btn_search" onclick="getCompanyListByCompany();"><span class="blind" >검색</span></button>
                             </div>
-                            
+
+                            <div id="resetContentButton">
+                                <button class="btn point" onclick="itemChangeFold();" style="color:#fefefe;">목록으로 돌아가기</button>
+                            </div>
+
                         </div>
 
 
