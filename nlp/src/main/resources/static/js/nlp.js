@@ -1545,6 +1545,9 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
 
 function makeStockGraph(data, divID) {
     var company = document.getElementById('stockRange').value;
+    console.log(company);
+    console.log(data[company]);
+    console.log(data[company].length);
 
     stockData = [];
     for (var i = 0; i < data[company].length; i++) {
@@ -1990,7 +1993,7 @@ function makePieChart(data, divID, nCutofftoShow, nCutoff) {
 
 
 
-var tooltip = d3.select('body')
+var tooltip = d3.select('.container')
     .append("div")
     .attr('id', 'tooltip')
     .attr('data-html', 'true')
@@ -2684,6 +2687,7 @@ function getChartQuery1() {
             }
 
             var divID = 'stockTime';
+            console.log("1");
             stockGraph = document.getElementById(divID)
             stockGraph.addEventListener('click', function () {
                 document.getElementById('resetChart').addEventListener('click', function () {
@@ -2804,6 +2808,7 @@ function getChartQuery2() {
 
             var divID = 'stockTime';
             stockGraph = document.getElementById(divID)
+            console.log("2");
             stockGraph.addEventListener('click', function () {
                 document.getElementById('resetChart').addEventListener('click', function () {
                     console.log('clicked');
@@ -2925,12 +2930,16 @@ function getChartQuery3(companyName) {
                 }
                 allStockData[tempStock.company].push({ date: tempStock.date, price: tempStock.price })
             }
+            console.log("스톡데이터");
             console.log(allStockData)
             if (responseData.stockData.length != 0){
                 var shortestCompany = companies.reduce(function (a, b) {
                     return a.length <= b.length ? a : b;
                 })
+
+                document.getElementById('stockRange').innerHTML = '';
                 var stockOptions = document.getElementById('stockRange');
+                console.log("스톡옵션");
                 console.log(stockOptions);
                 for (var i = 0; i < companies.length; i++) {
                     if (companies[i] == shortestCompany) {
@@ -2944,7 +2953,7 @@ function getChartQuery3(companyName) {
     
                 var divID = 'stockTime';
                 stockGraph = document.getElementById(divID);
-
+                console.log("3");
                 stockGraph.addEventListener('click', function () {
                     document.getElementById('resetChart').addEventListener('click', function () {
                         console.log('clicked');
@@ -2958,7 +2967,12 @@ function getChartQuery3(companyName) {
                 makeStockGraph(allStockData, divID);
             }
             else{
-
+                var stockContents = `
+                                        <div style="text-align:center; font-size:40px; margin-top:60px;">
+                                            주가 정보 없음
+                                        </div>
+                                    `;
+                document.getElementById('stockTime').innerHTML = stockContents;
             }
             
 

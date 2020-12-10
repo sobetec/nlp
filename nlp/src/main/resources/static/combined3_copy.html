@@ -434,6 +434,7 @@
         .nulls {
             display: none;
         }
+
     </style>
 
     <script type="text/javascript" src="js/jquery-3.5.1.js"></script>
@@ -748,10 +749,17 @@
                 }
 
                 var downImg = '';
+                var paramFileName = window.reportResponseData[i].orgnFileName;
+
+                paramFileName= paramFileName.replace(/&/g,"%26");
+                paramFileName= paramFileName.replace(/\+/g,"%2B");
+                paramFileName= paramFileName.replace(/=/g,"%3D");
+                paramFileName= paramFileName.replace(/\[/g,"%5B");
+                paramFileName= paramFileName.replace(/\]/g,"%5D");
 
                 if (window.reportResponseData[i].docCaty == 'pdf'){
                     downImg =   `
-                                    <a href="/file/` + window.reportResponseData[i].orgnFileName + `.pdf">
+                                    <a href="/file/` + paramFileName + `.pdf">
                                         <img src="/img/pdf_down.png" style="width: auto; height: 14px;">
                                     </a>
                                 `;
@@ -961,6 +969,9 @@
 
                     document.getElementById('myModal').innerHTML = modalhtml2;
                     $('#myModal').show();
+
+                    document.getElementById('main_title').innerText = '뉴스 조회';
+                    $('#chartDiv').show();
                     setTimeout(() => drawTable(result_area, ''), 1000);
 
                 },
@@ -1011,15 +1022,20 @@
                 success: function (responseData) {
                     //alert('조회 성공');
                     console.log(responseData.length);
-                    window.reportResponseData = responseData;
-                    console.log(window.reportResponseData[0]);
+                    if (responseData.length != 0){
+                        window.reportResponseData = responseData;
+                        console.log(window.reportResponseData[0]);
 
-                    $('#myModal').hide();
+                        $('#myModal').hide();
 
-                    document.getElementById('myModal').innerHTML =  modalhtml3;
-                    $('#myModal').show();
-                    setTimeout(() => drawTableReport(), 1000);
-
+                        document.getElementById('myModal').innerHTML =  modalhtml3;
+                        $('#myModal').show();
+                        setTimeout(() => drawTableReport(), 1000);
+                    }
+                    else{
+                        $('#myModal').hide();
+                        alert('보고서가 없습니다');
+                    }
                 },
                 error: function () {
                     if (data.gubun == "custom" && (data.startDate == null || data.endData == null)){
@@ -1226,10 +1242,14 @@
             if (gubunJaName == "industry") {
                 result_area = 'result_area_industry';
                 table_id = 'industry_news_list';
+                $('#result_area_industry').show();
             }else {
                 result_area = 'result_area_subsidiary';
                 table_id = 'subsidiary_news_list';
+                $('#result_area_subsidiary').show();
             };
+            $('#chartDiv').hide();
+            $('#result_area_news').hide();
 
             console.log('산업명'+gubunJaName);
             loading1("뉴스");
@@ -1246,7 +1266,9 @@
                     console.log(window.newsResponseData[0]);
 
                     $('#myModal').hide();
-                    $('#resetContentButton').show();
+                    if ($('#fold').val() == 'subsidiary' || $('#fold').val() == 'industry'){
+                        $('#resetContentButton').show();
+                    }
 
                     document.getElementById('myModal').innerHTML = modalhtml2;
                     $('#myModal').show();
@@ -1264,134 +1286,134 @@
         }
 
 
-            function getIndustryAndSubsidiaryList(gubunJa) {
+        function getIndustryAndSubsidiaryList(gubunJa) {
 
-                industry_column_list = ["ㄱ", "ㄴ", "ㄷ", "ㄹ", "ㅁ", "ㅂ", "ㅅ", "ㅇ", "ㅈ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ", "기타"];
-                industry_column_list_java = ['responseData[i].giYeok',
-                    'responseData[i].niEun',
-                    'responseData[i].diGeut',
-                    'responseData[i].riEul',
-                    'responseData[i].miEum',
-                    'responseData[i].biEup',
-                    'responseData[i].siOt',
-                    'responseData[i].iEung',
-                    'responseData[i].jiEut',
-                    'responseData[i].chiEut',
-                    'responseData[i].kiEuk',
-                    'responseData[i].tiEuk',
-                    'responseData[i].piEup',
-                    'responseData[i].hiEut',
-                    'responseData[i].guiTar'];
+            industry_column_list = ["ㄱ", "ㄴ", "ㄷ", "ㄹ", "ㅁ", "ㅂ", "ㅅ", "ㅇ", "ㅈ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ", "기타"];
+            industry_column_list_java = ['responseData[i].giYeok',
+                'responseData[i].niEun',
+                'responseData[i].diGeut',
+                'responseData[i].riEul',
+                'responseData[i].miEum',
+                'responseData[i].biEup',
+                'responseData[i].siOt',
+                'responseData[i].iEung',
+                'responseData[i].jiEut',
+                'responseData[i].chiEut',
+                'responseData[i].kiEuk',
+                'responseData[i].tiEuk',
+                'responseData[i].piEup',
+                'responseData[i].hiEut',
+                'responseData[i].guiTar'];
 
-                console.log('구분자 자바스크립'+gubunJa);
-                console.log(industry_column_list[0]);
-                console.log(industry_column_list_java[0]);
+            console.log('구분자 자바스크립'+gubunJa);
+            console.log(industry_column_list[0]);
+            console.log(industry_column_list_java[0]);
 
-                $.ajax({
-                    url: "/getIndustryAndSubsidiaryList/" + gubunJa,
-                    method: 'GET',
-                    dataType: 'json',
-                    success: function (responseData) {
-                        // alert('조회 성공');
-                        // console.log(responseData);
-                        //console.log(responseData[0]);
+            $.ajax({
+                url: "/getIndustryAndSubsidiaryList/" + gubunJa,
+                method: 'GET',
+                dataType: 'json',
+                success: function (responseData) {
+                    // alert('조회 성공');
+                    // console.log(responseData);
+                    //console.log(responseData[0]);
 
-                        //var gigi = eval(industry_column_list_java[0]);
-                        //				console.log(gigi);
+                    //var gigi = eval(industry_column_list_java[0]);
+                    //				console.log(gigi);
 
-                        var tables = ``;
+                    var tables = ``;
 
-                        var expend_all = `
-                    <div class="buttons" align="right" >
-                        <a id="toggleee" class="btn" style="min-width: 110px;" href="javascript:togglee();">전체 펼치기</a>
-                        
-                    </div>
-                    `
+                    var expend_all = `
+                <div class="buttons" align="right" >
+                    <a id="toggleee" class="btn" style="min-width: 110px;" href="javascript:togglee();">전체 펼치기</a>
+                    
+                </div>
+                `
 
-                        for (var n = 0; n < 3; n++) {
-                            var htmlTableHead =
+                    for (var n = 0; n < 3; n++) {
+                        var htmlTableHead =
+                            `
+                        <table style="border-style: none none none none; border-width:2px; border-color:#ccc4c3;" rules=cols>
+                            <tr>
+                        `;
+
+                        var tds = ``;
+
+                        if (n == 0) { m = 0; r = 5 };
+                        if (n == 1) { m = 5; r = 10 };
+                        if (n == 2) { m = 10; r = 15 };
+
+                        for (var j = m; j < r; j++) {
+                            var colName = industry_column_list[j];
+
+                            //console.log(colJavaName);
+                            var htmlhead =
                                 `
-                            <table style="border-style: none none none none; border-width:2px; border-color:#ccc4c3;" rules=cols>
-                                <tr>
+                            
+                                    <td style="padding-left: 16px; padding-right:10px;" valign="top" width="270">
+                                        <div>
+                                            <ul >
+                                                <li class="menu">
+                                                    <a style="font-size: large; font-weight: bold;"> `+ colName + ` </a>
+                                                    
+                                                    <ul class="list">
+                                                        <br/>
+                                                                                                            
                             `;
 
-                            var tds = ``;
-
-                            if (n == 0) { m = 0; r = 5 };
-                            if (n == 1) { m = 5; r = 10 };
-                            if (n == 2) { m = 10; r = 15 };
-
-                            for (var j = m; j < r; j++) {
-                                var colName = industry_column_list[j];
-
-                                //console.log(colJavaName);
-                                var htmlhead =
-                                    `
-                                
-                                        <td style="padding-left: 16px; padding-right:10px;" valign="top" width="270">
-                                            <div>
-                                                <ul >
-                                                    <li class="menu">
-                                                        <a style="font-size: large; font-weight: bold;"> `+ colName + ` </a>
-                                                        
-                                                        <ul class="list">
-                                                            <br/>
-                                                                                                                
+                            var htmlmiddle =
+                                `
+                                    </ul>
+                                    <ul class="hide">
                                 `;
 
-                                var htmlmiddle =
-                                    `
-                                        </ul>
-                                        <ul class="hide">
-                                    `;
 
-
-                                k = 0;
-                                for (var i = 0; i < responseData.length; i++) {
-                                    var colJavaName = eval(industry_column_list_java[j]);
-                                    // console.log('컬럼이름 '+colJavaName);
-                                    if (k < 5) {
-                                        if (colJavaName != null) {
-                                            var htmlli1 =
-                                                `
-                                                    <li>`+ colJavaName + `</li>
-                                                    `;
-
-                                            htmlhead += htmlli1;
-                                            k++;
-                                        }
-
-                                    } else if ((colJavaName != null)) {
-                                        var htmlli2 =
+                            k = 0;
+                            for (var i = 0; i < responseData.length; i++) {
+                                var colJavaName = eval(industry_column_list_java[j]);
+                                // console.log('컬럼이름 '+colJavaName);
+                                if (k < 5) {
+                                    if (colJavaName != null) {
+                                        var htmlli1 =
                                             `
-                                                    <li>`+ colJavaName + `</li>
-                                                    `;
-                                        htmlmiddle += htmlli2;
-                                    };
+                                                <li>`+ colJavaName + `</li>
+                                                `;
+
+                                        htmlhead += htmlli1;
+                                        k++;
+                                    }
+
+                                } else if ((colJavaName != null)) {
+                                    var htmlli2 =
+                                        `
+                                                <li>`+ colJavaName + `</li>
+                                                `;
+                                    htmlmiddle += htmlli2;
                                 };
-
-
-                                var htmltail =
-                                    `
-                                                                </ul>
-                                                                <a class="visivi"  > 더보기 ▼ </a>
-                                                                <a class="closed"  > 접기 ▲ </a>
-                                                            </li>
-
-
-                                                        </ul>
-                                                    </div>
-                                                </td>
-                                                                
-                                                                
-                                `;
-                                var td = htmlhead + htmlmiddle + htmltail;
-
-                                tds += td;
                             };
 
-                            var htmlTableTail =
+
+                            var htmltail =
                                 `
+                                                            </ul>
+                                                            <a class="visivi"  > 더보기 ▼ </a>
+                                                            <a class="closed"  > 접기 ▲ </a>
+                                                        </li>
+
+
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                                            
+                                                            
+                            `;
+                            var td = htmlhead + htmlmiddle + htmltail;
+
+                            tds += td;
+                        };
+
+                        var htmlTableTail =
+                            `
                                 </tr>
                             <br/>	
                             <br/>
@@ -1399,100 +1421,97 @@
 
                         `
 
-                            var htmltable1 = htmlTableHead + tds + htmlTableTail;
+                        var htmltable1 = htmlTableHead + tds + htmlTableTail;
 
-                            tables += htmltable1;
-                        };
+                        tables += htmltable1;
+                    };
 
-                        if (gubunJa == 'industry') {
-                            document.getElementById('result_area_industry').innerHTML = expend_all + tables;
-                        }else {
-                            document.getElementById('result_area_subsidiary').innerHTML = expend_all + tables;
-                        }
-                        
-
-
-                        $(".menu>a").click(function () {
-
-                            //$('directoryresults').find('input');
-                            var lisf = $(this).siblings('ul');
-                            var submenu = $(lisf[1]);
-                            var lista = $(this).siblings('a');
-                            var folda1 = $(lista[0]);
-                            var folda2 = $(lista[1]);
-
-                            if (submenu.is(":visible")) {
-                                submenu.slideUp(400);
-
-                                if ($(this).hasClass('closed')) {
-                                    $(this).css('visibility', 'hidden');
-                                }
-                                if (folda1.hasClass('closed')) {
-                                    folda1.css('visibility', 'hidden');
-                                }
-                                if (folda2.hasClass('closed')) {
-                                    folda2.css('visibility', 'hidden');
-                                }
-                                if ($(this).hasClass('visivi')) {
-                                    $(this).css('visibility', 'visible');
-                                }
-                                if (folda1.hasClass('visivi')) {
-                                    folda1.css('visibility', 'visible');
-                                }
-                                if (folda2.hasClass('visivi')) {
-                                    folda2.css('visibility', 'visible');
-                                }
-
-                            } else {
-                                submenu.slideDown(400);
-
-                                if ($(this).hasClass('closed')) {
-                                    $(this).css('visibility', 'visible');
-                                }
-                                if (folda1.hasClass('closed')) {
-                                    folda1.css('visibility', 'visible');
-                                }
-                                if (folda2.hasClass('closed')) {
-                                    folda2.css('visibility', 'visible');
-                                }
-                                if ($(this).hasClass('visivi')) {
-                                    $(this).css('visibility', 'hidden');
-                                }
-                                if (folda1.hasClass('visivi')) {
-                                    folda1.css('visibility', 'hidden');
-                                }
-                                if (folda2.hasClass('visivi')) {
-                                    folda2.css('visibility', 'hidden');
-                                }
-
-                            }
-                            console.log("im aclick in list");
-
-                        });
-
-                        $(".list").on("click", "li", function () {
-                            alert($(this).text());
-                            var listName = $(this).text();
-                            console.log(listName);
-                            getNewsListByIndustryAndSubsidiary(gubunJa, listName);
-                        });
-
-                        $(".hide").on("click", "li", function () {
-                            alert($(this).text());
-                            var listName = $(this).text();
-                            console.log(listName);
-                            getNewsListByIndustryAndSubsidiary(gubunJa, listName);
-                        });
-
-                    },
-                    error: function () {
-                        alert('조회 실패');
+                    if (gubunJa == 'industry') {
+                        document.getElementById('result_area_industry').innerHTML = expend_all + tables;
+                    }else {
+                        document.getElementById('result_area_subsidiary').innerHTML = expend_all + tables;
                     }
-                });
+                    
 
+                    $(".menu>a").click(function () {
 
+                        //$('directoryresults').find('input');
+                        var lisf = $(this).siblings('ul');
+                        var submenu = $(lisf[1]);
+                        var lista = $(this).siblings('a');
+                        var folda1 = $(lista[0]);
+                        var folda2 = $(lista[1]);
 
+                        if (submenu.is(":visible")) {
+                            submenu.slideUp(400);
+
+                            if ($(this).hasClass('closed')) {
+                                $(this).css('visibility', 'hidden');
+                            }
+                            if (folda1.hasClass('closed')) {
+                                folda1.css('visibility', 'hidden');
+                            }
+                            if (folda2.hasClass('closed')) {
+                                folda2.css('visibility', 'hidden');
+                            }
+                            if ($(this).hasClass('visivi')) {
+                                $(this).css('visibility', 'visible');
+                            }
+                            if (folda1.hasClass('visivi')) {
+                                folda1.css('visibility', 'visible');
+                            }
+                            if (folda2.hasClass('visivi')) {
+                                folda2.css('visibility', 'visible');
+                            }
+
+                        } else {
+                            submenu.slideDown(400);
+
+                            if ($(this).hasClass('closed')) {
+                                $(this).css('visibility', 'visible');
+                            }
+                            if (folda1.hasClass('closed')) {
+                                folda1.css('visibility', 'visible');
+                            }
+                            if (folda2.hasClass('closed')) {
+                                folda2.css('visibility', 'visible');
+                            }
+                            if ($(this).hasClass('visivi')) {
+                                $(this).css('visibility', 'hidden');
+                            }
+                            if (folda1.hasClass('visivi')) {
+                                folda1.css('visibility', 'hidden');
+                            }
+                            if (folda2.hasClass('visivi')) {
+                                folda2.css('visibility', 'hidden');
+                            }
+
+                        }
+                        console.log("im aclick in list");
+
+                    });
+
+                    $(".list").on("click", "li", function () {
+                        alert($(this).text());
+                        var listName = $(this).text();
+                        console.log(listName);
+                        getNewsListByIndustryAndSubsidiary(gubunJa, listName);
+                    });
+
+                    $(".hide").on("click", "li", function () {
+                        alert($(this).text());
+                        var listName = $(this).text();
+                        console.log(listName);
+                        getNewsListByIndustryAndSubsidiary(gubunJa, listName);
+                    });
+
+                },
+                error: function () {
+                    alert('조회 실패');
                 }
+            });
+
+        }
 
 
         function rmv() {
@@ -1528,7 +1547,6 @@
             //	}
             //});
 
-
             //$("#dataTableSearch").trigger(e);
 
             $("#dataTableSearch").val(keyword);
@@ -1563,68 +1581,87 @@
                 success: function (responseData) {
                     //alert('조회 성공');
                     console.log(responseData.length);
-                    window.companyResponseData = responseData;
 
-                    var companyliList = [];
-                    var companyliListHTML = ``;
+                    if (responseData.length == 0){
+                        var modalContents =
+                        `
+                            <div class="modal-list-head">
+                                <p style="text-align: center;"><span style="font-size: 14pt;"><b><span style="font-size: 16pt;">관련 기업이 존재하지 않습니다.</span></b></span></p>
+                            </div>
 
-                    var subsidiaryliList = [];
-                    var subsidiaryliListHTML = ``;
+                            <div class="modal-list">
+                                <p style="text-align: center; line-height: 1.5;"><br />
+                                    데이터가 존재하지 않습니다.
+                                </p>
+                            </div>
+                        `;
+                    }
+                    else{
+                        window.companyResponseData = responseData;
 
-                    var industryliList = [];
-                    var industryliListHTML = ``;
+                        var companyliList = [];
+                        var companyliListHTML = ``;
 
-                    for (var i = 0; i < responseData.length; i++){
-                        companyliList[i] = `<li>` + window.companyResponseData[i].cmpy + `</li>`;
-                        companyliListHTML = companyliListHTML + companyliList[i];
+                        var subsidiaryliList = [];
+                        var subsidiaryliListHTML = ``;
 
-                        if (window.companyResponseData[i].subsName == null){
-                            subsidiaryliList[i] = `<li> &nbsp </li>`;    
+                        var industryliList = [];
+                        var industryliListHTML = ``;
+
+                        for (var i = 0; i < responseData.length; i++){
+                            companyliList[i] = `<li>` + window.companyResponseData[i].cmpy + `</li>`;
+                            companyliListHTML = companyliListHTML + companyliList[i];
+
+                            if (window.companyResponseData[i].subsName == null){
+                                subsidiaryliList[i] = `<li> &nbsp </li>`;    
+                            }
+                            else{
+                                subsidiaryliList[i] = `<li>` + window.companyResponseData[i].subsName + `</li>`;
+                            }
+                            subsidiaryliListHTML = subsidiaryliListHTML + subsidiaryliList[i];
+
+                            if (window.companyResponseData[i].instName == null){
+                                industryliList[i] = `<li> &nbsp </li>`;    
+                            }
+                            else{
+                                industryliList[i] = `<li>` + window.companyResponseData[i].instName + `</li>`;
+                            }
+                            industryliListHTML = industryliListHTML + industryliList[i];
                         }
-                        else{
-                            subsidiaryliList[i] = `<li>` + window.companyResponseData[i].subsName + `</li>`;
-                        }
-                        subsidiaryliListHTML = subsidiaryliListHTML + subsidiaryliList[i];
 
-                        if (window.companyResponseData[i].instName == null){
-                            industryliList[i] = `<li> &nbsp </li>`;    
-                        }
-                        else{
-                            industryliList[i] = `<li>` + window.companyResponseData[i].instName + `</li>`;
-                        }
-                        industryliListHTML = industryliListHTML + industryliList[i];
+                        $('#myModal').hide();
+
+                        var modalContents =
+                        `
+                            <div class="modal-list-head">
+                                <p style="text-align: center;"><span style="font-size: 14pt;"><b><span style="font-size: 16pt;">목록 중 하나를 선택해 주세요.</span></b></span></p>
+                            </div>
+
+                            <div class="modal-list">
+                                <table border="1" width="100%">
+                                    <tr>
+                                        <td>
+                                            <ul class="list_company">
+                                                ` + companyliListHTML + `
+                                            </ul>
+                                        </td>
+                                        <td>
+                                            <ul class="list_subsidiary">
+                                                ` + subsidiaryliListHTML + `
+                                            </ul>
+                                        </td>
+                                        <td>
+                                            <ul class="list_industry">
+                                                ` + industryliListHTML + `
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        `;
                     }
 
-                    $('#myModal').hide();
 
-                    var modalContents =
-                    `
-                        <div class="modal-list-head">
-                            <p style="text-align: center;"><span style="font-size: 14pt;"><b><span style="font-size: 16pt;">목록 중 하나를 선택해 주세요.</span></b></span></p>
-                        </div>
-
-                        <div class="modal-list">
-                            <table border="1" width="100%">
-                                <tr>
-                                    <td>
-                                        <ul class="list_company">
-                                            ` + companyliListHTML + `
-                                        </ul>
-                                    </td>
-                                    <td>
-                                        <ul class="list_subsidiary">
-                                            ` + subsidiaryliListHTML + `
-                                        </ul>
-                                    </td>
-                                    <td>
-                                        <ul class="list_industry">
-                                            ` + industryliListHTML + `
-                                        </ul>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    `;
 
                     document.getElementById('myModal').innerHTML = modalContents;
                     $('#myModal').show();
@@ -2308,6 +2345,10 @@
 
                 <div id="chartModal" class="modal">
                     <!-- Modal content -->
+                </div>
+
+                <div id="tooltip_position">
+
                 </div>
 
             </div>
