@@ -7,14 +7,6 @@
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>SBT AUTOML</title>
 	<style>
-		.rect .gauge-box {
-			fill: white;
-			border: red;
-			-moz-box-shadow: inset 0 0 10px #000000;
-			-webkit-box-shadow: inset 0 0 10px #000000;
-			box-shadow: inset 0 0 10px #000000;
-		}
-
 		body {
 			font-family: Helvetica, Arial, sans-serif;
 			margin: 32px;
@@ -49,11 +41,6 @@
 			flex-wrap: wrap;
 			flex-direction: row !important;
 			margin: -24px -24px 0 0;
-		}
-
-		.shadow {
-			-webkit-filter: drop-shadow(4px 4px 3px rgba(0, 0, 0, .7));
-			filter: drop-shadow(4px 4px 3px rgba(0, 0, 0, .7));
 		}
 	</style>
 	<script type="text/javascript" src="./js/d3.v4.min.js"></script>
@@ -128,6 +115,8 @@
 
 		}
 	</script>
+
+	<script type="text/javascript" src="./js/d3.v4.min.js"></script>
 	<script type="text/javascript" src='./js/nlp.js'></script>
 	<script type="text/javascript" src='./js/nlp2.js'></script>
 	<script type="text/javascript" src='./js/FileSaver.min.js'></script>
@@ -166,10 +155,10 @@
 							<input id="paddingSlider" type="range" min="1" max="4" step="0.25" value="1.5">
 							<span>숫자 선택: </span>
 							<span id='textMaxValue'></span>
-							<input id="textNumberSlider" type="range" min="1" max="2000" step="1" value="400">
+							<input id="textNumberSlider" type="range" min="1" max="50" step="1" value="50">
 							<span>글자 크기: </span>
 							<span id='fontSizeValue'></span>
-							<input id="fontSizeSlider" type="range" min="1" max="150" step="1" value="40">
+							<input id="fontSizeSlider" type="range" min="1" max="500" step="1" value="50">
 						</div>
 						<div id='keywordBarSettings' class='enlargedChartSettings' style='display:none'>
 							<span>숫자 선택: </span>
@@ -295,7 +284,7 @@
 								<a id="newsList" class="btn" href="javascript:getChartQuery1();">조회</a>
 							</div>
 							<button class="btn line">편집</button>
-							<a href="#" class="btn point" target="_blank">다운로드</a>
+							<a class="btn point" target="_blank">다운로드</a>
 						</div>
 
 						<div class="visualize">
@@ -303,371 +292,50 @@
 							<div class="card_list">
 								<!-- [D] 클릭한 카드에 클래스 active 추가해주세요 -->
 
-								<!-- sentiment box -->
+
+								<!-- 워드 클라우드 -->
 								<div class="card_item">
 									<div class="card_box">
 										<div class="card_head">
-											T/A 결과
+											<span class="title">워드 클라우드</span>
+
 										</div>
 										<div class="card_content">
-											<div class="chart_area" style="padding-top: 70%">
-												<div class="chart" id="sentimentBoxPlot">
-
-													<script>
-
-
-
-
-
-
-
-													</script>
-
-												</div>
-
-											</div>
-
-
-										</div>
-
-									</div>
-								</div>
-
-								<!-- DANGER GAUGE Extended Version -->
-								<div class="card_item">
-									<div class="card_box">
-										<div class="card_head">
-											T/A 결과
-										</div>
-										<div class="card_content">
-											<div class="chart_area" style="padding-top: 70%">
-												<div class="chart" id="dangerGauge">
-
-													<script type="text/javascript" src='./js/nlp.js'></script>
-
-													<script>
-														var gauge = document.getElementById('dangerGauge');
-
-														var gaugeDirection = 0;
-
-
-
-													</script>
-
-												</div>
-
-											</div>
-
-
-										</div>
-
-									</div>
-								</div>
-
-
-								<div class="card_item">
-									<div class="card_box">
-										<div class="card_head">
-											키워드 파이차트
-										</div>
-										<div class="card_content">
-											<div class="chart_area" style="padding-top: 70%">
+											<div class="chart_area" style="padding-top: 70%"
+												style="background-color:#f4fbff">
 												<div class="chart" id="keywordPie">
 
 													<script>
 														var divID = 'keywordPie'
+														var keywords = ['증권 중개업', '국내은행', '지주회사', '승용차 및 기타 여객용 자동차 제조업', '유선 온라인 게임 소프트웨어 개발 및 공급업', '이동전화기 제조업', '완제 의약품 제조업', '무선 및 위성 통신업', '응용 소프트웨어 개발 및 공급업', '화장품 제조업'];
+														var values = [24370, 23551, 21657, 17640, 16812, 15874, 14844, 13826, 10663, 9634];
+														/* var keywords = ['삼성', 'LG', '현대자동차', 'SK', '롯데', '신한금융지주회사', 'KB금융', '케이티', '신세계', '씨제이']
+														var values = [30284, 22300, 20669, 16957, 9506, 8892, 8193, 7344, 7069, 6800] */
 
-														var textSlide = document.getElementById('keywordPieSlider')
-														document.getElementById('keywordMaxValuePie').innerHTML = textSlide.value;
-														textSlide.onchange = function () {
-															document.getElementById('keywordMaxValuePie').innerHTML = document.getElementById('keywordPieSlider').value;
-															makePieChart(window.newsResponseData.keywords, 'enlargedChart',
-																document.getElementById('keywordPieSlider').value, document.getElementById('keywordPieSlider2').value)
-														}
-														var textSlide = document.getElementById('keywordPieSlider2')
-														document.getElementById('keywordMaxValuePie2').innerHTML = textSlide.value;
-														textSlide.onchange = function () {
-															document.getElementById('keywordMaxValuePie2').innerHTML = document.getElementById('keywordPieSlider2').value;
-															makePieChart(window.newsResponseData.keywords, 'enlargedChart', document.getElementById('keywordPieSlider').value,
-																document.getElementById('keywordPieSlider2').value)
+														var data = []
+														for (var i = 0; i < keywords.length; i++) {
+															data.push({ keyword: keywords[i], tf_idf: values[i] })
 														}
 
-
-
-
-
-
-
-													</script>
-
-												</div>
-											</div>
-										</div>
-
-									</div>
-								</div>
-
-
-
-								<!-- 스플릿 콩나물 그래프 -->
-								<div class="card_item">
-									<div class="card_box">
-										<div class="card_head">
-											<span class="title">콩나물 시계열 감성지수</span>
-										</div>
-										<div class="card_content">
-											<div class="chart_area" style="padding-top: 70%">
-												<div class="chart" id='sentimentTimeTwoLines'>
-													<script>
-														var divID = 'sentimentTimeTwoLines';
-
-
-													</script>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-
-								<!-- news article count -->
-								<div class="card_item">
-									<div class="card_box">
-										<div class="card_head">
-											<p>기사수</p>
-											<style>
-												#data {
-													overflow: hidden;
-													padding: 0;
-												}
-
-												select {
-													padding: 0;
-													padding-left: 1px;
-													border: none;
-													background-color: #eee;
-												}
-
-												option {
-													display: inline-block;
-													border: 1px solid #000;
-													background-color: white;
-													padding-left: 5px;
-													padding-right: 5px;
-													margin-left: -1px;
-													display: inline-block;
-												}
-											</style>
-											<div>
-												<select multiple size="1" id='articleCountRange'>
-													<option value='1'>1년</option>
-													<option value='3'>3년</option>
-													<option value='5'>5년</option>
-													<option value='all' selected>전체</option>
-												</select>
-											</div>
-										</div>
-										<div class="card_content">
-											<div class="chart_area" style="padding-top: 70%">
-												<div class="chart" id='articleCounts'>
-													<script>
-														var divID = 'articleCounts';
-
-
-													</script>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-
-								<!-- 키워드 빠 차트 -->
-								<div class="card_item">
-									<div class="card_box">
-										<div class="card_head">
-											<span class="title">키워드 빠 차트</span>
-										</div>
-										<div class="card_content">
-											<div class="chart_area" style="padding-top: 70%">
-												<div class="chart" id="keywordBar">
-													<script>
-														var divID = 'keywordBar'
-
-														var textSlide = document.getElementById('keywordBarSlider')
-														document.getElementById('keywordMaxValueBar').innerHTML = textSlide.value;
-														textSlide.onchange = function () {
-															document.getElementById('keywordMaxValueBar').innerHTML = document.getElementById('keywordBarSlider').value;
-															makeKeywordBarPlot(window.newsResponseData.keywords, 'enlargedChart', document.getElementById('keywordBarSlider').value)
-														}
-
-													</script>
-
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-
-								<!-- 주가 플롯 -->
-								<div class="card_item">
-									<div class="card_box">
-										<div class="card_head">
-											<span class="title">시계열 주가 차트</span>
-											<div>
-												<select size="1" id='stockRange'>
-												</select>
-											</div>
-										</div>
-										<div class="card_content">
-											<div class="chart_area" style="padding-top: 70%">
-												<div class="chart" id="stockTime">
-													<script>
-														/* var filepath = './data/news_counts.csv'
-														d3.csv(filepath, function (data) {
-
-															var divID = 'stockTime';
-															stockGraph = document.getElementById(divID)
-															stockGraph.addEventListener('click', function () {
-																document.getElementById('resetChart').addEventListener('click', function () {
-																	console.log('clicked');
-																	makeStockGraph(data, 'enlargedChart');
-																})
-																makeStockGraph(data, 'enlargedChart');
-															})
-															makeStockGraph(data, divID)
-														}) */
-													</script>
-
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-
-
-								<!-- 워드 클라우드 가로만 -->
-								<div class="card_item">
-									<div class="card_box">
-										<div class="card_head">
-											<span class="title">워드 클라우드</span>
-
-										</div>
-										<div class="card_content">
-											<div class="chart_area" style="padding-top: 70%"
-												style="background-color:#f4fbff">
-												<div class="chart" id="wordCloud" style="cursor:default">
-													<script type="text/javascript"
-														src="./js/d3.layout.cloud.js"></script>
-													<script>
-														var divID = 'wordCloud'
-													</script>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-
-								<!-- 워드 클라우드 가로 세로 -->
-								<div class="card_item">
-									<div class="card_box">
-										<div class="card_head">
-											<span class="title">워드 클라우드</span>
-
-										</div>
-										<div class="card_content">
-											<div class="chart_area" style="padding-top: 70%"
-												style="background-color:#f4fbff">
-												<div class="chart" id="wordCloud2" style="cursor:default">
-													<script type="text/javascript"
-														src="./js/d3.layout.cloud.js"></script>
-													<script>
-														var divID = 'wordCloud2'
-													</script>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-
-								<!-- Related Documents -->
-								<div class="card_item">
-									<div class="card_box">
-										<div class="card_head">
-
-											<span class="title">관련 문서</span>
-										</div>
-										<div class="card_content">
-											<div class="chart_area" style="padding-top: 70%">
-												<div class="chart" id="relatedDocNetwork">
-													<div class="vis-network" tabindex="900"
-														style="position: relative; overflow: hidden; touch-action: pan-y; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); width: 100%; height: 100%;">
-														<canvas width="100%" height="100%"
-															style="position: relative; touch-action: none; user-select: none; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); width: 100%; height: 100%;"></canvas>
-													</div>
-
-													<script type="text/javascript"
-														src="./js/vis-network.min.js"></script>
-													<script>
-														var nodes = null;
-														var edges = null;
-														var network = null;
-
-														// create people.
-														// value corresponds with the age of the person
-														nodes = [
-															{ id: 1, value: 10, label: "(주)카카오", color: '#c3aed6', margin: 20, font: { face: 'malgun-gothic', color: "#000000", size: 40 } },
-															{ id: 2, value: 10, label: "서비스", color: '#efbbcf', margin: 15, font: { color: "#000000", size: 30 } },
-															{ id: 3, value: 10, label: "이모티콘", color: '#efbbcf', margin: 15, font: { color: "#000000", size: 30 } },
-															{ id: 4, value: 10, label: "채팅", color: '#efbbcf', margin: 15, font: { color: "#000000", size: 30 } },
-															{ id: 7, value: 10, label: "기사: 카카오, 리무진서비스\n 스타트업 투자", margin: 10, color: '#ffd5cd', font: { color: "#000000" } },
-															{ id: 8, value: 10, label: "기사: 택시기사 80% \n카카오서비스 이용", margin: 10, color: '#ffd5cd', font: { color: "#000000" } },
-															{ id: 9, value: 10, label: "기사: 다음카카오, 다음 검색광고\n 옐로아이디 연동 서비스", margin: 10, color: '#ffd5cd', font: { color: "#000000" } },
-															{ id: 10, value: 10, label: "기사: 카카오, VOD 시장 진출…\n영화 서비스 시작", margin: 10, color: '#ffd5cd', font: { color: "#000000" } },
-															{ id: 11, value: 10, label: "기사: 카카오스토리에 \n이모티콘 도입", margin: 10, color: '#ffd5cd', font: { color: "#000000" } },
-															{ id: 12, value: 10, label: "기사: 하루 1000만명\n 카톡 이모티콘 이용", margin: 10, color: '#ffd5cd', font: { color: "#000000" } },
-															{ id: 13, value: 10, label: "기사: 카카오, 이모티콘으로\n 기부한다", margin: 10, color: '#ffd5cd', font: { color: "#000000" } },
-															{ id: 14, value: 10, label: "기사: KT올레 고객, \n카카오톡 맘껏 쓰세요", margin: 10, color: '#ffd5cd', font: { color: "#000000" } },
-															{ id: 15, value: 10, label: "기사: [컨콜]카카오, '카카오톡 MAU\n 최초로 4200만 돌파'", margin: 10, color: '#ffd5cd', font: { color: "#000000" } },
-															{ id: 16, value: 10, label: "'카카오톡 메일' \n시범 테스트 시작", margin: 10, color: '#ffd5cd', font: { color: "#000000" } },];
-
-														// create connections between people
-														// value corresponds with the amount of contact between two people
-														edges = [
-															{ from: 1, to: 2, value: 3, color: '#8675a9', smooth: false },
-															{ from: 1, to: 3, value: 5, color: '#8675a9', smooth: false },
-															{ from: 1, to: 4, value: 8, color: '#8675a9', smooth: false },
-															{ from: 1, to: 6, value: 2, color: '#8675a9', smooth: false },
-															{ from: 2, to: 7, value: 2, color: '#d9a0b6', smooth: false },
-															{ from: 2, to: 8, value: 1, color: '#d9a0b6', smooth: false },
-															{ from: 2, to: 9, value: 2, color: '#d9a0b6', smooth: false },
-															{ from: 2, to: 10, value: 5, color: '#d9a0b6', smooth: false },
-															{ from: 3, to: 11, value: 3, color: '#d9a0b6', smooth: false },
-															{ from: 3, to: 12, value: 3, color: '#d9a0b6', smooth: false },
-															{ from: 3, to: 13, value: 2, color: '#d9a0b6', smooth: false },
-															{ from: 4, to: 14, value: 1, color: '#d9a0b6', smooth: false },
-															{ from: 4, to: 16, value: 6, color: '#d9a0b6', smooth: false },
-															{ from: 4, to: 15, value: 2, color: '#d9a0b6', smooth: false },
-														];
-
-														// Instantiate our network object.
-														var container = document.getElementById("relatedDocNetwork");
-														var data = {
-															nodes: nodes,
-															edges: edges,
-														};
-														var options = {
-															nodes: {
-																shape: "box",
-																size: 5,
-															},
-															physics: {
-																enabled: false,
-															},
-														};
-														container.addEventListener('click', function () {
-															options.physics = { enabled: true };
-															network = new vis.Network(document.getElementById("enlargedChart"), data, options);
+														var chart = document.getElementById('keywordPie');
+														var svg = makePieChart(data, 'keywordPie', 10, 10)
+														console.log(window.SVG)
+														chart.addEventListener('click', function () {
+															svg = makePieChart(data, 'enlargedChart', 10, 10)
 														})
-														network = new vis.Network(container, data, options)
+
+
+
+
+
+
+
+
+
+
+
+
+
 													</script>
 
 												</div>
@@ -835,6 +503,8 @@
 			}
 			console.log('saved')
 		})
+		
+
 	</script>
 </body>
 

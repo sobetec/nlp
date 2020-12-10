@@ -11,7 +11,6 @@
     <link rel="stylesheet" type="text/css" href="css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="css/w3.css">
     <style>
-        
         body {
             font-family: Helvetica, Arial, sans-serif;
         }
@@ -422,6 +421,10 @@
             display: none;
         }
     </style>
+    <script type="text/javascript" src="./js/d3.v4.min.js"></script>
+    <script type="text/javascript" src='./js/nlp.js'></script>
+    <script type="text/javascript" src='./js/nlp2.js'></script>
+    <script type="text/javascript" src='./js/FileSaver.min.js'></script>
 
     <script type="text/javascript" src="js/jquery-3.5.1.js"></script>
     <script type="text/javascript" charset="utf8" src="datatables/datatables.js"></script>
@@ -1388,8 +1391,6 @@
 
     </script>
 
-    <script type="text/javascript" src="./js/d3.v4.min.js"></script>
-    <script type="text/javascript" src='./js/nlp.js'></script>
 
 
 
@@ -1443,7 +1444,7 @@
                             <input id="keywordPieSlider2" type="range" min="1" max="100000" step="1" value="300">
                             <span id='keywordMaxValuePie2'></span>
                         </div>
-                        <a href="#" class="btn point" target="_blank">다운로드</a>
+                        <a id='downloadButton' class="btn point" target="_blank">다운로드</a>
                         <div class="chart_area" id="enlargedChart">
                             <div class="chart">차트 영역</div>
                         </div>
@@ -1560,8 +1561,6 @@
                                             </div>
                                             <div class="chart_area" style="padding-top: 60%">
                                                 <div class="chart" id="dangerGauge">
-
-                                                    <script type="text/javascript" src='./js/nlp.js'></script>
 
                                                     <script>
                                                         var gauge = document.getElementById('dangerGauge');
@@ -1980,7 +1979,17 @@
                 /*  $('.stockLine').attr('clip-path', 'url(#stockClip)'); */
             }
         });
+        $('#downloadButton').on('click', function () {
+            var svg = window.SVG
+            var svgString = getSVGString(svg.node());
+            console.log(svgString)
+            svgToImage(svgString, 944, 602, 'png', save)
 
+            function save(dataBlob, filesize) {
+                saveAs(dataBlob, 'D3 vis exported to PNG.png'); // FileSaver.js function
+            }
+            console.log('saved')
+        })
 
 
     </script>
