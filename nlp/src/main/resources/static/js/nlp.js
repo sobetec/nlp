@@ -70,15 +70,33 @@ function makeGauge(divID, sentimentScore) {
     gaugeSVG.append('g')
         .attr('transform', 'translate(' + divWidth / 2 + ',' + 3 * divHeight / 5 + ")")
         .append("polygon")
+        .attr('id', 'gaugeNeedle')
         .attr('stroke-width', 3)
         .attr('fill', '#820812')
         .attr('class', 'needle')
         .attr('points', "0,0 -" + "0," + 0.02 * divHeight +
             " " + -divWidth / 4 + ",0 " + "0," + -divHeight * 0.02)
+        .on('click', function () {
+            d3.select('#gaugeNeedle')
+                .transition()
+                .ease(d3.easeLinear)
+                .duration(400)
+                .attr("transform", "rotate(180)")
+                .transition()
+                .ease(d3.easeElastic)
+                .duration(5000)
+                .attr("transform", "rotate(" + (sentimentScore / 100 * 240 - 30) + ")")
+
+        })
+        .transition()
+        .ease(d3.easeLinear)
+        .duration(200)
+        .attr("transform", "rotate(120)")
         .transition()
         .ease(d3.easeElastic)
         .duration(5000)
-        .attr("transform", "rotate(" + (sentimentScore / 100 * 240 - 30) + ")");
+        .attr("transform", "rotate(" + (sentimentScore / 100 * 240 - 30) + ")")
+
 
     /* gaugeSVG.append('g')
             .attr('transform', 'translate(' + divWidth / 2 + ',' + 3*divHeight / 5 + ")")
@@ -111,6 +129,14 @@ function makeGauge(divID, sentimentScore) {
         .attr("r", 0.02 * divHeight)
         .attr("cx", divWidth / 2)
         .attr("cy", 3 * divHeight / 5)
+        .on('click', function () {
+            d3.select('#gaugeNeedle').attr("transform", "rotate(-)")
+            d3.select('#gaugeNeedle')
+                .transition()
+                .ease(d3.easeElastic)
+                .duration(3000)
+                .attr("transform", "rotate(" + (sentimentScore / 100 * 240 - 30) + ")")
+        })
 
     /* gaugeSVG.append('g')
         .append('rect')
@@ -138,7 +164,19 @@ function makeGauge(divID, sentimentScore) {
             .attr('class', 'shadowArc')
             .style('filter', 'url(#drop-shadow)')
             .attr("transform", "translate(" + divWidth / 2 + ',' + 3 * divHeight / 5 + ")")
-            .attr("fill", color);
+            .attr("fill", color)
+            .on('click', function () {
+                d3.select('#gaugeNeedle')
+                    .transition()
+                    .ease(d3.easeLinear)
+                    .duration(400)
+                    .attr("transform", "rotate(180)")
+                    .transition()
+                    .ease(d3.easeElastic)
+                    .duration(5000)
+                    .attr("transform", "rotate(" + (sentimentScore / 100 * 240 - 30) + ")")
+
+            });
     }
 
     function appendArcLabel(g, divWidth, divHeight, x, dy, arclabel, label) {
@@ -496,7 +534,7 @@ function makeSentimentBoxPlot(sentimentData, divID) {
         .attr("height", "100%")
         .attr('pointer-events', 'all')
         .call(zoomBeh);
-    
+
     svg.append('rect')
         .attr('height', '100%')
         .attr('width', '100%')
@@ -2846,7 +2884,7 @@ function getChartQuery3(companyName) {
     d3.selectAll('.visSVG').remove();
     var search_company = document.getElementById('search_company_news').value;
     //console.log(search_company);
-    document.getElementById('chartModal').innerHTML =  modalhtml4;
+    document.getElementById('chartModal').innerHTML = modalhtml4;
     $('#chartModal').show();
     data = parameters();
 
@@ -2861,7 +2899,7 @@ function getChartQuery3(companyName) {
             //console.log(responseData)
             //alert('조회 성공: ' + responseData.allNews.length + '개 기사');
 
-            
+
 
             makeGauge('dangerGauge', responseData.averageScore)
             document.getElementById('dangerGauge').addEventListener('click', function () {
@@ -2915,7 +2953,7 @@ function getChartQuery3(companyName) {
             }
             var companies = [];
             var allStockData = {};
-            
+
             console.log("스톡 길이 :  " + responseData.stockData.length);
             for (var i = 0; i < responseData.stockData.length; i++) {
                 var tempStock = responseData.stockData[i]
@@ -2926,7 +2964,7 @@ function getChartQuery3(companyName) {
                 allStockData[tempStock.company].push({ date: tempStock.date, price: tempStock.price })
             }
             console.log(allStockData)
-            if (responseData.stockData.length != 0){
+            if (responseData.stockData.length != 0) {
                 var shortestCompany = companies.reduce(function (a, b) {
                     return a.length <= b.length ? a : b;
                 })
@@ -2941,7 +2979,7 @@ function getChartQuery3(companyName) {
                     }
                     stockOptions.insertAdjacentHTML('beforeend', tempHTML);
                 }
-    
+
                 var divID = 'stockTime';
                 stockGraph = document.getElementById(divID);
 
@@ -2957,10 +2995,10 @@ function getChartQuery3(companyName) {
                 })
                 makeStockGraph(allStockData, divID);
             }
-            else{
+            else {
 
             }
-            
+
 
             $('#chartModal').hide();
 

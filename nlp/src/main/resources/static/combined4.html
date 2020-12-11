@@ -1,0 +1,2362 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>NLP -News List</title>
+    <link rel="stylesheet" href="css/auto-ml.css">
+    <link rel="stylesheet" type="text/css" href="datatables/datatables.css">
+
+    <link rel="stylesheet" href="css/w3.css">
+    <link rel="stylesheet" href="css/pagination.css">
+    <style>
+        .card_list {
+            flex-direction: row !important;
+        }
+
+        /*chart part*/
+        body {
+            font-family: Helvetica, Arial, sans-serif;
+        }
+
+        .axis-grid line {
+            stroke: rgb(190, 190, 190);
+            stroke-width: 0.5;
+        }
+
+        #power-gauge g.arc {
+            fill: steelblue;
+        }
+
+        #power-gauge g.pointer {
+            fill: #e85116;
+            stroke: #b64011;
+        }
+
+        #power-gauge g.label text {
+            text-anchor: middle;
+            font-size: 14px;
+            font-weight: bold;
+            fill: #666;
+        }
+
+        #example {
+            text-align: center;
+            font-size: 11px;
+        }
+
+        #example_news {
+            text-align: center;
+            font-size: 11px;
+        }
+
+        #example_report {
+            text-align: center;
+            font-size: 11px;
+        }
+
+        /*news and report part*/
+        #example_report,
+        #example_news,
+        #example,
+        #industry_news_list,
+        #subsidiary_news_list {
+            text-align: center;
+            font-size: 11px;
+        }
+
+        /* The Modal (background) */
+        .modal {
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            /* Stay in place */
+            z-index: 1;
+            /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%;
+            /* Full width */
+            height: 100%;
+            /* Full height */
+            overflow: auto;
+            /* Enable scroll if needed */
+            background-color: rgb(0, 0, 0);
+            /* Fallback color */
+            background-color: rgba(0, 0, 0, 0.4);
+            /* Black w/ opacity */
+        }
+
+        /* Modal Content/Box */
+        .modal-content {
+            background-color: #fefefe;
+            margin: -7% auto;
+            /* 15% from the top and centered */
+            padding-top: 20px;
+            padding-bottom: 20px;
+            padding-left: 40px;
+            padding-right: 40px;
+            width: 72%;
+            /* Could be more or less, depending on screen size */
+            min-height: 300px;
+            position: relative;
+            vertical-align: middle;
+        }
+
+        .modal-title {
+            margin: 7% auto;
+            /* 15% from the top and centered */
+            min-height: 40px;
+            background-color: #0508b1;
+            text-align: center;
+            vertical-align: middle;
+            position: relative;
+            padding: 20px;
+            width: 72%;
+            /* Could be more or less, depending on screen size */
+        }
+
+        .modal-close {
+            background-color: #fefefe;
+            margin: 7% auto;
+            padding-top: 20px;
+            padding-bottom: 20px;
+            padding-left: 40px;
+            padding-right: 40px;
+            width: 72%;
+            min-height: 50px;
+            position: relative;
+            vertical-align: middle;
+        }
+
+        .modal-loading {
+            background-color: #fefefe;
+            margin: 10% auto;
+            /* 15% from the top and centered */
+            padding: 40px;
+            border: 1px solid #888;
+            width: 70%;
+            /* Could be more or less, depending on screen size */
+            min-height: 400px;
+            position: relative;
+        }
+
+        .modal-list-head {
+            background-color: #fefefe;
+            margin: 5% auto;
+            /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 50%;
+            /* Could be more or less, depending on screen size */
+            max-height: 60px;
+            position: relative;
+        }
+
+        .modal-list {
+            background-color: #fefefe;
+            margin: -5% auto;
+            /* 15% from the top and centered */
+            padding: 40px;
+            border: 1px solid #888;
+            width: 50%;
+            /* Could be more or less, depending on screen size */
+            max-height: 600px;
+            position: relative;
+            overflow-y: scroll;
+        }
+
+
+        * {
+            box-sizing: border-box;
+            /*scrollbar-color: transparent transparent;*/
+            /* thumb and track color */
+            scrollbar-width: 5px;
+        }
+
+        *::-webkit-scrollbar {
+            width: 5;
+        }
+
+        *::-webkit-scrollbar-track {
+            /*background: transparent;*/
+        }
+
+        *::-webkit-scrollbar-thumb {
+            /*background: transparent;*/
+            border: none;
+        }
+
+        * {
+            -ms-overflow-style: none;
+        }
+
+        .carousel {
+            position: relative;
+            /*margin-top: 12%;*/
+            filter: drop-shadow(0 0 10px #0003);
+            perspective: 100px;
+            background-color: rgb(199, 190, 108);
+        }
+
+        .carousel::before,
+        .carousel::after,
+        .carousel__prev,
+        .carousel__next {
+            position: absolute;
+            top: 0;
+            margin-top: 1.2%;
+            width: 2rem;
+            height: 2rem;
+            transform: translateY(-50%);
+            border-radius: 50%;
+            font-size: 0;
+            outline: 0;
+        }
+
+        .carousel::before,
+        .carousel__prev {
+            left: 1rem;
+        }
+
+        .carousel::after,
+        .carousel__next {
+            right: 1rem;
+        }
+
+        .carousel::before {
+            content: '';
+            z-index: 1;
+            /*background-color: #333;*/
+            background-color: rgb(49, 156, 22);
+            background-size: 1rem 1rem;
+            background-repeat: no-repeat;
+            background-position: center center;
+            color: #fff;
+            font-size: 1rem;
+            line-height: 2rem;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        .carousel::after {
+            content: '';
+            z-index: 1;
+            background-color: rgb(141, 29, 29);
+            background-size: 1rem 1rem;
+            background-repeat: no-repeat;
+            background-position: center center;
+            color: #fff;
+            font-size: 2rem;
+            line-height: 3rem;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        .carousel::before {
+            background-image: url("img/left-arrow.png");
+        }
+
+        .carousel::after {
+            background-image: url("img/right-arrow.png");
+        }
+
+        .carouselNoPrev {
+            position: relative;
+            perspective: 100px;
+        }
+
+        .carouselNoPrev::before,
+        .carouselNoPrev::after,
+        .carouselNoPrev__prev,
+        .carouselNoPrev__next {
+            position: absolute;
+            top: 0;
+            margin-top: 1.2%;
+            width: 2rem;
+            height: 2rem;
+            transform: translateY(-50%);
+            border-radius: 50%;
+            font-size: 0;
+            outline: 0;
+        }
+
+        .carouselNoPrev::before,
+        .carouselNoPrev__prev {
+            left: 1rem;
+        }
+
+        .carouselNoPrev::after,
+        .carouselNoPrev__next {
+            right: 1rem;
+        }
+
+        .carouselNoPrev::before {
+            opacity: 0;
+            content: '';
+            z-index: 1;
+            background-color: rgb(168, 199, 54);
+            background-size: 1rem 1rem;
+            background-repeat: no-repeat;
+            background-position: center center;
+            color: #fff;
+            font-size: 1rem;
+            line-height: 2rem;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        .carouselNoPrev::after {
+            content: '';
+            z-index: 1;
+            background-color: rgb(173, 48, 167);
+            background-size: 1rem 1rem;
+            background-repeat: no-repeat;
+            background-position: center center;
+            color: #fff;
+            font-size: 2rem;
+            line-height: 3rem;
+            text-align: center;
+            pointer-events: none;
+        }
+
+
+        .carouselNoPrev::before {
+            background-image: url("img/left-arrow.png");
+        }
+
+        .carouselNoPrev::after {
+            background-image: url("img/right-arrow.png");
+        }
+
+
+        .carouselNoNext {
+            position: relative;
+            perspective: 100px;
+        }
+
+        .carouselNoNext::before,
+        .carouselNoNext::after,
+        .carouselNoNext__prev,
+        .carouselNoNext__next {
+            position: absolute;
+            top: 0;
+            margin-top: 1.2%;
+            width: 2rem;
+            height: 2rem;
+            transform: translateY(-50%);
+            border-radius: 50%;
+            font-size: 0;
+            outline: 0;
+        }
+
+        .carouselNoNext::before,
+        .carouselNoNext__prev {
+            left: 1rem;
+        }
+
+        .carouselNoNext::after,
+        .carouselNoNext__next {
+            right: 1rem;
+        }
+
+        .carouselNoNext::before {
+            content: '';
+            z-index: 1;
+            background-color: rgb(40, 185, 178);
+            background-size: 1rem 1rem;
+            background-repeat: no-repeat;
+            background-position: center center;
+            color: #fff;
+            font-size: 1rem;
+            line-height: 2rem;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        .carouselNoNext::after {
+            opacity: 0;
+            content: '';
+            z-index: 1;
+            background-color: rgb(255, 255, 255);
+            background-size: 1rem 1rem;
+            background-repeat: no-repeat;
+            background-position: center center;
+            color: #fff;
+            font-size: 2rem;
+            line-height: 3rem;
+            text-align: center;
+            pointer-events: none;
+        }
+
+
+        .carouselNoNext::before {
+            background-image: url("img/left-arrow.png");
+        }
+
+        .carouselNoNext::after {
+            background-image: url("img/right-arrow.png");
+        }
+
+
+        /* fold */
+        .menu a {
+            cursor: pointer;
+        }
+
+        .fold a {
+            cursor: pointer;
+        }
+
+        .menu .hide li:hover {
+
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bolder;
+            color: #7c130c;
+        }
+
+        .menu .hide {
+            display: none;
+            font-size: 14px;
+
+        }
+
+
+        .visivi {
+            visibility: visible;
+            font-size: 13px;
+            font-weight: bold;
+            position: absolute;
+            color: #0d1775;
+        }
+
+        .closed {
+            visibility: hidden;
+            font-size: 13px;
+            font-weight: bold;
+            position: relative;
+            color: #090b88;
+        }
+
+        .list li:hover {
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bolder;
+            color: #7c130c;
+        }
+
+        .list li {
+
+            font-size: 14px;
+
+        }
+
+        .nulls {
+            display: none;
+        }
+    </style>
+
+    <script type="text/javascript" src="js/jquery-3.5.1.js"></script>
+    <script type="text/javascript" charset="utf8" src="datatables/datatables.js"></script>
+    <script type="text/javascript" src="js/pagination.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            createEmptyDatatableNews();
+            $('#example_report').DataTable();
+            setDisplay();
+            $('#date_picker_div_News').hide();
+            $('#condition').hide();
+            $('#condition_report').hide();
+        });
+
+
+
+        function viewNewsContents(i) {
+            console.log(window.newsResponseData[i]);
+            console.log(window.newsResponseData[i].indexNum);
+            console.log(window.newsResponseData.length);
+
+            var prev = ``;
+            var next = ``;
+            var j = -1;
+            var k = -1;
+            var carouselOption = "";
+
+            if (i != 0 && i != window.newsResponseData.length - 1) {
+                j = i - 1;
+                k = i + 1;
+                prev = `<a href="javascript:viewNewsContents(` + j + `);" class="carousel__prev">Go to last slide</a>`;
+                next = `<a href="javascript:viewNewsContents(` + k + `);" class="carousel__next">Go to next slide</a>`;
+                carouselOption = "carousel";
+            }
+            else if (i == 0) {
+                k = i + 1;
+                prev = ``;
+                next = `<a href="javascript:viewNewsContents(` + k + `);" class="carousel__next">Go to next slide</a>`;
+                carouselOption = "carouselNoPrev";
+            }
+            else if (i == window.newsResponseData.length - 1) {
+                j = i - 1;
+                prev = `<a href="javascript:viewNewsContents(` + j + `);" class="carousel__prev">Go to last slide</a>`;
+                next = ``;
+                carouselOption = "carouselNoNext";
+            }
+
+            var sectionHtml =
+                `   
+                <section class="` + carouselOption + `" aria-label="Gallery" style="background-color: #FFF;">
+                    <div class="carousel__snapper">
+                        ` + prev + next + `
+                    </div>
+                </section>  
+            `;
+
+
+
+            var modalhtml =
+                `   
+                <div class="modal-title">
+                    ` + sectionHtml + `
+                    <p style="text-align: center; vertical-align: middle;"><b><span style="font-size: 13pt; color:white; vertical-align: middle;">` + window.newsResponseData[i].newsTtl + `</span></b></p>
+                </div>
+
+                <div class="modal-content">
+
+                    <section>
+                        <div>
+                            <table style="width:100%;">
+                                <tr>
+                                    <td>
+                                        <p style="text-align: right; line-height: 1;"><br />` + window.newsResponseData[i].newsDate + `</p>
+
+                                        <div style="border: 1px solid #888;">
+                                            <p style="text-align: center; line-height: 1.5;"><br />` + window.newsResponseData[i].rawData + `</p>
+                                        </div>
+
+                                        <p><br/></p>
+                                        <p><br/></p>
+                                        <p><br></p>
+                                        <p><br></p>
+
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </section>
+
+                    <div>
+                    </div>
+
+                </div>
+                
+                <div class="modal-close">
+                    <table style="width:100%;">
+                        <tr>
+                            <td>
+                                <div style="cursor:pointer;background-color:#DDDDDD;text-align: center;padding-bottom: 10px; padding-top: 10px; position:absolute; bottom:10px; width:85%; left:50%; transform:translate(-50%, 0);" onClick="close_pop();">
+                                    <span class="pop_bt" style="font-size: 13pt;">
+                                        닫기
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+
+                
+            `;
+            document.getElementById('myModal').innerHTML = modalhtml;
+            $('#myModal').show();
+        }
+
+
+        function loading1(loading) {
+            var modalhtml1 =
+                `
+            <div class="modal-loading">
+                <p style="text-align: center;"><span style="font-size: 14pt;"><b><span style="font-size: 24pt;">` + loading + ` 목록 불러오는 중...</span></b></span></p>
+                <button type="button" class="close" onClick="close_pop();"></button>
+                <p style="text-align: center; line-height: 1.5;"><br />데이터 베이스에서 읽어오고 있습니다.</p>
+                <p style="text-align: center; line-height: 1.5;"><br />잠시만 기다려 주십시오.</p>
+                <p><br /></p>
+                <p style="text-align: center; line-height: 1.5;"><br />
+                    <img src="/img/loading.gif" align="center"/>
+                </p>
+            </div>
+            `;
+            document.getElementById('myModal').innerHTML = modalhtml1;
+            $('#myModal').show();
+        }
+
+        function drawTable(result_area, table_id) {
+
+            if (table_id === '') {
+                table_id = 'example';
+            }
+
+            /* <table id="`+table_id+`" class="display" style="width:100%"> */
+            var htmlStart =
+                `
+            <table id="`+ table_id + `" class="display" style="width:100%">
+                        <colgroup>
+                            <col>
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th>인덱스</th>
+                            <th>컴포짓키</th>
+                            <th>날짜</th>
+                            <th>기업명</th>
+                            <th>제목</th>
+                            <th>progress</th>
+                            <th>스코어</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            for (var i = 0; i < window.newsResponseData.length; i++) {
+                var indexNum = i + 1;
+                window.newsResponseData[i].indexNum = indexNum;
+                var sscoreWord = newsResponseData[i].taScreWord;
+                var sscore = 0;
+
+                if (newsResponseData[i].taScre != NaN) {
+                    tempSscore = Math.round(newsResponseData[i].taScre).toString();;
+                    if (tempSscore.match(/^[0-9]$/) != null) {
+                        sscore = '0' + tempSscore;
+                    } else {
+                        sscore = tempSscore;
+                    }
+                    //console.log(sscore);
+                };
+
+
+                var rred = '';
+                var procc = '';
+
+                if (sscoreWord == '중립') {
+                    procc = `<td><div style="width:100%; border:0.5px solid grey; height:7px; color:#000!important; background-color:#dadada!important; border-radius:6px" >
+                    <div style="height:7px; padding:0.01em; width:`+ sscore + `%; color: #fff!important;
+                    background-color: #32880a!important; border-radius: 7px; font-size: 0%;" >`+ sscore + `</div>
+                </div></td>`
+                    rred = `<td style='color:#32880a;'>` + sscoreWord + `</td>`;
+                } else if (sscoreWord == '부정') {
+                    procc = `<td><div style="width:100%; border:0.5px solid grey; height:7px; color:#000!important; background-color:#dadada!important; border-radius:6px" >
+                    <div style="height:7px; padding:0.01em; width:`+ sscore + `%; color: #fff!important;
+                    background-color: #2196F3!important; border-radius: 7px; font-size: 0%;" >`+ sscore + `</div>
+                </div></td>`
+                    rred = `<td style='color:#2196F3;'>` + sscoreWord + `</td>`;
+                } else if (sscoreWord == '긍정') {
+                    procc = `<td><div style="width:100%; border:0.5px solid grey; height:7px; color:#000!important; background-color:#dadada!important; border-radius:6px" >
+                    <div style="height:7px; padding:0.01em; width:`+ sscore + `%; color: #fff!important;
+                    background-color: #a31b1b!important; border-radius: 7px; font-size: 0%;" >`+ sscore + `</div>
+                </div></td>`
+                    rred = `<td style='color:#a31b1b;'>` + sscoreWord + `</td>`;
+                } else if (sscoreWord == '없음') {
+                    procc = `<td>no score</td>`
+                    rred = `<td style='color:black'>` + sscoreWord + `</td>`;
+                }
+
+
+                var hiddenData = escapeHtml(window.newsResponseData[i].rawData);
+                console.log(hiddenData);
+
+                var htmlContents =
+                    `
+                    <tr>
+                        <td>` + indexNum + `</td>
+                        <td>` + window.newsResponseData[i].cmpyKey + `</td>
+                        <td>` + window.newsResponseData[i].newsDate + `</td>
+                        <td>` + window.newsResponseData[i].cmpyName + `</td>
+                        <td><a href="javascript:viewNewsContents(` + i + `);">` + window.newsResponseData[i].newsTtl + `</a>
+                            <input type="hidden" id="hidden` + i + `" value="` + hiddenData + `"/>
+                            </td>
+                        `+ procc + `
+                        `+ rred + `
+                    </tr>
+                `;
+                htmlStart = htmlStart + htmlContents;
+            }
+
+            var htmlEnd =
+                `
+                </tbody>
+            </table>
+            `;
+
+            document.getElementById(result_area).innerHTML = htmlStart + htmlEnd;
+
+            $('#' + table_id).DataTable();
+            close_pop();
+        }
+
+        var entityMap = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;', '/': '&#x2F;', '`': '&#x60;', '=': '&#x3D;' };
+
+        function escapeHtml(string) {
+            return String(string).replace(/[&<>"'`=\/]/g,
+                function (s) {
+                    return entityMap[s];
+                });
+        }
+
+
+        function drawTableReport() {
+            var htmlStart =
+                `
+            <table id="example_report" class="display" style="width:100%">
+                        <colgroup>
+                            <col>
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th>인덱스</th>
+                            <th>날짜</th>
+                            <th>제목</th>
+                            <th>progress</th>
+                            <th>스코어</th>
+                            <th>타입</th>
+                            <th>　</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tbodyReport">
+            `;
+
+            for (var i = 0; i < window.reportResponseData.length; i++) {
+                var indexNum = i + 1;
+                window.reportResponseData[i].indexNum = indexNum;
+                var sscoreWord = reportResponseData[i].taScreWord;
+                var sscore = 0;
+
+                if (reportResponseData[i].taScre != NaN) {
+                    tempSscore = Math.round(reportResponseData[i].taScre).toString();;
+                    if (tempSscore.match(/^[0-9]$/) != null) {
+                        sscore = '0' + tempSscore;
+                    } else {
+                        sscore = tempSscore;
+                    }
+                    //console.log(sscore);
+                };
+
+
+                var rred = '';
+                var procc = '';
+
+                if (sscoreWord == '중립') {
+                    procc = `<td><div style="width:100%; border:0.5px solid grey; height:7px; color:#000!important; background-color:#dadada!important; border-radius:6px" >
+                    <div style="height:7px; padding:0.01em; width:`+ sscore + `%; color: #fff!important;
+                    background-color: #32880a!important; border-radius: 7px; font-size: 0%;" >`+ sscore + `</div>
+                </div></td>`
+                    rred = `<td style='color:#32880a;'>` + sscoreWord + `</td>`;
+                } else if (sscoreWord == '부정') {
+                    procc = `<td><div style="width:100%; border:0.5px solid grey; height:7px; color:#000!important; background-color:#dadada!important; border-radius:6px" >
+                    <div style="height:7px; padding:0.01em; width:`+ sscore + `%; color: #fff!important;
+                    background-color: #2196F3!important; border-radius: 7px; font-size: 0%;" >`+ sscore + `</div>
+                </div></td>`
+                    rred = `<td style='color:#2196F3;'>` + sscoreWord + `</td>`;
+                } else if (sscoreWord == '긍정') {
+                    procc = `<td><div style="width:100%; border:0.5px solid grey; height:7px; color:#000!important; background-color:#dadada!important; border-radius:6px" >
+                    <div style="height:7px; padding:0.01em; width:`+ sscore + `%; color: #fff!important;
+                    background-color: #a31b1b!important; border-radius: 7px; font-size: 0%;" >`+ sscore + `</div>
+                </div></td>`
+                    rred = `<td style='color:#a31b1b;'>` + sscoreWord + `</td>`;
+                } else if (sscoreWord == '없음') {
+                    procc = `<td>no score</td>`
+                    rred = `<td style='color:black'>` + sscoreWord + `</td>`;
+                }
+
+                var downImg = '';
+
+                if (window.reportResponseData[i].docCaty == 'pdf') {
+                    downImg = `
+                                    <a href="/file/` + window.reportResponseData[i].orgnFileName + `.pdf">
+                                        <img src="/img/pdf_down.png" style="width: auto; height: 14px;">
+                                    </a>
+                                `;
+                }
+                else if (window.reportResponseData[i].docCaty == 'hwp') {
+                    downImg = `
+                                    <a href="/file/` + window.reportResponseData[i].orgnFileName + `.hwp">
+                                        <img src="/img/hwp_down.png" style="width: auto; height: 14px;">
+                                    </a>
+                                `;
+                }
+                else {
+                    downImg = `<img src="/img/document_download.png" style="width: auto; height: 14px;">`;
+                }
+
+                var htmlContents =
+                    `
+                    <tr>
+                        <td>` + indexNum + `</td>
+                        <td>` + window.reportResponseData[i].reportDate + `</td>
+                        <td>` + window.reportResponseData[i].orgnFileName + `</td>
+                        `+ procc + `
+                        `+ rred + `
+                        <td>` + window.reportResponseData[i].docCaty + `</td>
+                        <td>
+                            ` + downImg + `
+                        </a>
+                        </td>
+                    </tr>
+                `;
+                htmlStart = htmlStart + htmlContents;
+            }
+
+            var htmlEnd =
+                `
+                </tbody>
+            </table>
+            `;
+
+            document.getElementById('result_area_report').innerHTML = htmlStart + htmlEnd;
+
+            $('#example_report').DataTable();
+            close_pop();
+        }
+
+        function countPages(rowCount) {
+            var pageCount = 0;
+            if (rowCount >= 2000) {
+                pageCount = parseInt(rowCount / 2000) + 1;
+            } else {
+                pageCount = 1;
+            }
+
+            return pageCount;
+        }
+
+        function parameters() {
+            var data = new Object();
+
+            data.newsYear = parseInt($("#newsYear").val());
+            data.gubun = $("#gubunNews").val();
+
+            if ($("#gubunNews").val() == "month") {
+                var temp = $("#choicesNews").val().split("월")[0];
+                console.log(temp);
+                data.gubunItem = parseInt(temp);
+            }
+            else if ($("#gubunNews").val() == "quarter") {
+                var temp = $("#choicesNews").val().split("분기")[0];
+                console.log(temp);
+                data.gubunItem = parseInt(temp);
+            }
+
+            data.startDate = $("#date_from_news").val();
+            data.endDate = $("#date_to_news").val();
+            data.searchWord = document.getElementById('search_company_news').value;
+            data.pageNum = 1;
+            data.rowCount = 0;
+            data.pageCount = 1;
+
+            return data;
+        }
+
+        function getRowCount() {
+            let datassss = parameters();
+            console.log(parameters());
+
+            $.ajax({
+                url: "/getRowCount",
+                method: 'POST',
+                data: datassss,
+                dataType: 'json',
+                success: function (responseData) {
+                    console.log(responseData);
+                    datassss.rowCount = responseData;
+                    if (datassss.rowCount == 0) {
+                        alert('뉴스기사가 없습니다');
+                        datassss.pageCount = 0;
+
+                    } else {
+                        alert('총 ' + datassss.rowCount + ' 건의 뉴스 기사가 검색됨');
+                        datassss.pageCount = countPages(datassss.rowCount);
+                        getChartQuery3(datassss.searchWord);
+                        paginationByRowCount(datassss);
+                    }
+                },
+                error: function () {
+                    alert('rowCount 조회실패');
+
+                }
+
+            });
+
+        }
+
+        function paginationByRowCount(data) {
+            var pageLength = data.pageCount;
+            var sources = function () {
+                var result = [];
+
+                for (var i = 1; i <= pageLength; i++) {
+                    result.push(i);
+                }
+
+                return result;
+            }();
+
+            $('#pagination-container').pagination({
+                dataSource: sources,
+                pageSize: 1,
+                pageRange: 1,
+                showGoInput: true,
+                showGoButton: true,
+                showNavigator: true,
+                callback: function (pagination) {
+                    //    //     var html = _.template($('#template-demo').html(), {
+                    //    //         data: data
+                    //    //     });
+                    //    //$('#data-container').html(html);
+                    data.pageNum = pagination[0];
+                    //window.data = data ;
+                    //pageData = window.data ;
+                    console.log(pagination);
+                    getNewsList(data);
+                }
+            });
+        }
+
+
+
+
+        function getNewsList(data) {
+
+            var result_area = "result_area_news";
+            var table_id = "example_news";
+            console.log(data);
+
+            loading1("뉴스");
+
+            $.ajax({
+                url: "/getNewsListByCondition",
+                method: 'POST',
+                data: data,
+                dataType: 'json',
+                success: function (responseData) {
+                    //alert('조회 성공');
+                    console.log(responseData.length);
+                    window.newsResponseData = responseData;
+                    console.log(window.newsResponseData[0]);
+
+                    $('#myModal').hide();
+
+                    document.getElementById('myModal').innerHTML = modalhtml2;
+                    $('#myModal').show();
+                    setTimeout(() => drawTable(result_area, table_id), 1000);
+
+                },
+                error: function () {
+                    alert('조회 실패');
+                    $('#myModal').hide();
+                }
+            });
+
+        }
+
+        function getNewsListByCompanyName(companyName) {
+            var data = parameters();
+            data.searchWord = companyName;
+            console.log(data);
+            var result_area = 'result_area_news';
+
+            loading1("뉴스");
+
+            $.ajax({
+                url: "/getNewsListByCompanyName",
+                method: 'POST',
+                data: data,
+                dataType: 'json',
+                success: function (responseData) {
+                    //alert('조회 성공');
+                    getChartQuery3(companyName);
+                    console.log(responseData.length);
+                    window.newsResponseData = responseData;
+                    console.log(window.newsResponseData[0]);
+
+                    $('#myModal').hide();
+
+                    document.getElementById('myModal').innerHTML = modalhtml2;
+                    $('#myModal').show();
+                    setTimeout(() => drawTable(result_area, ''), 1000);
+
+                },
+                error: function () {
+                    if (data.gubun == "custom" && (data.startDate == null || data.endData == null)) {
+                        alert('시작 날짜 및 끝 날짜를 입력 해 주세요.');
+                    }
+                    else {
+                        alert('조회 실패');
+                    }
+                    $('#myModal').hide();
+                }
+            });
+
+        }
+
+
+        function getReportList() {
+            var data = parameters();
+            console.log(data);
+
+            loading1("행내 보고서");
+
+            $.ajax({
+                url: "/getReportListByCondition",
+                method: 'POST',
+                data: data,
+                dataType: 'json',
+                success: function (responseData) {
+                    //alert('조회 성공');
+                    console.log(responseData.length);
+                    window.reportResponseData = responseData;
+                    console.log(window.reportResponseData[0]);
+
+                    $('#myModal').hide();
+
+                    document.getElementById('myModal').innerHTML = modalhtml3;
+                    $('#myModal').show();
+                    setTimeout(() => drawTableReport(), 1000);
+
+                },
+                error: function () {
+                    if (data.gubun == "custom" && (data.startDate == null || data.endData == null)) {
+                        alert('시작 날짜 및 끝 날짜를 입력 해 주세요.');
+                    }
+                    else {
+                        alert('조회 실패');
+                    }
+                    $('#myModal').hide();
+                }
+            });
+        }
+
+        var modalhtml2 =
+            `
+                <div class="modal-loading">
+                    <p style="text-align: center;"><span style="font-size: 14pt;"><b><span style="font-size: 24pt;">뉴스 목록 불러오는 중...</span></b></span></p>
+                    <button type="button" class="close" onClick="close_pop();"></button>
+                    <p style="text-align: center; line-height: 1.5;"><br />화면에 표출중입니다.</p>
+                    <p style="text-align: center; line-height: 1.5;"><br />잠시만 기다려 주십시오.</p>
+                    <p><br /></p>
+                    <p style="text-align: center; line-height: 1.5;"><br />
+                        <img src="/img/loading.gif" align="center"/>
+                    </p>
+                </div>
+            `;
+
+        var modalhtml3 =
+            `
+                <div class="modal-loading">
+                    <p style="text-align: center;"><span style="font-size: 14pt;"><b><span style="font-size: 24pt;">보고서 목록 불러오는 중...</span></b></span></p>
+                    <button type="button" class="close" onClick="close_pop();"></button>
+                    <p style="text-align: center; line-height: 1.5;"><br />화면에 표출중입니다.</p>
+                    <p style="text-align: center; line-height: 1.5;"><br />잠시만 기다려 주십시오.</p>
+                    <p><br /></p>
+                    <p style="text-align: center; line-height: 1.5;"><br />
+                        <img src="/img/loading.gif" align="center"/>
+                    </p>
+                </div>
+            `;
+
+        var modalhtml4 =
+            `
+                <div class="modal-loading">
+                    <p style="text-align: center;"><span style="font-size: 14pt;"><b><span style="font-size: 24pt;">차트 데이터 불러오는 중...</span></b></span></p>
+                    <button type="button" class="close" onClick="close_pop();"></button>
+                    <p style="text-align: center; line-height: 1.5;"><br />화면에 표출중입니다.</p>
+                    <p style="text-align: center; line-height: 1.5;"><br />잠시만 기다려 주십시오.</p>
+                    <p><br /></p>
+                    <p style="text-align: center; line-height: 1.5;"><br />
+                        <img src="/img/loading.gif" align="center"/>
+                    </p>
+                </div>
+            `;
+
+
+        var selectListData = {
+            quarter: {
+                name: 'quarter',
+                text: ['1분기', '2분기', '3분기', '4분기'],
+                value: ['q1', 'q2', 'q3', 'q4']
+            },
+            month: {
+                name: 'month',
+                text: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+                value: ['m1', 'm2', 'm3', 'm4', 'm5', 'm6', 'm7', 'm8', 'm9', 'm10', 'm11', 'm12']
+            },
+            year: {
+                value: 'no'
+            },
+            custom: {
+                value: 'no'
+            }
+        };
+
+        function itemChangeNews() {
+
+            var selectItem = $("#gubunNews").val();
+            console.log(selectItem);
+
+            var changeItem;
+
+            if (selectItem == "quarter") {
+                changeItem = selectListData.quarter.text;
+                document.getElementById("choicesNews").disabled = false;
+                document.getElementById("newsYear").disabled = false;
+                $('#yearSelect').show();
+                $('#date_picker_div_News').hide();
+                $('#condition').show();
+            }
+            else if (selectItem == "month") {
+                changeItem = selectListData.month.text;
+                document.getElementById("choicesNews").disabled = false;
+                document.getElementById("newsYear").disabled = false;
+                $('#yearSelect').show();
+                $('#date_picker_div_News').hide();
+                $('#condition').show();
+            }
+            else if (selectItem == "year") {
+                changeItem = '';
+                document.getElementById("choicesNews").disabled = true;
+                document.getElementById("newsYear").disabled = false;
+                $('#yearSelect').show();
+                $('#date_picker_div_News').hide();
+                $('#condition').hide();
+            }
+            else if (selectItem == "custom") {
+                changeItem = '';
+                //document.getElementById("choicesNews").disabled = true;
+                //document.getElementById("newsYear").disabled = true;
+                $('#yearSelect').hide();
+                $('#date_picker_div_News').show();
+                $('#condition').hide();
+            }
+
+            $('#choicesNews').empty();
+
+            for (var count = 0; count < changeItem.length; count++) {
+                var option = $("<option>" + changeItem[count] + "</option>");
+                $('#choicesNews').append(option);
+            }
+        }
+
+        function itemChangeReport() {
+
+            $('#date_picker_div_Report').hide();
+            var selectItem = $("#gubunReport").val();
+            console.log(selectItem);
+
+            var changeItem;
+
+            if (selectItem == "quarter") {
+                changeItem = selectListData.quarter.text;
+                document.getElementById("choicesReport").disabled = false;
+                document.getElementById("reportYear").disabled = false;
+                $('#date_picker_div_Report').hide();
+                $('#condition_report').show();
+            }
+            else if (selectItem == "month") {
+                changeItem = selectListData.month.text;
+                document.getElementById("choicesReport").disabled = false;
+                document.getElementById("reportYear").disabled = false;
+                $('#date_picker_div_Report').hide();
+                $('#condition_report').show();
+            }
+            else if (selectItem == "year") {
+                changeItem = '';
+                document.getElementById("choicesReport").disabled = true;
+                document.getElementById("reportYear").disabled = false;
+                $('#date_picker_div_Report').hide();
+                $('#condition_report').hide();
+            }
+            else if (selectItem == "custom") {
+                changeItem = '';
+                document.getElementById("choicesReport").disabled = true;
+                document.getElementById("reportYear").disabled = true;
+                $('#date_picker_div_Report').show();
+                $('#condition_report').hide();
+            }
+
+            $('#choicesReport').empty();
+
+            for (var count = 0; count < changeItem.length; count++) {
+                var option = $("<option>" + changeItem[count] + "</option>");
+                $('#choicesReport').append(option);
+            }
+        }
+
+        function setDisplay() {
+            itemChangeFold();
+            d3.selectAll('.visSVG').remove();
+
+            if ($('input:radio[id=news_radio]').is(':checked')) {
+                document.getElementById('main_title').innerText = '뉴스 조회';
+                createEmptyDatatableNews();
+                $('#contents_section_news').show();
+                $('#contents_section_report').hide();
+                $('#date_picker_div_News').hide();
+                $('#example_news').DataTable();
+                $('.visualize').show();
+                $('#option_set_report').hide();
+                $('#option_set_news').show();
+
+            } else {
+                document.getElementById('main_title').innerText = '행내 보고서 조회';
+                createEmptyDatatableReport();
+                $('#contents_section_report').show();
+                $('#contents_section_news').hide();
+                $('#date_picker_div_Report').hide();
+                $('#example_report').DataTable();
+                $('.visualize').hide();
+                $('#option_set_news').hide();
+                $('#option_set_report').show();
+            }
+            document.getElementById('pagination-container').innerHTML = ``;
+        }
+
+        //산업별 뉴스 가져오기
+        function getNewsListByIndustryAndSubsidiary(gubunJaName, selectedName) {
+
+            var result_area = '';
+            var table_id = '';
+            var controllerUrl = "getNewsListByIndustryAndSubsidiary";
+            if (gubunJaName == "industry") {
+                result_area = 'result_area_industry';
+                table_id = 'industry_news_list';
+            } else {
+                result_area = 'result_area_subsidiary';
+                table_id = 'subsidiary_news_list';
+            };
+
+            console.log('산업명' + gubunJaName);
+            loading1("뉴스");
+
+            $.ajax({
+                url: "/" + controllerUrl + "/",
+                method: 'GET',
+                dataType: 'json',
+                data: { gubunJaName: gubunJaName, selectedName: selectedName },
+                success: function (responseData) {
+                    //alert('조회 성공');
+                    console.log(responseData.length);
+                    window.newsResponseData = responseData;
+                    console.log(window.newsResponseData[0]);
+
+                    $('#myModal').hide();
+
+                    document.getElementById('myModal').innerHTML = modalhtml2;
+                    $('#myModal').show();
+                    setTimeout(() => drawTable(result_area, table_id), 1000);
+
+                },
+                error: function () {
+                    alert('조회 실패');
+                    $('#myModal').hide();
+                }
+            });
+
+
+        }
+
+
+        function getIndustryAndSubsidiaryList(gubunJa) {
+
+            industry_column_list = ["ㄱ", "ㄴ", "ㄷ", "ㄹ", "ㅁ", "ㅂ", "ㅅ", "ㅇ", "ㅈ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ", "기타"];
+            industry_column_list_java = ['responseData[i].giYeok',
+                'responseData[i].niEun',
+                'responseData[i].diGeut',
+                'responseData[i].riEul',
+                'responseData[i].miEum',
+                'responseData[i].biEup',
+                'responseData[i].siOt',
+                'responseData[i].iEung',
+                'responseData[i].jiEut',
+                'responseData[i].chiEut',
+                'responseData[i].kiEuk',
+                'responseData[i].tiEuk',
+                'responseData[i].piEup',
+                'responseData[i].hiEut',
+                'responseData[i].guiTar'];
+
+            console.log('구분자 자바스크립' + gubunJa);
+            console.log(industry_column_list[0]);
+            console.log(industry_column_list_java[0]);
+
+            $.ajax({
+                url: "/getIndustryAndSubsidiaryList/" + gubunJa,
+                method: 'GET',
+                dataType: 'json',
+                success: function (responseData) {
+                    // alert('조회 성공');
+                    // console.log(responseData);
+                    //console.log(responseData[0]);
+
+                    //var gigi = eval(industry_column_list_java[0]);
+                    //				console.log(gigi);
+
+                    var tables = ``;
+
+                    var expend_all = `
+                    <div class="buttons" align="right" >
+                        <a id="toggleee" class="btn" style="min-width: 110px;" href="javascript:togglee();">전체 펼치기</a>
+                        
+                    </div>
+                    `
+
+                    for (var n = 0; n < 3; n++) {
+                        var htmlTableHead =
+                            `
+                            <table style="border-style: none none none none; border-width:2px; border-color:#ccc4c3;" rules=cols>
+                                <tr>
+                            `;
+
+                        var tds = ``;
+
+                        if (n == 0) { m = 0; r = 5 };
+                        if (n == 1) { m = 5; r = 10 };
+                        if (n == 2) { m = 10; r = 15 };
+
+                        for (var j = m; j < r; j++) {
+                            var colName = industry_column_list[j];
+
+                            //console.log(colJavaName);
+                            var htmlhead =
+                                `
+                                
+                                        <td style="padding-left: 16px; padding-right:10px;" valign="top" width="270">
+                                            <div>
+                                                <ul >
+                                                    <li class="menu">
+                                                        <a style="font-size: large; font-weight: bold;"> `+ colName + ` </a>
+                                                        
+                                                        <ul class="list">
+                                                            <br/>
+                                                                                                                
+                                `;
+
+                            var htmlmiddle =
+                                `
+                                        </ul>
+                                        <ul class="hide">
+                                    `;
+
+
+                            k = 0;
+                            for (var i = 0; i < responseData.length; i++) {
+                                var colJavaName = eval(industry_column_list_java[j]);
+                                // console.log('컬럼이름 '+colJavaName);
+                                if (k < 5) {
+                                    if (colJavaName != null) {
+                                        var htmlli1 =
+                                            `
+                                                    <li>`+ colJavaName + `</li>
+                                                    `;
+
+                                        htmlhead += htmlli1;
+                                        k++;
+                                    }
+
+                                } else if ((colJavaName != null)) {
+                                    var htmlli2 =
+                                        `
+                                                    <li>`+ colJavaName + `</li>
+                                                    `;
+                                    htmlmiddle += htmlli2;
+                                };
+                            };
+
+
+                            var htmltail =
+                                `
+                                                                </ul>
+                                                                <a class="visivi"  > 더보기 ▼ </a>
+                                                                <a class="closed"  > 접기 ▲ </a>
+                                                            </li>
+
+
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                                                
+                                                                
+                                `;
+                            var td = htmlhead + htmlmiddle + htmltail;
+
+                            tds += td;
+                        };
+
+                        var htmlTableTail =
+                            `
+                                </tr>
+                            <br/>	
+                            <br/>
+                            </table>	
+
+                        `
+
+                        var htmltable1 = htmlTableHead + tds + htmlTableTail;
+
+                        tables += htmltable1;
+                    };
+
+                    if (gubunJa == 'industry') {
+                        document.getElementById('result_area_industry').innerHTML = expend_all + tables;
+                    } else {
+                        document.getElementById('result_area_subsidiary').innerHTML = expend_all + tables;
+                    }
+
+
+
+                    $(".menu>a").click(function () {
+
+                        //$('directoryresults').find('input');
+                        var lisf = $(this).siblings('ul');
+                        var submenu = $(lisf[1]);
+                        var lista = $(this).siblings('a');
+                        var folda1 = $(lista[0]);
+                        var folda2 = $(lista[1]);
+
+                        if (submenu.is(":visible")) {
+                            submenu.slideUp(400);
+
+                            if ($(this).hasClass('closed')) {
+                                $(this).css('visibility', 'hidden');
+                            }
+                            if (folda1.hasClass('closed')) {
+                                folda1.css('visibility', 'hidden');
+                            }
+                            if (folda2.hasClass('closed')) {
+                                folda2.css('visibility', 'hidden');
+                            }
+                            if ($(this).hasClass('visivi')) {
+                                $(this).css('visibility', 'visible');
+                            }
+                            if (folda1.hasClass('visivi')) {
+                                folda1.css('visibility', 'visible');
+                            }
+                            if (folda2.hasClass('visivi')) {
+                                folda2.css('visibility', 'visible');
+                            }
+
+                        } else {
+                            submenu.slideDown(400);
+
+                            if ($(this).hasClass('closed')) {
+                                $(this).css('visibility', 'visible');
+                            }
+                            if (folda1.hasClass('closed')) {
+                                folda1.css('visibility', 'visible');
+                            }
+                            if (folda2.hasClass('closed')) {
+                                folda2.css('visibility', 'visible');
+                            }
+                            if ($(this).hasClass('visivi')) {
+                                $(this).css('visibility', 'hidden');
+                            }
+                            if (folda1.hasClass('visivi')) {
+                                folda1.css('visibility', 'hidden');
+                            }
+                            if (folda2.hasClass('visivi')) {
+                                folda2.css('visibility', 'hidden');
+                            }
+
+                        }
+                        console.log("im aclick in list");
+
+                    });
+
+                    $(".list").on("click", "li", function () {
+                        alert($(this).text());
+                        var listName = $(this).text();
+                        console.log(listName);
+                        getNewsListByIndustryAndSubsidiary(gubunJa, listName);
+                    });
+
+                    $(".hide").on("click", "li", function () {
+                        alert($(this).text());
+                        var listName = $(this).text();
+                        console.log(listName);
+                        getNewsListByIndustryAndSubsidiary(gubunJa, listName);
+                    });
+
+                },
+                error: function () {
+                    alert('조회 실패');
+                }
+            });
+
+
+
+        }
+
+
+        function rmv() {
+            $(".hide").slideUp();
+            $(".closed").css('visibility', 'hidden');
+            $(".visivi").css('visibility', 'visible');
+            $("#toggleee").text('전체 펼치기');
+
+        }
+
+        function sshow() {
+            $(".hide").slideDown();
+            $(".closed").css('visibility', 'visible');
+            $(".visivi").css('visibility', 'hidden');
+            $("#toggleee").text('전체 접기');
+        }
+
+        function togglee() {
+            if ($("#toggleee").text() == '전체 펼치기') {
+                sshow();
+            } else if ($("#toggleee").text() == '전체 접기') {
+                rmv();
+            };
+        }
+
+        function dataTableSearch(keyword) {
+            //$("#dataTableSearch").val('엘지');
+            //$("#dataTableSearch").focus();
+            //$("#dataTableSearch").bind("keydown", function(e) {
+            //    if (e.keyCode == 13) { // enter key
+            //       // yourAction();
+            //        return false
+            //	}
+            //});
+
+
+            //$("#dataTableSearch").trigger(e);
+
+            $("#dataTableSearch").val(keyword);
+            //$("#search_company").trigger(e);
+
+            pressButton();
+        }
+
+        function pressButton() {
+            var e = jQuery.Event("keyup.DT");
+            //var e = jQuery.Event( "search.DT", { keyCode: 13 } )
+            $("#dataTableSearch").trigger(e);
+
+            //setTimeout(function () {
+            //	jQuery('#search_company').trigger('click');
+            // }, 1000);
+            console.log('im trigger press enter')
+        }
+
+
+        //기업별 뉴스 가져오기
+        function getCompanyListByCompany() {
+            var companyName = document.getElementById('search_company_news').value;
+            console.log("@#@#@#@#@#@#");
+            console.log('기업명 ' + companyName);
+            var result_area = 'result_area_news';
+            var table_id = 'example_news';
+            $.ajax({
+                url: "/getCompanyListByCompany/" + companyName,
+                method: 'GET',
+                dataType: 'json',
+                success: function (responseData) {
+                    //alert('조회 성공');
+                    console.log(responseData.length);
+                    window.companyResponseData = responseData;
+
+                    var companyList = [];
+                    companyListHTML = ``;
+                    var companyliList = [];
+                    companyliListHTML = ``;
+
+                    for (var i = 0; i < responseData.length; i++) {
+                        companyList[i] = `<p> <a href="javascript:getNewsListByCompanyName(` + `'` + window.companyResponseData[i] + `'` + `);" id="modalList` + i + `">` + window.companyResponseData[i] + ` </a> </p>`;
+                        companyListHTML = companyListHTML + companyList[i];
+                        companyliList[i] = `<li>` + window.companyResponseData[i] + `</li>`;
+                        companyliListHTML = companyliListHTML + companyliList[i];
+                    }
+
+                    $('#myModal').hide();
+
+                    var modalContents =
+                        `
+                        <div class="modal-list-head">
+                            <p style="text-align: center;"><span style="font-size: 14pt;"><b><span style="font-size: 16pt;">목록 중 하나를 선택해 주세요.</span></b></span></p>
+                        </div>
+
+                        <div class="modal-list">
+                            <ul class="list">
+                                ` + companyliListHTML + `
+                            </ul>
+                        </div>
+                    `;
+                    document.getElementById('myModal').innerHTML = modalContents;
+                    $('#myModal').show();
+
+                    $(".list").on("click", "li", function () {
+                        var companyName = $(this).text();
+                        getNewsListByCompanyName(companyName);
+                    });
+
+                },
+                error: function () {
+                    alert('조회 실패');
+                    $('#myModal').hide();
+                }
+            });
+        }
+
+        //산업별 뉴스 가져오기
+        function getNewsListByIndustry(industryName) {
+
+            console.log('산업명' + industryName);
+            loading1("뉴스");
+            var result_area = 'result_area_industry';
+            var table_id = 'industry_news_list';
+            $.ajax({
+                url: "/getNewsListByIndustry/" + industryName,
+                method: 'GET',
+                dataType: 'json',
+                success: function (responseData) {
+                    //alert('조회 성공');
+                    console.log(responseData.length);
+                    window.newsResponseData = responseData;
+                    console.log(window.newsResponseData[0]);
+
+                    $('#myModal').hide();
+
+                    document.getElementById('myModal').innerHTML = modalhtml2;
+                    $('#myModal').show();
+                    setTimeout(() => drawTable(result_area, table_id), 1000);
+                    document.getElementById('main_title').innerHTML = `뉴스 목록 조회<h4 style="display:inline">(` + industryName + `)</h4>`;
+
+                },
+                error: function () {
+                    alert('조회 실패');
+                    $('#myModal').hide();
+                }
+            });
+        }
+
+
+        function itemChangeFold() {
+            var selectItem = $("#fold").val();
+            console.log(selectItem);
+            var getFunction = ``;
+            var gubunSelectHTML = ` <a style="margin-right: -10px; margin-left: 10px;">구분</a>
+                                    <select name="gubun" id="gubunNews" class="select" style="width:120px;" onChange="itemChangeNews()">
+                                        <option value="year" selected="selected">연도별</option>
+                                        <option value="quarter">분기별</option>
+                                        <option value="month">월별</option>
+                                        <option value="custom">사용자 선택</option>
+                                    </select>
+                                    `;
+            var yearSelectHTML = `  
+                                        <a style="margin-right: -10px; margin-left: 10px;">연도 선택</a>
+                                        <select name="newsYear" id="newsYear" class="select" style="min-width: 80px; width:80px;">
+                                            <option value="2025">2025</option>
+                                            <option value="2024">2024</option>
+                                            <option value="2023">2023</option>
+                                            <option value="2022">2022</option>
+                                            <option value="2021">2021</option>
+                                            <option value="2020" selected="selected">2020</option>
+                                            <option value="2019">2019</option>
+                                            <option value="2018">2018</option>
+                                            <option value="2017">2017</option>
+                                            <option value="2016">2016</option>
+                                            <option value="2015">2015</option>
+                                        </select>
+                                    `;
+            var conditionHTML = `   
+                                        <a id="gubunText"></a>
+                                        <select name="choices" id="choicesNews" class="select">
+                                        </select>
+                                    `;
+            var datePickerHTML = `  
+                                        <span class="date_picker">
+                                            <label for="date_from" class="label" style="margin-right: -1px; margin-left: 10px;">기간</label>
+                                            <span class="input_date"><input type="text" class="input_text" id="date_from_news"></span>
+                                            <span class="dash">-</span>
+                                            <span class="input_date"><input type="text" class="input_text" id="date_to_news"></span>
+                                        </span>
+                                    `;
+            var searchBoxHTML = `<input id="search_company_news" type="text" placeholder="검색" value="" onkeypress="if( event.keyCode == 13 ){` + getFunction + `}">
+                <button id="search_button_news" class="btn_search" onclick="` + getFunction + `"><span class="blind" >검색</span></button>`;
+            document.getElementById('search_box_news').innerHTML = searchBoxHTML;
+
+            document.getElementById('gubunSelect').innerHTML = gubunSelectHTML;
+            document.getElementById('yearSelect').innerHTML = yearSelectHTML;
+            document.getElementById('condition').innerHTML = conditionHTML;
+
+            itemChangeNews();
+
+            if (selectItem == "company") {
+                createEmptyDatatableNews();
+                $('#chartDiv').show();
+                $('#result_area_subsidiary').hide();
+                $('#result_area_industry').hide();
+                $('#yearSelect').show();
+                $('#gubunSelect').show();
+                $('#search_box_news').show();
+                document.getElementById("search_company_news").disabled = false;
+                document.getElementById("search_button_news").disabled = false;
+                document.getElementById('search_company_news').value = '';
+                $('#result_area_news').show();
+                getFunction = `getCompanyListByCompany();`;
+            }
+            else if (selectItem == "subsidiary") {
+                getIndustryAndSubsidiaryList('subsidiary');
+                $('#result_area_industry').hide();
+                $('#result_area_news').hide();
+                $('#yearSelect').hide();
+                $('#gubunSelect').hide();
+                $('#search_box_news').hide();
+                document.getElementById("search_company_news").disabled = true;
+                document.getElementById("search_button_news").disabled = true;
+                document.getElementById('search_company_news').value = '';
+                $('#result_area_subsidiary').show();
+                $('#chartDiv').hide();
+
+            }
+            else if (selectItem == "industry") {
+                getIndustryAndSubsidiaryList('industry');
+                $('#result_area_news').hide();
+                $('#result_area_subsidiary').hide();
+                $('#yearSelect').hide();
+                $('#gubunSelect').hide();
+                $('#search_box_news').hide();
+                document.getElementById("search_company_news").disabled = true;
+                document.getElementById("search_button_news").disabled = true;
+                document.getElementById('search_company_news').value = '';
+                $('#result_area_industry').show();
+                $('#chartDiv').hide();
+            }
+            else if (selectItem == "keyword") {
+                createEmptyDatatableNews();
+                $('#chartDiv').show();
+                $('#result_area_subsidiary').hide();
+                $('#result_area_industry').hide();
+                $('#yearSelect').show();
+                $('#gubunSelect').show();
+                $('#search_box_news').show();
+                document.getElementById("search_company_news").disabled = false;
+                document.getElementById("search_button_news").disabled = false;
+                document.getElementById('search_company_news').value = '';
+                $('#result_area_news').show();
+                getFunction = `getRowCount();`;
+            }
+
+            searchBoxHTML = `<input id="search_company_news" type="text" placeholder="검색" value="" onkeypress="if( event.keyCode == 13 ){` + getFunction + `}">
+                <button id="search_button_news" class="btn_search" onclick="` + getFunction + `"><span class="blind" >검색</span></button>`;
+            document.getElementById('search_box_news').innerHTML = searchBoxHTML;
+        }
+
+        function createEmptyChartDiv() {
+            document.getElementById('chartDiv').innerHTML = chartDivHTML;
+        }
+
+        function createEmptyDatatableNews() {
+            var newsTableBody = ``;
+
+            for (var i = 0; i < 10; i++) {
+                newsTableBody = newsTableBody + `<tr> <td>　 </td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>`;
+            }
+
+            var newsTable = ` <table id="example_news" class="display" style="width:100%">
+                                <colgroup>
+                                    <col>
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th>인덱스</th>
+                                    <th>컴포짓키</th>
+                                    <th>날짜</th>
+                                    <th>기업명</th>
+                                    <th>제목</th>
+                                    <th>progress</th>
+                                    <th>score</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tbodyNews">
+                                    ` + newsTableBody + `                                
+                                </tbody>
+                            </table>`;
+
+            document.getElementById('result_area_news').innerHTML = newsTable;
+            $('#example_news').DataTable();
+        }
+
+        function createEmptyDatatableReport() {
+            var reportTableBody = ``;
+
+            for (var i = 0; i < 10; i++) {
+                reportTableBody = reportTableBody + `<tr> <td>　 </td><td></td><td></td><td></td><td></td><td></td> </tr>`;
+            }
+
+            var reportTable = ` <table id="example_report" class="display" style="width:100%">
+                                <colgroup>
+                                    <col>
+                                </colgroup>
+                                <thead>
+                                <tr>
+                                    <th>인덱스</th>
+                                    <th>날짜</th>
+                                    <th>제목</th>
+                                    <th >스코어</th>
+                                    <th >progress</th>
+                                    <th >타입</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tbodyReport">
+                                    ` + reportTableBody + `                                
+                                </tbody>
+                            </table>`;
+
+            document.getElementById('result_area_report').innerHTML = reportTable;
+            $('#example_report').DataTable();
+        }
+
+        // modal
+        $(document).on('keydown', function (e) {
+            if (e.keyCode === 27) { // ESC
+                close_pop();
+            }
+        });
+
+        //close if click outside
+        $(document).mouseup(function (e) {
+            var containerTitle = $('.modal .modal-title');
+            var containerContent = $('.modal .modal-content');
+            var containerClose = $('.modal .modal-close');
+            if (!containerTitle.is(e.target) && containerTitle.has(e.target).length === 0
+                && !containerContent.is(e.target) && containerContent.has(e.target).length === 0
+                && !containerClose.is(e.target) && containerClose.has(e.target).length === 0) {
+                close_pop();
+            }
+        });
+
+
+
+    </script>
+
+    <script type="text/javascript" src="./js/d3.v4.min.js"></script>
+    <script type="text/javascript" src='./js/nlp.js'></script>
+
+
+
+
+</head>
+
+<body>
+    <div class="wrap">
+        <header class="header">
+            <!-- logo -->
+            <h1 class="logo_area">
+                <a href="/" class="link_logo"><img src="img/logo_KDB.jpg" alt="algograp"></a>
+            </h1>
+
+            <div class="right_area">
+                <!-- user -->
+                <div class="buttons">
+                    <button class="btn_shortcut"><span class="blind">바로가기</span></button>
+
+                </div>
+            </div>
+        </header>
+        <div class="layer_dimmed">
+            <div class="layer_box" id='entirePopupBox'>
+                <div class="layer_body">
+                    <div class="chart_detail">
+                        <div>
+                            <button type="button" id='resetChart'>Reset</button></div>
+                        <div id='wordCloudSettings' class='enlargedChartSettings' style='display:none'>
+                            <span>패딩 선택: </span>
+                            <span id='paddingValue'></span>
+                            <input id="paddingSlider" type="range" min="1" max="4" step="0.25" value="1.5">
+                            <span>숫자 선택: </span>
+                            <span id='textMaxValue'></span>
+                            <input id="textNumberSlider" type="range" min="1" max="50" step="1" value="50">
+                            <span>글자 크기: </span>
+                            <span id='fontSizeValue'></span>
+                            <input id="fontSizeSlider" type="range" min="1" max="500" step="1" value="50">
+                        </div>
+                        <div id='keywordBarSettings' class='enlargedChartSettings' style='display:none'>
+                            <span>숫자 선택: </span>
+                            <input id="keywordBarSlider" type="range" min="1" max="50" step="1" value="10">
+                            <span id='keywordMaxValueBar'></span>
+                        </div>
+                        <div id='keywordPieSettings' class='enlargedChartSettings' style='display:none'>
+                            <span>숫자 선택: </span>
+                            <input id="keywordPieSlider" type="range" min="1" max="30" step="1" value="6">
+                            <span id='keywordMaxValuePie'></span>
+                            <br>
+                            <span>숫자 선택: </span>
+                            <input id="keywordPieSlider2" type="range" min="1" max="100000" step="1" value="300">
+                            <span id='keywordMaxValuePie2'></span>
+                        </div>
+                        <a href="#" class="btn point" target="_blank">다운로드</a>
+                        <div class="chart_area" id="enlargedChart">
+                            <div class="chart">차트 영역</div>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn_close"><span class="blind">닫기</span></button>
+            </div>
+        </div>
+        <div class="container">
+
+            <div class="side_panel">
+                <h2 class="blind">메뉴</h2>
+                <!-- menu -->
+                <nav class="main_menu is_fold">
+                    <ul class="menu_list">
+                        <li><a href="#" class="link_menu active"><i class="icon_01"></i><span class="menu">데이터
+                                    관리</span></a></li>
+                        <li><a href="#" class="link_menu"><i class="icon_02"></i><span class="menu">데이터 전처리</span></a>
+                        </li>
+                        <li><a href="#" class="link_menu"><i class="icon_03"></i><span class="menu">데이터 분리</span></a>
+                        </li>
+                        <li><a href="#" class="link_menu"><i class="icon_04"></i><span class="menu">데이터 분석</span></a>
+                        </li>
+                        <li><a href="#" class="link_menu"><i class="icon_05"></i><span class="menu">분석 결과</span></a>
+                        </li>
+                        <li><a href="#" class="link_menu"><i class="icon_06"></i><span class="menu">데이터 진단</span></a>
+                        </li>
+                        <li><a href="#" class="link_menu"><i class="icon_07"></i><span class="menu">배포</span></a></li>
+                    </ul>
+
+
+
+                    <button class="btn_close"><span class="blind">메인메뉴 닫기</span></button>
+                </nav>
+
+
+            </div>
+
+
+            <div class="main_panel" role="main">
+
+
+                <div class="contents_panel">
+
+                    <h3 class="main_title" id="main_title"></h3>
+
+                    <span class="input_radio">
+                        <input type="radio" class="input_radio" id="news_radio" name="news_report"
+                            onchange="setDisplay()" checked="checked">
+                        <label for="news_radio" class="label">뉴스</label>
+
+                    </span>
+                    <span class="input_radio">
+                        <input type="radio" class="input_radio" id="report_radio" name="news_report"
+                            onchange="setDisplay()">
+                        <label for="report_radio" class="label">보고서</label>
+                    </span>
+
+                    <div class="contents">
+
+                        <div class="option_set" id="option_set_news">
+
+                            <div class="data_set">
+                                <select class="select" id="fold" style="min-width: 90px; width:90px;"
+                                    onChange="itemChangeFold()">
+                                    <option value="company">기업별</option>
+                                    <option value="subsidiary">계열별</option>
+                                    <option value="industry">산업별</option>
+                                    <option value="keyword">키워드</option>
+                                </select>
+                            </div>
+
+                            <div class="data_set" style="float:left" id="gubunSelect">
+                                <a style="margin-right: -10px; margin-left: 10px;">구분</a>
+                                <select name="gubun" id="gubunNews" class="select" style="width:120px;"
+                                    onChange="itemChangeNews()">
+                                    <option value="year" selected="selected">연도별</option>
+                                    <option value="quarter">분기별</option>
+                                    <option value="month">월별</option>
+                                    <option value="custom">사용자 선택</option>
+                                </select>
+                            </div>
+
+                            <div class="data_set" style="float:left" id="yearSelect">
+                                <a style="margin-right: -10px; margin-left: 10px;">연도 선택</a>
+                                <select name="newsYear" id="newsYear" class="select"
+                                    style="min-width: 80px; width:80px;">
+                                    <option value="2025">2025</option>
+                                    <option value="2024">2024</option>
+                                    <option value="2023">2023</option>
+                                    <option value="2022">2022</option>
+                                    <option value="2021">2021</option>
+                                    <option value="2020" selected="selected">2020</option>
+                                    <option value="2019">2019</option>
+                                    <option value="2018">2018</option>
+                                    <option value="2017">2017</option>
+                                    <option value="2016">2016</option>
+                                    <option value="2015">2015</option>
+                                </select>
+                            </div>
+
+                            <div id="condition" class="data_set" style="float:left">
+                                <a id="gubunText"></a>
+                                <select name="choices" id="choicesNews" class="select">
+                                </select>
+                            </div>
+
+                            <div id="date_picker_div_News">
+                                <span class="date_picker">
+                                    <label for="date_from" class="label"
+                                        style="margin-right: -1px; margin-left: 10px;">기간</label>
+                                    <span class="input_date"><input type="text" class="input_text"
+                                            id="date_from_news"></span>
+                                    <span class="dash">-</span>
+                                    <span class="input_date"><input type="text" class="input_text"
+                                            id="date_to_news"></span>
+                                </span>
+                            </div>
+
+
+                            <div class="search_box" id="search_box_news">
+                                <input id="search_company_news" type="text" placeholder="검색" value=""
+                                    onkeypress="if( event.keyCode == 13 ){getCompanyListByCompany();}">
+                                <button id="search_button_news" class="btn_search"
+                                    onclick="getCompanyListByCompany();"><span class="blind">검색</span></button>
+                            </div>
+
+                        </div>
+
+
+                        <div class="option_set" id="option_set_report">
+
+                            <div class="data_set" style="float:left">
+                                <a style="margin-right: -10px; margin-left: 10px;">구분</a>
+                                <select name="gubun" id="gubunReport" class="select" onChange="itemChangeReport()">
+                                    <option value="year" selected="selected">연도별</option>
+                                    <option value="quarter">분기별</option>
+                                    <option value="month">월별</option>
+                                    <option value="custom">사용자 선택</option>
+                                </select>
+                            </div>
+
+                            <div class="data_set" style="float:left;">
+                                <a style="margin-right: -10px; margin-left: 10px;">연도 선택</a>
+                                <select name="reportYear" id="reportYear" class="select"
+                                    style="min-width: 80px; width:80px;">
+                                    <option value="2025">2025</option>
+                                    <option value="2024">2024</option>
+                                    <option value="2023">2023</option>
+                                    <option value="2022">2022</option>
+                                    <option value="2021">2021</option>
+                                    <option value="2020" selected="selected">2020</option>
+                                    <option value="2019">2019</option>
+                                    <option value="2018">2018</option>
+                                    <option value="2017">2017</option>
+                                    <option value="2016">2016</option>
+                                    <option value="2015">2015</option>
+                                </select>
+                            </div>
+
+                            <div id="condition_report" class="data_set" style="float:left">
+                                <a id="gubunText"></a>
+                                <select name="choices" id="choicesReport" class="select">
+                                </select>
+                            </div>
+
+
+                            <div id="date_picker_div_Report">
+                                <span class="date_picker">
+                                    <label for="date_from" class="label">기간</label>
+                                    <span class="input_date"><input type="text" class="input_text"
+                                            id="date_from_report"></span>
+                                    <span class="dash">-</span>
+                                    <span class="input_date"><input type="text" class="input_text"
+                                            id="date_to_report"></span>
+                                </span>
+                            </div>
+
+                            <div class="search_box" id="search_box_report">
+                                <input id="search_company_report" type="text" placeholder="검색" value=""
+                                    onkeypress="if( event.keyCode == 13 ){getReportList();}">
+                                <button class="btn_search" onclick="getReportList();"><span
+                                        class="blind">검색</span></button>
+                            </div>
+
+                        </div>
+
+
+                        <div id='chartDiv' style='display:block'>
+
+                            <div class="contents">
+
+                                <div class="visualize">
+
+                                    <div class="card_list">
+                                        <!-- DANGER GAUGE Extended Version -->
+                                        <div class="card_item_small">
+                                            <div class="card_box">
+                                                <div class="card_head">
+                                                    T/A 결과
+                                                </div>
+                                                <div class="chart_area" style="padding-top: 66%">
+                                                    <div class="chart" id="dangerGauge">
+
+                                                        <script type="text/javascript" src='./js/nlp.js'></script>
+
+                                                        <script>
+                                                            var gauge = document.getElementById('dangerGauge');
+
+                                                            var gaugeDirection = 0;
+
+                                                        </script>
+
+                                                    </div>
+
+                                                </div>
+
+
+
+                                            </div>
+                                        </div>
+
+                                        <!-- news article count -->
+                                        <div class="card_item_large">
+                                            <div class="card_box">
+                                                <div class="card_head">
+                                                    <span>기사수&nbsp;</span>
+                                                    <style>
+                                                        #data {
+                                                            overflow: hidden;
+                                                            padding: 0;
+                                                        }
+
+                                                        select {
+                                                            padding: 0;
+                                                            padding-left: 1px;
+                                                            border: none;
+                                                            background-color: #eee;
+                                                        }
+
+                                                        option {
+                                                            display: inline-block;
+                                                            border: 1px solid #000;
+                                                            background-color: white;
+                                                            padding-left: 5px;
+                                                            padding-right: 5px;
+                                                            margin-left: -1px;
+                                                            display: inline-block;
+                                                        }
+                                                    </style>
+
+                                                    <select multiple size="1" id='articleCountRange'>
+                                                        <option value='1'>1년</option>
+                                                        <option value='3'>3년</option>
+                                                        <option value='5'>5년</option>
+                                                        <option value='all' selected>전체</option>
+                                                    </select>
+
+                                                </div>
+                                                <div class="chart_area" style="padding-top: 20%">
+                                                    <div class="chart" id='articleCounts'>
+                                                        <script>
+                                                            var divID = 'articleCounts';
+
+
+                                                        </script>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- 키워드 빠 플롯 -->
+                                        <div class="card_item_small">
+                                            <div class="card_box">
+                                                <div class="card_head">
+                                                    <span class="title">키워드 랭킹</span>
+                                                </div>
+                                                <div class="card_content">
+                                                    <div class="chart_area" style="padding-top: 68%">
+                                                        <div class="chart" id="keywordBar">
+                                                            <script>
+
+                                                            </script>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+                                        <!-- 주가 플롯 -->
+                                        <div class="card_item_large">
+                                            <div class="card_box">
+                                                <div class="card_head">
+                                                    <span>주가&nbsp;</span>
+                                                    <select size="1" id='stockRange' class='select'>
+                                                    </select>
+                                                </div>
+                                                <div class="chart_area" style="padding-top: 20%">
+                                                    <div class="chart" id="stockTime">
+                                                        <script>
+                                                        </script>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+
+                    <br>
+                    <div id='tableDiv' style='display:block'>
+
+                        <!-- news section -->
+                        <div class="section" id="contents_section_news">
+
+                            <span class="hiihihihiihidden">
+                                <span id='pagination-container'>
+
+                                </span>
+                            </span>
+
+                            <div id="result_area_news">
+
+                            </div>
+
+                            <div id="result_area_subsidiary">
+
+                            </div>
+
+                            <div id="result_area_industry">
+
+                            </div>
+
+                        </div>
+
+
+
+
+                        <!-- report section -->
+                        <div class="section" id="contents_section_report">
+
+
+                            <div id="result_area_report">
+
+                            </div>
+
+                        </div>
+
+
+
+
+                    </div>
+
+
+                </div>
+
+
+
+                <!-- modal area -->
+                <div id="myModal" class="modal">
+                    <!-- Modal content -->
+                </div>
+
+                <div id="chartModal" class="modal">
+                    <!-- Modal content -->
+                </div>
+
+            </div>
+
+
+
+
+
+
+
+        </div>
+    </div>
+
+    <!-- [D] 마크업 확인용 js, 개발시 제거하세요. -->
+
+    <script type="text/javascript" src="js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="js/ui-common.js"></script>
+
+
+
+
+    <script type="text/javascript">
+
+        function close_pop(flag) {
+            $('#myModal').hide();
+        };
+
+        $('.visualize .card_item_small .chart').on('click', function () {
+            $('.layer_dimmed').addClass('is_active');
+        });
+        $('.visualize .card_item_large .chart').on('click', function () {
+            $('.layer_dimmed').addClass('is_active');
+        });
+        $(window).resize(function () {
+            console.log('resized')
+        });
+        $('.stockPoint').on("scroll", function (e) {
+            console.log('scrolling on point')
+            $('.stocksScroller').trigger('scroll', e);
+        })
+        $("#keywordBarSlider").on("input", function () {
+            document.getElementById('keywordMaxValueBar').innerHTML = document.getElementById('keywordBarSlider').value;
+            makeKeywordBarPlot(window.newsChartData.keywords, 'enlargedChart', document.getElementById('keywordBarSlider').value)
+        })
+        $(".card_list").css('max-height', $(".contents_panel:first").height())
+        console.log($(".contents_panel:first").height());
+
+        // modal
+        $('.layer_dimmed .btn_close').on('click', function () {
+            $(this).parents('.layer_dimmed').removeClass('is_active');
+            $('.enlargedChartSettings').css("display", "none");
+            /* $('.stockLine').attr('clip-path', 'url(#stockClip)'); */
+        });
+
+
+        //close if click outside
+        $(document).mouseup(function (e) {
+            var chartEnlargedContainer = $('.layer_dimmed .layer_box');
+            var articlePreviewContainer = $('.modal .modal-content')
+            if (!chartEnlargedContainer.is(e.target) && chartEnlargedContainer.has(e.target).length === 0) {
+                $('.layer_dimmed').removeClass('is_active');
+                $('.enlargedChartSettings').css("display", "none");
+                /*  $('.stockLine').attr('clip-path', 'url(#stockClip)'); */
+            }
+            if (!articlePreviewContainer.is(e.target) && articlePreviewContainer.has(e.target).length === 0) {
+                close_pop();
+            }
+        });
+
+        //close if escape is pressed
+        $(document).on('keydown', function (e) {
+            if (e.keyCode === 27) { // ESC
+                $('.layer_dimmed').removeClass('is_active');
+                $('.enlargedChartSettings').css("display", "none");
+                close_pop();
+                /*  $('.stockLine').attr('clip-path', 'url(#stockClip)'); */
+            }
+        });
+
+
+
+    </script>
+</body>
+
+</html>

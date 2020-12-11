@@ -157,9 +157,11 @@ function getSVGString(svgNode) {
                 if (!contains('.' + classes[c], selectorTextArr))
                     selectorTextArr.push('.' + classes[c]);
         }
+        console.log(selectorTextArr)
 
         // Extract CSS Rules
         var extractedCSSText = "";
+        console.log(document.styleSheets)
         for (var i = 0; i < document.styleSheets.length; i++) {
             var s = document.styleSheets[i];
 
@@ -172,7 +174,8 @@ function getSVGString(svgNode) {
 
             var cssRules = s.cssRules;
             for (var r = 0; r < cssRules.length; r++) {
-                if (contains(cssRules[r].selectorText, selectorTextArr))
+                /* console.log(cssRules[r].selectorText) */
+                if (contains(String(cssRules[r].selectorText).split(' ')[0], selectorTextArr))
                     extractedCSSText += cssRules[r].cssText;
             }
         }
