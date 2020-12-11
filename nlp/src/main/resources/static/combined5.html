@@ -502,13 +502,13 @@
             $('#condition').hide();
             $('#condition_report').hide();
             $('#resetContentButton').hide();
-            document.getElementById("scroll_button").onscroll = function() {scrollFunction()};
+            document.getElementById("scroll_button").onscroll = function () { scrollFunction() };
 
         });
 
 
 
-        function viewNewsContents(i){
+        function viewNewsContents(i) {
             console.log(window.newsResponseData[i]);
             console.log(window.newsResponseData[i].indexNum);
             console.log(window.newsResponseData.length);
@@ -519,22 +519,22 @@
             var k = -1;
             var carouselOption = "";
             
-            if (i !=0  && i != window.newsResponseData.length-1){
-                j = i-1;
-                k = i+1;
-                prev = `<a href="javascript:viewNewsContents(` +j+ `);" class="carousel__prev">Go to last slide</a>`;
-                next = `<a href="javascript:viewNewsContents(` +k+ `);" class="carousel__next">Go to next slide</a>`;
+            if (i != 0 && i != window.newsResponseData.length - 1) {
+                j = i - 1;
+                k = i + 1;
+                prev = `<a href="javascript:viewNewsContents(` + j + `);" class="carousel__prev">Go to last slide</a>`;
+                next = `<a href="javascript:viewNewsContents(` + k + `);" class="carousel__next">Go to next slide</a>`;
                 carouselOption = "carousel";
             }
-            else if (i == 0){
-                k = i+1;
+            else if (i == 0) {
+                k = i + 1;
                 prev = ``;
-                next = `<a href="javascript:viewNewsContents(` +k+ `);" class="carousel__next">Go to next slide</a>`;
+                next = `<a href="javascript:viewNewsContents(` + k + `);" class="carousel__next">Go to next slide</a>`;
                 carouselOption = "carouselNoPrev";
             }
-            else if (i == window.newsResponseData.length-1){
-                j = i-1;
-                prev = `<a href="javascript:viewNewsContents(` +j+ `);" class="carousel__prev">Go to last slide</a>`;
+            else if (i == window.newsResponseData.length - 1) {
+                j = i - 1;
+                prev = `<a href="javascript:viewNewsContents(` + j + `);" class="carousel__prev">Go to last slide</a>`;
                 next = ``;
                 carouselOption = "carouselNoNext";
             }
@@ -608,7 +608,7 @@
         }
 
 
-        function loading1(loading){
+        function loading1(loading) {
             var modalhtml1 =
             `
             <div class="modal-loading">
@@ -622,20 +622,20 @@
                 </p>
             </div>
             `;
-            document.getElementById('myModal').innerHTML =  modalhtml1;
+            document.getElementById('myModal').innerHTML = modalhtml1;
             $('#myModal').show();
         }
 
-        function drawTable(result_area, table_id){   
+        function drawTable(result_area, table_id) {   
 
-            if (table_id === ''){
+            if (table_id === '') {
                 table_id = 'example';
             }
 
             /* <table id="`+table_id+`" class="display" style="width:100%"> */
             var htmlStart =
             `
-            <table id="`+ table_id +`" class="display" style="width:100%">
+            <table id="`+ table_id + `" class="display" style="width:100%">
                         <colgroup>
                             <col>
                         </colgroup>
@@ -653,8 +653,8 @@
                         <tbody>
             `;
 
-            for(var i = 0; i < window.newsResponseData.length; i++){
-                var indexNum = i+1;
+            for (var i = 0; i < window.newsResponseData.length; i++) {
+                var indexNum = i + 1;
                 window.newsResponseData[i].indexNum = indexNum;
                 var sscoreWord = newsResponseData[i].taScreWord;
                 var sscore = 0;
@@ -706,11 +706,11 @@
                         <td>` + window.newsResponseData[i].cmpyKey + `</td>
                         <td>` + window.newsResponseData[i].newsDate + `</td>
                         <td>` + window.newsResponseData[i].cmpyName + `</td>
-                        <td ><a href="javascript:viewNewsContents(` + i +`);">` + window.newsResponseData[i].newsTtl + `</a>
-                            <input type="hidden" id="hidden` + i +`" value="` + hiddenData +`"/>
+                        <td ><a href="javascript:viewNewsContents(` + i + `);">` + window.newsResponseData[i].newsTtl + `</a>
+                            <input type="hidden" id="hidden` + i + `" value="` + hiddenData + `"/>
                             </td>
                         `+ procc + `
-                        `+ rred +`
+                        `+ rred + `
                     </tr>
                 `;
                 htmlStart = htmlStart + htmlContents;
@@ -722,15 +722,15 @@
             </table>
             `;
 
-            document.getElementById(result_area).innerHTML = htmlStart+htmlEnd;
+            document.getElementById(result_area).innerHTML = htmlStart + htmlEnd;
 
-            $('#'+table_id).DataTable();
+            $('#' + table_id).DataTable();
             close_pop();
         }
 
         var entityMap = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;', '/': '&#x2F;', '`': '&#x60;', '=': '&#x3D;' }; 
         
-        function escapeHtml (string) { 
+        function escapeHtml(string) { 
             return String(string).replace(/[&<>"'`=\/]/g, 
             function (s) { 
                 return entityMap[s]; 
@@ -738,7 +738,7 @@
         }
 
 
-        function drawTableReport(){   
+        function drawTableReport() {   
             var htmlStart =
             `
             <table id="example_report" class="display" style="width:100%">
@@ -759,8 +759,8 @@
                         <tbody id="tbodyReport">
             `;
 
-            for(var i = 0; i < window.reportResponseData.length; i++){
-                var indexNum = i+1;
+            for (var i = 0; i < window.reportResponseData.length; i++) {
+                var indexNum = i + 1;
                 window.reportResponseData[i].indexNum = indexNum;
                 var sscoreWord = reportResponseData[i].taScreWord;
                 var sscore = 0;
@@ -805,27 +805,27 @@
                 var downImg = '';
                 var paramFileName = window.reportResponseData[i].orgnFileName;
 
-                paramFileName= paramFileName.replace(/&/g,"%26");
-                paramFileName= paramFileName.replace(/\+/g,"%2B");
-                paramFileName= paramFileName.replace(/=/g,"%3D");
-                paramFileName= paramFileName.replace(/\[/g,"%5B");
-                paramFileName= paramFileName.replace(/\]/g,"%5D");
+                paramFileName = paramFileName.replace(/&/g, "%26");
+                paramFileName = paramFileName.replace(/\+/g, "%2B");
+                paramFileName = paramFileName.replace(/=/g, "%3D");
+                paramFileName = paramFileName.replace(/\[/g, "%5B");
+                paramFileName = paramFileName.replace(/\]/g, "%5D");
 
-                if (window.reportResponseData[i].docCaty == 'pdf'){
-                    downImg =   `
+                if (window.reportResponseData[i].docCaty == 'pdf') {
+                    downImg = `
                                     <a href="/file/` + paramFileName + `.pdf">
                                         <img src="/img/pdf_down.png" style="width: auto; height: 14px;">
                                     </a>
                                 `;
                 }
-                else if (window.reportResponseData[i].docCaty == 'hwp'){
-                    downImg =   `
+                else if (window.reportResponseData[i].docCaty == 'hwp') {
+                    downImg = `
                                     <a href="/file/` + window.reportResponseData[i].orgnFileName + `.hwp">
                                         <img src="/img/hwp_down.png" style="width: auto; height: 14px;">
                                     </a>
                                 `;
                 }
-                else{
+                else {
                     downImg = `<img src="/img/document_download.png" style="width: auto; height: 14px;">`;
                 }
 
@@ -836,7 +836,7 @@
                         <td>` + window.reportResponseData[i].reportDate + `</td>
                         <td>` + window.reportResponseData[i].orgnFileName + `</td>
                         `+ procc + `
-                        `+ rred +`
+                        `+ rred + `
                         <td>` + window.reportResponseData[i].docCaty + `</td>
                         <td>
                             ` + downImg + `
@@ -853,7 +853,7 @@
             </table>
             `;
             
-            document.getElementById('result_area_report').innerHTML = htmlStart+htmlEnd;
+            document.getElementById('result_area_report').innerHTML = htmlStart + htmlEnd;
             
             $('#example_report').DataTable();
             close_pop();
@@ -861,9 +861,9 @@
 
         function countPages(rowCount) {
             var pageCount = 0;
-            if (rowCount >= 2000){
-                pageCount = parseInt(rowCount / 2000) + 1 ;
-            }else {
+            if (rowCount >= 2000) {
+                pageCount = parseInt(rowCount / 2000) + 1;
+            } else {
                 pageCount = 1;
             }
 
@@ -897,7 +897,7 @@
             return data;
         }
 
-        function getRowCount(){
+        function getRowCount() {
             let datassss = parameters();
             console.log(parameters());
 
@@ -913,8 +913,8 @@
                         alert('뉴스기사가 없습니다');
                         datassss.pageCount = 0;
                         
-                    }else{
-                        alert('총 '+datassss.rowCount+ ' 건의 뉴스 기사가 검색됨');
+                    } else {
+                        alert('총 ' + datassss.rowCount + ' 건의 뉴스 기사가 검색됨');
                         datassss.pageCount = countPages(datassss.rowCount);
                         getChartQuery3(datassss.searchWord);
                         paginationByRowCount(datassss);
@@ -931,7 +931,7 @@
 
         
 
-        function paginationByRowCount(data){
+        function paginationByRowCount(data) {
             var pageLength = data.pageCount;
             var sources = function () {
                 var result = [];
@@ -969,7 +969,7 @@
 
         function getNewsList(data) {
             
-            var result_area ="result_area_news";
+            var result_area = "result_area_news";
             var table_id = "example_news";
             console.log(data);
 
@@ -1001,7 +1001,7 @@
 
         }
 
-        function getNewsListByCompanyName(companyName){
+        function getNewsListByCompanyName(companyName) {
             var data = parameters();
             data.searchWord = companyName;
             console.log(data);
@@ -1032,10 +1032,10 @@
 
                 },
                 error: function () {
-                    if (data.gubun == "custom" && (data.startDate == null || data.endData == null)){
+                    if (data.gubun == "custom" && (data.startDate == null || data.endData == null)) {
                         alert('시작 날짜 및 끝 날짜를 입력 해 주세요.');
                     }
-                    else{
+                    else {
                         alert('조회 실패');
                     }
                     $('#myModal').hide();
@@ -1045,7 +1045,7 @@
         }
 
 
-        function getReportList(){
+        function getReportList() {
             var data = new Object();
 
             data.reportYear = parseInt($("#reportYear").val());
@@ -1078,26 +1078,26 @@
                 success: function (responseData) {
                     //alert('조회 성공');
                     console.log(responseData.length);
-                    if (responseData.length != 0){
+                    if (responseData.length != 0) {
                         window.reportResponseData = responseData;
                         console.log(window.reportResponseData[0]);
 
                         $('#myModal').hide();
 
-                        document.getElementById('myModal').innerHTML =  modalhtml3;
+                        document.getElementById('myModal').innerHTML = modalhtml3;
                         $('#myModal').show();
                         setTimeout(() => drawTableReport(), 1000);
                     }
-                    else{
+                    else {
                         $('#myModal').hide();
                         alert('보고서가 없습니다');
                     }
                 },
                 error: function () {
-                    if (data.gubun == "custom" && (data.startDate == null || data.endData == null)){
+                    if (data.gubun == "custom" && (data.startDate == null || data.endData == null)) {
                         alert('시작 날짜 및 끝 날짜를 입력 해 주세요.');
                     }
-                    else{
+                    else {
                         alert('조회 실패');
                     }
                     $('#myModal').hide();
@@ -1167,14 +1167,14 @@
             }
         };
 
-        function itemChangeNews(){
+        function itemChangeNews() {
 
             var selectItem = $("#gubunNews").val();
             console.log(selectItem);
 
             var changeItem;
 
-            if(selectItem == "quarter"){
+            if (selectItem == "quarter") {
                 changeItem = selectListData.quarter.text;
                 document.getElementById("choicesNews").disabled = false;
                 document.getElementById("newsYear").disabled = false;
@@ -1182,7 +1182,7 @@
                 $('#date_picker_div_News').hide();
                 $('#condition').show();
             }
-            else if(selectItem == "month"){
+            else if (selectItem == "month") {
                 changeItem = selectListData.month.text;
                 document.getElementById("choicesNews").disabled = false;
                 document.getElementById("newsYear").disabled = false;
@@ -1190,7 +1190,7 @@
                 $('#date_picker_div_News').hide();
                 $('#condition').show();
             }
-            else if(selectItem == "year"){
+            else if (selectItem == "year") {
                 changeItem = '';
                 document.getElementById("choicesNews").disabled = true;
                 document.getElementById("newsYear").disabled = false;
@@ -1198,7 +1198,7 @@
                 $('#date_picker_div_News').hide();
                 $('#condition').hide();
             }
-            else if(selectItem == "custom"){
+            else if (selectItem == "custom") {
                 changeItem = '';
                 //document.getElementById("choicesNews").disabled = true;
                 //document.getElementById("newsYear").disabled = true;
@@ -1209,13 +1209,13 @@
 
             $('#choicesNews').empty();
 
-            for(var count = 0; count < changeItem.length; count++){                
-                var option = $("<option>"+changeItem[count]+"</option>");
+            for (var count = 0; count < changeItem.length; count++) {                
+                var option = $("<option>" + changeItem[count] + "</option>");
                 $('#choicesNews').append(option);
             }
         }
 
-        function itemChangeReport(){
+        function itemChangeReport() {
 
             $('#date_picker_div_Report').hide();
             var selectItem = $("#gubunReport").val();
@@ -1223,28 +1223,28 @@
 
             var changeItem;
 
-            if(selectItem == "quarter"){
+            if (selectItem == "quarter") {
                 changeItem = selectListData.quarter.text;
                 document.getElementById("choicesReport").disabled = false;
                 document.getElementById("reportYear").disabled = false;
                 $('#date_picker_div_Report').hide();
                 $('#condition_report').show();
             }
-            else if(selectItem == "month"){
+            else if (selectItem == "month") {
                 changeItem = selectListData.month.text;
                 document.getElementById("choicesReport").disabled = false;
                 document.getElementById("reportYear").disabled = false;
                 $('#date_picker_div_Report').hide();
                 $('#condition_report').show();
             }
-            else if(selectItem == "year"){
+            else if (selectItem == "year") {
                 changeItem = '';
                 document.getElementById("choicesReport").disabled = true;
                 document.getElementById("reportYear").disabled = false;
                 $('#date_picker_div_Report').hide();
                 $('#condition_report').hide();
             }
-            else if(selectItem == "custom"){
+            else if (selectItem == "custom") {
                 changeItem = '';
                 document.getElementById("choicesReport").disabled = true;
                 document.getElementById("reportYear").disabled = true;
@@ -1254,17 +1254,17 @@
 
             $('#choicesReport').empty();
 
-            for(var count = 0; count < changeItem.length; count++){                
-                var option = $("<option>"+changeItem[count]+"</option>");
+            for (var count = 0; count < changeItem.length; count++) {
+                var option = $("<option>" + changeItem[count] + "</option>");
                 $('#choicesReport').append(option);
             }
         }
 
-        function setDisplay(){
+        function setDisplay() {
             itemChangeFold();
             d3.selectAll('.visSVG').remove();
 
-            if($('input:radio[id=news_radio]').is(':checked')){
+            if ($('input:radio[id=news_radio]').is(':checked')) {
                 document.getElementById('main_title').innerText = '뉴스 조회';
                 createEmptyDatatableNews();
                 $('#contents_section_news').show();
@@ -1275,7 +1275,7 @@
                 $('#option_set_report').hide();
                 $('#option_set_news').show();
                 
-            }else{
+            } else {
                 document.getElementById('main_title').innerText = '행내 보고서 조회';    
                 createEmptyDatatableReport();
                 $('#contents_section_report').show();
@@ -1286,11 +1286,11 @@
                 $('#option_set_news').hide();
                 $('#option_set_report').show();
             }
-            document.getElementById('pagination-container').innerHTML=``;
+            document.getElementById('pagination-container').innerHTML = ``;
         }
 
         //산업별 뉴스 가져오기
-        function getNewsListByIndustryAndSubsidiary(gubunJaName,selectedName) {
+        function getNewsListByIndustryAndSubsidiary(gubunJaName, selectedName) {
 
             var result_area = '';
             var table_id = '';
@@ -1299,7 +1299,7 @@
                 result_area = 'result_area_industry';
                 table_id = 'industry_news_list';
                 $('#result_area_industry').show();
-            }else {
+            } else {
                 result_area = 'result_area_subsidiary';
                 table_id = 'subsidiary_news_list';
                 $('#result_area_subsidiary').show();
@@ -1307,11 +1307,11 @@
             $('#chartDiv').hide();
             $('#result_area_news').hide();
 
-            console.log('산업명'+gubunJaName);
+            console.log('산업명' + gubunJaName);
             loading1("뉴스");
 
             $.ajax({
-                url: "/"+controllerUrl+"/" ,
+                url: "/" + controllerUrl + "/",
                 method: 'GET',
                 dataType: 'json',
                 data: { gubunJaName: gubunJaName, selectedName: selectedName },
@@ -1322,7 +1322,7 @@
                     console.log(window.newsResponseData[0]);
 
                     $('#myModal').hide();
-                    if ($('#fold').val() == 'subsidiary' || $('#fold').val() == 'industry'){
+                    if ($('#fold').val() == 'subsidiary' || $('#fold').val() == 'industry') {
                         itemChangeFold();
                         $('#resetContentButton').show();
                     }
@@ -1362,7 +1362,7 @@
                 'responseData[i].hiEut',
                 'responseData[i].guiTar'];
 
-            console.log('구분자 자바스크립'+gubunJa);
+            console.log('구분자 자바스크립' + gubunJa);
             console.log(industry_column_list[0]);
             console.log(industry_column_list_java[0]);
 
@@ -1485,7 +1485,7 @@
 
                     if (gubunJa == 'industry') {
                         document.getElementById('result_area_industry').innerHTML = expend_all + tables;
-                    }else {
+                    } else {
                         document.getElementById('result_area_subsidiary').innerHTML = expend_all + tables;
                     }
                     
@@ -1625,10 +1625,10 @@
         
 
         //기업별 뉴스 가져오기
-        function getCompanyListByCompany(){
+        function getCompanyListByCompany() {
             var companyName = document.getElementById('search_company_news').value; 
             console.log("@#@#@#@#@#@#");
-            console.log('기업명 '+companyName);
+            console.log('기업명 ' + companyName);
             var result_area = 'result_area_news';
             var table_id = 'example_news';
             $.ajax({
@@ -1639,7 +1639,7 @@
                     //alert('조회 성공');
                     console.log(responseData.length);
 
-                    if (responseData.length == 0){
+                    if (responseData.length == 0) {
                         var modalContents =
                         `
                             <div class="modal-list-head">
@@ -1653,7 +1653,7 @@
                             </div>
                         `;
                     }
-                    else{
+                    else {
                         window.companyResponseData = responseData;
 
                         var companyliList = [];
@@ -1665,22 +1665,22 @@
                         var industryliList = [];
                         var industryliListHTML = ``;
 
-                        for (var i = 0; i < responseData.length; i++){
+                        for (var i = 0; i < responseData.length; i++) {
                             companyliList[i] = `<li>` + window.companyResponseData[i].cmpy + `</li>`;
                             companyliListHTML = companyliListHTML + companyliList[i];
 
-                            if (window.companyResponseData[i].subsName == null){
+                            if (window.companyResponseData[i].subsName == null) {
                                 subsidiaryliList[i] = `<li class="disabled">　</li>`;    
                             }
-                            else{
+                            else {
                                 subsidiaryliList[i] = `<li>` + window.companyResponseData[i].subsName + `</li>`;
                             }
                             subsidiaryliListHTML = subsidiaryliListHTML + subsidiaryliList[i];
 
-                            if (window.companyResponseData[i].instName == null){
+                            if (window.companyResponseData[i].instName == null) {
                                 industryliList[i] = `<li class="disabled">　</li>`;    
                             }
-                            else{
+                            else {
                                 industryliList[i] = `<li>` + window.companyResponseData[i].instName + `</li>`;
                             }
                             industryliListHTML = industryliListHTML + industryliList[i];
@@ -1728,18 +1728,18 @@
                     document.getElementById('myModal').innerHTML = modalContents;
                     $('#myModal').show();
 
-                    $(".list_company").on("click", "li", function() {
+                    $(".list_company").on("click", "li", function () {
                         var companyName = $(this).text();
                         getNewsListByCompanyName(companyName);
                     });
 
-                    $(".list_subsidiary").on("click", "li", function() {
+                    $(".list_subsidiary").on("click", "li", function () {
                         var companyName = $(this).text();
                         $('#fold').val('subsidiary').prop('selected', true);
                         getNewsListByIndustryAndSubsidiary('subsidiary', companyName);
                     });
 
-                    $(".list_industry").on("click", "li", function() {
+                    $(".list_industry").on("click", "li", function () {
                         var companyName = $(this).text();
                         $('#fold').val('industry').prop('selected', true);
                         getNewsListByIndustryAndSubsidiary('industry', companyName);
@@ -1754,9 +1754,9 @@
         }
 
         //산업별 뉴스 가져오기
-        function getNewsListByIndustry(industryName){
+        function getNewsListByIndustry(industryName) {
         
-            console.log('산업명'+industryName);
+            console.log('산업명' + industryName);
             loading1("뉴스");
             var result_area = 'result_area_industry';
             var table_id = 'industry_news_list';
@@ -1786,7 +1786,7 @@
         }
 
         
-        function itemChangeFold(){
+        function itemChangeFold() {
             var selectItem = $("#fold").val();
             console.log(selectItem);
             var getFunction = ``;
@@ -1839,7 +1839,7 @@
             $('#resetContentButton').hide();
             document.getElementById('main_title').innerText = '뉴스 조회';
 
-            if(selectItem == "company"){
+            if (selectItem == "company") {
                 createEmptyDatatableNews();
                 $('#chartDiv').show();
                 $('#result_area_subsidiary').hide();
@@ -1849,11 +1849,11 @@
                 $('#search_box_news').show();
                 document.getElementById("search_company_news").disabled = false;
                 document.getElementById("search_button_news").disabled = false;
-                document.getElementById('search_company_news').value='';
+                document.getElementById('search_company_news').value = '';
                 $('#result_area_news').show();
                 getFunction = `getCompanyListByCompany();`;
             }
-            else if(selectItem == "subsidiary"){
+            else if (selectItem == "subsidiary") {
                 getIndustryAndSubsidiaryList('subsidiary');
                 $('#result_area_industry').hide();
                 $('#result_area_news').hide();
@@ -1862,12 +1862,12 @@
                 $('#search_box_news').hide();
                 document.getElementById("search_company_news").disabled = true;
                 document.getElementById("search_button_news").disabled = true;
-                document.getElementById('search_company_news').value='';
+                document.getElementById('search_company_news').value = '';
                 $('#result_area_subsidiary').show();
                 $('#chartDiv').hide();
                 
             }
-            else if(selectItem == "industry"){
+            else if (selectItem == "industry") {
                 getIndustryAndSubsidiaryList('industry');
                 $('#result_area_news').hide();
                 $('#result_area_subsidiary').hide();
@@ -1876,11 +1876,11 @@
                 $('#search_box_news').hide();
                 document.getElementById("search_company_news").disabled = true;
                 document.getElementById("search_button_news").disabled = true;
-                document.getElementById('search_company_news').value='';
+                document.getElementById('search_company_news').value = '';
                 $('#result_area_industry').show();
                 $('#chartDiv').hide();
             }
-            else if(selectItem == "keyword"){
+            else if (selectItem == "keyword") {
                 createEmptyDatatableNews();
                 $('#chartDiv').show();
                 $('#result_area_subsidiary').hide();
@@ -1890,7 +1890,7 @@
                 $('#search_box_news').show();
                 document.getElementById("search_company_news").disabled = false;
                 document.getElementById("search_button_news").disabled = false;
-                document.getElementById('search_company_news').value='';
+                document.getElementById('search_company_news').value = '';
                 $('#result_area_news').show();
                 getFunction = `getRowCount();`;
             }
@@ -1898,21 +1898,21 @@
             searchBoxHTML = `<input id="search_company_news" type="text" placeholder="검색" value="" onkeypress="if( event.keyCode == 13 ){` + getFunction + `}">
                 <button id="search_button_news" class="btn_search" onclick="` + getFunction + `"><span class="blind" >검색</span></button>`;
             document.getElementById('search_box_news').innerHTML = searchBoxHTML;
-            document.getElementById('pagination-container').innerHTML=``;    
+            document.getElementById('pagination-container').innerHTML = ``;    
         }
 
-        function createEmptyChartDiv(){
+        function createEmptyChartDiv() {
             document.getElementById('chartDiv').innerHTML = chartDivHTML;
         }
 
-        function createEmptyDatatableNews(){
+        function createEmptyDatatableNews() {
             var newsTableBody = ``;
 
-            for (var i = 0; i < 10; i++){
+            for (var i = 0; i < 10; i++) {
                 newsTableBody = newsTableBody + `<tr> <td>　 </td><td></td><td></td><td></td><td></td><td></td><td></td> </tr>`;
             }
 
-            var newsTable=` <table id="example_news" class="display" style="width:100%">
+            var newsTable = ` <table id="example_news" class="display" style="width:100%">
                                 <colgroup>
                                     <col>
                                 </colgroup>
@@ -1928,7 +1928,7 @@
                                 </tr>
                                 </thead>
                                 <tbody id="tbodyNews">
-                                    ` + newsTableBody +`                                
+                                    ` + newsTableBody + `                                
                                 </tbody>
                             </table>`;
 
@@ -1936,14 +1936,14 @@
             $('#example_news').DataTable();
         }
 
-        function createEmptyDatatableReport(){
+        function createEmptyDatatableReport() {
             var reportTableBody = ``;
 
-            for (var i = 0; i < 10; i++){
+            for (var i = 0; i < 10; i++) {
                 reportTableBody = reportTableBody + `<tr> <td>　 </td><td></td><td></td><td></td><td></td><td></td> </tr>`;
             }
 
-            var reportTable=` <table id="example_report" class="display" style="width:100%">
+            var reportTable = ` <table id="example_report" class="display" style="width:100%">
                                 <colgroup>
                                     <col>
                                 </colgroup>
@@ -2000,20 +2000,20 @@
 
         var bott = document.getElementById("scroll_button").scrollHeight;
         var bott2 = document.getElementById("scroll_button").scrollTop;
-        console.log('im document.body.scrollHeight= '+ document.getElementById("scroll_button").scrollHeight);
+        console.log('im document.body.scrollHeight= ' + document.getElementById("scroll_button").scrollHeight);
         console.log(document.getElementById("scroll_button").scrollTop);
         //console.log('document.body.scrollTop=  ' + document.body.scrollTop)
         //console.log('document.documentElement.scrollTop=  ' + document.documentElement.scrollTop)
     
-        if ( ((document.getElementById("scroll_button").scrollHeight - $(window).height()) >= document.getElementById("scroll_button").scrollTop) && (document.getElementById("scroll_button").scrollTop > 20) ) {
+        if (((document.getElementById("scroll_button").scrollHeight - $(window).height()) >= document.getElementById("scroll_button").scrollTop) && (document.getElementById("scroll_button").scrollTop > 20)) {
         mybutton.style.display = "block";
         mybutton.style.bottom = "75px";
         mybutton2.style.display = "block";
-        }else if(document.getElementById("scroll_button").scrollTop > (document.getElementById("scroll_button").scrollHeight - $(window).height())){
+        } else if (document.getElementById("scroll_button").scrollTop > (document.getElementById("scroll_button").scrollHeight - $(window).height())){
             mybutton.style.display = "block";
         mybutton.style.bottom = "20px";
         mybutton2.style.display = "none";
-        }else {
+        } else {
         mybutton.style.display = "none";
         mybutton.style.bottom = "75px";
         mybutton2.style.display = "none";
@@ -2038,6 +2038,8 @@
 
     <script type="text/javascript" src="./js/d3.v4.min.js"></script>
     <script type="text/javascript" src='./js/nlp.js'></script>
+    <script type="text/javascript" src='./js/nlp2.js'></script>
+	<script type="text/javascript" src='./js/FileSaver.min.js'></script>
 
 
 
@@ -2095,7 +2097,7 @@
                             <input id="keywordPieSlider2" type="range" min="1" max="100000" step="1" value="300">
                             <span id='keywordMaxValuePie2'></span>
                         </div>
-                        <a href="#" class="btn point" target="_blank">다운로드</a>
+                        <a id='downloadButton' class="btn point" target="_blank">다운로드</a>
                         <div class="chart_area" id="enlargedChart">
                             <div class="chart">차트 영역</div>
                         </div>
@@ -2104,7 +2106,7 @@
                 <button class="btn_close"><span class="blind">닫기</span></button>
             </div>
         </div>
-        <div class="container" >
+        <div class="container">
 
             <div class="side_panel">
                 <h2 class="blind">메뉴</h2>
@@ -2135,10 +2137,10 @@
             </div>
 
 
-            <div class="main_panel"  role="main">
+            <div class="main_panel" role="main">
                 
 
-                <div class="contents_panel" id= "scroll_button" >
+                <div class="contents_panel" id="scroll_button">
                 <button onclick="topFunction()" id="myBtn" title="Go to top">&nbsp;⮝&nbsp;</button>
                 <button onclick="BotFunction()" id="myBtn2" title="Go to bottom">&nbsp;⮟&nbsp;</button>
                     <h3 class="main_title" id="main_title"></h3>
@@ -2276,7 +2278,6 @@
                         </div>
 
 
-
                         <div id='chartDiv' style='display:block'>
 
                             <div class="contents">
@@ -2380,7 +2381,6 @@
                                         </div>
 
 
-
                                         <!-- 주가 플롯 -->
                                         <div class="card_item_large">
                                             <div class="card_box">
@@ -2414,11 +2414,11 @@
                         <!-- news section -->
                         <div class="section" id="contents_section_news">
 
-                            <span class="hiihihihiihidden" >
-                                <span  id='pagination-container'  >
+                            <span class="hiihihihiihidden">
+                                <span id='pagination-container'>
     
                                 </span>
-                            </span >
+                            </span>
                             
                             <div id="result_area_news">
                                 
@@ -2466,9 +2466,6 @@
                     <!-- Modal content -->
                 </div>
 
-                <div id='tooltip_position'>
-
-                </div>
                 
             </div>
 
@@ -2548,6 +2545,17 @@
             }
         });
 
+        $('#downloadButton').on('click', function () {
+            var svg = window.SVG
+            var svgString = getSVGString(svg.node());
+            console.log(svgString)
+            svgToImage(svgString, 944, 602, 'png', save)
+
+            function save(dataBlob, filesize) {
+                saveAs(dataBlob, 'chart.png'); // FileSaver.js function
+            }
+            console.log('saved')
+        })
 
 
     </script>
