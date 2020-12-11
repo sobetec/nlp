@@ -434,6 +434,52 @@
         .nulls {
             display: none;
         }
+
+
+        /*플로팅 버튼 탑 바텀*/
+        #myBtn {
+            display: none;
+            position: fixed;
+            bottom: 75px;
+            right: 30px;
+            z-index: 99;
+            font-size: 18px;
+            border: none;
+            outline: none;
+            background-color: #820812;
+            color: white;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 4px;
+            opacity: 40%;
+          }
+          
+          #myBtn2 {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 30px;
+            z-index: 99;
+            font-size: 18px;
+            border: none;
+            outline: none;
+            background-color: #820812;
+            color: white;
+            cursor: pointer;
+            padding: 10px; /*버튼크기*/
+            border-radius: 4px;
+            opacity: 40%;
+          }
+          
+          #myBtn:hover {
+            background-color: #820812;
+            opacity: 98%;
+          }
+          
+          #myBtn2:hover {
+            background-color: #820812;
+            opacity: 98%;
+          }
     </style>
 
     <script type="text/javascript" src="js/jquery-3.5.1.js"></script>
@@ -449,6 +495,8 @@
             $('#condition').hide();
             $('#condition_report').hide();
             $('#resetContentButton').hide();
+            document.getElementById("scroll_button").onscroll = function() {scrollFunction()};
+
         });
 
 
@@ -866,6 +914,8 @@
             });
             
         }
+
+        
 
         function paginationByRowCount(data){
             var pageLength = data.pageCount;
@@ -1684,7 +1734,7 @@
             });
         }
 
-
+        
         function itemChangeFold(){
             var selectItem = $("#fold").val();
             console.log(selectItem);
@@ -1885,6 +1935,53 @@
         });
 
 
+    
+        //window.onscroll = function() {scrollFunction()
+        
+    
+    function scrollFunction() {
+        var scrollBottom = $(document).height() - $(window).height() - $(window).scrollTop();
+        console.log('im scroll $(document).height() =  ' + $(document).height());
+        console.log('im scroll $(window).height() =  ' + $(window).height());
+        console.log('im scroll $(window).scrollTop() =  ' + $(window).scrollTop());
+        var mybutton = document.getElementById("myBtn");
+        var mybutton2 = document.getElementById("myBtn2");
+
+        var bott = document.getElementById("scroll_button").scrollHeight;
+        var bott2 = document.getElementById("scroll_button").scrollTop;
+        console.log('im document.body.scrollHeight= '+ document.getElementById("scroll_button").scrollHeight);
+        console.log(document.getElementById("scroll_button").scrollTop);
+        //console.log('document.body.scrollTop=  ' + document.body.scrollTop)
+        //console.log('document.documentElement.scrollTop=  ' + document.documentElement.scrollTop)
+    
+        if ( ((document.getElementById("scroll_button").scrollHeight - $(window).height()) >= document.getElementById("scroll_button").scrollTop) && (document.getElementById("scroll_button").scrollTop > 20) ) {
+        mybutton.style.display = "block";
+        mybutton.style.bottom = "75px";
+        mybutton2.style.display = "block";
+        }else if(document.getElementById("scroll_button").scrollTop > (document.getElementById("scroll_button").scrollHeight - $(window).height())){
+            mybutton.style.display = "block";
+        mybutton.style.bottom = "20px";
+        mybutton2.style.display = "none";
+        }else {
+        mybutton.style.display = "none";
+        mybutton.style.bottom = "75px";
+        mybutton2.style.display = "none";
+        }
+        
+        
+    }
+    
+    // When the user clicks on the button, scroll to the top of the document
+    function topFunction() {
+        document.getElementById("scroll_button").scrollTop = 0;
+        
+    }
+    
+    function BotFunction() {
+        
+        document.getElementById("scroll_button").scrollTop = document.getElementById("scroll_button").scrollHeight;
+    }
+
 
     </script>
 
@@ -1897,7 +1994,11 @@
 </head>
 
 <body>
+    
     <div class="wrap">
+
+
+
         <header class="header">
             <!-- logo -->
             <h1 class="logo_area">
@@ -1952,7 +2053,7 @@
                 <button class="btn_close"><span class="blind">닫기</span></button>
             </div>
         </div>
-        <div class="container">
+        <div class="container" >
 
             <div class="side_panel">
                 <h2 class="blind">메뉴</h2>
@@ -1983,11 +2084,12 @@
             </div>
 
 
-            <div class="main_panel" role="main">
+            <div class="main_panel"  role="main">
+                
 
-
-                <div class="contents_panel">
-
+                <div class="contents_panel" id= "scroll_button" >
+                <button onclick="topFunction()" id="myBtn" title="Go to top">&nbsp;⮝&nbsp;</button>
+                <button onclick="BotFunction()" id="myBtn2" title="Go to bottom">&nbsp;⮟&nbsp;</button>
                     <h3 class="main_title" id="main_title"></h3>
 
                         <span class="input_radio">
@@ -2310,12 +2412,17 @@
                     <!-- Modal content -->
                 </div>
 
+                <div id='tooltip_position'>
+
+                </div>
+                
             </div>
 
+          
 
 
 
-
+          
 
 
         </div>
