@@ -69,40 +69,53 @@
 
         /* The Modal (background) */
         .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 1; /* Sit on top */
+            display: none;
+            /* Hidden by default */
+            position: fixed;
+            /* Stay in place */
+            z-index: 1;
+            /* Sit on top */
             left: 0;
             top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: auto; /* Enable scroll if needed */
-            background-color: rgb(0,0,0); /* Fallback color */
-            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            width: 100%;
+            /* Full width */
+            height: 100%;
+            /* Full height */
+            overflow: auto;
+            /* Enable scroll if needed */
+            background-color: rgb(0, 0, 0);
+            /* Fallback color */
+            background-color: rgba(0, 0, 0, 0.4);
+            /* Black w/ opacity */        
         }
     
         /* Modal Content/Box */
         .modal-content {
             background-color: #fefefe;
-            margin: -7% auto; /* 15% from the top and centered */
+            margin: -7% auto;
+            /* 15% from the top and centered */
             padding-top: 20px;
             padding-bottom: 20px;
             padding-left: 40px;
             padding-right: 40px;
-            width: 72%; /* Could be more or less, depending on screen size */
+            width: 72%;
+            /* Could be more or less, depending on screen size */
             min-height: 300px;
             position: relative;   
             vertical-align: middle;                       
         }
+
         .modal-title {
-            margin: 7% auto; /* 15% from the top and centered */
+            margin: 7% auto;
+            /* 15% from the top and centered */
             min-height: 40px;
             background-color: #0508b1;
             text-align: center;
             vertical-align: middle;
             position: relative;
             padding: 20px;
-            width: 72%; /* Could be more or less, depending on screen size */
+            width: 72%;
+            /* Could be more or less, depending on screen size */
         }
         
         .modal-close {
@@ -120,30 +133,36 @@
 
         .modal-loading {
             background-color: #fefefe;
-            margin: 10% auto; /* 15% from the top and centered */
+            margin: 10% auto;
+            /* 15% from the top and centered */
             padding: 40px;
             border: 1px solid #888;
-            width: 70%; /* Could be more or less, depending on screen size */
+            width: 70%;
+            /* Could be more or less, depending on screen size */
             min-height: 400px;
             position: relative;                          
         }
 
         .modal-list-head {
             background-color: #fefefe;
-            margin: 5% auto; /* 15% from the top and centered */
+            margin: 5% auto;
+            /* 15% from the top and centered */
             padding: 20px;
             border: 1px solid #888;
-            width: 50%; /* Could be more or less, depending on screen size */
+            width: 50%;
+            /* Could be more or less, depending on screen size */
             max-height: 60px;
             position: relative;                         
         }
 
         .modal-list {
             background-color: #fefefe;
-            margin: -5% auto; /* 15% from the top and centered */
+            margin: -5% auto;
+            /* 15% from the top and centered */
             padding: 40px;
             border: 1px solid #888;
-            width: 50%; /* Could be more or less, depending on screen size */
+            width: 50%;
+            /* Could be more or less, depending on screen size */
             max-height: 600px;
             position: relative; 
             overflow-y: scroll;                         
@@ -152,7 +171,8 @@
 
         * {
             box-sizing: border-box;
-            /*scrollbar-color: transparent transparent;*/ /* thumb and track color */
+            /*scrollbar-color: transparent transparent;*/
+            /* thumb and track color */
             scrollbar-width: 5px;
         }
         
@@ -503,7 +523,6 @@
             $('#condition_report').hide();
             $('#resetContentButton').hide();
             document.getElementById("scroll_button").onscroll = function () { scrollFunction() };
-
         });
 
 
@@ -706,7 +725,7 @@
                         <td>` + window.newsResponseData[i].cmpyKey + `</td>
                         <td>` + window.newsResponseData[i].newsDate + `</td>
                         <td>` + window.newsResponseData[i].cmpyName + `</td>
-                        <td ><a href="javascript:viewNewsContents(` + i + `);">` + window.newsResponseData[i].newsTtl + `</a>
+                        <td><a href="javascript:viewNewsContents(` + i + `);">` + window.newsResponseData[i].newsTtl + `</a>
                             <input type="hidden" id="hidden` + i + `" value="` + hiddenData + `"/>
                             </td>
                         `+ procc + `
@@ -927,9 +946,7 @@
             
             });
             
-        }
-
-        
+        }        
 
         function paginationByRowCount(data) {
             var pageLength = data.pageCount;
@@ -2047,11 +2064,7 @@
 </head>
 
 <body>
-    
     <div class="wrap">
-
-
-
         <header class="header">
             <!-- logo -->
             <h1 class="logo_area">
@@ -2272,7 +2285,7 @@
 
                             <div class="search_box" id="search_box_report">
                                 <input id="search_company_report" type="text" placeholder="검색" value="" onkeypress="if( event.keyCode == 13 ){getReportList();}">
-                                <button  class="btn_search" onclick="getReportList();"><span class="blind" >검색</span></button>
+                                <button class="btn_search" onclick="getReportList();"><span class="blind" >검색</span></button>
                             </div>
             
                         </div>
@@ -2287,11 +2300,41 @@
                                     <div class="card_list">
                                         <!-- DANGER GAUGE Extended Version -->
                                         <div class="card_item_small">
-                                            <div class="card_box">
+                                            <div class="card_box_left">
                                                 <div class="card_head">
                                                     T/A 결과
+
+                                                    <style>
+                                                        #data {
+                                                            overflow: hidden;
+                                                            padding: 0;
+                                                        }
+
+                                                        #articleCo {
+                                                            visibility: hidden;
+                                                            padding: 0;
+                                                            padding-left: 1px;
+                                                            border: none;
+                                                            background-color: #eee;
+                                                        }
+
+                                                        .hiddenoption {
+                                                            visibility: hidden;
+                                                            border: 1px solid #000;
+                                                            background-color: white;
+                                                            padding-left: 5px;
+                                                            padding-right: 5px;
+                                                            margin-left: -1px;
+                                                            
+                                                        }
+                                                    </style>
+
+                                                    <select multiple size="1" id='articleCo'>
+                                                        
+                                                        <option class='hiddenoption' value='all' selected>전체</option>
+                                                    </select>
                                                 </div>
-                                                <div class="chart_area" style="padding-top: 66%">
+                                                <div class="chart_area" style=" height: 14.5vw;">
                                                     <div class="chart" id="dangerGauge">
 
                                                         <script type="text/javascript" src='./js/nlp.js'></script>
@@ -2314,7 +2357,7 @@
 
                                         <!-- news article count -->
                                         <div class="card_item_large">
-                                            <div class="card_box">
+                                            <div class="card_box_right">
                                                 <div class="card_head">
                                                     <span>기사수&nbsp;</span>
                                                     <style>
@@ -2337,7 +2380,7 @@
                                                             padding-left: 5px;
                                                             padding-right: 5px;
                                                             margin-left: -1px;
-                                                            display: inline-block;
+
                                                         }
                                                     </style>
 
@@ -2349,7 +2392,7 @@
                                                     </select>
 
                                                 </div>
-                                                <div class="chart_area" style="padding-top: 20%">
+                                                <div class="chart_area" style=" height: 14.5vw;">
                                                     <div class="chart" id='articleCounts'>
                                                         <script>
                                                             var divID = 'articleCounts';
@@ -2360,15 +2403,33 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
 
+                                    <div class="card_list">
                                         <!-- 키워드 빠 플롯 -->
                                         <div class="card_item_small">
-                                            <div class="card_box">
+                                            <div class="card_box_left">
                                                 <div class="card_head">
                                                     <span class="title">키워드 랭킹</span>
+                                                    <style>
+                                                        #data {
+                                                            overflow: hidden;
+                                                            padding: 0;
+                                                        }
+
+                                                        #stockRangeee {
+                                                            visibility: hidden;
+                                                           
+                                                        }
+
+                                                        
+                                                    </style>
+
+                                                    <select size="1" id='stockRangeee' class='select'>
+                                                    </select>
                                                 </div>
                                                 <div class="card_content">
-                                                    <div class="chart_area" style="padding-top: 68%">
+                                                    <div class="chart_area" style=" height: 15.5vw;">
                                                         <div class="chart" id="keywordBar">
                                                             <script>
 
@@ -2383,13 +2444,13 @@
 
                                         <!-- 주가 플롯 -->
                                         <div class="card_item_large">
-                                            <div class="card_box">
+                                            <div class="card_box_right">
                                                 <div class="card_head">
                                                     <span>주가&nbsp;</span>
                                                     <select size="1" id='stockRange' class='select'>
                                                     </select>
                                                 </div>
-                                                <div class="chart_area" style="padding-top: 20%">
+                                                <div class="chart_area" style=" height: 15.5vw;">
                                                     <div class="chart" id="stockTime">
                                                         <script>
                                                         </script>
@@ -2465,7 +2526,6 @@
                 <div id="chartModal" class="modal">
                     <!-- Modal content -->
                 </div>
-
                 
             </div>
 
@@ -2473,7 +2533,6 @@
 
 
 
-          
 
 
         </div>
