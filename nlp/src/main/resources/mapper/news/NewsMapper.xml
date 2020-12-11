@@ -164,8 +164,10 @@
 		  order by news_date desc
  	</select>
  	
- 	<select id="selectCompanyListByCompany" parameterType="String" resultType="String">
+ 	<select id="selectCompanyListByCompany" parameterType="String" resultType="com.sobetec.nlp.newslist.Company">
 		SELECT "company"		AS "cmpy"
+			,	"subsidiary_name"	AS "subsName"
+			,	"industry_name"	AS "instName"
 		FROM NLP."company_code"
 		where company like concat('%', #{companyName} ,'%')
  	</select>

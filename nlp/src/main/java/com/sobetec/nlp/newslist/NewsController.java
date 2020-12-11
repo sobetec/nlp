@@ -83,7 +83,7 @@ public class NewsController {
 	}
 	
 	@GetMapping(path = "/getCompanyListByCompany/{companyName}")
-	public List<String> getCompanyListByCompany(@PathVariable String companyName) throws Exception {
+	public List<Company> getCompanyListByCompany(@PathVariable String companyName) throws Exception {
 		return newsService.getCompanyListByCompany(companyName);
 	}
 	

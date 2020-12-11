@@ -80,7 +80,7 @@ public class NewsRepository implements NewsRepositoryImpl {
 	}
 
 	@Override
-	public List<String> getCompanyListByCompany(String companyName) throws Exception {
+	public List<Company> getCompanyListByCompany(String companyName) throws Exception {
 		return sqlSession.selectList("mapper.newsMapper.selectCompanyListByCompany", companyName);
 	}
 

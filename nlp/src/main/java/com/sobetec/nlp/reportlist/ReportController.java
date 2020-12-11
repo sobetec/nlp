@@ -65,7 +65,9 @@ public class ReportController {
 	
 	@RequestMapping("/file/{fileName:.+}")
 	public void downloadReport(HttpServletRequest request, HttpServletResponse response, @PathVariable("fileName") String fileName) throws IOException {
+		System.out.println("in herer!!!");
 		File file = new File(EXTERNAL_FILE_PATH + fileName);
+		System.out.println(fileName);
 		if (file.exists()) {
 
 			//get the mimetype

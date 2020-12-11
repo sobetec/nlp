@@ -14,7 +14,7 @@ public interface NewsRepositoryImpl {
 
 	List<News> getNewsListByIndustry(String instCode) throws Exception;
 	
-	List<String> getCompanyListByCompany(String companyName) throws Exception;
+	List<Company> getCompanyListByCompany(String companyName) throws Exception;
 	
 	List<News> getNewsListByCompanyName(NewsCondition newsCondition) throws Exception;
 
