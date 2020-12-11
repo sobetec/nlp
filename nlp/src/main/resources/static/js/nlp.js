@@ -2978,7 +2978,7 @@ function getChartQuery3(companyName) {
                 console.log("스톡옵션");
                 console.log(stockOptions);
                 for (var i = 0; i < companies.length; i++) {
-                    if (companies[i] == shortestCompany) {
+                    if (companies[i] == companyName) {
                         var tempHTML = `<option value='${companies[i]}' selected>${companies[i]}</option>`;
                     }
                     else {

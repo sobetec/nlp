@@ -516,6 +516,7 @@
 
         $(document).ready(function () {
             createEmptyDatatableNews();
+            createEmptyDatatableReport();
             $('#example_report').DataTable();
             setDisplay();
             $('#date_picker_div_News').hide();
@@ -1279,11 +1280,11 @@
 
         function setDisplay() {
             itemChangeFold();
-            d3.selectAll('.visSVG').remove();
+            //d3.selectAll('.visSVG').remove();
 
             if ($('input:radio[id=news_radio]').is(':checked')) {
                 document.getElementById('main_title').innerText = '뉴스 조회';
-                createEmptyDatatableNews();
+                //createEmptyDatatableNews();
                 $('#contents_section_news').show();
                 $('#contents_section_report').hide();
                 $('#date_picker_div_News').hide();
@@ -1294,7 +1295,7 @@
                 
             } else {
                 document.getElementById('main_title').innerText = '행내 보고서 조회';    
-                createEmptyDatatableReport();
+                //createEmptyDatatableReport();
                 $('#contents_section_report').show();
                 $('#contents_section_news').hide();      
                 $('#date_picker_div_Report').hide();
@@ -1857,7 +1858,7 @@
             document.getElementById('main_title').innerText = '뉴스 조회';
 
             if (selectItem == "company") {
-                createEmptyDatatableNews();
+                //createEmptyDatatableNews();
                 $('#chartDiv').show();
                 $('#result_area_subsidiary').hide();
                 $('#result_area_industry').hide();
@@ -1874,8 +1875,10 @@
                 getIndustryAndSubsidiaryList('subsidiary');
                 $('#result_area_industry').hide();
                 $('#result_area_news').hide();
-                $('#yearSelect').hide();
-                $('#gubunSelect').hide();
+                // $('#yearSelect').hide();
+                // $('#gubunSelect').hide();
+                $('#yearSelect').show();
+                $('#gubunSelect').show();
                 $('#search_box_news').hide();
                 document.getElementById("search_company_news").disabled = true;
                 document.getElementById("search_button_news").disabled = true;
@@ -1888,8 +1891,10 @@
                 getIndustryAndSubsidiaryList('industry');
                 $('#result_area_news').hide();
                 $('#result_area_subsidiary').hide();
-                $('#yearSelect').hide();
-                $('#gubunSelect').hide();
+                // $('#yearSelect').hide();
+                // $('#gubunSelect').hide();
+                $('#yearSelect').show();
+                $('#gubunSelect').show();
                 $('#search_box_news').hide();
                 document.getElementById("search_company_news").disabled = true;
                 document.getElementById("search_button_news").disabled = true;
@@ -1898,7 +1903,7 @@
                 $('#chartDiv').hide();
             }
             else if (selectItem == "keyword") {
-                createEmptyDatatableNews();
+                //createEmptyDatatableNews();
                 $('#chartDiv').show();
                 $('#result_area_subsidiary').hide();
                 $('#result_area_industry').hide();
