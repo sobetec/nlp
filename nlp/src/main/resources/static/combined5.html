@@ -2017,7 +2017,7 @@
         
     
     function scrollFunction() {
-        var scrollBottom = $(document).height() - $(window).height() - $(window).scrollTop();
+        //var scrollBottom = $(document).height() - $(window).height() - $(window).scrollTop();
         console.log('im scroll $(document).height() =  ' + $(document).height());
         console.log('im scroll $(window).height() =  ' + $(window).height());
         console.log('im scroll $(window).scrollTop() =  ' + $(window).scrollTop());
@@ -2045,6 +2045,11 @@
         mybutton2.style.display = "none";
         }
         
+        if (document.getElementById("scroll_button").scrollTop == 0){
+            mybutton.style.display = "none";
+            mybutton.style.bottom = "75px";
+            mybutton2.style.display = "none";
+        }
         
     }
     
