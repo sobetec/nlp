@@ -86,14 +86,13 @@ public class NewsService {
         return listNews; 
     }
     
-    public List<News> getNewsListByIndustryAndSubsidiary(String gubunJaName, String selectedName) throws Exception {
+    public List<News> getNewsListByIndustryAndSubsidiary(NewsCondition newsCondition) throws Exception {
     	
     	List<News> listNews = new ArrayList<News>();
-    	if (gubunJaName.equals("industry")) {
-    		listNews = repository.getNewsListByIndustry(selectedName);
-                	
+    	if (newsCondition.getGubunJaName().equals("industry")) {
+    		listNews = repository.getNewsListByIndustry(newsCondition);
     	}else {
-    		listNews = repository.getNewsListBySubsidiary(selectedName);
+    		listNews = repository.getNewsListBySubsidiary(newsCondition);
     	}
     	for(int i = 0; i < listNews.size(); i++) {
     		
