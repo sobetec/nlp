@@ -442,7 +442,10 @@
             color: #090b88;
         }
 
-        .list li:hover {
+        .list li:hover,
+        .list_company li:hover,
+        .list_subsidiary li:hover,
+        .list_industry li:hover {
             text-decoration: underline;
             cursor: pointer;
             font-size: 14px;
@@ -450,14 +453,61 @@
             color: #7c130c;
         }
 
-        .list li {
-
+        .list li,
+        .list_company li,
+        .list_subsidiary li,
+        .list_industry li {
             font-size: 14px;
-
         }
 
         .nulls {
             display: none;
+        }
+
+        /*플로팅 버튼 탑 바텀*/
+        #myBtn {
+            display: none;
+            position: fixed;
+            bottom: 75px;
+            right: 30px;
+            z-index: 99;
+            font-size: 18px;
+            border: none;
+            outline: none;
+            background-color: #820812;
+            color: white;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 4px;
+            opacity: 40%;
+        }
+
+        #myBtn2 {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 30px;
+            z-index: 99;
+            font-size: 18px;
+            border: none;
+            outline: none;
+            background-color: #820812;
+            color: white;
+            cursor: pointer;
+            padding: 10px;
+            /*버튼크기*/
+            border-radius: 4px;
+            opacity: 40%;
+        }
+
+        #myBtn:hover {
+            background-color: #820812;
+            opacity: 98%;
+        }
+
+        #myBtn2:hover {
+            background-color: #820812;
+            opacity: 98%;
         }
     </style>
 
@@ -473,6 +523,9 @@
             $('#date_picker_div_News').hide();
             $('#condition').hide();
             $('#condition_report').hide();
+            $('#resetContentButton').hide();
+            document.getElementById("scroll_button").onscroll = function () { scrollFunction() };
+
         });
 
 
@@ -667,7 +720,6 @@
 
 
                 var hiddenData = escapeHtml(window.newsResponseData[i].rawData);
-                console.log(hiddenData);
 
                 var htmlContents =
                     `
@@ -676,7 +728,7 @@
                         <td>` + window.newsResponseData[i].cmpyKey + `</td>
                         <td>` + window.newsResponseData[i].newsDate + `</td>
                         <td>` + window.newsResponseData[i].cmpyName + `</td>
-                        <td><a href="javascript:viewNewsContents(` + i + `);">` + window.newsResponseData[i].newsTtl + `</a>
+                        <td ><a href="javascript:viewNewsContents(` + i + `);">` + window.newsResponseData[i].newsTtl + `</a>
                             <input type="hidden" id="hidden` + i + `" value="` + hiddenData + `"/>
                             </td>
                         `+ procc + `
@@ -773,10 +825,17 @@
                 }
 
                 var downImg = '';
+                var paramFileName = window.reportResponseData[i].orgnFileName;
+
+                paramFileName = paramFileName.replace(/&/g, "%26");
+                paramFileName = paramFileName.replace(/\+/g, "%2B");
+                paramFileName = paramFileName.replace(/=/g, "%3D");
+                paramFileName = paramFileName.replace(/\[/g, "%5B");
+                paramFileName = paramFileName.replace(/\]/g, "%5D");
 
                 if (window.reportResponseData[i].docCaty == 'pdf') {
                     downImg = `
-                                    <a href="/file/` + window.reportResponseData[i].orgnFileName + `.pdf">
+                                    <a href="/file/` + paramFileName + `.pdf">
                                         <img src="/img/pdf_down.png" style="width: auto; height: 14px;">
                                     </a>
                                 `;
@@ -892,6 +951,8 @@
 
         }
 
+
+
         function paginationByRowCount(data) {
             var pageLength = data.pageCount;
             var sources = function () {
@@ -986,6 +1047,9 @@
 
                     document.getElementById('myModal').innerHTML = modalhtml2;
                     $('#myModal').show();
+
+                    document.getElementById('main_title').innerText = '뉴스 조회';
+                    $('#chartDiv').show();
                     setTimeout(() => drawTable(result_area, ''), 1000);
 
                 },
@@ -1004,7 +1068,26 @@
 
 
         function getReportList() {
-            var data = parameters();
+            var data = new Object();
+
+            data.reportYear = parseInt($("#reportYear").val());
+            data.gubun = $("#gubunReport").val();
+
+            if ($("#gubunReport").val() == "month") {
+                var temp = $("#choicesReport").val().split("월")[0];
+                console.log(temp);
+                data.gubunItem = parseInt(temp);
+            }
+            else if ($("#gubunReport").val() == "quarter") {
+                var temp = $("#choicesReport").val().split("분기")[0];
+                console.log(temp);
+                data.gubunItem = parseInt(temp);
+            }
+
+            data.startDate = $("#date_from_report").val();
+            data.endDate = $("#date_to_report").val();
+            data.searchWord = document.getElementById('search_company_report').value;
+
             console.log(data);
 
             loading1("행내 보고서");
@@ -1017,15 +1100,20 @@
                 success: function (responseData) {
                     //alert('조회 성공');
                     console.log(responseData.length);
-                    window.reportResponseData = responseData;
-                    console.log(window.reportResponseData[0]);
+                    if (responseData.length != 0) {
+                        window.reportResponseData = responseData;
+                        console.log(window.reportResponseData[0]);
 
-                    $('#myModal').hide();
+                        $('#myModal').hide();
 
-                    document.getElementById('myModal').innerHTML = modalhtml3;
-                    $('#myModal').show();
-                    setTimeout(() => drawTableReport(), 1000);
-
+                        document.getElementById('myModal').innerHTML = modalhtml3;
+                        $('#myModal').show();
+                        setTimeout(() => drawTableReport(), 1000);
+                    }
+                    else {
+                        $('#myModal').hide();
+                        alert('보고서가 없습니다');
+                    }
                 },
                 error: function () {
                     if (data.gubun == "custom" && (data.startDate == null || data.endData == null)) {
@@ -1232,10 +1320,14 @@
             if (gubunJaName == "industry") {
                 result_area = 'result_area_industry';
                 table_id = 'industry_news_list';
+                $('#result_area_industry').show();
             } else {
                 result_area = 'result_area_subsidiary';
                 table_id = 'subsidiary_news_list';
+                $('#result_area_subsidiary').show();
             };
+            $('#chartDiv').hide();
+            $('#result_area_news').hide();
 
             console.log('산업명' + gubunJaName);
             loading1("뉴스");
@@ -1252,10 +1344,14 @@
                     console.log(window.newsResponseData[0]);
 
                     $('#myModal').hide();
+                    if ($('#fold').val() == 'subsidiary' || $('#fold').val() == 'industry') {
+                        $('#resetContentButton').show();
+                    }
 
                     document.getElementById('myModal').innerHTML = modalhtml2;
                     $('#myModal').show();
                     setTimeout(() => drawTable(result_area, table_id), 1000);
+                    document.getElementById('main_title').innerHTML = `뉴스 조회<h4 style="display:inline">(` + selectedName + `)</h4>`;
 
                 },
                 error: function () {
@@ -1306,18 +1402,18 @@
                     var tables = ``;
 
                     var expend_all = `
-                    <div class="buttons" align="right" >
-                        <a id="toggleee" class="btn" style="min-width: 110px;" href="javascript:togglee();">전체 펼치기</a>
-                        
-                    </div>
-                    `
+                <div class="buttons" align="right" >
+                    <a id="toggleee" class="btn" style="min-width: 110px;" href="javascript:togglee();">전체 펼치기</a>
+                    
+                </div>
+                `
 
                     for (var n = 0; n < 3; n++) {
                         var htmlTableHead =
                             `
-                            <table style="border-style: none none none none; border-width:2px; border-color:#ccc4c3;" rules=cols>
-                                <tr>
-                            `;
+                        <table style="border-style: none none none none; border-width:2px; border-color:#ccc4c3;" rules=cols>
+                            <tr>
+                        `;
 
                         var tds = ``;
 
@@ -1331,23 +1427,23 @@
                             //console.log(colJavaName);
                             var htmlhead =
                                 `
-                                
-                                        <td style="padding-left: 16px; padding-right:10px;" valign="top" width="270">
-                                            <div>
-                                                <ul >
-                                                    <li class="menu">
-                                                        <a style="font-size: large; font-weight: bold;"> `+ colName + ` </a>
-                                                        
-                                                        <ul class="list">
-                                                            <br/>
-                                                                                                                
-                                `;
+                            
+                                    <td style="padding-left: 16px; padding-right:10px;" valign="top" width="270">
+                                        <div>
+                                            <ul >
+                                                <li class="menu">
+                                                    <a style="font-size: large; font-weight: bold;"> `+ colName + ` </a>
+                                                    
+                                                    <ul class="list">
+                                                        <br/>
+                                                                                                            
+                            `;
 
                             var htmlmiddle =
                                 `
-                                        </ul>
-                                        <ul class="hide">
-                                    `;
+                                    </ul>
+                                    <ul class="hide">
+                                `;
 
 
                             k = 0;
@@ -1358,8 +1454,8 @@
                                     if (colJavaName != null) {
                                         var htmlli1 =
                                             `
-                                                    <li>`+ colJavaName + `</li>
-                                                    `;
+                                                <li>`+ colJavaName + `</li>
+                                                `;
 
                                         htmlhead += htmlli1;
                                         k++;
@@ -1368,8 +1464,8 @@
                                 } else if ((colJavaName != null)) {
                                     var htmlli2 =
                                         `
-                                                    <li>`+ colJavaName + `</li>
-                                                    `;
+                                                <li>`+ colJavaName + `</li>
+                                                `;
                                     htmlmiddle += htmlli2;
                                 };
                             };
@@ -1377,18 +1473,18 @@
 
                             var htmltail =
                                 `
-                                                                </ul>
-                                                                <a class="visivi"  > 더보기 ▼ </a>
-                                                                <a class="closed"  > 접기 ▲ </a>
-                                                            </li>
+                                                            </ul>
+                                                            <a class="visivi"  > 더보기 ▼ </a>
+                                                            <a class="closed"  > 접기 ▲ </a>
+                                                        </li>
 
 
-                                                        </ul>
-                                                    </div>
-                                                </td>
-                                                                
-                                                                
-                                `;
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                                            
+                                                            
+                            `;
                             var td = htmlhead + htmlmiddle + htmltail;
 
                             tds += td;
@@ -1413,7 +1509,6 @@
                     } else {
                         document.getElementById('result_area_subsidiary').innerHTML = expend_all + tables;
                     }
-
 
 
                     $(".menu>a").click(function () {
@@ -1494,8 +1589,6 @@
                 }
             });
 
-
-
         }
 
 
@@ -1532,7 +1625,6 @@
             //	}
             //});
 
-
             //$("#dataTableSearch").trigger(e);
 
             $("#dataTableSearch").val(keyword);
@@ -1567,40 +1659,104 @@
                 success: function (responseData) {
                     //alert('조회 성공');
                     console.log(responseData.length);
-                    window.companyResponseData = responseData;
 
-                    var companyList = [];
-                    companyListHTML = ``;
-                    var companyliList = [];
-                    companyliListHTML = ``;
+                    if (responseData.length == 0) {
+                        var modalContents =
+                            `
+                            <div class="modal-list-head">
+                                <p style="text-align: center;"><span style="font-size: 14pt;"><b><span style="font-size: 16pt;">관련 기업이 존재하지 않습니다.</span></b></span></p>
+                            </div>
 
-                    for (var i = 0; i < responseData.length; i++) {
-                        companyList[i] = `<p> <a href="javascript:getNewsListByCompanyName(` + `'` + window.companyResponseData[i] + `'` + `);" id="modalList` + i + `">` + window.companyResponseData[i] + ` </a> </p>`;
-                        companyListHTML = companyListHTML + companyList[i];
-                        companyliList[i] = `<li>` + window.companyResponseData[i] + `</li>`;
-                        companyliListHTML = companyliListHTML + companyliList[i];
+                            <div class="modal-list">
+                                <p style="text-align: center; line-height: 1.5;"><br />
+                                    데이터가 존재하지 않습니다.
+                                </p>
+                            </div>
+                        `;
+                    }
+                    else {
+                        window.companyResponseData = responseData;
+
+                        var companyliList = [];
+                        var companyliListHTML = ``;
+
+                        var subsidiaryliList = [];
+                        var subsidiaryliListHTML = ``;
+
+                        var industryliList = [];
+                        var industryliListHTML = ``;
+
+                        for (var i = 0; i < responseData.length; i++) {
+                            companyliList[i] = `<li>` + window.companyResponseData[i].cmpy + `</li>`;
+                            companyliListHTML = companyliListHTML + companyliList[i];
+
+                            if (window.companyResponseData[i].subsName == null) {
+                                subsidiaryliList[i] = `<li> &nbsp </li>`;
+                            }
+                            else {
+                                subsidiaryliList[i] = `<li>` + window.companyResponseData[i].subsName + `</li>`;
+                            }
+                            subsidiaryliListHTML = subsidiaryliListHTML + subsidiaryliList[i];
+
+                            if (window.companyResponseData[i].instName == null) {
+                                industryliList[i] = `<li> &nbsp </li>`;
+                            }
+                            else {
+                                industryliList[i] = `<li>` + window.companyResponseData[i].instName + `</li>`;
+                            }
+                            industryliListHTML = industryliListHTML + industryliList[i];
+                        }
+
+                        $('#myModal').hide();
+
+                        var modalContents =
+                            `
+                            <div class="modal-list-head">
+                                <p style="text-align: center;"><span style="font-size: 14pt;"><b><span style="font-size: 16pt;">목록 중 하나를 선택해 주세요.</span></b></span></p>
+                            </div>
+
+                            <div class="modal-list">
+                                <table border="1" width="100%">
+                                    <tr>
+                                        <td>
+                                            <ul class="list_company">
+                                                ` + companyliListHTML + `
+                                            </ul>
+                                        </td>
+                                        <td>
+                                            <ul class="list_subsidiary">
+                                                ` + subsidiaryliListHTML + `
+                                            </ul>
+                                        </td>
+                                        <td>
+                                            <ul class="list_industry">
+                                                ` + industryliListHTML + `
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        `;
                     }
 
-                    $('#myModal').hide();
 
-                    var modalContents =
-                        `
-                        <div class="modal-list-head">
-                            <p style="text-align: center;"><span style="font-size: 14pt;"><b><span style="font-size: 16pt;">목록 중 하나를 선택해 주세요.</span></b></span></p>
-                        </div>
 
-                        <div class="modal-list">
-                            <ul class="list">
-                                ` + companyliListHTML + `
-                            </ul>
-                        </div>
-                    `;
                     document.getElementById('myModal').innerHTML = modalContents;
                     $('#myModal').show();
 
-                    $(".list").on("click", "li", function () {
+                    $(".list_company").on("click", "li", function () {
                         var companyName = $(this).text();
                         getNewsListByCompanyName(companyName);
+                    });
+
+                    $(".list_subsidiary").on("click", "li", function () {
+                        var companyName = $(this).text();
+                        getNewsListByIndustryAndSubsidiary('subsidiary', companyName);
+                    });
+
+                    $(".list_industry").on("click", "li", function () {
+                        var companyName = $(this).text();
+                        getNewsListByIndustryAndSubsidiary('industry', companyName);
                     });
 
                 },
@@ -1694,6 +1850,8 @@
             document.getElementById('condition').innerHTML = conditionHTML;
 
             itemChangeNews();
+            $('#resetContentButton').hide();
+            document.getElementById('main_title').innerText = '뉴스 조회';
 
             if (selectItem == "company") {
                 createEmptyDatatableNews();
@@ -1754,6 +1912,7 @@
             searchBoxHTML = `<input id="search_company_news" type="text" placeholder="검색" value="" onkeypress="if( event.keyCode == 13 ){` + getFunction + `}">
                 <button id="search_button_news" class="btn_search" onclick="` + getFunction + `"><span class="blind" >검색</span></button>`;
             document.getElementById('search_box_news').innerHTML = searchBoxHTML;
+            document.getElementById('pagination-container').innerHTML = ``;
         }
 
         function createEmptyChartDiv() {
@@ -1842,10 +2001,59 @@
 
 
 
+        //window.onscroll = function() {scrollFunction()
+
+
+        function scrollFunction() {
+            var scrollBottom = $(document).height() - $(window).height() - $(window).scrollTop();
+            console.log('im scroll $(document).height() =  ' + $(document).height());
+            console.log('im scroll $(window).height() =  ' + $(window).height());
+            console.log('im scroll $(window).scrollTop() =  ' + $(window).scrollTop());
+            var mybutton = document.getElementById("myBtn");
+            var mybutton2 = document.getElementById("myBtn2");
+
+            var bott = document.getElementById("scroll_button").scrollHeight;
+            var bott2 = document.getElementById("scroll_button").scrollTop;
+            console.log('im document.body.scrollHeight= ' + document.getElementById("scroll_button").scrollHeight);
+            console.log(document.getElementById("scroll_button").scrollTop);
+            //console.log('document.body.scrollTop=  ' + document.body.scrollTop)
+            //console.log('document.documentElement.scrollTop=  ' + document.documentElement.scrollTop)
+
+            if (((document.getElementById("scroll_button").scrollHeight - $(window).height()) >= document.getElementById("scroll_button").scrollTop) && (document.getElementById("scroll_button").scrollTop > 20)) {
+                mybutton.style.display = "block";
+                mybutton.style.bottom = "75px";
+                mybutton2.style.display = "block";
+            } else if (document.getElementById("scroll_button").scrollTop > (document.getElementById("scroll_button").scrollHeight - $(window).height())) {
+                mybutton.style.display = "block";
+                mybutton.style.bottom = "20px";
+                mybutton2.style.display = "none";
+            } else {
+                mybutton.style.display = "none";
+                mybutton.style.bottom = "75px";
+                mybutton2.style.display = "none";
+            }
+
+
+        }
+
+        // When the user clicks on the button, scroll to the top of the document
+        function topFunction() {
+            document.getElementById("scroll_button").scrollTop = 0;
+
+        }
+
+        function BotFunction() {
+
+            document.getElementById("scroll_button").scrollTop = document.getElementById("scroll_button").scrollHeight;
+        }
+
+
     </script>
 
     <script type="text/javascript" src="./js/d3.v4.min.js"></script>
     <script type="text/javascript" src='./js/nlp.js'></script>
+	<script type="text/javascript" src='./js/nlp2.js'></script>
+	<script type="text/javascript" src='./js/FileSaver.min.js'></script>
 
 
 
@@ -1853,7 +2061,11 @@
 </head>
 
 <body>
+
     <div class="wrap">
+
+
+
         <header class="header">
             <!-- logo -->
             <h1 class="logo_area">
@@ -1942,8 +2154,9 @@
             <div class="main_panel" role="main">
 
 
-                <div class="contents_panel">
-
+                <div class="contents_panel" id="scroll_button">
+                    <button onclick="topFunction()" id="myBtn" title="Go to top">&nbsp;⮝&nbsp;</button>
+                    <button onclick="BotFunction()" id="myBtn2" title="Go to bottom">&nbsp;⮟&nbsp;</button>
                     <h3 class="main_title" id="main_title"></h3>
 
                     <span class="input_radio">
@@ -2025,6 +2238,11 @@
                                     onkeypress="if( event.keyCode == 13 ){getCompanyListByCompany();}">
                                 <button id="search_button_news" class="btn_search"
                                     onclick="getCompanyListByCompany();"><span class="blind">검색</span></button>
+                            </div>
+
+                            <div id="resetContentButton">
+                                <button class="btn point" onclick="itemChangeFold();" style="color:#fefefe;">목록으로
+                                    돌아가기</button>
                             </div>
 
                         </div>
@@ -2121,7 +2339,6 @@
 
                                             </div>
                                         </div>
-
                                         <!-- news article count -->
                                         <div class="card_item_large">
                                             <div class="card_box">
@@ -2189,7 +2406,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
 
 
                                         <!-- 주가 플롯 -->
@@ -2277,7 +2493,12 @@
                     <!-- Modal content -->
                 </div>
 
+                <div id='tooltip_position'>
+
+                </div>
+
             </div>
+
 
 
 
@@ -2354,17 +2575,16 @@
             }
         });
         $('#downloadButton').on('click', function () {
-			var svg = window.SVG
-			var svgString = getSVGString(svg.node());
-			console.log(svgString)
-			svgToImage(svgString, 944, 602, 'png', save)
+            var svg = window.SVG
+            var svgString = getSVGString(svg.node());
+            console.log(svgString)
+            svgToImage(svgString, 944, 602, 'png', save)
 
-			function save(dataBlob, filesize) {
-				saveAs(dataBlob, 'chart.png'); // FileSaver.js function
-			}
-			console.log('saved')
-		})
-
+            function save(dataBlob, filesize) {
+                saveAs(dataBlob, 'chart.png'); // FileSaver.js function
+            }
+            console.log('saved')
+        })
 
 
     </script>

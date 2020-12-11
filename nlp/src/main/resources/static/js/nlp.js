@@ -834,7 +834,7 @@ function makeSentimentBoxPlot(sentimentData, divID) {
 
 function makeKeywordBarPlot(data, divID, nCutoff) {
     var xPadding = 50;
-    var yPadding = 30;
+    var yPadding = 10;
     var colorVec = ['#83afd5', '#fbbe81', '#80c89c', '#be7cbf']
     var graphDiv = document.getElementById(divID);
     data.sort(function (a, b) { return b.tf_idf - a.tf_idf });
