@@ -12,6 +12,9 @@
     <link rel="stylesheet" href="css/w3.css">
     <link rel="stylesheet" href="css/pagination.css">
     <style>
+        .card_list {
+            flex-direction: row !important;
+        }
         
         /*chart part*/
         body {
@@ -429,6 +432,11 @@
 
         .list li, .list_company li, .list_subsidiary li, .list_industry li {
             font-size: 14px;
+        }
+
+        .disabled {
+            pointer-events:none;
+            opacity:0.6;
         }
 
         .nulls {
@@ -1315,6 +1323,7 @@
 
                     $('#myModal').hide();
                     if ($('#fold').val() == 'subsidiary' || $('#fold').val() == 'industry'){
+                        itemChangeFold();
                         $('#resetContentButton').show();
                     }
 
@@ -1661,7 +1670,7 @@
                             companyliListHTML = companyliListHTML + companyliList[i];
 
                             if (window.companyResponseData[i].subsName == null){
-                                subsidiaryliList[i] = `<li> &nbsp </li>`;    
+                                subsidiaryliList[i] = `<li class="disabled">　</li>`;    
                             }
                             else{
                                 subsidiaryliList[i] = `<li>` + window.companyResponseData[i].subsName + `</li>`;
@@ -1669,7 +1678,7 @@
                             subsidiaryliListHTML = subsidiaryliListHTML + subsidiaryliList[i];
 
                             if (window.companyResponseData[i].instName == null){
-                                industryliList[i] = `<li> &nbsp </li>`;    
+                                industryliList[i] = `<li class="disabled">　</li>`;    
                             }
                             else{
                                 industryliList[i] = `<li>` + window.companyResponseData[i].instName + `</li>`;
@@ -1687,6 +1696,11 @@
 
                             <div class="modal-list">
                                 <table border="1" width="100%">
+                                    <tr>
+                                        <th>기업</th>
+                                        <th>계열</th>
+                                        <th>산업</th>
+                                    </tr>
                                     <tr>
                                         <td>
                                             <ul class="list_company">
@@ -1721,11 +1735,13 @@
 
                     $(".list_subsidiary").on("click", "li", function() {
                         var companyName = $(this).text();
+                        $('#fold').val('subsidiary').prop('selected', true);
                         getNewsListByIndustryAndSubsidiary('subsidiary', companyName);
                     });
 
                     $(".list_industry").on("click", "li", function() {
                         var companyName = $(this).text();
+                        $('#fold').val('industry').prop('selected', true);
                         getNewsListByIndustryAndSubsidiary('industry', companyName);
                     });
                     
@@ -2260,12 +2276,13 @@
                         </div>
 
 
+
                         <div id='chartDiv' style='display:block'>
-    
+
                             <div class="contents">
-    
+
                                 <div class="visualize">
-    
+
                                     <div class="card_list">
                                         <!-- DANGER GAUGE Extended Version -->
                                         <div class="card_item_small">
@@ -2273,46 +2290,27 @@
                                                 <div class="card_head">
                                                     T/A 결과
                                                 </div>
-                                                <div class="chart_area" style="padding-top: 60%">
+                                                <div class="chart_area" style="padding-top: 66%">
                                                     <div class="chart" id="dangerGauge">
-    
+
                                                         <script type="text/javascript" src='./js/nlp.js'></script>
-    
+
                                                         <script>
                                                             var gauge = document.getElementById('dangerGauge');
-    
+
                                                             var gaugeDirection = 0;
-    
+
                                                         </script>
-    
+
                                                     </div>
-    
+
                                                 </div>
-    
-    
-    
+
+
+
                                             </div>
                                         </div>
-    
-                                        <!-- 키워드 빠 플롯 -->
-                                        <div class="card_item_small">
-                                            <div class="card_box">
-                                                <div class="card_head">
-                                                    <span class="title">키워드 랭킹</span>
-                                                </div>
-                                                <div class="card_content">
-                                                    <div class="chart_area" style="padding-top: 84%">
-                                                        <div class="chart" id="keywordBar">
-                                                            <script>
-    
-                                                            </script>
-    
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-    
+
                                         <!-- news article count -->
                                         <div class="card_item_large">
                                             <div class="card_box">
@@ -2323,14 +2321,14 @@
                                                             overflow: hidden;
                                                             padding: 0;
                                                         }
-    
+
                                                         select {
                                                             padding: 0;
                                                             padding-left: 1px;
                                                             border: none;
                                                             background-color: #eee;
                                                         }
-    
+
                                                         option {
                                                             display: inline-block;
                                                             border: 1px solid #000;
@@ -2341,27 +2339,48 @@
                                                             display: inline-block;
                                                         }
                                                     </style>
-    
+
                                                     <select multiple size="1" id='articleCountRange'>
                                                         <option value='1'>1년</option>
                                                         <option value='3'>3년</option>
                                                         <option value='5'>5년</option>
                                                         <option value='all' selected>전체</option>
                                                     </select>
-    
+
                                                 </div>
-                                                <div class="chart_area" style="padding-top: 22.15%">
+                                                <div class="chart_area" style="padding-top: 20%">
                                                     <div class="chart" id='articleCounts'>
                                                         <script>
                                                             var divID = 'articleCounts';
-    
-    
+
+
                                                         </script>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-    
+
+                                        <!-- 키워드 빠 플롯 -->
+                                        <div class="card_item_small">
+                                            <div class="card_box">
+                                                <div class="card_head">
+                                                    <span class="title">키워드 랭킹</span>
+                                                </div>
+                                                <div class="card_content">
+                                                    <div class="chart_area" style="padding-top: 68%">
+                                                        <div class="chart" id="keywordBar">
+                                                            <script>
+
+                                                            </script>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
                                         <!-- 주가 플롯 -->
                                         <div class="card_item_large">
                                             <div class="card_box">
@@ -2370,11 +2389,11 @@
                                                     <select size="1" id='stockRange' class='select'>
                                                     </select>
                                                 </div>
-                                                <div class="chart_area" style="padding-top: 21%">
+                                                <div class="chart_area" style="padding-top: 20%">
                                                     <div class="chart" id="stockTime">
                                                         <script>
                                                         </script>
-    
+
                                                     </div>
                                                 </div>
                                             </div>

@@ -2029,7 +2029,7 @@ function makePieChart(data, divID, nCutofftoShow, nCutoff) {
     }
 }
 
-var tooltip = d3.select('#tooltip_position')
+var tooltip = d3.select('.main_panel')
     .append("div")
     .attr('id', 'tooltip')
     .attr('data-html', 'true')
