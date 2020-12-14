@@ -75,11 +75,11 @@ public class NewsController {
 		return resultList;
 	}
 	
-	@GetMapping(path = "/getNewsListByIndustryAndSubsidiary")
-	public List<News> getNewsListByIndustry( @RequestParam(value = "gubunJaName",required = false) String gubunJaName,@RequestParam(value = "selectedName",required = false) String selectedName) throws Exception {
-		System.out.println("구분자 네임=" + gubunJaName  );
-		System.out.println("찍은네임=" + selectedName  );
-		return newsService.getNewsListByIndustryAndSubsidiary(gubunJaName,selectedName);
+	@PostMapping(path = "/getNewsListByIndustryAndSubsidiary")
+	public List<News> getNewsListByIndustry(NewsCondition newsCondition) throws Exception {
+		System.out.println("구분자 네임= " + newsCondition.getGubunJaName());
+		System.out.println("찍은네임= " + newsCondition.getSelectedName());
+		return newsService.getNewsListByIndustryAndSubsidiary(newsCondition);	
 	}
 	
 	@GetMapping(path = "/getCompanyListByCompany/{companyName}")

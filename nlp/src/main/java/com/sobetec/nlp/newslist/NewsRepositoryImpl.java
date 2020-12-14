@@ -12,7 +12,7 @@ public interface NewsRepositoryImpl {
 
 	List<News> getChartNewsByCompany(String cmpyNameOnly) throws Exception;
 
-	List<News> getNewsListByIndustry(String instCode) throws Exception;
+	List<News> getNewsListByIndustry(NewsCondition newsCondition) throws Exception;
 	
 	List<Company> getCompanyListByCompany(String companyName) throws Exception;
 	
@@ -24,7 +24,7 @@ public interface NewsRepositoryImpl {
 	
 	List<Industry> getIndustryList() throws Exception;
 
-	List<News> getNewsListBySubsidiary(String instCode) throws Exception;
+	List<News> getNewsListBySubsidiary(NewsCondition newsCondition) throws Exception;
 
 	
 	

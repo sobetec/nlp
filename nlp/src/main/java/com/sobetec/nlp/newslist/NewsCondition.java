@@ -11,7 +11,8 @@ public class NewsCondition {
 	private int pageNum;
 	private int rowCount;
 	private int pageCount;
-	
+	private String gubunJaName;
+	private String selectedName;
 	
 	public int getNewsYear() {
 		return newsYear;
@@ -67,22 +68,27 @@ public class NewsCondition {
 	public void setPageCount(int pageCount) {
 		this.pageCount = pageCount;
 	}
+	public String getGubunJaName() {
+		return gubunJaName;
+	}
+	public void setGubunJaName(String gubunJaName) {
+		this.gubunJaName = gubunJaName;
+	}
+	public String getSelectedName() {
+		return selectedName;
+	}
+	public void setSelectedName(String selectedName) {
+		this.selectedName = selectedName;
+	}
 	
 	@Override
 	public String toString() {
 		return "NewsCondition [newsYear=" + newsYear + ", gubun=" + gubun + ", gubunItem=" + gubunItem + ", startDate="
 				+ startDate + ", endDate=" + endDate + ", searchWord=" + searchWord + ", pageNum=" + pageNum
-				+ ", rowCount=" + rowCount + ", pageCount=" + pageCount + "]";
+				+ ", rowCount=" + rowCount + ", pageCount=" + pageCount + ", gubunJaName=" + gubunJaName
+				+ ", selectedName=" + selectedName + "]";
 	}
 	
 	
-	
-
-	
-	
-
-	
-
-
 	
 }
