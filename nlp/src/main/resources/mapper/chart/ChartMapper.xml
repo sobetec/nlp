@@ -21,6 +21,7 @@
 			 , "closing_price" as "price"
 			 FROM NLP."nlp_stock"
 			 WHERE company LIKE concat('%',#{cmpyNameOnly},'%')
+			 
 			 ORDER BY date
 	</select>
 	<select id="getDocFreqCounts" resultType="com.sobetec.nlp.chart.NewsKeyword">
@@ -119,27 +120,34 @@
 	</select>
 	
 	<select id="selectChartIndustryStocksByCondition" parameterType="com.sobetec.nlp.chart.ChartCondition" resultType="com.sobetec.nlp.chart.Stocks">
-		SELECT "company" as "company"
-			 , "date" as "date"
-			 , "closing_price" as "price"	
-		 from (select * , date_part('year', date) as year, date_part('month', date) as month, date_part('day', date) as day, date_part('quarter', date) as quarter
-			from (select c.seq, d.industry_code, d.industry_name, c.company_code, c.company, to_date(date, 'yyyymmdd') as date, closing_price 
-			from nlp.nlp_stock c, nlp.company_code d where c.company_code = d.code) as a) as b
-		 WHERE industry_name LIKE concat('%',#{selectedName},'%') 
+	select d.date, d.company, d.closing_price as "price" from (
+		select s.company, 
+				to_date(s.date, 'yyyymmdd') as date, 
+				date_part('year', to_date(s.date, 'yyyymmdd')) as year, 
+			 	date_part('month', to_date(s.date, 'yyyymmdd')) as month,
+			 	date_part('day', to_date(s.date, 'yyyymmdd')) as day, 
+			 	date_part('quarter', to_date(s.date, 'yyyymmdd')) as quarter, 
+				s.closing_price 
+		from nlp.nlp_stock as s
+		join nlp.company_code as b
+		on (s.company_code = b.code and b.industry_name = concat('%',#{selectedName},'%')))as d
+				
+	where
+		 
 		 <choose>
 		  	<when test="gubun == 'year'">
-		  		and year = #{newsYear}
+		  		year = #{newsYear}
 		  	</when>
 		  	<when test="gubun == 'month'">
-		  		and year = #{newsYear}
+		  		year = #{newsYear}
 		  		and month = #{gubunItem}
 		  	</when>
 		  	<when test="gubun == 'quarter'">
-		  		and year = #{newsYear}
+		  		year = #{newsYear}
 		  		and quarter = #{gubunItem}
 		  	</when>
 		  	<when test="gubun == 'custom'">
-		  		and date between  to_date(#{startDate}, 'yyyy-mm-dd') and to_date(#{endDate}, 'yyyy-mm-dd')
+		  		date between  to_date(#{startDate}, 'yyyy-mm-dd') and to_date(#{endDate}, 'yyyy-mm-dd')
 		  	</when>
 		  </choose>
 		 ORDER BY date
