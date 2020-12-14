@@ -845,6 +845,8 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
     console.log(nCutoff);
 
     if(data.length !=0){
+        var keywordBarContents = ``;
+        document.getElementById('keywordBar').innerHTML = keywordBarContents;
         if (divID == "enlargedChart") {
             var divHeight = 602;
             var divWidth = 944;
@@ -3036,6 +3038,8 @@ function getChartQuery3(companyName) {
             responseData['allStockData'] = allStockData;
             window.newsChartData = responseData;
             if (responseData.stockData.length != 0) {
+                var stockContents = ``;
+                document.getElementById('stockTime').innerHTML = stockContents;
                 var shortestCompany = companies.reduce(function (a, b) {
                     return a.length <= b.length ? a : b;
                 })
@@ -3191,6 +3195,8 @@ function getChartQuery4(dataIndSub) {
             console.log("스톡데이터");
             console.log(allStockData)
             if (responseData.stockData.length != 0) {
+                var stockContents = ``;
+                document.getElementById('stockTime').innerHTML = stockContents;
                 var shortestCompany = companies.reduce(function (a, b) {
                     return a.length <= b.length ? a : b;
                 })
