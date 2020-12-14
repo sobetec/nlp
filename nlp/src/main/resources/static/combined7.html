@@ -109,7 +109,7 @@
             margin: 7% auto;
             /* 15% from the top and centered */
             min-height: 40px;
-            background-color: #5659dd;
+            background-color: #0508b1;
             text-align: center;
             vertical-align: middle;
             position: relative;
@@ -518,7 +518,7 @@
         .select[multiple] {
 			background-color: white;
 			border-radius: 4px;
-		}
+		} 
 		        
     </style>
 
@@ -538,16 +538,6 @@
             $('#resetContentButton').hide();
             document.getElementById("scroll_button").onscroll = function () { scrollFunction() };
         });
-
-
-        // 뒤로가기나 새로고침시 경고창 (단 다시묻지 않음시 뒤로가기는 경고창이 뜨지않음)
-        // 
-        // window.addEventListener('beforeunload', function (e) {
-        //     // Cancel the event
-        //     e.preventDefault(); // If you prevent default behavior in Mozilla Firefox prompt will always be shown
-        //     // Chrome requires returnValue to be set
-        //     e.returnValue = '';
-        // });
 
 
 
@@ -1050,6 +1040,7 @@
 
             var result_area = "result_area_news";
             var table_id = "example_news";
+            data.gubunJaName = "keyword";
             console.log(data);
 
             keywordLoading1(data.rowCount);
@@ -1082,7 +1073,9 @@
 
         function getNewsListByCompanyName(companyName) {
             var data = parameters();
-            data.searchWord = companyName;
+            data.searchWord = document.getElementById('search_company_news').value;
+            data.selectedName = companyName;
+            data.gubunJaName = 'company';
             console.log(data);
             var result_area = 'result_area_news';
 
@@ -1258,6 +1251,7 @@
                 changeItem = selectListData.quarter.text;
                 document.getElementById("choicesNews").disabled = false;
                 document.getElementById("newsYear").disabled = false;
+                document.getElementById("articleCountRange").disabled = true;
                 $('#yearSelect').show();
                 $('#date_picker_div_News').hide();
                 $('#condition').show();
@@ -1266,6 +1260,7 @@
                 changeItem = selectListData.month.text;
                 document.getElementById("choicesNews").disabled = false;
                 document.getElementById("newsYear").disabled = false;
+                document.getElementById("articleCountRange").disabled = true;
                 $('#yearSelect').show();
                 $('#date_picker_div_News').hide();
                 $('#condition').show();
@@ -1274,6 +1269,7 @@
                 changeItem = '';
                 document.getElementById("choicesNews").disabled = true;
                 document.getElementById("newsYear").disabled = false;
+                document.getElementById("articleCountRange").disabled = true;
                 $('#yearSelect').show();
                 $('#date_picker_div_News').hide();
                 $('#condition').hide();
@@ -1282,6 +1278,7 @@
                 changeItem = '';
                 //document.getElementById("choicesNews").disabled = true;
                 //document.getElementById("newsYear").disabled = true;
+                document.getElementById("articleCountRange").disabled = false;
                 $('#yearSelect').hide();
                 $('#date_picker_div_News').show();
                 $('#condition').hide();
@@ -1307,6 +1304,7 @@
                 changeItem = selectListData.quarter.text;
                 document.getElementById("choicesReport").disabled = false;
                 document.getElementById("reportYear").disabled = false;
+                $('#yearSelectReport').show();
                 $('#date_picker_div_Report').hide();
                 $('#condition_report').show();
             }
@@ -1314,6 +1312,7 @@
                 changeItem = selectListData.month.text;
                 document.getElementById("choicesReport").disabled = false;
                 document.getElementById("reportYear").disabled = false;
+                $('#yearSelectReport').show();
                 $('#date_picker_div_Report').hide();
                 $('#condition_report').show();
             }
@@ -1321,13 +1320,15 @@
                 changeItem = '';
                 document.getElementById("choicesReport").disabled = true;
                 document.getElementById("reportYear").disabled = false;
+                $('#yearSelectReport').show();
                 $('#date_picker_div_Report').hide();
                 $('#condition_report').hide();
             }
             else if (selectItem == "custom") {
                 changeItem = '';
-                document.getElementById("choicesReport").disabled = true;
-                document.getElementById("reportYear").disabled = true;
+                // document.getElementById("choicesReport").disabled = true;
+                // document.getElementById("reportYear").disabled = true;
+                $('#yearSelectReport').hide();
                 $('#date_picker_div_Report').show();
                 $('#condition_report').hide();
             }
@@ -1974,8 +1975,8 @@
                 getIndustryAndSubsidiaryList('subsidiary');
                 $('#result_area_industry').hide();
                 $('#result_area_news').hide();
-                $('#yearSelect').hide();
-                $('#gubunSelect').hide();
+                $('#yearSelect').show();
+                $('#gubunSelect').show();
                 $('#search_box_news').hide();
                 document.getElementById("search_company_news").disabled = true;
                 document.getElementById("search_button_news").disabled = true;
@@ -1988,8 +1989,8 @@
                 getIndustryAndSubsidiaryList('industry');
                 $('#result_area_news').hide();
                 $('#result_area_subsidiary').hide();
-                $('#yearSelect').hide();
-                $('#gubunSelect').hide();
+                $('#yearSelect').show();
+                $('#gubunSelect').show();
                 $('#search_box_news').hide();
                 document.getElementById("search_company_news").disabled = true;
                 document.getElementById("search_button_news").disabled = true;
@@ -2364,7 +2365,7 @@
                                 </select>
                             </div>
 
-                            <div class="data_set" style="float:left;">
+                            <div class="data_set" style="float:left;" id="yearSelectReport">
                                 <a style="margin-right: -10px; margin-left: 10px;">연도 선택</a>
                                 <select name="reportYear" id="reportYear" class="select"
                                     style="min-width: 80px; width:80px;">
@@ -2478,7 +2479,7 @@
                                         <div class="card_item_large">
                                             <div class="card_box_right">
                                                 <div class="card_head">
-                                                    <span>기간&nbsp;</span>
+                                                    <span>기사수&nbsp;</span>
                                                     <style>
                                                         #data {
                                                             overflow: hidden;

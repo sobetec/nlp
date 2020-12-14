@@ -13,7 +13,7 @@
 		 FROM NLP."nlp_news"
 		 where (company_name like concat('%',#{cmpyNameOnly},'%') or raw_data like concat('%',#{cmpyNameOnly},'%') or news_title like concat('%',#{cmpyNameOnly},'%') )
 		 AND (news_date between '2015-01-01' and '2020-12-31')
-		 order by news_date desc limit 10000
+		 order by news_date desc
 	</select>
 	<select id="selectChartStocksByCompany" parameterType="String" resultType="com.sobetec.nlp.chart.Stocks">
 		SELECT "company" as "company"
@@ -59,7 +59,7 @@
 		  	</when>
 		  
 		  </choose>
-		 order by news_date desc limit 10000
+		 order by news_date desc
 	</select>
 	
 	<select id="selectChartStocksByCondition" parameterType="com.sobetec.nlp.chart.ChartCondition" resultType="com.sobetec.nlp.chart.Stocks">
@@ -70,6 +70,119 @@
 		 from (select * , date_part('year', date) as year, date_part('month', date) as month, date_part('day', date) as day, date_part('quarter', date) as quarter
 				from (select seq, company_code, company, to_date(date, 'yyyymmdd') as date, closing_price from nlp.nlp_stock) as a) as b
 		 WHERE company LIKE concat('%',#{searchWord},'%')
+		 <choose>
+		  	<when test="gubun == 'year'">
+		  		and year = #{newsYear}
+		  	</when>
+		  	<when test="gubun == 'month'">
+		  		and year = #{newsYear}
+		  		and month = #{gubunItem}
+		  	</when>
+		  	<when test="gubun == 'quarter'">
+		  		and year = #{newsYear}
+		  		and quarter = #{gubunItem}
+		  	</when>
+		  	<when test="gubun == 'custom'">
+		  		and date between  to_date(#{startDate}, 'yyyy-mm-dd') and to_date(#{endDate}, 'yyyy-mm-dd')
+		  	</when>
+		  </choose>
+		 ORDER BY date
+	</select>
+	
+	<select id="selectChartIndustryNewsByCondition" parameterType="com.sobetec.nlp.chart.ChartCondition" resultType="com.sobetec.nlp.chart.News">
+		SELECT "composite_key"						AS "cmpyKey"
+			 , "news_date"							AS "newsDate"
+			 , "company_name"						AS "cmpyName"
+			 , round(cast(ta_score as numeric),4)	AS "taScre"
+			 , "news_title"							AS "newsTtl"
+			 , "ext_morphs"							AS "extMorp"
+		 FROM NLP."nlp_news"
+		 where industry_code = (select industry_code from nlp.company_code where industry_name like concat('%',#{selectedName},'%') limit 1)
+		 <choose>
+		  	<when test="gubun == 'year'">
+		  		and year = #{newsYear}
+		  	</when>
+		  	<when test="gubun == 'month'">
+		  		and year = #{newsYear}
+		  		and month = #{gubunItem}
+		  	</when>
+		  	<when test="gubun == 'quarter'">
+		  		and year = #{newsYear}
+		  		and quarter = #{gubunItem}
+		  	</when>
+		  	<when test="gubun == 'custom'">
+		  		and news_date between  to_date(#{startDate}, 'yyyy-mm-dd') and to_date(#{endDate}, 'yyyy-mm-dd')
+		  	</when>
+		  
+		  </choose>
+		 order by news_date desc
+	</select>
+	
+	<select id="selectChartIndustryStocksByCondition" parameterType="com.sobetec.nlp.chart.ChartCondition" resultType="com.sobetec.nlp.chart.Stocks">
+		SELECT "company" as "company"
+			 , "date" as "date"
+			 , "closing_price" as "price"	
+		 from (select * , date_part('year', date) as year, date_part('month', date) as month, date_part('day', date) as day, date_part('quarter', date) as quarter
+			from (select c.seq, d.industry_code, d.industry_name, c.company_code, c.company, to_date(date, 'yyyymmdd') as date, closing_price 
+			from nlp.nlp_stock c, nlp.company_code d where c.company_code = d.code) as a) as b
+		 WHERE industry_name LIKE concat('%',#{selectedName},'%') 
+		 <choose>
+		  	<when test="gubun == 'year'">
+		  		and year = #{newsYear}
+		  	</when>
+		  	<when test="gubun == 'month'">
+		  		and year = #{newsYear}
+		  		and month = #{gubunItem}
+		  	</when>
+		  	<when test="gubun == 'quarter'">
+		  		and year = #{newsYear}
+		  		and quarter = #{gubunItem}
+		  	</when>
+		  	<when test="gubun == 'custom'">
+		  		and date between  to_date(#{startDate}, 'yyyy-mm-dd') and to_date(#{endDate}, 'yyyy-mm-dd')
+		  	</when>
+		  </choose>
+		 ORDER BY date
+	</select>
+	
+	<select id="selectChartCompanyNewsByCondition" parameterType="com.sobetec.nlp.chart.ChartCondition" resultType="com.sobetec.nlp.chart.News">
+		SELECT "composite_key"						AS "cmpyKey"
+			 , "news_date"							AS "newsDate"
+			 , "company_name"						AS "cmpyName"
+			 , round(cast(ta_score as numeric),4)	AS "taScre"
+			 , "news_title"							AS "newsTtl"
+			 , "ext_morphs"							AS "extMorp"
+		 FROM NLP."nlp_news"
+		 where company_name = #{selectedName}
+		 <choose>
+		  	<when test="gubun == 'year'">
+		  		and year = #{newsYear}
+		  	</when>
+		  	<when test="gubun == 'month'">
+		  		and year = #{newsYear}
+		  		and month = #{gubunItem}
+		  	</when>
+		  	<when test="gubun == 'quarter'">
+		  		and year = #{newsYear}
+		  		and quarter = #{gubunItem}
+		  	</when>
+		  	<when test="gubun == 'custom'">
+		  		and news_date between  to_date(#{startDate}, 'yyyy-mm-dd') and to_date(#{endDate}, 'yyyy-mm-dd')
+		  	</when>
+		  
+		  </choose>
+		 order by news_date desc
+	</select>
+	
+	
+	<select id="selectChartCompanyStocksByCondition" parameterType="com.sobetec.nlp.chart.ChartCondition" resultType="com.sobetec.nlp.chart.Stocks">
+		SELECT "company" as "company"
+			 , "date" as "date"
+			 , "closing_price" as "price"	
+			 		 
+		 from (select * , date_part('year', date) as year, date_part('month', date) as month, date_part('day', date) as day, date_part('quarter', date) as quarter
+				from (select seq, company_code, company, to_date(date, 'yyyymmdd') as date, closing_price from nlp.nlp_stock) as a) as b
+		 WHERE company = #{selectedName}
 		 <choose>
 		  	<when test="gubun == 'year'">
 		  		and year = #{newsYear}

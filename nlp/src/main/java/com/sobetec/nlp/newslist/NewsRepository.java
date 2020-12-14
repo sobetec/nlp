@@ -68,15 +68,33 @@ public class NewsRepository implements NewsRepositoryImpl {
 	}
 	
 	@Override
-	public List<News> getNewsListByIndustry(String selectedName) throws Exception {
-
-		return sqlSession.selectList("mapper.newsMapper.selectNewsListByIndustry", selectedName);
+	public List<News> getNewsListByIndustry(NewsCondition newsCondition) throws Exception {
+		if (newsCondition.getGubun().equals("custom")) {
+			String startDate = newsCondition.getStartDate();
+			String endDate = newsCondition.getEndDate();
+			String sd[] = startDate.split("/");
+			String ed[] = endDate.split("/");
+			startDate = sd[2] + "-" + sd[0] + "-" + sd[1];
+			endDate = ed[2] + "-" + ed[0] + "-" + ed[1];
+			newsCondition.setStartDate(startDate);
+			newsCondition.setEndDate(endDate);
+		}
+		return sqlSession.selectList("mapper.newsMapper.selectNewsListByIndustry", newsCondition);
 	}
 	
 	@Override
-	public List<News> getNewsListBySubsidiary(String selectedName) throws Exception {
-
-		return sqlSession.selectList("mapper.newsMapper.selectNewsListBySubsidiary", selectedName);
+	public List<News> getNewsListBySubsidiary(NewsCondition newsCondition) throws Exception {
+		if (newsCondition.getGubun().equals("custom")) {
+			String startDate = newsCondition.getStartDate();
+			String endDate = newsCondition.getEndDate();
+			String sd[] = startDate.split("/");
+			String ed[] = endDate.split("/");
+			startDate = sd[2] + "-" + sd[0] + "-" + sd[1];
+			endDate = ed[2] + "-" + ed[0] + "-" + ed[1];
+			newsCondition.setStartDate(startDate);
+			newsCondition.setEndDate(endDate);
+		}
+		return sqlSession.selectList("mapper.newsMapper.selectNewsListBySubsidiary", newsCondition);
 	}
 
 	@Override
