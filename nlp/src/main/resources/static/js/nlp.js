@@ -839,122 +839,137 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
     data.sort(function (a, b) { return b.tf_idf - a.tf_idf });
     dataSlice = data.slice(0, nCutoff)
     dataSlice.sort(function (a, b) { return a.tf_idf - b.tf_idf });
-    //console.log(data)
+    
+    console.log(data);
+    console.log(divID);
+    console.log(nCutoff);
 
-    if (divID == "enlargedChart") {
-        var divHeight = 602;
-        var divWidth = 944;
-        document.getElementById(divID).innerHTML = "";
+    if(data.length !=0){
+        if (divID == "enlargedChart") {
+            var divHeight = 602;
+            var divWidth = 944;
+            document.getElementById(divID).innerHTML = "";
+        }
+        else {
+            var divHeight = graphDiv.clientHeight;
+            var divWidth = graphDiv.clientWidth;
+        }
+        var INNER_HEIGHT = divHeight - 2 * yPadding;
+        var INNER_WIDTH = divWidth - 2 * xPadding;
+    
+        var yScale = d3.scaleBand()
+            .domain(dataSlice.map(function (d) { return d.keyword }))
+            .rangeRound([divHeight - yPadding, yPadding])
+            .paddingInner(0.1);
+        var yAxis = d3.axisLeft()
+            .tickSizeOuter(0)
+            .scale(yScale);
+    
+    
+        var xScale = d3.scaleLinear()
+            .domain([0, dataSlice[nCutoff - 1].tf_idf])
+            .range([xPadding, divWidth - xPadding])
+        /* var xAxis = d3.axisBottom()
+            .scale(xScale)
+            .ticks([])
+            
+                                                            .tickSize(0) */;
+    
+        var xAxisGrid = d3.axisBottom(xScale)
+            .tickSize(-INNER_HEIGHT)
+            .tickFormat('')
+            .tickSizeOuter(0);
+    
+        var svg = d3.select("#" + divID).append("svg")
+            .attr('class', 'visSVG')
+            .attr("width", "100%")
+            .attr("height", "100%");
+    
+        svg.append('g')
+            .attr('class', 'x axis-grid')
+            .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
+            .call(xAxisGrid)
+            .call(g => g.select('.domain').remove());
+    
+    
+    
+    
+        /* svg.append('g')
+            .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
+            .call(xAxis); */
+    
+    
+    
+        svg.selectAll(".keywordBar")
+            .data(dataSlice)
+            .enter().append('rect')
+            .attr("class", function (d) {
+                if (divID == 'enlargedChart') {
+                    return "keywordBarEnlarged";
+                }
+                else {
+                    return "keywordBar";
+                }
+            })
+            .style('fill', function (d, i) { return colorVec[i % colorVec.length] })
+            .attr("x", function (d) { return xScale(0) })
+            .attr("y", function (d) { return yScale(d.keyword) })
+            .attr("width", function (d) { return xScale(d.tf_idf) - xScale(0) })
+            .attr("height", yScale.bandwidth)
+            .on("mouseover", onMouseOver)
+            .on("mousemove", onMouseMove)
+            .on("mouseout", onMouseOut)
+            .on('click', function (d) {
+                if (divID == 'enlargedChart') {
+                    $('.layer_dimmed').removeClass('is_active');
+                    $('.enlargedChartSettings').css("display", "none");
+                    var selectItem = $("#fold").val();
+    
+                    dataTableSearch(d.keyword);
+                    if (selectItem == "company") {                    
+                        document.getElementById('dataTableSearchCompany').scrollIntoView();
+                    }
+                    else if (selectItem == "subsidiary") {
+                        document.getElementById('dataTableSearchSubsidiary').scrollIntoView();
+                    }
+                    else if (selectItem == "industry") {
+                        document.getElementById('dataTableSearchIndustry').scrollIntoView();
+                    }
+                    else if (selectItem == "keyword") {
+                        document.getElementById('dataTableSearchKeyword').scrollIntoView();
+                    }
+    
+                    
+                    console.log(d.keyword);
+    
+                }
+                else {
+    
+                }
+            });
+    
+        var yAxis = svg.append('g')
+            .attr('id', 'keywordYAxis')
+            .attr("transform", "translate(" + xPadding + ",0)")
+            .call(yAxis);
+    
+        var leftWidth = document.getElementById('keywordYAxis').getBoundingClientRect().width;
+        svg.attr('transform', 'translate(' + (leftWidth / 4) + ',0)');
+    
+        if (divID == 'enlargedChart') {
+            window.SVG = svg;
+        }
     }
-    else {
-        var divHeight = graphDiv.clientHeight;
-        var divWidth = graphDiv.clientWidth;
+    else{
+        var keywordBarContents = `
+                                    <div style="text-align:center; font-size:35px; margin-top:70px;">
+                                        뉴스 정보 없음
+                                    </div>
+                                 `;
+        document.getElementById('keywordBar').innerHTML = keywordBarContents;
     }
-    var INNER_HEIGHT = divHeight - 2 * yPadding;
-    var INNER_WIDTH = divWidth - 2 * xPadding;
 
-    var yScale = d3.scaleBand()
-        .domain(dataSlice.map(function (d) { return d.keyword }))
-        .rangeRound([divHeight - yPadding, yPadding])
-        .paddingInner(0.1);
-    var yAxis = d3.axisLeft()
-        .tickSizeOuter(0)
-        .scale(yScale);
-
-
-    var xScale = d3.scaleLinear()
-        .domain([0, dataSlice[nCutoff - 1].tf_idf])
-        .range([xPadding, divWidth - xPadding])
-    /* var xAxis = d3.axisBottom()
-        .scale(xScale)
-        .ticks([])
-        
-                                                        .tickSize(0) */;
-
-    var xAxisGrid = d3.axisBottom(xScale)
-        .tickSize(-INNER_HEIGHT)
-        .tickFormat('')
-        .tickSizeOuter(0);
-
-    var svg = d3.select("#" + divID).append("svg")
-        .attr('class', 'visSVG')
-        .attr("width", "100%")
-        .attr("height", "100%");
-
-    svg.append('g')
-        .attr('class', 'x axis-grid')
-        .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
-        .call(xAxisGrid)
-        .call(g => g.select('.domain').remove());
-
-
-
-
-    /* svg.append('g')
-        .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
-        .call(xAxis); */
-
-
-
-    svg.selectAll(".keywordBar")
-        .data(dataSlice)
-        .enter().append('rect')
-        .attr("class", function (d) {
-            if (divID == 'enlargedChart') {
-                return "keywordBarEnlarged";
-            }
-            else {
-                return "keywordBar";
-            }
-        })
-        .style('fill', function (d, i) { return colorVec[i % colorVec.length] })
-        .attr("x", function (d) { return xScale(0) })
-        .attr("y", function (d) { return yScale(d.keyword) })
-        .attr("width", function (d) { return xScale(d.tf_idf) - xScale(0) })
-        .attr("height", yScale.bandwidth)
-        .on("mouseover", onMouseOver)
-        .on("mousemove", onMouseMove)
-        .on("mouseout", onMouseOut)
-        .on('click', function (d) {
-            if (divID == 'enlargedChart') {
-                $('.layer_dimmed').removeClass('is_active');
-                $('.enlargedChartSettings').css("display", "none");
-                var selectItem = $("#fold").val();
-
-                dataTableSearch(d.keyword);
-                if (selectItem == "company") {                    
-                    document.getElementById('dataTableSearchCompany').scrollIntoView();
-                }
-                else if (selectItem == "subsidiary") {
-                    document.getElementById('dataTableSearchSubsidiary').scrollIntoView();
-                }
-                else if (selectItem == "industry") {
-                    document.getElementById('dataTableSearchIndustry').scrollIntoView();
-                }
-                else if (selectItem == "keyword") {
-                    document.getElementById('dataTableSearchKeyword').scrollIntoView();
-                }
-
-                
-                console.log(d.keyword);
-
-            }
-            else {
-
-            }
-        });
-
-    var yAxis = svg.append('g')
-        .attr('id', 'keywordYAxis')
-        .attr("transform", "translate(" + xPadding + ",0)")
-        .call(yAxis);
-
-    var leftWidth = document.getElementById('keywordYAxis').getBoundingClientRect().width;
-    svg.attr('transform', 'translate(' + (leftWidth / 4) + ',0)');
-
-    if (divID == 'enlargedChart') {
-        window.SVG = svg;
-    }
+    
 
 }
 
@@ -2939,7 +2954,7 @@ function getChartQuery3(companyName) {
     document.getElementById('chartModal').innerHTML = modalhtml4;
     $('#chartModal').show();
     data = parameters();
-    data.gubunJaName = 'company';
+    data.gubunJaName = $("#fold").val();
     data.selectedName = companyName;
 
     $.ajax({

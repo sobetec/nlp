@@ -202,4 +202,59 @@
 		 ORDER BY date
 	</select>
 	
+ 	<select id="selectChartSubsidiaryNewsByCondition" parameterType="com.sobetec.nlp.chart.ChartCondition" resultType="com.sobetec.nlp.chart.News">
+		SELECT "composite_key"						AS "cmpyKey"
+			 , "news_date"							AS "newsDate"
+			 , "company_name"						AS "cmpyName"
+			 , round(cast(ta_score as numeric),4)	AS "taScre"
+			 , "news_title"							AS "newsTtl"
+			 , "ext_morphs"							AS "extMorp"
+		  FROM NLP."nlp_news"
+		  where subsidiary_code = (select subsidiary_code from nlp.company_code where subsidiary_name = #{selectedName} limit 1)
+		  <choose>
+		  	<when test="gubun == 'year'">
+		  		and year = #{newsYear}
+		  	</when>
+		  	<when test="gubun == 'month'">
+		  		and year = #{newsYear}
+		  		and month = #{gubunItem}
+		  	</when>
+		  	<when test="gubun == 'quarter'">
+		  		and year = #{newsYear}
+		  		and quarter = #{gubunItem}
+		  	</when>
+		  	<when test="gubun == 'custom'">
+		  		and news_date between  to_date(#{startDate}, 'yyyy-mm-dd') and to_date(#{endDate}, 'yyyy-mm-dd')
+		  	</when>
+		  </choose>
+		  order by news_date desc
+	</select>
+	
+	<select id="selectChartSubsidiaryStocksByCondition" parameterType="com.sobetec.nlp.chart.ChartCondition" resultType="com.sobetec.nlp.chart.Stocks">
+		SELECT "company" as "company"
+			 , "date" as "date"
+			 , "closing_price" as "price"	
+			 		 
+		 from (select * , date_part('year', date) as year, date_part('month', date) as month, date_part('day', date) as day, date_part('quarter', date) as quarter
+				from (select seq, company_code, company, to_date(date, 'yyyymmdd') as date, closing_price from nlp.nlp_stock) as a) as b
+		 WHERE company = #{selectedName}
+		 <choose>
+		  	<when test="gubun == 'year'">
+		  		and year = #{newsYear}
+		  	</when>
+		  	<when test="gubun == 'month'">
+		  		and year = #{newsYear}
+		  		and month = #{gubunItem}
+		  	</when>
+		  	<when test="gubun == 'quarter'">
+		  		and year = #{newsYear}
+		  		and quarter = #{gubunItem}
+		  	</when>
+		  	<when test="gubun == 'custom'">
+		  		and date between  to_date(#{startDate}, 'yyyy-mm-dd') and to_date(#{endDate}, 'yyyy-mm-dd')
+		  	</when>
+		  </choose>
+		 ORDER BY date
+	</select>
+	
 </mapper>

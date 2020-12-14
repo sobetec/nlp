@@ -107,13 +107,12 @@ public class ChartNewsRepository implements ChartNewsRepositoryImpl {
 			chartCondition.setStartDate(startDate);
 			chartCondition.setEndDate(endDate);
 		}
-		return null;
+		return sqlSession.selectList("mapper.chartMapper.selectChartSubsidiaryNewsByCondition", chartCondition);
 	}
 
 	@Override
 	public List<Stocks> getChartSubsidiaryStocksByCondition(ChartCondition chartCondition) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		return sqlSession.selectList("mapper.chartMapper.selectChartSubsidiaryStocksByCondition", chartCondition);
 	}
 	
 	
