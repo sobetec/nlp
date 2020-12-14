@@ -2898,11 +2898,12 @@ function getChartQuery3(companyName) {
         dataType: 'json',
         success: function (responseData) {
             window.newsChartData = responseData;
-
-            //console.log(responseData)
+            
+            
+            //console.log('차트3 쓰리 리스펀스 데이따'+responseData);
             //alert('조회 성공: ' + responseData.allNews.length + '개 기사');
 
-
+            //console.log(responseData);
 
             makeGauge('dangerGauge', responseData.averageScore)
             document.getElementById('dangerGauge').addEventListener('click', function () {

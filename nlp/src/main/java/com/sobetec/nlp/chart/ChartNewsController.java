@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
  * @author YUJH
  * 
  */
+
+
 @RestController
 public class ChartNewsController {
 
