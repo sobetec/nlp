@@ -4226,7 +4226,21 @@
 		var language = settings.oLanguage;
 		var previousSearch = settings.oPreviousSearch;
 		var features = settings.aanFeatures;
-		var input = '<input id="dataTableSearch" type="search" class="'+classes.sFilterInput+'"/>';
+
+		var selectItem = $("#fold").val();
+
+		if (selectItem == "company") {
+			var input = '<input id="dataTableSearchCompany" type="search" class="'+classes.sFilterInput+'"/>';
+		}
+		else if (selectItem == "subsidiary") {
+			var input = '<input id="dataTableSearchSubsidiary" type="search" class="'+classes.sFilterInput+'"/>';
+		}
+		else if (selectItem == "industry") {
+			var input = '<input id="dataTableSearchIndustry" type="search" class="'+classes.sFilterInput+'"/>';
+		}
+		else if (selectItem == "keyword") {
+			var input = '<input id="dataTableSearchKeyword" type="search" class="'+classes.sFilterInput+'"/>';
+		}		
 	
 		var str = language.sSearch;
 		str = str.match(/_INPUT_/) ?

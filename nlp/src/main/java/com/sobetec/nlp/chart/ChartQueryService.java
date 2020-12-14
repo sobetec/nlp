@@ -171,15 +171,29 @@ public class ChartQueryService {
 		List<Stocks> allStocks = new ArrayList<Stocks>();
 		List<NewsKeyword> allDocFreqs = new ArrayList<NewsKeyword>();
 		
-		// logger.debug("call DB for news");
-		allNews = repository.getChartNewsByCondition(chartCondition);
-		// logger.debug("Done getting news");
-		// logger.debug("call DB for stock");
-		allStocks = repository.getChartStocksByCondition(chartCondition);
-		// logger.debug("Done getting stock");
-		// logger.debug("call DB for keywordFreqs");
-		allDocFreqs = repository.getDocFreqCounts();
-		// logger.debug("Done getting KeywordFreqs");
+		if (chartCondition.getGubunJaName().equals("industry")) {
+			// logger.debug("call DB for news");
+			allNews = repository.getChartIndustryNewsByCondition(chartCondition);
+			// logger.debug("Done getting news");
+			// logger.debug("call DB for stock");
+			allStocks = repository.getChartIndustryStocksByCondition(chartCondition);
+			// logger.debug("Done getting stock");
+			// logger.debug("call DB for keywordFreqs");
+			allDocFreqs = repository.getDocFreqCounts();
+			// logger.debug("Done getting KeywordFreqs");
+		}
+		else {
+			// logger.debug("call DB for news");
+			allNews = repository.getChartNewsByCondition(chartCondition);
+			// logger.debug("Done getting news");
+			// logger.debug("call DB for stock");
+			allStocks = repository.getChartStocksByCondition(chartCondition);
+			// logger.debug("Done getting stock");
+			// logger.debug("call DB for keywordFreqs");
+			allDocFreqs = repository.getDocFreqCounts();
+			// logger.debug("Done getting KeywordFreqs");
+		}
+		
 
 		// logger.debug("begin running algos");
 		HashMap<String, String> allDates = new HashMap<String, String>();

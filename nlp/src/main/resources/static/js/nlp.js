@@ -920,8 +920,30 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
             if (divID == 'enlargedChart') {
                 $('.layer_dimmed').removeClass('is_active');
                 $('.enlargedChartSettings').css("display", "none");
-                dataTableSearch(d.keyword);
-                document.getElementById('dataTableSearch').scrollIntoView();
+                var selectItem = $("#fold").val();
+
+                if (selectItem == "company") {
+                    console.log("im company trigger");
+                    dataTableSearch(d.keyword);
+                    document.getElementById('dataTableSearchCompany').scrollIntoView();
+                }
+                else if (selectItem == "subsidiary") {
+                    console.log("im subsidiary trigger");
+                    dataTableSearch(d.keyword);
+                    document.getElementById('dataTableSearchSubsidiary').scrollIntoView();
+                }
+                else if (selectItem == "industry") {
+                    console.log("im industry trigger");
+                    dataTableSearch(d.keyword);
+                    document.getElementById('dataTableSearchIndustry').scrollIntoView();
+                }
+                else if (selectItem == "keyword") {
+                    console.log("im keyword trigger");
+                    dataTableSearch(d.keyword);
+                    document.getElementById('dataTableSearchKeyword').scrollIntoView();
+                }
+
+                
                 console.log(d.keyword);
 
             }
@@ -2890,6 +2912,7 @@ function getChartQuery3(companyName) {
     document.getElementById('chartModal').innerHTML = modalhtml4;
     $('#chartModal').show();
     data = parameters();
+    data.gubunJaName = 'company';
 
     $.ajax({
         url: "/getChartQueryByCondition",
@@ -2979,6 +3002,164 @@ function getChartQuery3(companyName) {
                 console.log(stockOptions);
                 for (var i = 0; i < companies.length; i++) {
                     if (companies[i] == companyName) {
+                        var tempHTML = `<option value='${companies[i]}' selected>${companies[i]}</option>`;
+                    }
+                    else {
+                        var tempHTML = `<option value='${companies[i]}'>${companies[i]}</option>`;
+                    }
+                    stockOptions.insertAdjacentHTML('beforeend', tempHTML);
+                }
+
+                var divID = 'stockTime';
+                stockGraph = document.getElementById(divID);
+                console.log("3");
+                stockGraph.addEventListener('click', function () {
+                    document.getElementById('resetChart').addEventListener('click', function () {
+                        console.log('clicked');
+                        makeStockGraph(allStockData, 'enlargedChart');
+                    })
+                    makeStockGraph(allStockData, 'enlargedChart');
+                })
+                document.getElementById('stockRange').addEventListener('change', function () {
+                    makeStockGraph(allStockData, divID);
+                })
+                makeStockGraph(allStockData, divID);
+            }
+            else {
+                var stockContents = `
+                                        <div style="text-align:center; font-size:40px; margin-top:60px;">
+                                            주가 정보 없음
+                                        </div>
+                                    `;
+                document.getElementById('stockTime').innerHTML = stockContents;
+            }
+
+
+            $('#chartModal').hide();
+
+
+
+            /* document.getElementById('keywordPieSlider2').max = responseData.keywords.length;
+            var pieChart = document.getElementById('keywordPie');
+            makePieChart(responseData.keywords, 'keywordPie', document.getElementById('keywordPieSlider').value, document.getElementById('keywordPieSlider2').value)
+            pieChart.addEventListener('click', function () {
+                //console.log('clicked');
+                document.getElementById('keywordPieSettings').style.display = 'inline';
+                makePieChart(responseData.keywords, 'enlargedChart', document.getElementById('keywordPieSlider').value, document.getElementById('keywordPieSlider2').value);
+            }) */
+
+
+            /* makeWordcloud(responseData.keywords); */
+
+        },
+        error: function () {
+            alert('조회 실패');
+        }
+    });
+}
+
+function getChartQuery4(dataIndSub) {
+    ////console.log(document.getElementById('articleCountRange').value);
+    d3.selectAll('.visSVG').remove();
+    // var search_company = document.getElementById('search_company_news').value;
+    var selectedName = dataIndSub.selectedName;
+    document.getElementById('chartModal').innerHTML = modalhtml4;
+    $('#chartModal').show();
+    data = dataIndSub;
+    data.searchWord = selectedName;
+
+    $.ajax({
+        url: "/getChartQueryByCondition",
+        method: 'POST',
+        data: data,
+        dataType: 'json',
+        success: function (responseData) {
+            window.newsChartData = responseData;
+
+            //console.log(responseData)
+            //alert('조회 성공: ' + responseData.allNews.length + '개 기사');
+
+            console.log("리스폰스 키ㅜ어ㅡ");
+            console.log(responseData.keywords);
+            console.log(document.getElementById('keywordBarSlider').value);
+            console.log("리스폰스 키ㅜ어ㅡ");
+
+
+            makeGauge('dangerGauge', responseData.averageScore)
+            document.getElementById('dangerGauge').addEventListener('click', function () {
+                //console.log('clicked');
+                makeGauge('enlargedChart', responseData.averageScore);
+            })
+
+
+            var sentimentData = [];
+            for (var i = 0; i < responseData.sentimentDates.length; i++) {
+                sentimentData.push({
+                    time: Date.parse(responseData.sentimentDates[i].date),
+                    sentiment: responseData.sentimentDates[i].sentiment
+                })
+            }
+            /* var chart = document.getElementById('sentimentTimeTwoLines');
+            makeSentimentTimeGraph(sentimentData, 'sentimentTimeTwoLines');
+            chart.addEventListener('click', function () {
+                //console.log('clicked');
+                makeSentimentTimeGraph(sentimentData, 'enlargedChart');
+            })
+ */
+
+
+            var chart = document.getElementById('articleCounts');
+            makeCombinedGraph(responseData.sentimentDates, responseData.allNews, 'articleCounts');
+            chart.addEventListener('click', function () {
+                //console.log('clicked');
+                makeCombinedGraph(responseData.sentimentDates, responseData.allNews, 'enlargedChart');
+            })
+            document.getElementById('articleCountRange').addEventListener('change', function () {
+                makeCombinedGraph(responseData.sentimentDates, responseData.allNews, 'articleCounts');
+            })
+
+            /* var chart = document.getElementById('articleCounts');
+            makeArticleCounts(responseData.allNews, 'articleCounts');
+            chart.addEventListener('click', function () {
+                //console.log('clicked');
+                makeArticleCounts(responseData.allNews, 'enlargedChart');
+            }) */
+
+            var chart = document.getElementById('keywordBar');
+            makeKeywordBarPlot(responseData.keywords, 'keywordBar', document.getElementById('keywordBarSlider').value)
+            chart.addEventListener('click', function () {
+                document.getElementById('keywordBarSettings').style.display = 'inline';
+                makeKeywordBarPlot(responseData.keywords, 'enlargedChart', document.getElementById('keywordBarSlider').value)
+            })
+
+            if (responseData.stockData.length > 0) {
+                console.log('test')
+            }
+            var companies = [];
+            var allStockData = {};
+
+            console.log("스톡 길이 :  " + responseData.stockData.length);
+            for (var i = 0; i < responseData.stockData.length; i++) {
+                var tempStock = responseData.stockData[i]
+                if (!companies.includes(tempStock.company)) {
+                    companies.push(tempStock.company);
+                    allStockData[tempStock.company] = [];
+                }
+                allStockData[tempStock.company].push({ date: tempStock.date, price: tempStock.price })
+            }
+            console.log("스톡데이터");
+            console.log(allStockData)
+            if (responseData.stockData.length != 0) {
+                var shortestCompany = companies.reduce(function (a, b) {
+                    return a.length <= b.length ? a : b;
+                })
+
+                document.getElementById('stockRange').innerHTML = '';
+                var stockOptions = document.getElementById('stockRange');
+                console.log("스톡옵션");
+                console.log(stockOptions);
+                for (var i = 0; i < companies.length; i++) {
+                    if (companies[i] == selectedName) {
                         var tempHTML = `<option value='${companies[i]}' selected>${companies[i]}</option>`;
                     }
                     else {

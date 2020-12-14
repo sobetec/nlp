@@ -73,7 +73,6 @@
 			 
 		  FROM NLP."nlp_news"
 		 where company_name_only like concat('%',#{cmpyNameOnly},'%') or raw_data like concat('%',#{cmpyNameOnly},'%') or news_title like concat('%',#{cmpyNameOnly},'%') 
-		 limit 1000
 
 	</select>
 	
@@ -227,8 +226,6 @@
 		  
 		  </choose>
 		 order by news_date desc
-		 limit 500
-
 	</select>
 	
 	

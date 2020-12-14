@@ -54,4 +54,26 @@ public class ChartNewsRepository implements ChartNewsRepositoryImpl {
 	public List<Stocks> getChartStocksByCondition(ChartCondition chartCondition) throws Exception {
 		return sqlSession.selectList("mapper.chartMapper.selectChartStocksByCondition", chartCondition);
 	}
+	
+	@Override
+	public List<News> getChartIndustryNewsByCondition(ChartCondition chartCondition) throws Exception {
+		if (chartCondition.getGubun().equals("custom")) {
+			String startDate = chartCondition.getStartDate();
+			String endDate = chartCondition.getEndDate();
+			String sd[] = startDate.split("/");
+			String ed[] = endDate.split("/");
+			startDate = sd[2] + "-" + sd[0] + "-" + sd[1];
+			endDate = ed[2] + "-" + ed[0] + "-" + ed[1];
+			chartCondition.setStartDate(startDate);
+			chartCondition.setEndDate(endDate);
+		}
+		return sqlSession.selectList("mapper.chartMapper.selectChartIndustryNewsByCondition", chartCondition);
+	}
+	
+	@Override
+	public List<Stocks> getChartIndustryStocksByCondition(ChartCondition chartCondition) throws Exception {
+		return sqlSession.selectList("mapper.chartMapper.selectChartIndustryStocksByCondition", chartCondition);
+	}
+	
+
 }

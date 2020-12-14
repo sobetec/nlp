@@ -646,6 +646,42 @@
             $('#myModal').show();
         }
 
+        function keywordLoading1(count) {
+            var modalhtml1 =
+            `
+            <div class="modal-loading">
+                <p style="text-align: center;"><span style="font-size: 14pt;"><b><span style="font-size: 24pt;"> 뉴스 목록 불러오는 중...</span></b></span></p>
+                <button type="button" class="close" onClick="close_pop();"></button>
+                <p style="text-align: center; line-height: 1.5;"><br />총 ` + count + `건을 데이터 베이스에서 읽어오고 있습니다.</p>
+                <p style="text-align: center; line-height: 1.5;"><br />잠시만 기다려 주십시오.</p>
+                <p><br /></p>
+                <p style="text-align: center; line-height: 1.5;"><br />
+                    <img src="/img/loading.gif" align="center"/>
+                </p>
+            </div>
+            `;
+            document.getElementById('myModal').innerHTML = modalhtml1;
+            $('#myModal').show();
+        }
+
+        function keywordLoading2(count) {
+            var modalhtml1 =
+            `
+            <div class="modal-loading">
+                <p style="text-align: center;"><span style="font-size: 14pt;"><b><span style="font-size: 24pt;">뉴스 목록 불러오는 중...</span></b></span></p>
+                <button type="button" class="close" onClick="close_pop();"></button>
+                <p style="text-align: center; line-height: 1.5;"><br />총 ` + count + `건을 화면에 표출중입니다.</p>
+                <p style="text-align: center; line-height: 1.5;"><br />잠시만 기다려 주십시오.</p>
+                <p><br /></p>
+                <p style="text-align: center; line-height: 1.5;"><br />
+                    <img src="/img/loading.gif" align="center"/>
+                </p>
+            </div>
+            `;
+            document.getElementById('myModal').innerHTML = modalhtml1;
+            $('#myModal').show();
+        }
+
         function drawTable(result_area, table_id) {   
 
             if (table_id === '') {
@@ -921,6 +957,8 @@
             let datassss = parameters();
             console.log(parameters());
 
+            loading1("뉴스");
+
             $.ajax({
                 url: "/getRowCount",
                 method: 'POST',
@@ -991,7 +1029,7 @@
             var table_id = "example_news";
             console.log(data);
 
-            loading1("뉴스");
+            keywordLoading1(data.rowCount);
 
             $.ajax({
                 url: "/getNewsListByCondition",
@@ -1122,6 +1160,7 @@
                 }
             });
         }
+
 
         var modalhtml2 =
             `
@@ -1313,10 +1352,10 @@
             var result_area = '';
             var table_id = '';
 
-            var dataInSub = parameters();
-            dataInSub.gubunJaName = gubunJaName;
-            dataInSub.selectedName = selectedName;
-            
+            var dataIndSub = parameters();
+            dataIndSub.gubunJaName = gubunJaName;
+            dataIndSub.selectedName = selectedName;
+
             if (gubunJaName == "industry") {
                 result_area = 'result_area_industry';
                 table_id = 'industry_news_list';
@@ -1336,9 +1375,10 @@
                 url: "/getNewsListByIndustryAndSubsidiary",
                 method: 'POST',
                 dataType: 'json',
-                data: dataInSub,
+                data: dataIndSub,
                 success: function (responseData) {
                     //alert('조회 성공');
+                    getChartQuery4(dataIndSub);
                     console.log(responseData.length);
                     window.newsResponseData = responseData;
                     console.log(window.newsResponseData[0]);
@@ -1348,6 +1388,8 @@
                         itemChangeFold();
                         $('#resetContentButton').show();
                     }
+
+                    $('#chartDiv').show();
 
                     document.getElementById('myModal').innerHTML = modalhtml2;
                     $('#myModal').show();
@@ -1628,7 +1670,21 @@
 
             //$("#dataTableSearch").trigger(e);
 
-            $("#dataTableSearch").val(keyword);
+            var selectItem = $("#fold").val();
+
+            if (selectItem == "company") {
+                $("#dataTableSearchCompany").val(keyword);
+            }
+            else if (selectItem == "subsidiary") {
+                $("#dataTableSearchSubsidiary").val(keyword);
+            }
+            else if (selectItem == "industry") {
+                $("#dataTableSearchIndustry").val(keyword);
+            }
+            else if (selectItem == "keyword") {
+                $("#dataTableSearchKeyword").val(keyword);
+            }
+            
             //$("#search_company").trigger(e);
 
             pressButton();
@@ -1637,7 +1693,23 @@
         function pressButton() {
             var e = jQuery.Event("keyup.DT");
             //var e = jQuery.Event( "search.DT", { keyCode: 13 } )
-            $("#dataTableSearch").trigger(e);
+            
+            
+
+            var selectItem = $("#fold").val();
+
+            if (selectItem == "company") {
+                $("#dataTableSearchCompany").trigger(e);
+            }
+            else if (selectItem == "subsidiary") {
+                $("#dataTableSearchSubsidiary").trigger(e);
+            }
+            else if (selectItem == "industry") {
+                $("#dataTableSearchIndustry").trigger(e);
+            }
+            else if (selectItem == "keyword") {
+                $("#dataTableSearchKeyword").trigger(e);
+            }
 
             //setTimeout(function () {
             //	jQuery('#search_company').trigger('click');
