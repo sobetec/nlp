@@ -922,24 +922,17 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
                 $('.enlargedChartSettings').css("display", "none");
                 var selectItem = $("#fold").val();
 
-                if (selectItem == "company") {
-                    console.log("im company trigger");
-                    dataTableSearch(d.keyword);
+                dataTableSearch(d.keyword);
+                if (selectItem == "company") {                    
                     document.getElementById('dataTableSearchCompany').scrollIntoView();
                 }
                 else if (selectItem == "subsidiary") {
-                    console.log("im subsidiary trigger");
-                    dataTableSearch(d.keyword);
                     document.getElementById('dataTableSearchSubsidiary').scrollIntoView();
                 }
                 else if (selectItem == "industry") {
-                    console.log("im industry trigger");
-                    dataTableSearch(d.keyword);
                     document.getElementById('dataTableSearchIndustry').scrollIntoView();
                 }
                 else if (selectItem == "keyword") {
-                    console.log("im keyword trigger");
-                    dataTableSearch(d.keyword);
                     document.getElementById('dataTableSearchKeyword').scrollIntoView();
                 }
 
