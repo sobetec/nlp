@@ -54,18 +54,17 @@ function makeGauge(divID, sentimentScore) {
     feMerge.append("feMergeNode")
         .attr("in", "SourceGraphic");
 
-
     appendArc(gaugeSVG, divWidth, divHeight, 288, 336, "#f3ff90", 'low' + divID);
     appendArc(gaugeSVG, divWidth, divHeight, 240, 288, "#b7ff90", 'veryLow' + divID);
     appendArc(gaugeSVG, divWidth, divHeight, 336, 384, "#ffea90", 'medium' + divID);
     appendArc(gaugeSVG, divWidth, divHeight, 24, 72, "#ffc990", 'high' + divID);
     appendArc(gaugeSVG, divWidth, divHeight, 72, 120, "#ff9090", 'veryHigh' + divID);
 
-    appendArcLabel(gaugeSVG, divWidth, divHeight, 0.077 * divHeight, 0.11 * divHeight, '#veryLow' + divID, 'VERY LOW')
-    appendArcLabel(gaugeSVG, divWidth, divHeight, 0.125 * divHeight, 0.11 * divHeight, '#low' + divID, 'LOW')
-    appendArcLabel(gaugeSVG, divWidth, divHeight, 0.1 * divHeight, 0.11 * divHeight, '#medium' + divID, 'MEDIUM')
-    appendArcLabel(gaugeSVG, divWidth, divHeight, 0.16 * divHeight, 0.11 * divHeight, '#high' + divID, 'HIGH')
-    appendArcLabel(gaugeSVG, divWidth, divHeight, 0.065 * divHeight, 0.11 * divHeight, '#veryHigh' + divID, 'VERY HIGH')
+    appendArcLabel(gaugeSVG, divWidth, divHeight, 0.077 * 0.6377118 * divWidth, 0.11 * 0.6377118 * divWidth, '#veryLow' + divID, 'VERY LOW')
+    appendArcLabel(gaugeSVG, divWidth, divHeight, 0.125 * 0.6377118 * divWidth, 0.11 * 0.6377118 * divWidth, '#low' + divID, 'LOW')
+    appendArcLabel(gaugeSVG, divWidth, divHeight, 0.1 * 0.6377118 * divWidth, 0.11 * 0.6377118 * divWidth, '#medium' + divID, 'MEDIUM')
+    appendArcLabel(gaugeSVG, divWidth, divHeight, 0.16 * 0.6377118 * divWidth, 0.11 * 0.6377118 * divWidth, '#high' + divID, 'HIGH')
+    appendArcLabel(gaugeSVG, divWidth, divHeight, 0.065 * 0.6377118 * divWidth, 0.11 * 0.6377118 * divWidth, '#veryHigh' + divID, 'VERY HIGH')
 
     gaugeSVG.append('g')
         .attr('transform', 'translate(' + divWidth / 2 + ',' + 3 * divHeight / 5 + ")")
@@ -186,7 +185,7 @@ function makeGauge(divID, sentimentScore) {
             .attr("class", "arcLabel")
             .append("textPath")
             .attr("xlink:href", arclabel)
-            .style("font-size", 0.05474 * divHeight)
+            .style("font-size", 0.05474 * 0.6377118 * divWidth)
             .style("font-color", 'black')
             .text(label);
     }
@@ -1269,14 +1268,38 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
         .domain(dateArray)
         .range([xPadding, divWidth - xPadding])
         .padding(0.05);
-    var xAxis = d3.axisBottom()
+
+    var gubun = $("#gubunNews").val()
+
+    if (gubun == 'month') {
+        var xAxis = d3.axisBottom()
+            .scale(xScale)
+            .tickValues(xScale.domain().filter(function (d, i) {
+                return !((i + Math.floor(articleCounts.length / 8)) % (Math.floor(articleCounts.length / 4)))
+            }))
+            .ticks(5)
+            .tickPadding(5)
+            .tickFormat(d3.timeFormat("%Y년%b%d일"))
+    }
+    else {
+        var xAxis = d3.axisBottom()
         .scale(xScale)
-        .tickValues(xScale.domain().filter(function (d, i) { return !(i % (Math.floor(articleCounts.length / 8))) }))
-        /* .tickSize(0)
-        .tickValues([]) */
+        .tickValues(xScale.domain().filter(function (d, i) {
+            if (gubun == 'quarter') {
+                return !((i + Math.floor(articleCounts.length / 6)) % (Math.floor(articleCounts.length / 3)))
+            }
+            else if (gubun == 'year')
+                return !((i + Math.floor(articleCounts.length / 12)) % (Math.floor(articleCounts.length / 6)))
+            else {
+                return !((i + Math.floor(articleCounts.length / 16)) % (Math.floor(articleCounts.length / 8)))
+            }
+        }))
         .ticks(5)
         .tickPadding(5)
         .tickFormat(d3.timeFormat("%Y년%b"))
+    }
+   
+
 
 
     var zoomBeh = d3.zoom()
@@ -1291,7 +1314,11 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
         .attr("width", "100%")
         .attr("height", "100%")
         .attr('pointer-events', 'all')
-        .call(zoomBeh);
+
+    if (divID == 'enlargedChart') {
+        svg.call(zoomBeh);
+    }
+
 
 
     svg.append('g')
@@ -1679,7 +1706,10 @@ function makeStockGraph(data, divID) {
         .attr("width", "100%")
         .attr("height", "100%")
         .attr('pointer-events', 'all')
-        .call(zoomBeh);
+
+    if (divID == 'chartEnlarged') {
+        svg.call(zoomBeh);
+    }
 
 
 
@@ -2898,8 +2928,12 @@ function getChartQuery2() {
 }
 
 function getChartQuery3(companyName) {
+
     ////console.log(document.getElementById('articleCountRange').value);
     d3.selectAll('.visSVG').remove();
+
+    document.getElementById('keywordBarSlider').value = 10;
+    console.log(document.getElementById('keywordBarSlider').value)
     var search_company = document.getElementById('search_company_news').value;
     //console.log(search_company);
     document.getElementById('chartModal').innerHTML = modalhtml4;
@@ -2913,7 +2947,6 @@ function getChartQuery3(companyName) {
         data: data,
         dataType: 'json',
         success: function (responseData) {
-            window.newsChartData = responseData;
 
             //console.log(responseData)
             //alert('조회 성공: ' + responseData.allNews.length + '개 기사');
@@ -2984,6 +3017,8 @@ function getChartQuery3(companyName) {
             }
             console.log("스톡데이터");
             console.log(allStockData)
+            responseData['allStockData'] = allStockData;
+            window.newsChartData = responseData;
             if (responseData.stockData.length != 0) {
                 var shortestCompany = companies.reduce(function (a, b) {
                     return a.length <= b.length ? a : b;
