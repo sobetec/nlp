@@ -74,6 +74,48 @@ public class ChartNewsRepository implements ChartNewsRepositoryImpl {
 	public List<Stocks> getChartIndustryStocksByCondition(ChartCondition chartCondition) throws Exception {
 		return sqlSession.selectList("mapper.chartMapper.selectChartIndustryStocksByCondition", chartCondition);
 	}
+
+	@Override
+	public List<News> getChartCompanyNewsByCondition(ChartCondition chartCondition) throws Exception {
+		if (chartCondition.getGubun().equals("custom")) {
+			String startDate = chartCondition.getStartDate();
+			String endDate = chartCondition.getEndDate();
+			String sd[] = startDate.split("/");
+			String ed[] = endDate.split("/");
+			startDate = sd[2] + "-" + sd[0] + "-" + sd[1];
+			endDate = ed[2] + "-" + ed[0] + "-" + ed[1];
+			chartCondition.setStartDate(startDate);
+			chartCondition.setEndDate(endDate);
+		}
+		return sqlSession.selectList("mapper.chartMapper.selectChartCompanyNewsByCondition", chartCondition);
+	}
+
+	@Override
+	public List<Stocks> getChartCompanyStocksByCondition(ChartCondition chartCondition) throws Exception {
+		return sqlSession.selectList("mapper.chartMapper.selectChartCompanyStocksByCondition", chartCondition);
+	}
+
+	@Override
+	public List<News> getChartSubsidiaryNewsByCondition(ChartCondition chartCondition) throws Exception {
+		if (chartCondition.getGubun().equals("custom")) {
+			String startDate = chartCondition.getStartDate();
+			String endDate = chartCondition.getEndDate();
+			String sd[] = startDate.split("/");
+			String ed[] = endDate.split("/");
+			startDate = sd[2] + "-" + sd[0] + "-" + sd[1];
+			endDate = ed[2] + "-" + ed[0] + "-" + ed[1];
+			chartCondition.setStartDate(startDate);
+			chartCondition.setEndDate(endDate);
+		}
+		return null;
+	}
+
+	@Override
+	public List<Stocks> getChartSubsidiaryStocksByCondition(ChartCondition chartCondition) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 	
 
 }

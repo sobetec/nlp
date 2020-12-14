@@ -207,7 +207,7 @@
 			 , "news_title"		AS "newsTtl"
 			 , "raw_data"		AS "rawData"
 		  FROM NLP."nlp_news"
-		 where company_name = #{searchWord}
+		 where company_name = #{selectedName}
 		  <choose>
 		  	<when test="gubun == 'year'">
 		  		and year = #{newsYear}

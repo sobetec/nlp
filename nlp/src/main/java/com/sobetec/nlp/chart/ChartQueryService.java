@@ -172,26 +172,24 @@ public class ChartQueryService {
 		List<NewsKeyword> allDocFreqs = new ArrayList<NewsKeyword>();
 		
 		if (chartCondition.getGubunJaName().equals("industry")) {
-			// logger.debug("call DB for news");
 			allNews = repository.getChartIndustryNewsByCondition(chartCondition);
-			// logger.debug("Done getting news");
-			// logger.debug("call DB for stock");
 			allStocks = repository.getChartIndustryStocksByCondition(chartCondition);
-			// logger.debug("Done getting stock");
-			// logger.debug("call DB for keywordFreqs");
 			allDocFreqs = repository.getDocFreqCounts();
-			// logger.debug("Done getting KeywordFreqs");
 		}
-		else {
-			// logger.debug("call DB for news");
-			allNews = repository.getChartNewsByCondition(chartCondition);
-			// logger.debug("Done getting news");
-			// logger.debug("call DB for stock");
-			allStocks = repository.getChartStocksByCondition(chartCondition);
-			// logger.debug("Done getting stock");
-			// logger.debug("call DB for keywordFreqs");
+		else if (chartCondition.getGubunJaName().equals("subsidiary")){
+			allNews = repository.getChartCompanyNewsByCondition(chartCondition);
+			allStocks = repository.getChartIndustryStocksByCondition(chartCondition);
 			allDocFreqs = repository.getDocFreqCounts();
-			// logger.debug("Done getting KeywordFreqs");
+		}
+		else if (chartCondition.getGubunJaName().equals("company")){
+			allNews = repository.getChartCompanyNewsByCondition(chartCondition);
+			allStocks = repository.getChartCompanyStocksByCondition(chartCondition);
+			allDocFreqs = repository.getDocFreqCounts();
+		}
+		else if (chartCondition.getGubunJaName().equals("keyword")){
+			allNews = repository.getChartNewsByCondition(chartCondition);
+			allStocks = repository.getChartStocksByCondition(chartCondition);
+			allDocFreqs = repository.getDocFreqCounts();
 		}
 		
 

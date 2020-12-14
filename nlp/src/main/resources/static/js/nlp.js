@@ -2940,6 +2940,7 @@ function getChartQuery3(companyName) {
     $('#chartModal').show();
     data = parameters();
     data.gubunJaName = 'company';
+    data.selectedName = companyName;
 
     $.ajax({
         url: "/getChartQueryByCondition",
