@@ -8,14 +8,14 @@
     <title>NLP -News List</title>
     <link rel="stylesheet" href="css/auto-ml.css">
     <link rel="stylesheet" type="text/css" href="datatables/datatables.css">
-    
+
     <link rel="stylesheet" href="css/w3.css">
     <link rel="stylesheet" href="css/pagination.css">
     <style>
         .card_list {
             flex-direction: row !important;
         }
-        
+
         /*chart part*/
         body {
             font-family: Helvetica, Arial, sans-serif;
@@ -58,12 +58,12 @@
         }
 
         /*news and report part*/
-        #example_report, 
-        #example_news, 
-        #example, 
-        #industry_news_list, 
+        #example_report,
+        #example_news,
+        #example,
+        #industry_news_list,
         #subsidiary_news_list {
-            text-align: center; 
+            text-align: center;
             font-size: 11px;
         }
 
@@ -86,9 +86,9 @@
             background-color: rgb(0, 0, 0);
             /* Fallback color */
             background-color: rgba(0, 0, 0, 0.4);
-            /* Black w/ opacity */        
+            /* Black w/ opacity */
         }
-    
+
         /* Modal Content/Box */
         .modal-content {
             background-color: #fefefe;
@@ -101,8 +101,8 @@
             width: 72%;
             /* Could be more or less, depending on screen size */
             min-height: 300px;
-            position: relative;   
-            vertical-align: middle;                       
+            position: relative;
+            vertical-align: middle;
         }
 
         .modal-title {
@@ -117,18 +117,18 @@
             width: 72%;
             /* Could be more or less, depending on screen size */
         }
-        
+
         .modal-close {
             background-color: #fefefe;
-            margin: 7% auto; 
+            margin: 7% auto;
             padding-top: 20px;
             padding-bottom: 20px;
             padding-left: 40px;
             padding-right: 40px;
-            width: 72%; 
+            width: 72%;
             min-height: 50px;
-            position: relative;   
-            vertical-align: middle;                       
+            position: relative;
+            vertical-align: middle;
         }
 
         .modal-loading {
@@ -140,7 +140,7 @@
             width: 70%;
             /* Could be more or less, depending on screen size */
             min-height: 400px;
-            position: relative;                          
+            position: relative;
         }
 
         .modal-list-head {
@@ -152,7 +152,7 @@
             width: 50%;
             /* Could be more or less, depending on screen size */
             max-height: 60px;
-            position: relative;                         
+            position: relative;
         }
 
         .modal-list {
@@ -164,8 +164,8 @@
             width: 50%;
             /* Could be more or less, depending on screen size */
             max-height: 600px;
-            position: relative; 
-            overflow-y: scroll;                         
+            position: relative;
+            overflow-y: scroll;
         }
 
 
@@ -175,20 +175,20 @@
             /* thumb and track color */
             scrollbar-width: 5px;
         }
-        
+
         *::-webkit-scrollbar {
             width: 5;
         }
-        
+
         *::-webkit-scrollbar-track {
             /*background: transparent;*/
         }
-        
+
         *::-webkit-scrollbar-thumb {
             /*background: transparent;*/
             border: none;
         }
-        
+
         * {
             -ms-overflow-style: none;
         }
@@ -200,7 +200,7 @@
             perspective: 100px;
             background-color: rgb(199, 190, 108);
         }
-        
+
         .carousel::before,
         .carousel::after,
         .carousel__prev,
@@ -215,17 +215,17 @@
             font-size: 0;
             outline: 0;
         }
-        
+
         .carousel::before,
         .carousel__prev {
             left: 1rem;
         }
-        
+
         .carousel::after,
         .carousel__next {
             right: 1rem;
-        } 
-        
+        }
+
         .carousel::before {
             content: '';
             z-index: 1;
@@ -258,16 +258,16 @@
         .carousel::before {
             background-image: url("img/left-arrow.png");
         }
-        
+
         .carousel::after {
             background-image: url("img/right-arrow.png");
-        } 
+        }
 
         .carouselNoPrev {
             position: relative;
             perspective: 100px;
         }
-        
+
         .carouselNoPrev::before,
         .carouselNoPrev::after,
         .carouselNoPrev__prev,
@@ -282,17 +282,17 @@
             font-size: 0;
             outline: 0;
         }
-        
+
         .carouselNoPrev::before,
         .carouselNoPrev__prev {
             left: 1rem;
         }
-        
+
         .carouselNoPrev::after,
         .carouselNoPrev__next {
             right: 1rem;
-        } 
-        
+        }
+
         .carouselNoPrev::before {
             opacity: 0;
             content: '';
@@ -322,11 +322,11 @@
             pointer-events: none;
         }
 
-        
+
         .carouselNoPrev::before {
             background-image: url("img/left-arrow.png");
         }
-        
+
         .carouselNoPrev::after {
             background-image: url("img/right-arrow.png");
         }
@@ -336,7 +336,7 @@
             position: relative;
             perspective: 100px;
         }
-        
+
         .carouselNoNext::before,
         .carouselNoNext::after,
         .carouselNoNext__prev,
@@ -351,17 +351,17 @@
             font-size: 0;
             outline: 0;
         }
-        
+
         .carouselNoNext::before,
         .carouselNoNext__prev {
             left: 1rem;
         }
-        
+
         .carouselNoNext::after,
         .carouselNoNext__next {
             right: 1rem;
-        } 
-        
+        }
+
         .carouselNoNext::before {
             content: '';
             z-index: 1;
@@ -391,11 +391,11 @@
             pointer-events: none;
         }
 
-        
+
         .carouselNoNext::before {
             background-image: url("img/left-arrow.png");
         }
-        
+
         .carouselNoNext::after {
             background-image: url("img/right-arrow.png");
         }
@@ -442,7 +442,10 @@
             color: #090b88;
         }
 
-        .list li:hover, .list_company li:hover, .list_subsidiary li:hover, .list_industry li:hover {
+        .list li:hover,
+        .list_company li:hover,
+        .list_subsidiary li:hover,
+        .list_industry li:hover {
             text-decoration: underline;
             cursor: pointer;
             font-size: 14px;
@@ -450,13 +453,16 @@
             color: #7c130c;
         }
 
-        .list li, .list_company li, .list_subsidiary li, .list_industry li {
+        .list li,
+        .list_company li,
+        .list_subsidiary li,
+        .list_industry li {
             font-size: 14px;
         }
 
         .disabled {
-            pointer-events:none;
-            opacity:0.6;
+            pointer-events: none;
+            opacity: 0.6;
         }
 
         .nulls {
@@ -479,9 +485,9 @@
             padding: 10px;
             border-radius: 4px;
             opacity: 40%;
-          }
-          
-          #myBtn2 {
+        }
+
+        #myBtn2 {
             display: none;
             position: fixed;
             bottom: 20px;
@@ -493,20 +499,27 @@
             background-color: #820812;
             color: white;
             cursor: pointer;
-            padding: 10px; /*버튼크기*/
+            padding: 10px;
+            /*버튼크기*/
             border-radius: 4px;
             opacity: 40%;
-          }
-          
-          #myBtn:hover {
+        }
+
+        #myBtn:hover {
             background-color: #820812;
             opacity: 98%;
-          }
-          
-          #myBtn2:hover {
+        }
+
+        #myBtn2:hover {
             background-color: #820812;
             opacity: 98%;
-          }
+        }
+        
+        .select[multiple] {
+			background-color: white;
+			border-radius: 4px;
+		}
+		        
     </style>
 
     <script type="text/javascript" src="js/jquery-3.5.1.js"></script>
@@ -537,7 +550,7 @@
             var j = -1;
             var k = -1;
             var carouselOption = "";
-            
+
             if (i != 0 && i != window.newsResponseData.length - 1) {
                 j = i - 1;
                 k = i + 1;
@@ -557,9 +570,9 @@
                 next = ``;
                 carouselOption = "carouselNoNext";
             }
-            
+
             var sectionHtml =
-            `   
+                `   
                 <section class="` + carouselOption + `" aria-label="Gallery" style="background-color: #FFF;">
                     <div class="carousel__snapper">
                         ` + prev + next + `
@@ -570,7 +583,7 @@
 
 
             var modalhtml =
-            `   
+                `   
                 <div class="modal-title">
                     ` + sectionHtml + `
                     <p style="text-align: center; vertical-align: middle;"><b><span style="font-size: 13pt; color:white; vertical-align: middle;">` + window.newsResponseData[i].newsTtl + `</span></b></p>
@@ -629,7 +642,7 @@
 
         function loading1(loading) {
             var modalhtml1 =
-            `
+                `
             <div class="modal-loading">
                 <p style="text-align: center;"><span style="font-size: 14pt;"><b><span style="font-size: 24pt;">` + loading + ` 목록 불러오는 중...</span></b></span></p>
                 <button type="button" class="close" onClick="close_pop();"></button>
@@ -645,7 +658,7 @@
             $('#myModal').show();
         }
 
-        function drawTable(result_area, table_id) {   
+        function drawTable(result_area, table_id) {
 
             if (table_id === '') {
                 table_id = 'example';
@@ -653,7 +666,7 @@
 
             /* <table id="`+table_id+`" class="display" style="width:100%"> */
             var htmlStart =
-            `
+                `
             <table id="`+ table_id + `" class="display" style="width:100%">
                         <colgroup>
                             <col>
@@ -714,12 +727,12 @@
                     procc = `<td>no score</td>`
                     rred = `<td style='color:black'>` + sscoreWord + `</td>`;
                 }
-                
+
 
                 var hiddenData = escapeHtml(window.newsResponseData[i].rawData);
-                
+
                 var htmlContents =
-                `
+                    `
                     <tr>
                         <td>` + indexNum + `</td>
                         <td>` + window.newsResponseData[i].cmpyKey + `</td>
@@ -735,8 +748,8 @@
                 htmlStart = htmlStart + htmlContents;
             }
 
-            var htmlEnd = 
-            `
+            var htmlEnd =
+                `
                 </tbody>
             </table>
             `;
@@ -747,19 +760,19 @@
             close_pop();
         }
 
-        var entityMap = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;', '/': '&#x2F;', '`': '&#x60;', '=': '&#x3D;' }; 
-        
-        function escapeHtml(string) { 
-            return String(string).replace(/[&<>"'`=\/]/g, 
-            function (s) { 
-                return entityMap[s]; 
-            }); 
+        var entityMap = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;', '/': '&#x2F;', '`': '&#x60;', '=': '&#x3D;' };
+
+        function escapeHtml(string) {
+            return String(string).replace(/[&<>"'`=\/]/g,
+                function (s) {
+                    return entityMap[s];
+                });
         }
 
 
-        function drawTableReport() {   
+        function drawTableReport() {
             var htmlStart =
-            `
+                `
             <table id="example_report" class="display" style="width:100%">
                         <colgroup>
                             <col>
@@ -849,7 +862,7 @@
                 }
 
                 var htmlContents =
-                `
+                    `
                     <tr>
                         <td>` + indexNum + `</td>
                         <td>` + window.reportResponseData[i].reportDate + `</td>
@@ -866,14 +879,14 @@
                 htmlStart = htmlStart + htmlContents;
             }
 
-            var htmlEnd = 
-            `
+            var htmlEnd =
+                `
                 </tbody>
             </table>
             `;
-            
+
             document.getElementById('result_area_report').innerHTML = htmlStart + htmlEnd;
-            
+
             $('#example_report').DataTable();
             close_pop();
         }
@@ -931,7 +944,7 @@
                     if (datassss.rowCount == 0) {
                         alert('뉴스기사가 없습니다');
                         datassss.pageCount = 0;
-                        
+
                     } else {
                         alert('총 ' + datassss.rowCount + ' 건의 뉴스 기사가 검색됨');
                         datassss.pageCount = countPages(datassss.rowCount);
@@ -941,24 +954,24 @@
                 },
                 error: function () {
                     alert('rowCount 조회실패');
-                    
+
                 }
-            
+
             });
-            
-        }        
+
+        }
 
         function paginationByRowCount(data) {
             var pageLength = data.pageCount;
             var sources = function () {
                 var result = [];
-          
+
                 for (var i = 1; i <= pageLength; i++) {
-                  result.push(i);
+                    result.push(i);
                 }
-          
+
                 return result;
-              }();
+            }();
 
             $('#pagination-container').pagination({
                 dataSource: sources,
@@ -985,7 +998,7 @@
 
 
         function getNewsList(data) {
-            
+
             var result_area = "result_area_news";
             var table_id = "example_news";
             console.log(data);
@@ -1025,7 +1038,7 @@
             var result_area = 'result_area_news';
 
             loading1("뉴스");
-            
+
             $.ajax({
                 url: "/getNewsListByCompanyName",
                 method: 'POST',
@@ -1086,7 +1099,7 @@
             console.log(data);
 
             loading1("행내 보고서");
-            
+
             $.ajax({
                 url: "/getReportListByCondition",
                 method: 'POST',
@@ -1226,7 +1239,7 @@
 
             $('#choicesNews').empty();
 
-            for (var count = 0; count < changeItem.length; count++) {                
+            for (var count = 0; count < changeItem.length; count++) {
                 var option = $("<option>" + changeItem[count] + "</option>");
                 $('#choicesNews').append(option);
             }
@@ -1291,12 +1304,12 @@
                 $('.visualize').show();
                 $('#option_set_report').hide();
                 $('#option_set_news').show();
-                
+
             } else {
-                document.getElementById('main_title').innerText = '행내 보고서 조회';    
+                document.getElementById('main_title').innerText = '행내 보고서 조회';
                 createEmptyDatatableReport();
                 $('#contents_section_report').show();
-                $('#contents_section_news').hide();      
+                $('#contents_section_news').hide();
                 $('#date_picker_div_Report').hide();
                 $('#example_report').DataTable();
                 $('.visualize').hide();
@@ -1505,7 +1518,7 @@
                     } else {
                         document.getElementById('result_area_subsidiary').innerHTML = expend_all + tables;
                     }
-                    
+
 
                     $(".menu>a").click(function () {
 
@@ -1639,11 +1652,11 @@
             // }, 1000);
             console.log('im trigger press enter')
         }
-        
+
 
         //기업별 뉴스 가져오기
         function getCompanyListByCompany() {
-            var companyName = document.getElementById('search_company_news').value; 
+            var companyName = document.getElementById('search_company_news').value;
             console.log("@#@#@#@#@#@#");
             console.log('기업명 ' + companyName);
             var result_area = 'result_area_news';
@@ -1658,7 +1671,7 @@
 
                     if (responseData.length == 0) {
                         var modalContents =
-                        `
+                            `
                             <div class="modal-list-head">
                                 <p style="text-align: center;"><span style="font-size: 14pt;"><b><span style="font-size: 16pt;">관련 기업이 존재하지 않습니다.</span></b></span></p>
                             </div>
@@ -1687,7 +1700,7 @@
                             companyliListHTML = companyliListHTML + companyliList[i];
 
                             if (window.companyResponseData[i].subsName == null) {
-                                subsidiaryliList[i] = `<li class="disabled">　</li>`;    
+                                subsidiaryliList[i] = `<li class="disabled">　</li>`;
                             }
                             else {
                                 subsidiaryliList[i] = `<li>` + window.companyResponseData[i].subsName + `</li>`;
@@ -1695,7 +1708,7 @@
                             subsidiaryliListHTML = subsidiaryliListHTML + subsidiaryliList[i];
 
                             if (window.companyResponseData[i].instName == null) {
-                                industryliList[i] = `<li class="disabled">　</li>`;    
+                                industryliList[i] = `<li class="disabled">　</li>`;
                             }
                             else {
                                 industryliList[i] = `<li>` + window.companyResponseData[i].instName + `</li>`;
@@ -1706,7 +1719,7 @@
                         $('#myModal').hide();
 
                         var modalContents =
-                        `
+                            `
                             <div class="modal-list-head">
                                 <p style="text-align: center;"><span style="font-size: 14pt;"><b><span style="font-size: 16pt;">목록 중 하나를 선택해 주세요.</span></b></span></p>
                             </div>
@@ -1761,7 +1774,7 @@
                         $('#fold').val('industry').prop('selected', true);
                         getNewsListByIndustryAndSubsidiary('industry', companyName);
                     });
-                    
+
                 },
                 error: function () {
                     alert('조회 실패');
@@ -1772,7 +1785,7 @@
 
         //산업별 뉴스 가져오기
         function getNewsListByIndustry(industryName) {
-        
+
             console.log('산업명' + industryName);
             loading1("뉴스");
             var result_area = 'result_area_industry';
@@ -1793,7 +1806,7 @@
                     $('#myModal').show();
                     setTimeout(() => drawTable(result_area, table_id), 1000);
                     document.getElementById('main_title').innerHTML = `뉴스 목록 조회<h4 style="display:inline">(` + industryName + `)</h4>`;
-                    
+
                 },
                 error: function () {
                     alert('조회 실패');
@@ -1802,7 +1815,7 @@
             });
         }
 
-        
+
         function itemChangeFold() {
             var selectItem = $("#fold").val();
             console.log(selectItem);
@@ -1851,7 +1864,7 @@
             document.getElementById('gubunSelect').innerHTML = gubunSelectHTML;
             document.getElementById('yearSelect').innerHTML = yearSelectHTML;
             document.getElementById('condition').innerHTML = conditionHTML;
-        
+
             itemChangeNews();
             $('#resetContentButton').hide();
             document.getElementById('main_title').innerText = '뉴스 조회';
@@ -1882,7 +1895,7 @@
                 document.getElementById('search_company_news').value = '';
                 $('#result_area_subsidiary').show();
                 $('#chartDiv').hide();
-                
+
             }
             else if (selectItem == "industry") {
                 getIndustryAndSubsidiaryList('industry');
@@ -1915,7 +1928,7 @@
             searchBoxHTML = `<input id="search_company_news" type="text" placeholder="검색" value="" onkeypress="if( event.keyCode == 13 ){` + getFunction + `}">
                 <button id="search_button_news" class="btn_search" onclick="` + getFunction + `"><span class="blind" >검색</span></button>`;
             document.getElementById('search_box_news').innerHTML = searchBoxHTML;
-            document.getElementById('pagination-container').innerHTML = ``;    
+            document.getElementById('pagination-container').innerHTML = ``;
         }
 
         function createEmptyChartDiv() {
@@ -1995,7 +2008,7 @@
             var containerTitle = $('.modal .modal-title');
             var containerContent = $('.modal .modal-content');
             var containerClose = $('.modal .modal-close');
-            if (!containerTitle.is(e.target) && containerTitle.has(e.target).length === 0 
+            if (!containerTitle.is(e.target) && containerTitle.has(e.target).length === 0
                 && !containerContent.is(e.target) && containerContent.has(e.target).length === 0
                 && !containerClose.is(e.target) && containerClose.has(e.target).length === 0) {
                 close_pop();
@@ -2003,52 +2016,52 @@
         });
 
 
-    
-        //window.onscroll = function() {scrollFunction()
-        
-    
-    function scrollFunction() {
-        var scrollBottom = $(document).height() - $(window).height() - $(window).scrollTop();
-        console.log('im scroll $(document).height() =  ' + $(document).height());
-        console.log('im scroll $(window).height() =  ' + $(window).height());
-        console.log('im scroll $(window).scrollTop() =  ' + $(window).scrollTop());
-        var mybutton = document.getElementById("myBtn");
-        var mybutton2 = document.getElementById("myBtn2");
 
-        var bott = document.getElementById("scroll_button").scrollHeight;
-        var bott2 = document.getElementById("scroll_button").scrollTop;
-        console.log('im document.body.scrollHeight= ' + document.getElementById("scroll_button").scrollHeight);
-        console.log(document.getElementById("scroll_button").scrollTop);
-        //console.log('document.body.scrollTop=  ' + document.body.scrollTop)
-        //console.log('document.documentElement.scrollTop=  ' + document.documentElement.scrollTop)
-    
-        if (((document.getElementById("scroll_button").scrollHeight - $(window).height()) >= document.getElementById("scroll_button").scrollTop) && (document.getElementById("scroll_button").scrollTop > 20)) {
-        mybutton.style.display = "block";
-        mybutton.style.bottom = "75px";
-        mybutton2.style.display = "block";
-        } else if (document.getElementById("scroll_button").scrollTop > (document.getElementById("scroll_button").scrollHeight - $(window).height())){
-            mybutton.style.display = "block";
-        mybutton.style.bottom = "20px";
-        mybutton2.style.display = "none";
-        } else {
-        mybutton.style.display = "none";
-        mybutton.style.bottom = "75px";
-        mybutton2.style.display = "none";
+        //window.onscroll = function() {scrollFunction()
+
+
+        function scrollFunction() {
+            var scrollBottom = $(document).height() - $(window).height() - $(window).scrollTop();
+            console.log('im scroll $(document).height() =  ' + $(document).height());
+            console.log('im scroll $(window).height() =  ' + $(window).height());
+            console.log('im scroll $(window).scrollTop() =  ' + $(window).scrollTop());
+            var mybutton = document.getElementById("myBtn");
+            var mybutton2 = document.getElementById("myBtn2");
+
+            var bott = document.getElementById("scroll_button").scrollHeight;
+            var bott2 = document.getElementById("scroll_button").scrollTop;
+            console.log('im document.body.scrollHeight= ' + document.getElementById("scroll_button").scrollHeight);
+            console.log(document.getElementById("scroll_button").scrollTop);
+            //console.log('document.body.scrollTop=  ' + document.body.scrollTop)
+            //console.log('document.documentElement.scrollTop=  ' + document.documentElement.scrollTop)
+
+            if (((document.getElementById("scroll_button").scrollHeight - $(window).height()) >= document.getElementById("scroll_button").scrollTop) && (document.getElementById("scroll_button").scrollTop > 20)) {
+                mybutton.style.display = "block";
+                mybutton.style.bottom = "75px";
+                mybutton2.style.display = "block";
+            } else if (document.getElementById("scroll_button").scrollTop > (document.getElementById("scroll_button").scrollHeight - $(window).height())) {
+                mybutton.style.display = "block";
+                mybutton.style.bottom = "20px";
+                mybutton2.style.display = "none";
+            } else {
+                mybutton.style.display = "none";
+                mybutton.style.bottom = "75px";
+                mybutton2.style.display = "none";
+            }
+
+
         }
-        
-        
-    }
-    
-    // When the user clicks on the button, scroll to the top of the document
-    function topFunction() {
-        document.getElementById("scroll_button").scrollTop = 0;
-        
-    }
-    
-    function BotFunction() {
-        
-        document.getElementById("scroll_button").scrollTop = document.getElementById("scroll_button").scrollHeight;
-    }
+
+        // When the user clicks on the button, scroll to the top of the document
+        function topFunction() {
+            document.getElementById("scroll_button").scrollTop = 0;
+
+        }
+
+        function BotFunction() {
+
+            document.getElementById("scroll_button").scrollTop = document.getElementById("scroll_button").scrollHeight;
+        }
 
 
     </script>
@@ -2056,7 +2069,7 @@
     <script type="text/javascript" src="./js/d3.v4.min.js"></script>
     <script type="text/javascript" src='./js/nlp.js'></script>
     <script type="text/javascript" src='./js/nlp2.js'></script>
-	<script type="text/javascript" src='./js/FileSaver.min.js'></script>
+    <script type="text/javascript" src='./js/FileSaver.min.js'></script>
 
 
 
@@ -2151,31 +2164,32 @@
 
 
             <div class="main_panel" role="main">
-                
+
 
                 <div class="contents_panel" id="scroll_button">
-                <button onclick="topFunction()" id="myBtn" title="Go to top">&nbsp;⮝&nbsp;</button>
-                <button onclick="BotFunction()" id="myBtn2" title="Go to bottom">&nbsp;⮟&nbsp;</button>
+                    <button onclick="topFunction()" id="myBtn" title="Go to top">&nbsp;⮝&nbsp;</button>
+                    <button onclick="BotFunction()" id="myBtn2" title="Go to bottom">&nbsp;⮟&nbsp;</button>
                     <h3 class="main_title" id="main_title"></h3>
 
-                        <span class="input_radio">
-                            <input type="radio" class="input_radio" id="news_radio" name="news_report"
-                                onchange="setDisplay()" checked="checked">
-                            <label for="news_radio" class="label">뉴스</label>
+                    <span class="input_radio">
+                        <input type="radio" class="input_radio" id="news_radio" name="news_report"
+                            onchange="setDisplay()" checked="checked">
+                        <label for="news_radio" class="label">뉴스</label>
 
-                        </span>
-                        <span class="input_radio">
-                            <input type="radio" class="input_radio" id="report_radio" name="news_report"
-                                onchange="setDisplay()">
-                            <label for="report_radio" class="label">보고서</label>
-                        </span>
+                    </span>
+                    <span class="input_radio">
+                        <input type="radio" class="input_radio" id="report_radio" name="news_report"
+                            onchange="setDisplay()">
+                        <label for="report_radio" class="label">보고서</label>
+                    </span>
 
                     <div class="contents">
-                        
-                        <div class="option_set" id="option_set_news"> 
+
+                        <div class="option_set" id="option_set_news">
 
                             <div class="data_set">
-                                <select class="select" id="fold" style="min-width: 90px; width:90px;" onChange="itemChangeFold()">
+                                <select class="select" id="fold" style="min-width: 90px; width:90px;"
+                                    onChange="itemChangeFold()">
                                     <option value="company">기업별</option>
                                     <option value="subsidiary">계열별</option>
                                     <option value="industry">산업별</option>
@@ -2185,7 +2199,8 @@
 
                             <div class="data_set" style="float:left" id="gubunSelect">
                                 <a style="margin-right: -10px; margin-left: 10px;">구분</a>
-                                <select name="gubun" id="gubunNews" class="select" style="width:120px;" onChange="itemChangeNews()">
+                                <select name="gubun" id="gubunNews" class="select" style="width:120px;"
+                                    onChange="itemChangeNews()">
                                     <option value="year" selected="selected">연도별</option>
                                     <option value="quarter">분기별</option>
                                     <option value="month">월별</option>
@@ -2195,7 +2210,8 @@
 
                             <div class="data_set" style="float:left" id="yearSelect">
                                 <a style="margin-right: -10px; margin-left: 10px;">연도 선택</a>
-                                <select name="newsYear" id="newsYear" class="select" style="min-width: 80px; width:80px;">
+                                <select name="newsYear" id="newsYear" class="select"
+                                    style="min-width: 80px; width:80px;">
                                     <option value="2025">2025</option>
                                     <option value="2024">2024</option>
                                     <option value="2023">2023</option>
@@ -2209,7 +2225,7 @@
                                     <option value="2015">2015</option>
                                 </select>
                             </div>
-                
+
                             <div id="condition" class="data_set" style="float:left">
                                 <a id="gubunText"></a>
                                 <select name="choices" id="choicesNews" class="select">
@@ -2218,21 +2234,27 @@
 
                             <div id="date_picker_div_News">
                                 <span class="date_picker">
-                                    <label for="date_from" class="label" style="margin-right: -1px; margin-left: 10px;">기간</label>
-                                    <span class="input_date"><input type="text" class="input_text" id="date_from_news"></span>
+                                    <label for="date_from" class="label"
+                                        style="margin-right: -1px; margin-left: 10px;">기간</label>
+                                    <span class="input_date"><input type="text" class="input_text"
+                                            id="date_from_news"></span>
                                     <span class="dash">-</span>
-                                    <span class="input_date"><input type="text" class="input_text" id="date_to_news"></span>
+                                    <span class="input_date"><input type="text" class="input_text"
+                                            id="date_to_news"></span>
                                 </span>
                             </div>
 
 
                             <div class="search_box" id="search_box_news">
-                                <input id="search_company_news" type="text" placeholder="검색" value="" onkeypress="if( event.keyCode == 13 ){getCompanyListByCompany();}">
-                                <button id="search_button_news" class="btn_search" onclick="getCompanyListByCompany();"><span class="blind" >검색</span></button>
+                                <input id="search_company_news" type="text" placeholder="검색" value=""
+                                    onkeypress="if( event.keyCode == 13 ){getCompanyListByCompany();}">
+                                <button id="search_button_news" class="btn_search"
+                                    onclick="getCompanyListByCompany();"><span class="blind">검색</span></button>
                             </div>
 
                             <div id="resetContentButton">
-                                <button class="btn point" onclick="itemChangeFold();" style="color:#fefefe;">목록으로 돌아가기</button>
+                                <button class="btn point" onclick="itemChangeFold();" style="color:#fefefe;">목록으로
+                                    돌아가기</button>
                             </div>
 
                         </div>
@@ -2252,7 +2274,8 @@
 
                             <div class="data_set" style="float:left;">
                                 <a style="margin-right: -10px; margin-left: 10px;">연도 선택</a>
-                                <select name="reportYear" id="reportYear" class="select" style="min-width: 80px; width:80px;">
+                                <select name="reportYear" id="reportYear" class="select"
+                                    style="min-width: 80px; width:80px;">
                                     <option value="2025">2025</option>
                                     <option value="2024">2024</option>
                                     <option value="2023">2023</option>
@@ -2266,7 +2289,7 @@
                                     <option value="2015">2015</option>
                                 </select>
                             </div>
-                
+
                             <div id="condition_report" class="data_set" style="float:left">
                                 <a id="gubunText"></a>
                                 <select name="choices" id="choicesReport" class="select">
@@ -2277,17 +2300,21 @@
                             <div id="date_picker_div_Report">
                                 <span class="date_picker">
                                     <label for="date_from" class="label">기간</label>
-                                    <span class="input_date"><input type="text" class="input_text" id="date_from_report"></span>
+                                    <span class="input_date"><input type="text" class="input_text"
+                                            id="date_from_report"></span>
                                     <span class="dash">-</span>
-                                    <span class="input_date"><input type="text" class="input_text" id="date_to_report"></span>
+                                    <span class="input_date"><input type="text" class="input_text"
+                                            id="date_to_report"></span>
                                 </span>
                             </div>
 
                             <div class="search_box" id="search_box_report">
-                                <input id="search_company_report" type="text" placeholder="검색" value="" onkeypress="if( event.keyCode == 13 ){getReportList();}">
-                                <button class="btn_search" onclick="getReportList();"><span class="blind" >검색</span></button>
+                                <input id="search_company_report" type="text" placeholder="검색" value=""
+                                    onkeypress="if( event.keyCode == 13 ){getReportList();}">
+                                <button class="btn_search" onclick="getReportList();"><span
+                                        class="blind">검색</span></button>
                             </div>
-            
+
                         </div>
 
 
@@ -2325,16 +2352,16 @@
                                                             padding-left: 5px;
                                                             padding-right: 5px;
                                                             margin-left: -1px;
-                                                            
+
                                                         }
                                                     </style>
 
-                                                    <select multiple size="1" id='articleCo'>
-                                                        
+                                                    <select multiple size="1" id='articleCo' class='yearSelect'>
+
                                                         <option class='hiddenoption' value='all' selected>전체</option>
                                                     </select>
                                                 </div>
-                                                <div class="chart_area" style=" height: 14.5vw;">
+                                                <div class="chart_area" style=" height: 16vw;">
                                                     <div class="chart" id="dangerGauge">
 
                                                         <script type="text/javascript" src='./js/nlp.js'></script>
@@ -2366,25 +2393,31 @@
                                                             padding: 0;
                                                         }
 
-                                                        select {
+                                                        .yearSelect {
                                                             padding: 0;
                                                             padding-left: 1px;
                                                             border: none;
-                                                            background-color: #eee;
+                                                            background-color: #ffffff;
                                                         }
 
-                                                        option {
+                                                        .yearSelect option {
                                                             display: inline-block;
-                                                            border: 1px solid #000;
+                                                            border: 1px solid #CDCDCD;
                                                             background-color: white;
+                                                            padding-top: 2px;
+                                                            padding-bottom: 2px;
                                                             padding-left: 5px;
                                                             padding-right: 5px;
-                                                            margin-left: -1px;
+                                                            margin-left: 0px;
 
+                                                        }
+                                                        
+                                                        .yearSelect::-webkit-scrollbar {
+                                                        	display: none;
                                                         }
                                                     </style>
 
-                                                    <select multiple size="1" id='articleCountRange'>
+                                                    <select multiple size="1" id='articleCountRange' class='yearSelect'>
                                                         <option value='1'>1년</option>
                                                         <option value='3'>3년</option>
                                                         <option value='5'>5년</option>
@@ -2392,7 +2425,7 @@
                                                     </select>
 
                                                 </div>
-                                                <div class="chart_area" style=" height: 14.5vw;">
+                                                <div class="chart_area" style=" height: 16vw;">
                                                     <div class="chart" id='articleCounts'>
                                                         <script>
                                                             var divID = 'articleCounts';
@@ -2419,10 +2452,8 @@
 
                                                         #stockRangeee {
                                                             visibility: hidden;
-                                                           
-                                                        }
 
-                                                        
+                                                        }
                                                     </style>
 
                                                     <select size="1" id='stockRangeee' class='select'>
@@ -2467,22 +2498,22 @@
                     </div>
 
 
-                   
+
 
                     <br>
                     <div id='tableDiv' style='display:block'>
-      
+
                         <!-- news section -->
                         <div class="section" id="contents_section_news">
 
                             <span class="hiihihihiihidden">
                                 <span id='pagination-container'>
-    
+
                                 </span>
                             </span>
-                            
+
                             <div id="result_area_news">
-                                
+
                             </div>
 
                             <div id="result_area_subsidiary">
@@ -2492,7 +2523,7 @@
                             <div id="result_area_industry">
 
                             </div>
-        
+
                         </div>
 
 
@@ -2500,12 +2531,12 @@
 
                         <!-- report section -->
                         <div class="section" id="contents_section_report">
-                            
-                    
+
+
                             <div id="result_area_report">
-                                
+
                             </div>
-        
+
                         </div>
 
 
@@ -2526,10 +2557,10 @@
                 <div id="chartModal" class="modal">
                     <!-- Modal content -->
                 </div>
-                
+
             </div>
 
-          
+
 
 
 
@@ -2559,6 +2590,11 @@
             $('.layer_dimmed').addClass('is_active');
         });
         $(window).resize(function () {
+            d3.selectAll('.visSVG').remove();
+            makeGauge('dangerGauge', window.newsChartData.averageScore)
+            makeCombinedGraph(window.newsChartData.sentimentDates, window.newsChartData.allNews, 'articleCounts');
+            makeKeywordBarPlot(window.newsChartData.keywords, 'keywordBar', document.getElementById('keywordBarSlider').value)
+            makeStockGraph(window.newsChartData.allStockData, 'stockTime');
             console.log('resized')
         });
         $('.stockPoint').on("scroll", function (e) {
