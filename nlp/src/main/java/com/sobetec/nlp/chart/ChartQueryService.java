@@ -172,21 +172,25 @@ public class ChartQueryService {
 		List<NewsKeyword> allDocFreqs = new ArrayList<NewsKeyword>();
 		
 		if (chartCondition.getGubunJaName().equals("industry")) {
+			System.out.println("인더더더");
 			allNews = repository.getChartIndustryNewsByCondition(chartCondition);
 			allStocks = repository.getChartIndustryStocksByCondition(chartCondition);
 			allDocFreqs = repository.getDocFreqCounts();
 		}
 		else if (chartCondition.getGubunJaName().equals("subsidiary")){
-			allNews = repository.getChartCompanyNewsByCondition(chartCondition);
-			allStocks = repository.getChartIndustryStocksByCondition(chartCondition);
+			System.out.println("섭시이이");
+			allNews = repository.getChartSubsidiaryNewsByCondition(chartCondition);
+			allStocks = repository.getChartSubsidiaryStocksByCondition(chartCondition);
 			allDocFreqs = repository.getDocFreqCounts();
 		}
 		else if (chartCondition.getGubunJaName().equals("company")){
+			System.out.println("컴퍼어어어");
 			allNews = repository.getChartCompanyNewsByCondition(chartCondition);
 			allStocks = repository.getChartCompanyStocksByCondition(chartCondition);
 			allDocFreqs = repository.getDocFreqCounts();
 		}
 		else if (chartCondition.getGubunJaName().equals("keyword")){
+			System.out.println("키워어어어");
 			allNews = repository.getChartNewsByCondition(chartCondition);
 			allStocks = repository.getChartStocksByCondition(chartCondition);
 			allDocFreqs = repository.getDocFreqCounts();
@@ -200,6 +204,8 @@ public class ChartQueryService {
 		float totalScore = 0;
 		HashMap<String, NewsKeyword> newsKeywordMap = new HashMap<String, NewsKeyword>();
 		// logger.debug("first sweep of all news retrieved");
+		System.out.println("DFDfDFDF");
+		System.out.println(allNews.size());
 		for (int i = 0; i < allNews.size(); i++) {
 			News currNews = allNews.get(i);
 			String[] morphs = currNews.getExtMorp().split(",");
