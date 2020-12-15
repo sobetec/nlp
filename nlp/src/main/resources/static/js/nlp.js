@@ -155,7 +155,7 @@ function makeGauge(divID, sentimentScore) {
         var arc = d3.arc()
             .innerRadius(divWidth / 5)
             .outerRadius(divWidth / 3)
-            .startAngle(startAngle * (Math.PI / 180))
+            .startAngle(startAngle * (Math.PI / 180))  //180 degree = ㅍ radian , 1 degree = ㅍ / 180 radian
             .endAngle(endAngle * (Math.PI / 180));
         g.append("path")
             .attr("d", arc)

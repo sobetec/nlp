@@ -130,7 +130,7 @@
 				s.closing_price 
 		from nlp.nlp_stock as s
 		join nlp.company_code as b
-		on (s.company_code = b.code and b.industry_name = concat('%',#{selectedName},'%')))as d
+		on (s.company_code = b.code and b.industry_name = #{selectedName}))as d
 				
 	where
 		 
