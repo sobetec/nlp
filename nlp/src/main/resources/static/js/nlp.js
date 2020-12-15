@@ -2946,7 +2946,7 @@ function getChartQuery3(companyName) {
 
     document.getElementById('keywordBarSlider').value = 10;
     console.log(document.getElementById('keywordBarSlider').value)
-    var search_company = document.getElementById('search_company_news').value;
+   // var search_company = document.getElementById('search_company_news').value;
     //console.log(search_company);
     document.getElementById('chartModal').innerHTML = modalhtml4;
     $('#chartModal').show();
@@ -2961,7 +2961,7 @@ function getChartQuery3(companyName) {
         dataType: 'json',
         success: function (responseData) {
 
-            //console.log(responseData)
+            console.log(responseData)
             //alert('조회 성공: ' + responseData.allNews.length + '개 기사');
 
 
