@@ -3008,12 +3008,13 @@ function getChartQuery3(companyName) {
                 makeArticleCounts(responseData.allNews, 'enlargedChart');
             }) */
 
-            var chart = document.getElementById('keywordBar');
+            var chart = document.getElementById('keyword_rank_maximaize');
             makeKeywordBarPlot(responseData.keywords, 'keywordBar', document.getElementById('keywordBarSlider').value)
-            chart.addEventListener('click', function () {
+             chart.addEventListener('click', function () {
+                $('.layer_dimmed').addClass('is_active');
                 document.getElementById('keywordBarSettings').style.display = 'inline';
                 makeKeywordBarPlot(responseData.keywords, 'enlargedChart', document.getElementById('keywordBarSlider').value)
-            })
+            }) 
 
             if (responseData.stockData.length > 0) {
                 console.log('test')
@@ -3137,7 +3138,7 @@ function getChartQuery4(dataIndSub) {
             //console.log('차트3 쓰리 리스펀스 데이따'+responseData);
             //alert('조회 성공: ' + responseData.allNews.length + '개 기사');
 
-            //console.log(responseData);
+            console.log(responseData);
 
             makeGauge('dangerGauge', responseData.averageScore)
             document.getElementById('dangerGauge').addEventListener('click', function () {

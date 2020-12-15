@@ -60,4 +60,11 @@ public class NewsKeyword {
 		this.totalDocFreq = totalDocFreq;
 	}
 
+	@Override
+	public String toString() {
+		return "NewsKeyword [" + (keyword != null ? "keyword=" + keyword + ", " : "") + "subsetDocFreq=" + subsetDocFreq
+				+ ", subsetTermCount=" + subsetTermCount + ", totalDocFreq=" + totalDocFreq + ", tf_idf=" + tf_idf
+				+ "]";
+	}
+
 }
