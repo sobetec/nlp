@@ -518,7 +518,20 @@
         .select[multiple] {
 			background-color: white;
 			border-radius: 4px;
-		} 
+        } 
+        
+        .maximize {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300587a'%3E%3Cg%3E%3Cg%3E%3Cpath d='M8 .5v1l-7-.001v14l14 .001v-7h1v8h-1l-14-.001v.001H0V.5h8zm8 6h-1V2.196L9.525 7.671l-.707-.707L14.281 1.5H10v-1h6v6z' transform='translate(-484 -6997) translate(484 6997) translate(2 1.5)'/%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/svg%3E%0A");
+            opacity: 60%;
+            padding-left: 3px;
+            padding-bottom: 3px;
+            
+        }
+        .maximize:hover {
+            
+            opacity: 40%;
+            cursor: pointer;
+        }
 		        
     </style>
 
@@ -1409,7 +1422,7 @@
 
                     $('#myModal').hide();
                     if ($('#fold').val() == 'subsidiary' || $('#fold').val() == 'industry') {
-                        itemChangeFold();
+                        //itemChangeFold();
                         $('#resetContentButton').show();
                     }
 
@@ -2110,16 +2123,16 @@
     
     function scrollFunction() {
         //var scrollBottom = $(document).height() - $(window).height() - $(window).scrollTop();
-        /* console.log('im scroll $(document).height() =  ' + $(document).height());
-        console.log('im scroll $(window).height() =  ' + $(window).height());
-        console.log('im scroll $(window).scrollTop() =  ' + $(window).scrollTop()); */
+        // console.log('im scroll $(document).height() =  ' + $(document).height());
+        // console.log('im scroll $(window).height() =  ' + $(window).height());
+        // console.log('im scroll $(window).scrollTop() =  ' + $(window).scrollTop());
         var mybutton = document.getElementById("myBtn");
         var mybutton2 = document.getElementById("myBtn2");
 
         var bott = document.getElementById("scroll_button").scrollHeight;
         var bott2 = document.getElementById("scroll_button").scrollTop;
-        /* console.log('im document.body.scrollHeight= ' + document.getElementById("scroll_button").scrollHeight);
-        console.log(document.getElementById("scroll_button").scrollTop); */
+        // console.log('im document.body.scrollHeight= ' + document.getElementById("scroll_button").scrollHeight);
+        // console.log(document.getElementById("scroll_button").scrollTop);
         //console.log('document.body.scrollTop=  ' + document.body.scrollTop)
         //console.log('document.documentElement.scrollTop=  ' + document.documentElement.scrollTop)
     
@@ -2244,7 +2257,7 @@
                         </li>
                         <li><a href="#" class="link_menu"><i class="icon_06"></i><span class="menu">데이터 진단</span></a>
                         </li>
-                        <li><a href="#" class="link_menu"><i class="icon_07"></i><span class="menu">배포</span></a></li>
+                        
                     </ul>
 
 
@@ -2453,6 +2466,7 @@
 
                                                         <option class='hiddenoption' value='all' selected>전체</option>
                                                     </select>
+                                                    <span  style="float: right;"><i class="maximize" id="ta_result_maximaize"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></i></span>
                                                 </div>
                                                 <div class="chart_area" style=" height: 16vw;">
                                                     <div class="chart" id="dangerGauge">
@@ -2516,7 +2530,7 @@
                                                         <option value='5'>5년</option>
                                                         <option value='all' selected>전체</option>
                                                     </select>
-
+                                                    <span  style="float: right;"><i class="maximize" id="new_count_maximaize"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></i></span>
                                                 </div>
                                                 <div class="chart_area" style=" height: 16vw;">
                                                     <div class="chart" id='articleCounts'>
@@ -2535,13 +2549,10 @@
                                         <!-- 키워드 빠 플롯 -->
                                         <div class="card_item_small">
                                             <div class="card_box_left">
-                                                <div class="card_head">
-                                                    <span class="title">키워드 랭킹</span>
+                                                <div class="card_head" >
+                                                    <span style="vertical-align: middle;" class="title">키워드 랭킹</span>
                                                     <style>
-                                                        #data {
-                                                            overflow: hidden;
-                                                            padding: 0;
-                                                        }
+                                                       
 
                                                         #stockRangeee {
                                                             visibility: hidden;
@@ -2551,6 +2562,7 @@
 
                                                     <select size="1" id='stockRangeee' class='select'>
                                                     </select>
+                                                    <span  style="float: right;"><i class="maximize" id="keyword_rank_maximaize"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></i></span>
                                                 </div>
                                                 <div class="card_content">
                                                     <div class="chart_area" style=" height: 15.5vw;">
@@ -2573,6 +2585,7 @@
                                                     <span>주가&nbsp;</span>
                                                     <select size="1" id='stockRange' class='select'>
                                                     </select>
+                                                    <span  style="float: right;"><i class="maximize" id="stock_maximaize"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></i></span>
                                                 </div>
                                                 <div class="chart_area" style=" height: 15.5vw;">
                                                     <div class="chart" id="stockTime">
@@ -2676,10 +2689,10 @@
             $('#myModal').hide();
         };
 
-        $('.visualize .card_item_small .chart').on('click', function () {
+        /* $('.visualize .card_item_small .chart #keyword_rank_maximaize').on('click', function () {
             $('.layer_dimmed').addClass('is_active');
-        });
-        $('.visualize .card_item_large .chart').on('click', function () {
+        });*/
+        $('.maximize').on('click', function () {
             $('.layer_dimmed').addClass('is_active');
         });
         $(window).resize(function () {

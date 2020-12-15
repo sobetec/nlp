@@ -155,7 +155,7 @@ function makeGauge(divID, sentimentScore) {
         var arc = d3.arc()
             .innerRadius(divWidth / 5)
             .outerRadius(divWidth / 3)
-            .startAngle(startAngle * (Math.PI / 180))
+            .startAngle(startAngle * (Math.PI / 180))  //180 degree = ㅍ radian , 1 degree = ㅍ / 180 radian
             .endAngle(endAngle * (Math.PI / 180));
         g.append("path")
             .attr("d", arc)
@@ -1629,10 +1629,6 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
             })
 
 
-
-
-
-
     }
 
     if (divID == 'enlargedChart') {
@@ -1643,8 +1639,6 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
 function makeStockGraph(data, divID) {
     var company = document.getElementById('stockRange').value;
     console.log(company);
-    console.log(data[company]);
-    console.log(data[company].length);
 
     stockData = [];
     for (var i = 0; i < data[company].length; i++) {
@@ -2947,11 +2941,12 @@ function getChartQuery2() {
 function getChartQuery3(companyName) {
 
     ////console.log(document.getElementById('articleCountRange').value);
+    //window.newsResponseData = '';
     d3.selectAll('.visSVG').remove();
 
     document.getElementById('keywordBarSlider').value = 10;
     console.log(document.getElementById('keywordBarSlider').value)
-    var search_company = document.getElementById('search_company_news').value;
+   // var search_company = document.getElementById('search_company_news').value;
     //console.log(search_company);
     document.getElementById('chartModal').innerHTML = modalhtml4;
     $('#chartModal').show();
@@ -3011,12 +3006,13 @@ function getChartQuery3(companyName) {
                 makeArticleCounts(responseData.allNews, 'enlargedChart');
             }) */
 
-            var chart = document.getElementById('keywordBar');
+            var chart = document.getElementById('keyword_rank_maximaize');
             makeKeywordBarPlot(responseData.keywords, 'keywordBar', document.getElementById('keywordBarSlider').value)
-            chart.addEventListener('click', function () {
+             chart.addEventListener('click', function () {
+                $('.layer_dimmed').addClass('is_active');
                 document.getElementById('keywordBarSettings').style.display = 'inline';
                 makeKeywordBarPlot(responseData.keywords, 'enlargedChart', document.getElementById('keywordBarSlider').value)
-            })
+            }) 
 
             if (responseData.stockData.length > 0) {
                 console.log('test')
@@ -3035,8 +3031,12 @@ function getChartQuery3(companyName) {
             }
             console.log("스톡데이터");
             console.log(allStockData)
+
             responseData['allStockData'] = allStockData;
             window.newsChartData = responseData;
+
+            document.getElementById('stockRange').innerHTML = '';
+            var stockOptions = document.getElementById('stockRange');
             if (responseData.stockData.length != 0) {
                 var stockContents = ``;
                 document.getElementById('stockTime').innerHTML = stockContents;
@@ -3044,8 +3044,7 @@ function getChartQuery3(companyName) {
                     return a.length <= b.length ? a : b;
                 })
 
-                document.getElementById('stockRange').innerHTML = '';
-                var stockOptions = document.getElementById('stockRange');
+                
                 console.log("스톡옵션");
                 console.log(stockOptions);
                 for (var i = 0; i < companies.length; i++) {
@@ -3107,9 +3106,13 @@ function getChartQuery3(companyName) {
 }
 
 function getChartQuery4(dataIndSub) {
+
     ////console.log(document.getElementById('articleCountRange').value);
+    //window.newsResponseData = '';
+
     d3.selectAll('.visSVG').remove();
-    // var search_company = document.getElementById('search_company_news').value;
+
+    document.getElementById('keywordBarSlider').value = 10;
     var selectedName = dataIndSub.selectedName;
     document.getElementById('chartModal').innerHTML = modalhtml4;
     $('#chartModal').show();
@@ -3194,15 +3197,18 @@ function getChartQuery4(dataIndSub) {
             }
             console.log("스톡데이터");
             console.log(allStockData)
+
+            responseData['allStockData'] = allStockData;
+            window.newsChartData = responseData;
+
+            document.getElementById('stockRange').innerHTML = '';
+            var stockOptions = document.getElementById('stockRange');
             if (responseData.stockData.length != 0) {
                 var stockContents = ``;
                 document.getElementById('stockTime').innerHTML = stockContents;
                 var shortestCompany = companies.reduce(function (a, b) {
                     return a.length <= b.length ? a : b;
-                })
-
-                document.getElementById('stockRange').innerHTML = '';
-                var stockOptions = document.getElementById('stockRange');
+                })    
                 console.log("스톡옵션");
                 console.log(stockOptions);
                 for (var i = 0; i < companies.length; i++) {

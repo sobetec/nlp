@@ -72,6 +72,10 @@ public class ChartNewsRepository implements ChartNewsRepositoryImpl {
 	
 	@Override
 	public List<Stocks> getChartIndustryStocksByCondition(ChartCondition chartCondition) throws Exception {
+		List<Stocks> a = sqlSession.selectList("mapper.chartMapper.selectChartIndustryStocksByCondition", chartCondition);
+		System.out.println(chartCondition);
+		System.out.println("레레렝");
+		System.out.println(a.size());
 		return sqlSession.selectList("mapper.chartMapper.selectChartIndustryStocksByCondition", chartCondition);
 	}
 
