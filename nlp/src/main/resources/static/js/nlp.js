@@ -2966,7 +2966,7 @@ function getChartQuery3(companyName) {
         dataType: 'json',
         success: function (responseData) {
 
-            //console.log(responseData)
+            console.log(responseData)
             //alert('조회 성공: ' + responseData.allNews.length + '개 기사');
 
 
@@ -3128,7 +3128,7 @@ function getChartQuery4(dataIndSub) {
             //console.log('차트3 쓰리 리스펀스 데이따'+responseData);
             //alert('조회 성공: ' + responseData.allNews.length + '개 기사');
 
-            //console.log(responseData);
+            console.log(responseData);
 
             makeGauge('dangerGauge', responseData.averageScore)
             document.getElementById('dangerGauge').addEventListener('click', function () {
