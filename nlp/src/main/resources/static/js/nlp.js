@@ -1717,11 +1717,11 @@ function makeStockGraph(data, divID) {
         .attr("width", "100%")
         .attr("height", "100%")
         .attr('pointer-events', 'all')
+        
 
-    if (divID == 'chartEnlarged') {
+    if (divID == 'enlargedChart') {
         svg.call(zoomBeh);
     }
-
 
 
     var gY = svg.append('g')
@@ -1828,12 +1828,14 @@ function makeStockGraph(data, divID) {
 
 
     function zoom() {
+        console.log('zooming');
         xScale.range([xPadding, divWidth - xPadding].map((d, i) => {
             if (i == 0) {
                 if (d3.event.transform.applyX(d) > xPadding) {
                     return xPadding
                 }
                 else {
+                    console.log(d - d3.event.transform.applyX(d))
                     return d3.event.transform.applyX(d)
                 }
             }
@@ -3082,6 +3084,11 @@ function getChartQuery3(companyName) {
 
 
             $('#chartModal').hide();
+            document.getElementById('main_title').focus();
+            $("#main_title").focus();
+            window.scrollTo(0,0);
+            document.body.scrollTop = 0;
+            topFunction();
 
 
 
@@ -3246,7 +3253,7 @@ function getChartQuery4(dataIndSub) {
 
 
             $('#chartModal').hide();
-
+            
 
 
             /* document.getElementById('keywordPieSlider2').max = responseData.keywords.length;
