@@ -204,8 +204,6 @@ public class ChartQueryService {
 		float totalScore = 0;
 		HashMap<String, NewsKeyword> newsKeywordMap = new HashMap<String, NewsKeyword>();
 		// logger.debug("first sweep of all news retrieved");
-		System.out.println("DFDfDFDF");
-		System.out.println(allNews.size());
 		for (int i = 0; i < allNews.size(); i++) {
 			News currNews = allNews.get(i);
 			String[] morphs = currNews.getExtMorp().split(",");
