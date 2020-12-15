@@ -3006,12 +3006,13 @@ function getChartQuery3(companyName) {
                 makeArticleCounts(responseData.allNews, 'enlargedChart');
             }) */
 
-            var chart = document.getElementById('keywordBar');
+            var chart = document.getElementById('keyword_rank_maximaize');
             makeKeywordBarPlot(responseData.keywords, 'keywordBar', document.getElementById('keywordBarSlider').value)
-            chart.addEventListener('click', function () {
+             chart.addEventListener('click', function () {
+                $('.layer_dimmed').addClass('is_active');
                 document.getElementById('keywordBarSettings').style.display = 'inline';
                 makeKeywordBarPlot(responseData.keywords, 'enlargedChart', document.getElementById('keywordBarSlider').value)
-            })
+            }) 
 
             if (responseData.stockData.length > 0) {
                 console.log('test')
