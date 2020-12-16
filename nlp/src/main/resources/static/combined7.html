@@ -953,6 +953,7 @@
         }
 
         function parameters() {
+            console.log("CURRENTLY RUNNING PARAMETERSSSSSS")
             var data = new Object();
 
             data.newsYear = parseInt($("#newsYear").val());
@@ -1000,7 +1001,7 @@
                     } else {
                         alert('총 ' + datassss.rowCount + ' 건의 뉴스 기사가 검색됨');
                         datassss.pageCount = countPages(datassss.rowCount);
-                        getChartQuery3(datassss.searchWord);
+                        getChartQuery(datassss.searchWord, 3);
                         paginationByRowCount(datassss);
                     }
                 },
@@ -1101,7 +1102,7 @@
                 dataType: 'json',
                 success: function (responseData) {
                     //alert('조회 성공');
-                    getChartQuery3(companyName);
+                    getChartQuery(companyName, 3);
                     console.log(responseData.length);
                     window.newsResponseData = responseData;
                     console.log(window.newsResponseData[0]);
@@ -1415,7 +1416,7 @@
                 data: dataIndSub,
                 success: function (responseData) {
                     //alert('조회 성공');
-                    getChartQuery4(dataIndSub);
+                    getChartQuery(dataIndSub, 4);
                     console.log(responseData.length);
                     window.newsResponseData = responseData;
                     console.log(window.newsResponseData[0]);
@@ -2466,7 +2467,7 @@
 
                                                         <option class='hiddenoption' value='all' selected>전체</option>
                                                     </select>
-                                                    <span  style="float: right;"><i class="maximize" id="ta_result_maximaize"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></i></span>
+                                                    <span  style="float: right;"><i class="maximize" id="maximizeGauge"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></i></span>
                                                 </div>
                                                 <div class="chart_area" style=" height: 16vw;">
                                                     <div class="chart" id="dangerGauge">
@@ -2530,7 +2531,7 @@
                                                         <option value='5'>5년</option>
                                                         <option value='all' selected>전체</option>
                                                     </select>
-                                                    <span  style="float: right;"><i class="maximize" id="new_count_maximaize"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></i></span>
+                                                    <span  style="float: right;"><i class="maximize" id="maximizeCombined"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></i></span>
                                                 </div>
                                                 <div class="chart_area" style=" height: 16vw;">
                                                     <div class="chart" id='articleCounts'>
@@ -2562,7 +2563,7 @@
 
                                                     <select size="1" id='stockRangeee' class='select'>
                                                     </select>
-                                                    <span  style="float: right;"><i class="maximize" id="keyword_rank_maximaize"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></i></span>
+                                                    <span  style="float: right;"><i class="maximize" id="maximizeKeywordBar"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></i></span>
                                                 </div>
                                                 <div class="card_content">
                                                     <div class="chart_area" style=" height: 15.5vw;">
@@ -2585,7 +2586,7 @@
                                                     <span>주가&nbsp;</span>
                                                     <select size="1" id='stockRange' class='select'>
                                                     </select>
-                                                    <span  style="float: right;"><i class="maximize" id="stock_maximaize"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></i></span>
+                                                    <span  style="float: right;"><i class="maximize" id="maximizeStock"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></i></span>
                                                 </div>
                                                 <div class="chart_area" style=" height: 15.5vw;">
                                                     <div class="chart" id="stockTime">
@@ -2688,10 +2689,6 @@
         function close_pop(flag) {
             $('#myModal').hide();
         };
-
-        /* $('.visualize .card_item_small .chart #keyword_rank_maximaize').on('click', function () {
-            $('.layer_dimmed').addClass('is_active');
-        });*/
         $('.maximize').on('click', function () {
             $('.layer_dimmed').addClass('is_active');
         });
@@ -2710,6 +2707,7 @@
         $("#keywordBarSlider").on("input", function () {
             document.getElementById('keywordMaxValueBar').innerHTML = document.getElementById('keywordBarSlider').value;
             makeKeywordBarPlot(window.newsChartData.keywords, 'enlargedChart', document.getElementById('keywordBarSlider').value)
+            makeKeywordBarPlot(window.newsChartData.keywords, 'keywordBar', document.getElementById('keywordBarSlider').value)
         })
         $(".card_list").css('max-height', $(".contents_panel:first").height())
         console.log($(".contents_panel:first").height());
@@ -2749,7 +2747,6 @@
         $('#downloadButton').on('click', function () {
             var svg = window.SVG
             var svgString = getSVGString(svg.node());
-            console.log(svgString)
             svgToImage(svgString, 944, 602, 'png', save)
 
             function save(dataBlob, filesize) {

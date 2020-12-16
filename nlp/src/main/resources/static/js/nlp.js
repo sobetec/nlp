@@ -839,14 +839,14 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
     data.sort(function (a, b) { return b.tf_idf - a.tf_idf });
     dataSlice = data.slice(0, nCutoff)
     dataSlice.sort(function (a, b) { return a.tf_idf - b.tf_idf });
-    
+
     console.log(data);
     console.log(divID);
     console.log(nCutoff);
 
-    if(data.length !=0){
+    if (data.length != 0) {
         var keywordBarContents = ``;
-        document.getElementById('keywordBar').innerHTML = keywordBarContents;
+        document.getElementById(divID).innerHTML = keywordBarContents;
         if (divID == "enlargedChart") {
             var divHeight = 602;
             var divWidth = 944;
@@ -858,7 +858,7 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
         }
         var INNER_HEIGHT = divHeight - 2 * yPadding;
         var INNER_WIDTH = divWidth - 2 * xPadding;
-    
+
         var yScale = d3.scaleBand()
             .domain(dataSlice.map(function (d) { return d.keyword }))
             .rangeRound([divHeight - yPadding, yPadding])
@@ -866,8 +866,8 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
         var yAxis = d3.axisLeft()
             .tickSizeOuter(0)
             .scale(yScale);
-    
-    
+
+
         var xScale = d3.scaleLinear()
             .domain([0, dataSlice[nCutoff - 1].tf_idf])
             .range([xPadding, divWidth - xPadding])
@@ -876,32 +876,32 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
             .ticks([])
             
                                                             .tickSize(0) */;
-    
+
         var xAxisGrid = d3.axisBottom(xScale)
             .tickSize(-INNER_HEIGHT)
             .tickFormat('')
             .tickSizeOuter(0);
-    
+
         var svg = d3.select("#" + divID).append("svg")
             .attr('class', 'visSVG')
             .attr("width", "100%")
             .attr("height", "100%");
-    
+
         svg.append('g')
             .attr('class', 'x axis-grid')
             .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
             .call(xAxisGrid)
             .call(g => g.select('.domain').remove());
-    
-    
-    
-    
+
+
+
+
         /* svg.append('g')
             .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
             .call(xAxis); */
-    
-    
-    
+
+
+
         svg.selectAll(".keywordBar")
             .data(dataSlice)
             .enter().append('rect')
@@ -926,9 +926,9 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
                     $('.layer_dimmed').removeClass('is_active');
                     $('.enlargedChartSettings').css("display", "none");
                     var selectItem = $("#fold").val();
-    
+
                     dataTableSearch(d.keyword);
-                    if (selectItem == "company") {                    
+                    if (selectItem == "company") {
                         document.getElementById('dataTableSearchCompany').scrollIntoView();
                     }
                     else if (selectItem == "subsidiary") {
@@ -940,29 +940,46 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
                     else if (selectItem == "keyword") {
                         document.getElementById('dataTableSearchKeyword').scrollIntoView();
                     }
-    
-                    
+
+
                     console.log(d.keyword);
-    
+
                 }
                 else {
-    
+                    var selectItem = $("#fold").val();
+
+                    dataTableSearch(d.keyword);
+                    if (selectItem == "company") {
+                        document.getElementById('dataTableSearchCompany').scrollIntoView();
+                    }
+                    else if (selectItem == "subsidiary") {
+                        document.getElementById('dataTableSearchSubsidiary').scrollIntoView();
+                    }
+                    else if (selectItem == "industry") {
+                        document.getElementById('dataTableSearchIndustry').scrollIntoView();
+                    }
+                    else if (selectItem == "keyword") {
+                        document.getElementById('dataTableSearchKeyword').scrollIntoView();
+                    }
+
+
+                    console.log(d.keyword);
                 }
             });
-    
+
         var yAxis = svg.append('g')
             .attr('id', 'keywordYAxis')
             .attr("transform", "translate(" + xPadding + ",0)")
             .call(yAxis);
-    
+
         var leftWidth = document.getElementById('keywordYAxis').getBoundingClientRect().width;
         svg.attr('transform', 'translate(' + (leftWidth / 4) + ',0)');
-    
+
         if (divID == 'enlargedChart') {
             window.SVG = svg;
         }
     }
-    else{
+    else {
         var keywordBarContents = `
                                     <div style="text-align:center; font-size:35px; margin-top:70px;">
                                         뉴스 정보 없음
@@ -971,7 +988,7 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
         document.getElementById('keywordBar').innerHTML = keywordBarContents;
     }
 
-    
+
 
 }
 
@@ -1300,22 +1317,22 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
     }
     else {
         var xAxis = d3.axisBottom()
-        .scale(xScale)
-        .tickValues(xScale.domain().filter(function (d, i) {
-            if (gubun == 'quarter') {
-                return !((i + Math.floor(articleCounts.length / 6)) % (Math.floor(articleCounts.length / 3)))
-            }
-            else if (gubun == 'year')
-                return !((i + Math.floor(articleCounts.length / 12)) % (Math.floor(articleCounts.length / 6)))
-            else {
-                return !((i + Math.floor(articleCounts.length / 16)) % (Math.floor(articleCounts.length / 8)))
-            }
-        }))
-        .ticks(5)
-        .tickPadding(5)
-        .tickFormat(d3.timeFormat("%Y년%b"))
+            .scale(xScale)
+            .tickValues(xScale.domain().filter(function (d, i) {
+                if (gubun == 'quarter') {
+                    return !((i + Math.floor(articleCounts.length / 6)) % (Math.floor(articleCounts.length / 3)))
+                }
+                else if (gubun == 'year')
+                    return !((i + Math.floor(articleCounts.length / 12)) % (Math.floor(articleCounts.length / 6)))
+                else {
+                    return !((i + Math.floor(articleCounts.length / 16)) % (Math.floor(articleCounts.length / 8)))
+                }
+            }))
+            .ticks(5)
+            .tickPadding(5)
+            .tickFormat(d3.timeFormat("%Y년%b"))
     }
-   
+
 
 
 
@@ -1718,7 +1735,7 @@ function makeStockGraph(data, divID) {
         .attr("height", "100%")
         .attr('pointer-events', 'all')
 
-    if (divID == 'chartEnlarged') {
+    if (divID == 'enlargedChart') {
         svg.call(zoomBeh);
     }
 
@@ -1828,6 +1845,7 @@ function makeStockGraph(data, divID) {
 
 
     function zoom() {
+        console.log('zooming')
         xScale.range([xPadding, divWidth - xPadding].map((d, i) => {
             if (i == 0) {
                 if (d3.event.transform.applyX(d) > xPadding) {
@@ -1848,26 +1866,6 @@ function makeStockGraph(data, divID) {
             else {
             }
         }));
-        /*  xScale.range([xPadding, divWidth - xPadding].map((d, i) => {
-             if (i == 0) {
-                 if (d3.event.transform.applyX(d) > xPadding) {
-                     return xPadding
-                 }
-                 else {
-                     return d3.event.transform.applyX(d)
-                 }
-             }
-             else if (i == 1) {
-                 if (d3.event.transform.applyX(d) < (divWidth - xPadding)) {
-                     return divWidth - xPadding
-                 }
-                 else {
-                     return d3.event.transform.applyX(d)
-                 }
-             }
-             else {
-             }
-         })); */
 
         gX.call(xAxis.scale(xScale))
         /*  gXGrid.call(xAxisGrid.scale(xScale)) */
@@ -1887,76 +1885,6 @@ function makeStockGraph(data, divID) {
             .attr('fill', 'red')
             .attr("cx", function (d) { return xScale(d.time) })
             .attr("cy", function (d) { return yScale(d.stock) })
-
-
-
-
-        /* 
-        var new_xScale = d3.event.transform.rescaleX(xScale);
-        gX.call(xAxis.scale(new_xScale))
-        gXGrid.call(xAxisGrid.scale(new_xScale))
-        lines.data(stockData)
-            .attr('x1', function (d) { return new_xScale(d.time) })
-            .attr('y1', function (d) { return yScale(d.stock) })
-            .attr('x2', function (d, i) {
-                if (i == 0) { return new_xScale(d.time) }
-                return new_xScale(stockData[i - 1].time);
-            })
-            .attr('y2', function (d, i) {
-                if (i == 0) { return yScale(d.stock) }
-                return yScale(stockData[i - 1].stock);
-            })
-        points.data(stockData)
-            .attr('fill', 'red')
-            .attr("cx", function (d) { return new_xScale(d.time) })
-            .attr("cy", function (d) { return yScale(d.stock) })
-
-        gXGrid.call(xAxisGrid.scale(new_xScale)) */
-
-
-
-
-
-        /* var new_yScale = d3.event.transform.rescaleY(yScale); */
-        /* gY.call(yAxis.scale(new_yScale)) */
-        /* gYGrid.call(yAxisGrid.scale(new_yScale)) */
-
-        /* var stockDataSlice = [];
-        var leftBound = Date.parse(new_xScale.invert(xPadding));
-        var rightBound = Date.parse(new_xScale.invert(INNER_WIDTH - xPadding));
-        //console.log(leftBound, rightBound)
-        for (var i = 0; i < stockData.length; i++) {
-            if (stockData[i].time > leftBound && stockData[i].time < rightBound) {
-                stockDataSlice.push(stockData[i]);
-            }
-        } */
-
-        /* lines.data(stockData)
-            .attr('x1', function (d) { return new_xScale(d.time) })
-            .attr('y1', function (d) { return new_yScale(d.stock) })
-            .attr('x2', function (d, i) {
-                if (i == 0) { return new_xScale(d.time) }
-                return new_xScale(stockData[i - 1].time);
-            })
-            .attr('y2', function (d, i) {
-                if (i == 0) { return new_yScale(d.stock) }
-                return new_yScale(stockData[i - 1].stock);
-            })
-        points.data(stockData)
-            .attr('fill', 'red')
-            .attr("cx", function (d) { return new_xScale(d.time) })
-            .attr("cy", function (d) { return new_yScale(d.stock) }) */
-
-
-        /* TRY ONLY MOVING X */
-        /*         gYGrid.call(yAxisGrid.scale(new_yScale)) */
-
-
-        /* svg.select(".xAxis").call(xAxis);
-        svg.select(".yAxis").call(yAxis);
- 
-        svg.selectAll(".stockLine")
-            .attr("transform", transform); */
     }
 
     if (divID == 'enlargedChart') {
@@ -2938,21 +2866,30 @@ function getChartQuery2() {
     //console.log('test')
 }
 
-function getChartQuery3(companyName) {
-
-    ////console.log(document.getElementById('articleCountRange').value);
-    //window.newsResponseData = '';
+function getChartQuery(queryInput, queryType) {
+    console.log(queryInput)
     d3.selectAll('.visSVG').remove();
 
     document.getElementById('keywordBarSlider').value = 10;
     console.log(document.getElementById('keywordBarSlider').value)
-   // var search_company = document.getElementById('search_company_news').value;
+    // var search_company = document.getElementById('search_company_news').value;
     //console.log(search_company);
     document.getElementById('chartModal').innerHTML = modalhtml4;
+    var data;
     $('#chartModal').show();
-    data = parameters();
-    data.gubunJaName = $("#fold").val();
-    data.selectedName = companyName;
+    if (queryType == 3) {
+        data = parameters();
+        data.gubunJaName = $("#fold").val();
+        data.selectedName = queryInput;
+        companyName = queryInput;
+        console.log(data)
+    }
+    else if (queryType == 4){
+        var selectedName = queryInput.selectedName;
+        data = queryInput;
+        data.searchWord = selectedName;
+    }
+    console.log(data)
 
     $.ajax({
         url: "/getChartQueryByCondition",
@@ -2960,14 +2897,11 @@ function getChartQuery3(companyName) {
         data: data,
         dataType: 'json',
         success: function (responseData) {
+            window.newsChartData = responseData;
 
             console.log(responseData)
-            //alert('조회 성공: ' + responseData.allNews.length + '개 기사');
-
-
-
             makeGauge('dangerGauge', responseData.averageScore)
-            document.getElementById('dangerGauge').addEventListener('click', function () {
+            document.getElementById('maximizeGauge').addEventListener('click', function () {
                 //console.log('clicked');
                 makeGauge('enlargedChart', responseData.averageScore);
             })
@@ -2980,18 +2914,12 @@ function getChartQuery3(companyName) {
                     sentiment: responseData.sentimentDates[i].sentiment
                 })
             }
-            /* var chart = document.getElementById('sentimentTimeTwoLines');
-            makeSentimentTimeGraph(sentimentData, 'sentimentTimeTwoLines');
-            chart.addEventListener('click', function () {
-                //console.log('clicked');
-                makeSentimentTimeGraph(sentimentData, 'enlargedChart');
-            })
- */
 
-
-            var chart = document.getElementById('articleCounts');
             makeCombinedGraph(responseData.sentimentDates, responseData.allNews, 'articleCounts');
-            chart.addEventListener('click', function () {
+            document.getElementById('maximizeCombined').addEventListener('click', function () {
+                document.getElementById('resetChart').addEventListener('click', function () {
+                    makeCombinedGraph(responseData.sentimentDates, responseData.allNews, 'enlargedChart');
+                })
                 //console.log('clicked');
                 makeCombinedGraph(responseData.sentimentDates, responseData.allNews, 'enlargedChart');
             })
@@ -2999,20 +2927,12 @@ function getChartQuery3(companyName) {
                 makeCombinedGraph(responseData.sentimentDates, responseData.allNews, 'articleCounts');
             })
 
-            /* var chart = document.getElementById('articleCounts');
-            makeArticleCounts(responseData.allNews, 'articleCounts');
-            chart.addEventListener('click', function () {
-                //console.log('clicked');
-                makeArticleCounts(responseData.allNews, 'enlargedChart');
-            }) */
-
-            var chart = document.getElementById('keyword_rank_maximaize');
             makeKeywordBarPlot(responseData.keywords, 'keywordBar', document.getElementById('keywordBarSlider').value)
-             chart.addEventListener('click', function () {
+            document.getElementById('maximizeKeywordBar').addEventListener('click', function () {
                 $('.layer_dimmed').addClass('is_active');
                 document.getElementById('keywordBarSettings').style.display = 'inline';
                 makeKeywordBarPlot(responseData.keywords, 'enlargedChart', document.getElementById('keywordBarSlider').value)
-            }) 
+            })
 
             if (responseData.stockData.length > 0) {
                 console.log('test')
@@ -3044,7 +2964,6 @@ function getChartQuery3(companyName) {
                     return a.length <= b.length ? a : b;
                 })
 
-                
                 console.log("스톡옵션");
                 console.log(stockOptions);
                 for (var i = 0; i < companies.length; i++) {
@@ -3057,20 +2976,16 @@ function getChartQuery3(companyName) {
                     stockOptions.insertAdjacentHTML('beforeend', tempHTML);
                 }
 
-                var divID = 'stockTime';
-                stockGraph = document.getElementById(divID);
-                console.log("3");
-                stockGraph.addEventListener('click', function () {
+                document.getElementById('maximizeStock').addEventListener('click', function () {
                     document.getElementById('resetChart').addEventListener('click', function () {
-                        console.log('clicked');
                         makeStockGraph(allStockData, 'enlargedChart');
                     })
                     makeStockGraph(allStockData, 'enlargedChart');
                 })
                 document.getElementById('stockRange').addEventListener('change', function () {
-                    makeStockGraph(allStockData, divID);
+                    makeStockGraph(allStockData, 'stockTime');
                 })
-                makeStockGraph(allStockData, divID);
+                makeStockGraph(allStockData, 'stockTime');
             }
             else {
                 var stockContents = `
@@ -3080,24 +2995,7 @@ function getChartQuery3(companyName) {
                                     `;
                 document.getElementById('stockTime').innerHTML = stockContents;
             }
-
-
             $('#chartModal').hide();
-
-
-
-            /* document.getElementById('keywordPieSlider2').max = responseData.keywords.length;
-            var pieChart = document.getElementById('keywordPie');
-            makePieChart(responseData.keywords, 'keywordPie', document.getElementById('keywordPieSlider').value, document.getElementById('keywordPieSlider2').value)
-            pieChart.addEventListener('click', function () {
-                //console.log('clicked');
-                document.getElementById('keywordPieSettings').style.display = 'inline';
-                makePieChart(responseData.keywords, 'enlargedChart', document.getElementById('keywordPieSlider').value, document.getElementById('keywordPieSlider2').value);
-            }) */
-
-
-            /* makeWordcloud(responseData.keywords); */
-
         },
         error: function () {
             alert('조회 실패');
@@ -3105,11 +3003,7 @@ function getChartQuery3(companyName) {
     });
 }
 
-function getChartQuery4(dataIndSub) {
-
-    ////console.log(document.getElementById('articleCountRange').value);
-    //window.newsResponseData = '';
-
+/* function getChartQuery4(dataIndSub) {
     d3.selectAll('.visSVG').remove();
 
     document.getElementById('keywordBarSlider').value = 10;
@@ -3126,10 +3020,6 @@ function getChartQuery4(dataIndSub) {
         dataType: 'json',
         success: function (responseData) {
             window.newsChartData = responseData;
-            
-            
-            //console.log('차트3 쓰리 리스펀스 데이따'+responseData);
-            //alert('조회 성공: ' + responseData.allNews.length + '개 기사');
 
             console.log(responseData);
 
@@ -3147,14 +3037,6 @@ function getChartQuery4(dataIndSub) {
                     sentiment: responseData.sentimentDates[i].sentiment
                 })
             }
-            /* var chart = document.getElementById('sentimentTimeTwoLines');
-            makeSentimentTimeGraph(sentimentData, 'sentimentTimeTwoLines');
-            chart.addEventListener('click', function () {
-                //console.log('clicked');
-                makeSentimentTimeGraph(sentimentData, 'enlargedChart');
-            })
- */
-
 
             var chart = document.getElementById('articleCounts');
             makeCombinedGraph(responseData.sentimentDates, responseData.allNews, 'articleCounts');
@@ -3165,13 +3047,6 @@ function getChartQuery4(dataIndSub) {
             document.getElementById('articleCountRange').addEventListener('change', function () {
                 makeCombinedGraph(responseData.sentimentDates, responseData.allNews, 'articleCounts');
             })
-
-            /* var chart = document.getElementById('articleCounts');
-            makeArticleCounts(responseData.allNews, 'articleCounts');
-            chart.addEventListener('click', function () {
-                //console.log('clicked');
-                makeArticleCounts(responseData.allNews, 'enlargedChart');
-            }) */
 
             var chart = document.getElementById('keywordBar');
             makeKeywordBarPlot(responseData.keywords, 'keywordBar', document.getElementById('keywordBarSlider').value)
@@ -3208,7 +3083,7 @@ function getChartQuery4(dataIndSub) {
                 document.getElementById('stockTime').innerHTML = stockContents;
                 var shortestCompany = companies.reduce(function (a, b) {
                     return a.length <= b.length ? a : b;
-                })    
+                })
                 console.log("스톡옵션");
                 console.log(stockOptions);
                 for (var i = 0; i < companies.length; i++) {
@@ -3247,28 +3122,13 @@ function getChartQuery4(dataIndSub) {
 
 
             $('#chartModal').hide();
-
-
-
-            /* document.getElementById('keywordPieSlider2').max = responseData.keywords.length;
-            var pieChart = document.getElementById('keywordPie');
-            makePieChart(responseData.keywords, 'keywordPie', document.getElementById('keywordPieSlider').value, document.getElementById('keywordPieSlider2').value)
-            pieChart.addEventListener('click', function () {
-                //console.log('clicked');
-                document.getElementById('keywordPieSettings').style.display = 'inline';
-                makePieChart(responseData.keywords, 'enlargedChart', document.getElementById('keywordPieSlider').value, document.getElementById('keywordPieSlider2').value);
-            }) */
-
-
-            /* makeWordcloud(responseData.keywords); */
-
         },
         error: function () {
             alert('조회 실패');
         }
     });
 }
-
+ */
 function makeWordcloud(data) {
     //console.log(data)
     var words = data.sort(function (a, b) { return b.tf_idf - a.tf_idf });
