@@ -1409,27 +1409,26 @@
         }
 
         function setDisplay() {
-            itemChangeFold();
-            d3.selectAll('.visSVG').remove();
+            // itemChangeFold();
 
             if ($('input:radio[id=news_radio]').is(':checked')) {
                 document.getElementById('main_title').innerText = '뉴스 조회';
-                createEmptyDatatableNews();
+                // createEmptyDatatableNews();
                 $('#contents_section_news').show();
                 $('#contents_section_report').hide();
                 $('#date_picker_div_News').hide();
-                $('#example_news').DataTable();
+                // $('#example_news').DataTable();
                 $('.visualize').show();
                 $('#option_set_report').hide();
                 $('#option_set_news').show();
 
             } else {
                 document.getElementById('main_title').innerText = '행내 보고서 조회';
-                createEmptyDatatableReport();
+                // createEmptyDatatableReport();
                 $('#contents_section_report').show();
                 $('#contents_section_news').hide();
                 $('#date_picker_div_Report').hide();
-                $('#example_report').DataTable();
+                // $('#example_report').DataTable();
                 $('.visualize').hide();
                 $('#option_set_news').hide();
                 $('#option_set_report').show();
@@ -2012,7 +2011,7 @@
             document.getElementById('main_title').innerText = '뉴스 조회';
 
             if (selectItem == "company") {
-                createEmptyDatatableNews();
+                // createEmptyDatatableNews();
                 $('#chartDiv').show();
                 $('#result_area_subsidiary').hide();
                 $('#result_area_industry').hide();
@@ -2053,7 +2052,7 @@
                 $('#chartDiv').hide();
             }
             else if (selectItem == "keyword") {
-                createEmptyDatatableNews();
+                // createEmptyDatatableNews();
                 $('#chartDiv').show();
                 $('#result_area_subsidiary').hide();
                 $('#result_area_industry').hide();
