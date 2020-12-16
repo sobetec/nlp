@@ -1,199 +1,209 @@
 function makeGauge(divID, sentimentScore) {
-    var sFactor = 7.1;
-    function sobescore(x) {
-        return 100 / (1 + Math.exp(-(x - 50) / sFactor));
-    }
-    var sFactor2 = 4;
-    function sobescore2(x) {
-        return 50 * ((x - 50) / (sFactor2 + Math.abs(x - 50))) + 50
-    }
-    function sobeDangerScore(x) {
-        return 50 * ((50 - x) / (sFactor2 + Math.abs(50 - x))) + 50
-    }
-    console.log(sentimentScore)
-    sentimentScore = sobeDangerScore(sentimentScore);
+    if (!isNaN(sentimentScore)) {
+        var sFactor = 7.1;
+        function sobescore(x) {
+            return 100 / (1 + Math.exp(-(x - 50) / sFactor));
+        }
+        var sFactor2 = 4;
+        function sobescore2(x) {
+            return 50 * ((x - 50) / (sFactor2 + Math.abs(x - 50))) + 50
+        }
+        function sobeDangerScore(x) {
+            return 50 * ((50 - x) / (sFactor2 + Math.abs(50 - x))) + 50
+        }
+        console.log(sentimentScore)
+        sentimentScore = sobeDangerScore(sentimentScore);
 
-    var gauge = document.getElementById(divID);
-    var divHeight = gauge.scrollHeight;
-    var divWidth = gauge.scrollWidth;
-    gauge.innerHTML = "";
-
-
-    gaugeSVG = d3.select("#" + divID).append("svg")
-        .attr('class', function () { if (divID == 'enlargedChart') { return 'largeSVG' } else { return 'visSVG' } })
-        .attr("width", "100%")
-        .attr("height", "100%");
-
-    if (divID == "enlargedChart") {
-        var divHeight = 602;
-        var divWidth = 944;
-    }
-    else {
-        var divHeight = gauge.offsetHeight;
-        var divWidth = gauge.offsetWidth;
-    }
-    var defs = gaugeSVG.append("defs");
-    var filter = defs.append('filter')
-        .attr('id', 'drop-shadow')
-        .attr('height', '130%')
-
-    filter.append("feGaussianBlur")
-        .attr("in", "SourceAlpha")
-        .attr("stdDeviation", 1)
-        .attr("result", "blur");
-    filter.append("feOffset")
-        .attr("in", "blur")
-        .attr("dx", 0.0083056478 * divHeight)
-        .attr("dy", 0.0083056478 * divHeight)
-        .attr("result", "offsetBlur");
-
-    var feMerge = filter.append('feMerge')
-
-    feMerge.append("feMergeNode")
-        .attr("in", "offsetBlur")
-    feMerge.append("feMergeNode")
-        .attr("in", "SourceGraphic");
-
-    appendArc(gaugeSVG, divWidth, divHeight, 288, 336, "#f3ff90", 'low' + divID);
-    appendArc(gaugeSVG, divWidth, divHeight, 240, 288, "#b7ff90", 'veryLow' + divID);
-    appendArc(gaugeSVG, divWidth, divHeight, 336, 384, "#ffea90", 'medium' + divID);
-    appendArc(gaugeSVG, divWidth, divHeight, 24, 72, "#ffc990", 'high' + divID);
-    appendArc(gaugeSVG, divWidth, divHeight, 72, 120, "#ff9090", 'veryHigh' + divID);
-
-    appendArcLabel(gaugeSVG, divWidth, divHeight, 0.077 * 0.6377118 * divWidth, 0.11 * 0.6377118 * divWidth, '#veryLow' + divID, 'VERY LOW')
-    appendArcLabel(gaugeSVG, divWidth, divHeight, 0.125 * 0.6377118 * divWidth, 0.11 * 0.6377118 * divWidth, '#low' + divID, 'LOW')
-    appendArcLabel(gaugeSVG, divWidth, divHeight, 0.1 * 0.6377118 * divWidth, 0.11 * 0.6377118 * divWidth, '#medium' + divID, 'MEDIUM')
-    appendArcLabel(gaugeSVG, divWidth, divHeight, 0.16 * 0.6377118 * divWidth, 0.11 * 0.6377118 * divWidth, '#high' + divID, 'HIGH')
-    appendArcLabel(gaugeSVG, divWidth, divHeight, 0.065 * 0.6377118 * divWidth, 0.11 * 0.6377118 * divWidth, '#veryHigh' + divID, 'VERY HIGH')
-
-    gaugeSVG.append('g')
-        .attr('transform', 'translate(' + divWidth / 2 + ',' + 3 * divHeight / 5 + ")")
-        .append("polygon")
-        .attr('id', function () {
-            if (divID == 'enlargedChart') {
-                return 'gaugeNeedleEnlarged';
-            }
-            else {
-                return 'gaugeNeedle'
-            }
-        })
-        .attr('stroke-width', 3)
-        .attr('fill', '#820812')
-        .attr('class', 'needle')
-        .attr('points', "0,0 -" + "0," + 0.02 * divHeight +
-            " " + -divWidth / 4 + ",0 " + "0," + -divHeight * 0.02)
-        .transition()
-        .ease(d3.easeLinear)
-        .duration(200)
-        .attr("transform", "rotate(120)")
-        .transition()
-        .ease(d3.easeElastic)
-        .duration(5000)
-        .attr("transform", "rotate(" + (sentimentScore / 100 * 240 - 30) + ")")
+        var gauge = document.getElementById(divID);
+        var divHeight = gauge.scrollHeight;
+        var divWidth = gauge.scrollWidth;
+        gauge.innerHTML = "";
 
 
-    /* gaugeSVG.append('g')
-            .attr('transform', 'translate(' + divWidth / 2 + ',' + 3*divHeight / 5 + ")")
+        gaugeSVG = d3.select("#" + divID).append("svg")
+            .attr('class', function () { if (divID == 'enlargedChart') { return 'largeSVG' } else { return 'visSVG' } })
+            .attr("width", "100%")
+            .attr("height", "100%");
+
+        if (divID == "enlargedChart") {
+            var divHeight = 602;
+            var divWidth = 944;
+        }
+        else {
+            var divHeight = gauge.offsetHeight;
+            var divWidth = gauge.offsetWidth;
+        }
+        var defs = gaugeSVG.append("defs");
+        var filter = defs.append('filter')
+            .attr('id', 'drop-shadow')
+            .attr('height', '130%')
+
+        filter.append("feGaussianBlur")
+            .attr("in", "SourceAlpha")
+            .attr("stdDeviation", 1)
+            .attr("result", "blur");
+        filter.append("feOffset")
+            .attr("in", "blur")
+            .attr("dx", 0.0083056478 * divHeight)
+            .attr("dy", 0.0083056478 * divHeight)
+            .attr("result", "offsetBlur");
+
+        var feMerge = filter.append('feMerge')
+
+        feMerge.append("feMergeNode")
+            .attr("in", "offsetBlur")
+        feMerge.append("feMergeNode")
+            .attr("in", "SourceGraphic");
+
+        appendArc(gaugeSVG, divWidth, divHeight, 288, 336, "#f3ff90", 'low' + divID);
+        appendArc(gaugeSVG, divWidth, divHeight, 240, 288, "#b7ff90", 'veryLow' + divID);
+        appendArc(gaugeSVG, divWidth, divHeight, 336, 384, "#ffea90", 'medium' + divID);
+        appendArc(gaugeSVG, divWidth, divHeight, 24, 72, "#ffc990", 'high' + divID);
+        appendArc(gaugeSVG, divWidth, divHeight, 72, 120, "#ff9090", 'veryHigh' + divID);
+
+        appendArcLabel(gaugeSVG, divWidth, divHeight, 0.077 * 0.6377118 * divWidth, 0.11 * 0.6377118 * divWidth, '#veryLow' + divID, 'VERY LOW')
+        appendArcLabel(gaugeSVG, divWidth, divHeight, 0.125 * 0.6377118 * divWidth, 0.11 * 0.6377118 * divWidth, '#low' + divID, 'LOW')
+        appendArcLabel(gaugeSVG, divWidth, divHeight, 0.1 * 0.6377118 * divWidth, 0.11 * 0.6377118 * divWidth, '#medium' + divID, 'MEDIUM')
+        appendArcLabel(gaugeSVG, divWidth, divHeight, 0.16 * 0.6377118 * divWidth, 0.11 * 0.6377118 * divWidth, '#high' + divID, 'HIGH')
+        appendArcLabel(gaugeSVG, divWidth, divHeight, 0.065 * 0.6377118 * divWidth, 0.11 * 0.6377118 * divWidth, '#veryHigh' + divID, 'VERY HIGH')
+
+        gaugeSVG.append('g')
+            .attr('transform', 'translate(' + divWidth / 2 + ',' + 3 * divHeight / 5 + ")")
             .append("polygon")
+            .attr('id', function () {
+                if (divID == 'enlargedChart') {
+                    return 'gaugeNeedleEnlarged';
+                }
+                else {
+                    return 'gaugeNeedle'
+                }
+            })
+            .attr('stroke-width', 3)
+            .attr('fill', '#820812')
             .attr('class', 'needle')
-            .attr('points', "0,0 -" + 0.04 * divHeight + "," + 0.02 * divHeight +
-                " " + -divWidth / 4 + ",0 " + -divHeight * 0.04 + "," + -divHeight * 0.02)
+            .attr('points', "0,0 -" + "0," + 0.02 * divHeight +
+                " " + -divWidth / 4 + ",0 " + "0," + -divHeight * 0.02)
+            .transition()
+            .ease(d3.easeLinear)
+            .duration(200)
+            .attr("transform", "rotate(120)")
             .transition()
             .ease(d3.easeElastic)
             .duration(5000)
-            .attr("transform", "rotate(180)"); */
+            .attr("transform", "rotate(" + (sentimentScore / 100 * 240 - 30) + ")")
 
 
-    gaugeSVG.append('g')
-        .attr('transform', 'translate(' + divWidth / 2 + ',' + divHeight / 1.2 + ")")
-        .append('text')
-        .text('ƒ(s): ' + String(sentimentScore.toFixed(1)))
-        .attr('id', 'sentimentIndicator')
-        .style('alignment-baseline', 'middle')
-        .style('font-style', 'italic')
-        .style('font-weight', 'bold')
-        .style('text-anchor', 'middle')
-        .style('font-size', 0.08 * divHeight);
+        /* gaugeSVG.append('g')
+                .attr('transform', 'translate(' + divWidth / 2 + ',' + 3*divHeight / 5 + ")")
+                .append("polygon")
+                .attr('class', 'needle')
+                .attr('points', "0,0 -" + 0.04 * divHeight + "," + 0.02 * divHeight +
+                    " " + -divWidth / 4 + ",0 " + -divHeight * 0.04 + "," + -divHeight * 0.02)
+                .transition()
+                .ease(d3.easeElastic)
+                .duration(5000)
+                .attr("transform", "rotate(180)"); */
 
 
-    var textHeight = document.getElementById('sentimentIndicator').getBoundingClientRect().height
-    var textWidth = document.getElementById('sentimentIndicator').getBoundingClientRect().width
-    gaugeSVG.append("circle")
-        .style("fill", "black")
-        .attr("r", 0.02 * divHeight)
-        .attr("cx", divWidth / 2)
-        .attr("cy", 3 * divHeight / 5);
+        gaugeSVG.append('g')
+            .attr('transform', 'translate(' + divWidth / 2 + ',' + divHeight / 1.2 + ")")
+            .append('text')
+            .text('ƒ(s): ' + String(sentimentScore.toFixed(1)))
+            .attr('id', 'sentimentIndicator')
+            .style('alignment-baseline', 'middle')
+            .style('font-style', 'italic')
+            .style('font-weight', 'bold')
+            .style('text-anchor', 'middle')
+            .style('font-size', 0.08 * divHeight);
 
-    /* gaugeSVG.append('g')
-        .append('rect')
-        .attr('class', 'gauge-box')
-        .attr('x', divWidth / 2 - textWidth / 2 - 5)
-        .attr('y', divHeight / 1.2 - textHeight / 2 - 5)
-        .attr('height', textHeight + 10)
-        .attr('width',  textWidth + 10)
-        .attr('fill', 'none')
-        .attr('stroke', 'black')
-        .attr('stroke-width', '0.1px')
-        .attr('box-shadow', '5px 10px 5px black inset') */
 
-    document.getElementById('')
+        var textHeight = document.getElementById('sentimentIndicator').getBoundingClientRect().height
+        var textWidth = document.getElementById('sentimentIndicator').getBoundingClientRect().width
+        gaugeSVG.append("circle")
+            .style("fill", "black")
+            .attr("r", 0.02 * divHeight)
+            .attr("cx", divWidth / 2)
+            .attr("cy", 3 * divHeight / 5);
 
-    function appendArc(g, divWidth, divHeight, startAngle, endAngle, color, arcID) {
-        var arc = d3.arc()
-            .innerRadius(divWidth / 5)
-            .outerRadius(divWidth / 3)
-            .startAngle(startAngle * (Math.PI / 180))  //180 degree = ㅍ radian , 1 degree = ㅍ / 180 radian
-            .endAngle(endAngle * (Math.PI / 180));
-        g.append("path")
-            .attr("d", arc)
-            .attr('id', arcID)
-            .attr('class', 'shadowArc')
-            .style('filter', 'url(#drop-shadow)')
-            .attr("transform", "translate(" + divWidth / 2 + ',' + 3 * divHeight / 5 + ")")
-            .attr("fill", color)
-            .on('click', function () {
-                if (divID == 'enlargedChart') {
-                    d3.select('#gaugeNeedleEnlarged')
-                        .transition()
-                        .ease(d3.easeLinear)
-                        .duration(400)
-                        .attr("transform", "rotate(180)")
-                        .transition()
-                        .ease(d3.easeElastic)
-                        .duration(5000)
-                        .attr("transform", "rotate(" + (sentimentScore / 100 * 240 - 30) + ")")
+        /* gaugeSVG.append('g')
+            .append('rect')
+            .attr('class', 'gauge-box')
+            .attr('x', divWidth / 2 - textWidth / 2 - 5)
+            .attr('y', divHeight / 1.2 - textHeight / 2 - 5)
+            .attr('height', textHeight + 10)
+            .attr('width',  textWidth + 10)
+            .attr('fill', 'none')
+            .attr('stroke', 'black')
+            .attr('stroke-width', '0.1px')
+            .attr('box-shadow', '5px 10px 5px black inset') */
 
-                }
-                else {
-                    d3.select('#gaugeNeedle')
-                        .transition()
-                        .ease(d3.easeLinear)
-                        .duration(400)
-                        .attr("transform", "rotate(180)")
-                        .transition()
-                        .ease(d3.easeElastic)
-                        .duration(5000)
-                        .attr("transform", "rotate(" + (sentimentScore / 100 * 240 - 30) + ")")
+        document.getElementById('')
 
-                }
+        function appendArc(g, divWidth, divHeight, startAngle, endAngle, color, arcID) {
+            var arc = d3.arc()
+                .innerRadius(divWidth / 5)
+                .outerRadius(divWidth / 3)
+                .startAngle(startAngle * (Math.PI / 180))  //180 degree = ㅍ radian , 1 degree = ㅍ / 180 radian
+                .endAngle(endAngle * (Math.PI / 180));
+            g.append("path")
+                .attr("d", arc)
+                .attr('id', arcID)
+                .attr('class', 'shadowArc')
+                .style('filter', 'url(#drop-shadow)')
+                .attr("transform", "translate(" + divWidth / 2 + ',' + 3 * divHeight / 5 + ")")
+                .attr("fill", color)
+                .on('click', function () {
+                    if (divID == 'enlargedChart') {
+                        d3.select('#gaugeNeedleEnlarged')
+                            .transition()
+                            .ease(d3.easeLinear)
+                            .duration(400)
+                            .attr("transform", "rotate(180)")
+                            .transition()
+                            .ease(d3.easeElastic)
+                            .duration(5000)
+                            .attr("transform", "rotate(" + (sentimentScore / 100 * 240 - 30) + ")")
 
-            })
+                    }
+                    else {
+                        d3.select('#gaugeNeedle')
+                            .transition()
+                            .ease(d3.easeLinear)
+                            .duration(400)
+                            .attr("transform", "rotate(180)")
+                            .transition()
+                            .ease(d3.easeElastic)
+                            .duration(5000)
+                            .attr("transform", "rotate(" + (sentimentScore / 100 * 240 - 30) + ")")
+
+                    }
+
+                })
+        }
+
+        function appendArcLabel(g, divWidth, divHeight, x, dy, arclabel, label) {
+            g.append("text")
+                .attr('x', x)
+                .attr('dy', dy)
+                .attr("class", "arcLabel")
+                .append("textPath")
+                .attr("xlink:href", arclabel)
+                .style("font-size", 0.05474 * 0.6377118 * divWidth)
+                .style("font-color", 'black')
+                .text(label);
+        }
+
+        if (divID == 'enlargedChart') {
+            window.SVG = gaugeSVG;
+        }
     }
-
-    function appendArcLabel(g, divWidth, divHeight, x, dy, arclabel, label) {
-        g.append("text")
-            .attr('x', x)
-            .attr('dy', dy)
-            .attr("class", "arcLabel")
-            .append("textPath")
-            .attr("xlink:href", arclabel)
-            .style("font-size", 0.05474 * 0.6377118 * divWidth)
-            .style("font-color", 'black')
-            .text(label);
-    }
-
-    if (divID == 'enlargedChart') {
-        window.SVG = gaugeSVG;
+    else {
+        var keywordBarContents = `
+                                    <div style="text-align:center; font-size:35px; margin-top:70px;">
+                                        뉴스 정보 없음
+                                    </div>
+                                 `;
+        document.getElementById(divID).innerHTML = keywordBarContents;
     }
 
 }
@@ -997,7 +1007,7 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
                                         뉴스 정보 없음
                                     </div>
                                  `;
-        document.getElementById('keywordBar').innerHTML = keywordBarContents;
+        document.getElementById(divID).innerHTML = keywordBarContents;
     }
 
 
@@ -1242,430 +1252,441 @@ function makeArticleCounts(data, divID) {
 }
 
 function makeCombinedGraph(sentimentData, articlesData, divID) {
-    console.log(sentimentData)
-    console.log(articlesData)
-    document.getElementById(divID).innerHTML = "";
-    var timeRange = document.getElementById('articleCountRange').value;
-    if (timeRange == 'all') {
-        var timeRangeStart = new Date('1970-01-01')
-    }
-    else {
-        var currDate = new Date();
-        var timeRangeStart = d3.timeYear.offset(currDate, -timeRange);
-    }
-
-    var counts = {};
-    for (var i = 0; i < articlesData.length; i++) {
-        if (!counts[articlesData[i].newsDate]) {
-            counts[articlesData[i].newsDate] = 0
-        }
-        counts[articlesData[i].newsDate]++;
-    }
-    sentimentData.sort(function (a, b) { return dateParser(a.date) - dateParser(b.date) });
-    var articleCounts = []
-    for (var i = 0; i < Object.keys(counts).length; i++) {
-        articleCounts.push({ date: Object.keys(counts)[i], count: counts[Object.keys(counts)[i]] })
-    }
-    sentimentData = sentimentData.filter(x => dateParser(x.date) > timeRangeStart)
-    articleCounts = articleCounts.filter(x => dateParser(x.date) > timeRangeStart)
-    var dateArray = [];
-    for (var i = articleCounts.length - 1; i > -1; i--) {
-        dateArray.push(dateParser(articleCounts[i].date));
-    }
-    var graphDiv = document.getElementById(divID);
-
-
-
-    if (divID == "enlargedChart") {
-        var divHeight = 602;
-        var divWidth = 944;
+    if (sentimentData.length != 0 && articlesData.length != 0) {
+        console.log(sentimentData)
+        console.log(articlesData)
         document.getElementById(divID).innerHTML = "";
-    }
-    else {
-        var divHeight = graphDiv.clientHeight;
-        var divWidth = graphDiv.clientWidth;
-    }
-    var xPadding = 60;
-    var yPadding = 25;
-    var INNER_HEIGHT = divHeight - 2 * yPadding;
-    var INNER_WIDTH = divWidth - 2 * xPadding;
-    var yScale = d3.scaleLinear()
-        .domain([0,
-            d3.max(articleCounts, function (d) { return d.count }) + 10])
-        .range([divHeight - yPadding, yPadding])
-    var ySentScale = d3.scaleLinear()
-        .domain([0, 100])
-        .range([divHeight - yPadding, yPadding])
-    var yAxis = d3.axisRight()
-        .scale(yScale)
-        .ticks(5)
-        .tickSizeOuter(0);
-    var ySentAxis = d3.axisLeft(ySentScale)
-        .scale(ySentScale)
-        .ticks(5)
-        .tickSizeOuter(0);
-    var yAxisGrid = d3.axisLeft(ySentScale)
-        .tickSize(-INNER_WIDTH)
-        .ticks(5)
-        .tickFormat('')
-        .tickSizeOuter(0);
+        var timeRange = document.getElementById('articleCountRange').value;
+        if (timeRange == 'all') {
+            var timeRangeStart = new Date('1970-01-01')
+        }
+        else {
+            var currDate = new Date();
+            var timeRangeStart = d3.timeYear.offset(currDate, -timeRange);
+        }
 
-    var xScale = d3.scaleBand()
-        .domain(dateArray)
-        .range([xPadding, divWidth - xPadding])
-        .padding(0.05);
+        var counts = {};
+        for (var i = 0; i < articlesData.length; i++) {
+            if (!counts[articlesData[i].newsDate]) {
+                counts[articlesData[i].newsDate] = 0
+            }
+            counts[articlesData[i].newsDate]++;
+        }
+        sentimentData.sort(function (a, b) { return dateParser(a.date) - dateParser(b.date) });
+        var articleCounts = []
+        for (var i = 0; i < Object.keys(counts).length; i++) {
+            articleCounts.push({ date: Object.keys(counts)[i], count: counts[Object.keys(counts)[i]] })
+        }
+        sentimentData = sentimentData.filter(x => dateParser(x.date) > timeRangeStart)
+        articleCounts = articleCounts.filter(x => dateParser(x.date) > timeRangeStart)
+        var dateArray = [];
+        for (var i = articleCounts.length - 1; i > -1; i--) {
+            dateArray.push(dateParser(articleCounts[i].date));
+        }
+        var graphDiv = document.getElementById(divID);
 
-    var gubun = $("#gubunNews").val()
 
-    if (gubun == 'month') {
-        var xAxis = d3.axisBottom()
-            .scale(xScale)
-            .tickValues(xScale.domain().filter(function (d, i) {
-                return !((i + Math.floor(articleCounts.length / 8)) % (Math.floor(articleCounts.length / 4)))
-            }))
+
+        if (divID == "enlargedChart") {
+            var divHeight = 602;
+            var divWidth = 944;
+            document.getElementById(divID).innerHTML = "";
+        }
+        else {
+            var divHeight = graphDiv.clientHeight;
+            var divWidth = graphDiv.clientWidth;
+        }
+        var xPadding = 60;
+        var yPadding = 25;
+        var INNER_HEIGHT = divHeight - 2 * yPadding;
+        var INNER_WIDTH = divWidth - 2 * xPadding;
+        var yScale = d3.scaleLinear()
+            .domain([0,
+                d3.max(articleCounts, function (d) { return d.count }) + 10])
+            .range([divHeight - yPadding, yPadding])
+        var ySentScale = d3.scaleLinear()
+            .domain([0, 100])
+            .range([divHeight - yPadding, yPadding])
+        var yAxis = d3.axisRight()
+            .scale(yScale)
             .ticks(5)
-            .tickPadding(5)
-            .tickFormat(d3.timeFormat("%Y년%b%d일"))
-    }
-    else {
-        var xAxis = d3.axisBottom()
-            .scale(xScale)
-            .tickValues(xScale.domain().filter(function (d, i) {
-                if (gubun == 'quarter') {
-                    return !((i + Math.floor(articleCounts.length / 6)) % (Math.floor(articleCounts.length / 3)))
-                }
-                else if (gubun == 'year')
-                    return !((i + Math.floor(articleCounts.length / 12)) % (Math.floor(articleCounts.length / 6)))
-                else {
-                    return !((i + Math.floor(articleCounts.length / 16)) % (Math.floor(articleCounts.length / 8)))
-                }
-            }))
+            .tickSizeOuter(0);
+        var ySentAxis = d3.axisLeft(ySentScale)
+            .scale(ySentScale)
             .ticks(5)
-            .tickPadding(5)
-            .tickFormat(d3.timeFormat("%Y년%b"))
-    }
+            .tickSizeOuter(0);
+        var yAxisGrid = d3.axisLeft(ySentScale)
+            .tickSize(-INNER_WIDTH)
+            .ticks(5)
+            .tickFormat('')
+            .tickSizeOuter(0);
+
+        var xScale = d3.scaleBand()
+            .domain(dateArray)
+            .range([xPadding, divWidth - xPadding])
+            .padding(0.05);
+
+        var gubun = $("#gubunNews").val()
+
+        if (gubun == 'month') {
+            var xAxis = d3.axisBottom()
+                .scale(xScale)
+                .tickValues(xScale.domain().filter(function (d, i) {
+                    return !((i + Math.floor(articleCounts.length / 8)) % (Math.floor(articleCounts.length / 4)))
+                }))
+                .ticks(5)
+                .tickPadding(5)
+                .tickFormat(d3.timeFormat("%Y년%b%d일"))
+        }
+        else {
+            var xAxis = d3.axisBottom()
+                .scale(xScale)
+                .tickValues(xScale.domain().filter(function (d, i) {
+                    if (gubun == 'quarter') {
+                        return !((i + Math.floor(articleCounts.length / 6)) % (Math.floor(articleCounts.length / 3)))
+                    }
+                    else if (gubun == 'year')
+                        return !((i + Math.floor(articleCounts.length / 12)) % (Math.floor(articleCounts.length / 6)))
+                    else {
+                        return !((i + Math.floor(articleCounts.length / 16)) % (Math.floor(articleCounts.length / 8)))
+                    }
+                }))
+                .ticks(5)
+                .tickPadding(5)
+                .tickFormat(d3.timeFormat("%Y년%b"))
+        }
 
 
 
 
-    var zoomBeh = d3.zoom()
-        .scaleExtent([0, 100])
-        //.translateExtent([[xPadding, yPadding],[xPadding + INNER_WIDTH, yPadding]])
-        /* .translateExtent(extent)
-        .extent(extent) */
-        .on("zoom", zoom);
+        var zoomBeh = d3.zoom()
+            .scaleExtent([0, 100])
+            //.translateExtent([[xPadding, yPadding],[xPadding + INNER_WIDTH, yPadding]])
+            /* .translateExtent(extent)
+            .extent(extent) */
+            .on("zoom", zoom);
 
-    var svg = d3.select("#" + divID).append("svg")
-        .attr('class', function () { if (divID == 'enlargedChart') { return 'largeSVG' } else { return 'visSVG' } })
-        .attr("width", "100%")
-        .attr("height", "100%")
-        .attr('pointer-events', 'all')
-
-    if (divID == 'enlargedChart') {
-        svg.call(zoomBeh);
-    }
-
-
-
-    svg.append('g')
-        .attr("transform", "translate(" + xPadding + ",0)")
-        .attr('id', 'sentYAxis')
-        .call(ySentAxis);
-
-    svg.append('g')
-        .attr('id', 'newsCountYAxis')
-        .attr("transform", "translate(" + (divWidth - xPadding) + ",0)")
-        .call(yAxis);
-
-    svg.append("text")
-        .attr("class", "y label")
-        .attr("text-anchor", "middle")
-        .attr("transform", "rotate(-90)")
-        .attr("x", -divHeight / 2)
-        .attr('y', xPadding / 2)
-        .text("감성지수");
-    svg.append("text")
-        .attr("class", "y label")
-        .attr("text-anchor", "middle")
-        .attr("transform", "rotate(-90)")
-        .attr("x", -divHeight / 2)
-        .attr('y', divWidth - (xPadding / 4))
-        .text("기사수");
-
-
-    svg.append("text")
-        .attr("class", "y label")
-        .attr("text-anchor", "middle")
-        .attr("transform", "rotate(-90)")
-        .attr("x", -divHeight / 2)
-        .attr('y', divWidth - 20)
-        .text("");
-
-    svg.append('g')
-        .attr('class', 'y axis-grid')
-        .attr("transform", "translate(" + xPadding + ",0)")
-        .call(yAxisGrid);
-
-
-
-    if (divID == 'enlargedChart') {
-        console.log('making enlarged')
-        var clip = svg.append("defs").append("svg:clipPath")
-            .attr('id', 'articleClipEnlarged')
-            .append('svg:rect')
-            .attr('width', INNER_WIDTH)
-            .attr('height', divHeight)
-            .attr('x', xPadding)
-            .attr('y', 0);
-
-        var clippedsvg = svg.append('g')
-            .attr('class', 'linechartarea')
-            .attr('clip-path', 'url(#articleClipEnlarged)')
-
-        var rects = clippedsvg.selectAll('.articleCountRectEnlarged')
-            .data(articleCounts)
-            .enter()
-            .append('rect')
-            .attr('class', 'articleCountRectEnlarged')
-            .attr('width', function (d, i) {
-                return xScale.bandwidth();
-            })
-            .attr('height', function (d, i) {
-                /* //console.log(INNER_HEIGHT + yPadding)
-                //console.log(d.count)
-                //console.log(yScale(d.count)) */
-                return INNER_HEIGHT + yPadding - yScale(d.count)
-            })
-            .attr('x', function (d, i) {
-                var tempDate = dateParser(d.date)
-                //console.log(xScale(tempDate))
-                return xScale(tempDate);
-            })
-            .attr('y', function (d, i) {
-                return yScale(d.count)
-            })
-            .attr('fill', '#ffa73b')
+        var svg = d3.select("#" + divID).append("svg")
+            .attr('class', function () { if (divID == 'enlargedChart') { return 'largeSVG' } else { return 'visSVG' } })
+            .attr("width", "100%")
+            .attr("height", "100%")
             .attr('pointer-events', 'all')
-            .style('opacity', '40%')
-            .on("mouseover", onMouseOver)
-            .on("mousemove", onMouseMove)
-            .on("mouseout", onMouseOut);
 
-        var sentPoints = clippedsvg.selectAll('.sentimentPointEnlarged')
-            .data(sentimentData)
-            .enter()
-            .append('circle')
-            .attr('class', 'sentimentPointEnlarged')
-            .attr('cx', function (d, i) {
-                return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
-            })
-            .attr('cy', function (d, i) {
-                return ySentScale(d.mean)
-            })
-            .attr('r', 5)
-            .attr('fill', 'blue')
-            .style('opacity', '0%')
-            .on("mouseover", onMouseOver)
-            .on("mousemove", onMouseMove)
-            .on("mouseout", onMouseOut);
+        if (divID == 'enlargedChart') {
+            svg.call(zoomBeh);
+        }
 
-        var sentLines = clippedsvg.selectAll('.sentimentLineEnlarged')
-            .data(sentimentData)
-            .enter()
-            .append('line')
-            .attr('class', 'sentimentLineEnlarged')
-            .attr('x1', function (d) { return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2) })
-            .attr('y1', function (d) { return ySentScale(d.mean) })
-            .attr('x2', function (d, i) {
-                if (i == 0) {
+
+
+        svg.append('g')
+            .attr("transform", "translate(" + xPadding + ",0)")
+            .attr('id', 'sentYAxis')
+            .call(ySentAxis);
+
+        svg.append('g')
+            .attr('id', 'newsCountYAxis')
+            .attr("transform", "translate(" + (divWidth - xPadding) + ",0)")
+            .call(yAxis);
+
+        svg.append("text")
+            .attr("class", "y label")
+            .attr("text-anchor", "middle")
+            .attr("transform", "rotate(-90)")
+            .attr("x", -divHeight / 2)
+            .attr('y', xPadding / 2)
+            .text("감성지수");
+        svg.append("text")
+            .attr("class", "y label")
+            .attr("text-anchor", "middle")
+            .attr("transform", "rotate(-90)")
+            .attr("x", -divHeight / 2)
+            .attr('y', divWidth - (xPadding / 4))
+            .text("기사수");
+
+
+        svg.append("text")
+            .attr("class", "y label")
+            .attr("text-anchor", "middle")
+            .attr("transform", "rotate(-90)")
+            .attr("x", -divHeight / 2)
+            .attr('y', divWidth - 20)
+            .text("");
+
+        svg.append('g')
+            .attr('class', 'y axis-grid')
+            .attr("transform", "translate(" + xPadding + ",0)")
+            .call(yAxisGrid);
+
+
+
+        if (divID == 'enlargedChart') {
+            console.log('making enlarged')
+            var clip = svg.append("defs").append("svg:clipPath")
+                .attr('id', 'articleClipEnlarged')
+                .append('svg:rect')
+                .attr('width', INNER_WIDTH)
+                .attr('height', divHeight)
+                .attr('x', xPadding)
+                .attr('y', 0);
+
+            var clippedsvg = svg.append('g')
+                .attr('class', 'linechartarea')
+                .attr('clip-path', 'url(#articleClipEnlarged)')
+
+            var rects = clippedsvg.selectAll('.articleCountRectEnlarged')
+                .data(articleCounts)
+                .enter()
+                .append('rect')
+                .attr('class', 'articleCountRectEnlarged')
+                .attr('width', function (d, i) {
+                    return xScale.bandwidth();
+                })
+                .attr('height', function (d, i) {
+                    /* //console.log(INNER_HEIGHT + yPadding)
+                    //console.log(d.count)
+                    //console.log(yScale(d.count)) */
+                    return INNER_HEIGHT + yPadding - yScale(d.count)
+                })
+                .attr('x', function (d, i) {
+                    var tempDate = dateParser(d.date)
+                    //console.log(xScale(tempDate))
+                    return xScale(tempDate);
+                })
+                .attr('y', function (d, i) {
+                    return yScale(d.count)
+                })
+                .attr('fill', '#ffa73b')
+                .attr('pointer-events', 'all')
+                .style('opacity', '40%')
+                .on("mouseover", onMouseOver)
+                .on("mousemove", onMouseMove)
+                .on("mouseout", onMouseOut);
+
+            var sentPoints = clippedsvg.selectAll('.sentimentPointEnlarged')
+                .data(sentimentData)
+                .enter()
+                .append('circle')
+                .attr('class', 'sentimentPointEnlarged')
+                .attr('cx', function (d, i) {
                     return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
+                })
+                .attr('cy', function (d, i) {
+                    return ySentScale(d.mean)
+                })
+                .attr('r', 5)
+                .attr('fill', 'blue')
+                .style('opacity', '0%')
+                .on("mouseover", onMouseOver)
+                .on("mousemove", onMouseMove)
+                .on("mouseout", onMouseOut);
+
+            var sentLines = clippedsvg.selectAll('.sentimentLineEnlarged')
+                .data(sentimentData)
+                .enter()
+                .append('line')
+                .attr('class', 'sentimentLineEnlarged')
+                .attr('x1', function (d) { return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2) })
+                .attr('y1', function (d) { return ySentScale(d.mean) })
+                .attr('x2', function (d, i) {
+                    if (i == 0) {
+                        return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
+                    }
+                    return xScale(dateParser(sentimentData[i - 1].date)) + (xScale.bandwidth() / 2);
+                })
+                .attr('y2', function (d, i) {
+                    if (i == 0) { return ySentScale(d.mean) }
+                    return ySentScale(sentimentData[i - 1].mean);
+                })
+                .attr('stroke', '#990000')
+                .attr('stroke-width', 1);
+
+
+
+            var gX = svg.append('g')
+                .attr('id', 'articlexAxis')
+                .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
+                .attr('clip-path', 'url(#articleClipEnlarged)')
+                .call(xAxis);
+        }
+        else {
+            //console.log(INNER_WIDTH)
+            //console.log(xPadding)
+            //console.log(xScale.domain());
+            var clip = svg.append("defs").append("svg:clipPath")
+                .attr('id', 'articleClip')
+                .append('svg:rect')
+                .attr('width', INNER_WIDTH)
+                .attr('height', divHeight)
+                .attr('x', xPadding)
+                .attr('y', 0);
+
+            var clippedsvg = svg.append('g')
+                .attr('class', 'linechartarea')
+                .attr('clip-path', 'url(#articleClip)')
+
+            var rects = clippedsvg.selectAll('.articleCountRect')
+                .data(articleCounts)
+                .enter()
+                .append('rect')
+                .attr('class', 'articleCountRect')
+                .attr('width', function (d, i) {
+                    return xScale.bandwidth();
+                })
+                .attr('height', function (d, i) {
+                    /* //console.log(INNER_HEIGHT + yPadding)
+                    //console.log(d.count)
+                    //console.log(yScale(d.count)) */
+                    return INNER_HEIGHT + yPadding - yScale(d.count)
+                })
+                .attr('x', function (d, i) {
+                    var tempDate = dateParser(d.date)
+                    //console.log(xScale(tempDate))
+                    return xScale(tempDate);
+                })
+                .attr('y', function (d, i) {
+                    return yScale(d.count)
+                })
+                .attr('fill', '#ffa73b')
+                .style('opacity', '40%')
+                .on("mouseover", onMouseOver)
+                .on("mousemove", onMouseMove)
+                .on("mouseout", onMouseOut);
+
+            var sentPoints = clippedsvg.selectAll('.sentimentPoint')
+                .data(sentimentData)
+                .enter()
+                .append('circle')
+                .attr('class', 'sentimentPoint')
+                .attr('cx', function (d, i) {
+                    return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
+                })
+                .attr('cy', function (d, i) {
+                    return ySentScale(d.mean)
+                })
+                .attr('r', 5)
+                .attr('fill', 'blue')
+                .style('opacity', '0%')
+                .on("mouseover", onMouseOver)
+                .on("mousemove", onMouseMove)
+                .on("mouseout", onMouseOut);
+
+            var sentLines = clippedsvg.selectAll('.sentimentLine')
+                .data(sentimentData)
+                .enter()
+                .append('line')
+                .attr('class', 'sentimentLine')
+                .attr('x1', function (d) { return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2) })
+                .attr('y1', function (d) { return ySentScale(d.mean) })
+                .attr('x2', function (d, i) {
+                    if (i == 0) {
+                        return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
+                    }
+                    return xScale(dateParser(sentimentData[i - 1].date)) + (xScale.bandwidth() / 2);
+                })
+                .attr('y2', function (d, i) {
+                    if (i == 0) { return ySentScale(d.mean) }
+                    return ySentScale(sentimentData[i - 1].mean);
+                })
+                .attr('stroke', '#990000')
+                .attr('stroke-width', 1);
+
+
+
+            var gX = svg.append('g')
+                .attr('id', 'articlexAxis')
+                .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
+                .attr('clip-path', 'url(#articleClip)')
+                .call(xAxis);
+        }
+
+        function zoom() {
+            //console.log('zooming')
+
+            xScale.range([xPadding, divWidth - xPadding].map((d, i) => {
+                if (i == 0) {
+                    if (d3.event.transform.applyX(d) > xPadding) {
+                        return xPadding
+                    }
+                    else {
+                        console.log(d - d3.event.transform.applyX(d))
+                        return d3.event.transform.applyX(d);
+                    }
                 }
-                return xScale(dateParser(sentimentData[i - 1].date)) + (xScale.bandwidth() / 2);
-            })
-            .attr('y2', function (d, i) {
-                if (i == 0) { return ySentScale(d.mean) }
-                return ySentScale(sentimentData[i - 1].mean);
-            })
-            .attr('stroke', '#990000')
-            .attr('stroke-width', 1);
+                else if (i == 1) {
+                    if (d3.event.transform.applyX(d) < (divWidth - xPadding)) {
+                        return divWidth - xPadding
+                    }
+                    else {
+                        return d3.event.transform.applyX(d)
+                    }
+                }
+                else {
+                }
+            }));
+            /* xScale.rangeRound([xPadding, divWidth - xPadding].map((d) => d3.event.transform.applyX(d))); */
+
+            gX.call(xAxis.scale(xScale))
+
+            console.log(this);
+
+            svg.selectAll(".articleCountRectEnlarged")
+                .attr("x", function (d) {
+                    var tempDate = dateParser(d.date)
+                    return xScale(tempDate);
+                })
+                .attr("width", xScale.bandwidth())
+
+            svg.selectAll(".sentimentLineEnlarged")
+                .attr('x1', function (d) { return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2) })
+                .attr('x2', function (d, i) {
+                    if (i == 0) {
+                        return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
+                    }
+                    return xScale(dateParser(sentimentData[i - 1].date)) + (xScale.bandwidth() / 2);
+                })
+            svg.selectAll(".sentimentPointEnlarged")
+                .attr("cx", function (d) {
+                    return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
+                })
+            svg.selectAll(".articleCountRect")
+                .attr("x", function (d) {
+                    var tempDate = dateParser(d.date)
+                    return xScale(tempDate);
+                })
+                .attr("width", xScale.bandwidth())
+
+            svg.selectAll(".sentimentLine")
+                .attr('x1', function (d) { return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2) })
+                .attr('x2', function (d, i) {
+                    if (i == 0) {
+                        return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
+                    }
+                    return xScale(dateParser(sentimentData[i - 1].date)) + (xScale.bandwidth() / 2);
+                })
+            svg.selectAll(".sentimentPoint")
+                .attr("cx", function (d) {
+                    return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
+                })
 
 
+        }
 
-        var gX = svg.append('g')
-            .attr('id', 'articlexAxis')
-            .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
-            .attr('clip-path', 'url(#articleClipEnlarged)')
-            .call(xAxis);
+        if (divID == 'enlargedChart') {
+            window.SVG = svg;
+        }
     }
     else {
-        //console.log(INNER_WIDTH)
-        //console.log(xPadding)
-        //console.log(xScale.domain());
-        var clip = svg.append("defs").append("svg:clipPath")
-            .attr('id', 'articleClip')
-            .append('svg:rect')
-            .attr('width', INNER_WIDTH)
-            .attr('height', divHeight)
-            .attr('x', xPadding)
-            .attr('y', 0);
-
-        var clippedsvg = svg.append('g')
-            .attr('class', 'linechartarea')
-            .attr('clip-path', 'url(#articleClip)')
-
-        var rects = clippedsvg.selectAll('.articleCountRect')
-            .data(articleCounts)
-            .enter()
-            .append('rect')
-            .attr('class', 'articleCountRect')
-            .attr('width', function (d, i) {
-                return xScale.bandwidth();
-            })
-            .attr('height', function (d, i) {
-                /* //console.log(INNER_HEIGHT + yPadding)
-                //console.log(d.count)
-                //console.log(yScale(d.count)) */
-                return INNER_HEIGHT + yPadding - yScale(d.count)
-            })
-            .attr('x', function (d, i) {
-                var tempDate = dateParser(d.date)
-                //console.log(xScale(tempDate))
-                return xScale(tempDate);
-            })
-            .attr('y', function (d, i) {
-                return yScale(d.count)
-            })
-            .attr('fill', '#ffa73b')
-            .style('opacity', '40%')
-            .on("mouseover", onMouseOver)
-            .on("mousemove", onMouseMove)
-            .on("mouseout", onMouseOut);
-
-        var sentPoints = clippedsvg.selectAll('.sentimentPoint')
-            .data(sentimentData)
-            .enter()
-            .append('circle')
-            .attr('class', 'sentimentPoint')
-            .attr('cx', function (d, i) {
-                return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
-            })
-            .attr('cy', function (d, i) {
-                return ySentScale(d.mean)
-            })
-            .attr('r', 5)
-            .attr('fill', 'blue')
-            .style('opacity', '0%')
-            .on("mouseover", onMouseOver)
-            .on("mousemove", onMouseMove)
-            .on("mouseout", onMouseOut);
-
-        var sentLines = clippedsvg.selectAll('.sentimentLine')
-            .data(sentimentData)
-            .enter()
-            .append('line')
-            .attr('class', 'sentimentLine')
-            .attr('x1', function (d) { return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2) })
-            .attr('y1', function (d) { return ySentScale(d.mean) })
-            .attr('x2', function (d, i) {
-                if (i == 0) {
-                    return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
-                }
-                return xScale(dateParser(sentimentData[i - 1].date)) + (xScale.bandwidth() / 2);
-            })
-            .attr('y2', function (d, i) {
-                if (i == 0) { return ySentScale(d.mean) }
-                return ySentScale(sentimentData[i - 1].mean);
-            })
-            .attr('stroke', '#990000')
-            .attr('stroke-width', 1);
-
-
-
-        var gX = svg.append('g')
-            .attr('id', 'articlexAxis')
-            .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
-            .attr('clip-path', 'url(#articleClip)')
-            .call(xAxis);
-    }
-
-    function zoom() {
-        //console.log('zooming')
-
-        xScale.range([xPadding, divWidth - xPadding].map((d, i) => {
-            if (i == 0) {
-                if (d3.event.transform.applyX(d) > xPadding) {
-                    return xPadding
-                }
-                else {
-                    console.log(d - d3.event.transform.applyX(d))
-                    return d3.event.transform.applyX(d);
-                }
-            }
-            else if (i == 1) {
-                if (d3.event.transform.applyX(d) < (divWidth - xPadding)) {
-                    return divWidth - xPadding
-                }
-                else {
-                    return d3.event.transform.applyX(d)
-                }
-            }
-            else {
-            }
-        }));
-        /* xScale.rangeRound([xPadding, divWidth - xPadding].map((d) => d3.event.transform.applyX(d))); */
-
-        gX.call(xAxis.scale(xScale))
-
-        console.log(this);
-
-        svg.selectAll(".articleCountRectEnlarged")
-            .attr("x", function (d) {
-                var tempDate = dateParser(d.date)
-                return xScale(tempDate);
-            })
-            .attr("width", xScale.bandwidth())
-
-        svg.selectAll(".sentimentLineEnlarged")
-            .attr('x1', function (d) { return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2) })
-            .attr('x2', function (d, i) {
-                if (i == 0) {
-                    return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
-                }
-                return xScale(dateParser(sentimentData[i - 1].date)) + (xScale.bandwidth() / 2);
-            })
-        svg.selectAll(".sentimentPointEnlarged")
-            .attr("cx", function (d) {
-                return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
-            })
-        svg.selectAll(".articleCountRect")
-            .attr("x", function (d) {
-                var tempDate = dateParser(d.date)
-                return xScale(tempDate);
-            })
-            .attr("width", xScale.bandwidth())
-
-        svg.selectAll(".sentimentLine")
-            .attr('x1', function (d) { return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2) })
-            .attr('x2', function (d, i) {
-                if (i == 0) {
-                    return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
-                }
-                return xScale(dateParser(sentimentData[i - 1].date)) + (xScale.bandwidth() / 2);
-            })
-        svg.selectAll(".sentimentPoint")
-            .attr("cx", function (d) {
-                return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
-            })
-
-
-    }
-
-    if (divID == 'enlargedChart') {
-        window.SVG = svg;
+        var keywordBarContents = `
+                                    <div style="text-align:center; font-size:35px; margin-top:70px;">
+                                        뉴스 정보 없음
+                                    </div>
+                                 `;
+        document.getElementById(divID).innerHTML = keywordBarContents;
     }
 }
 
 function makeStockGraph(data, divID) {
+    console.log(data)
     var company = document.getElementById('stockRange').value;
     console.log(company);
 
@@ -3011,6 +3032,7 @@ function getChartQuery(queryInput, queryType) {
                 document.getElementById('stockTime').innerHTML = stockContents;
             }
             $('#chartModal').hide();
+            window.scrollTo(0,0);
         },
         error: function () {
             alert('조회 실패');

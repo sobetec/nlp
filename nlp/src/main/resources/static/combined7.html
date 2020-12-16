@@ -1040,6 +1040,7 @@
                         alert('총 ' + datassss.rowCount + ' 건의 뉴스 기사가 검색됨');
                         datassss.pageCount = countPages(datassss.rowCount);
                         getChartQuery(datassss.searchWord, 3);
+                        topFunction();
                         paginationByRowCount(datassss);
 
                         document.getElementById('main_title').focus();
@@ -1156,6 +1157,7 @@
                     document.getElementById('main_title').innerText = '뉴스 조회';
                     $('#chartDiv').show();
                     setTimeout(() => drawTable(result_area, ''), 1000);
+                    topFunction();
 
                     document.getElementById('main_title').focus();
 
@@ -1479,6 +1481,7 @@
                     $('#myModal').show();
                     setTimeout(() => drawTable(result_area, table_id), 1000);
                     document.getElementById('main_title').innerHTML = `뉴스 조회<h4 style="display:inline">(` + selectedName + `)</h4>`;
+                    topFunction();
 
                     document.getElementById('main_title').focus();
 
