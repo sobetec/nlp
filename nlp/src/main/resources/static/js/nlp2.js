@@ -157,11 +157,9 @@ function getSVGString(svgNode) {
                 if (!contains('.' + classes[c], selectorTextArr))
                     selectorTextArr.push('.' + classes[c]);
         }
-        console.log(selectorTextArr)
 
         // Extract CSS Rules
         var extractedCSSText = "";
-        console.log(document.styleSheets)
         for (var i = 0; i < document.styleSheets.length; i++) {
             var s = document.styleSheets[i];
 
