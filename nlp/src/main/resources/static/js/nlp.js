@@ -20,7 +20,7 @@ function makeGauge(divID, sentimentScore) {
 
 
     gaugeSVG = d3.select("#" + divID).append("svg")
-        .attr('class', function() { if (divID == 'enlargedChart') {return 'largeSVG'} else {return 'visSVG'}})
+        .attr('class', function () { if (divID == 'enlargedChart') { return 'largeSVG' } else { return 'visSVG' } })
         .attr("width", "100%")
         .attr("height", "100%");
 
@@ -69,24 +69,19 @@ function makeGauge(divID, sentimentScore) {
     gaugeSVG.append('g')
         .attr('transform', 'translate(' + divWidth / 2 + ',' + 3 * divHeight / 5 + ")")
         .append("polygon")
-        .attr('id', 'gaugeNeedle')
+        .attr('id', function () {
+            if (divID == 'enlargedChart') {
+                return 'gaugeNeedleEnlarged';
+            }
+            else {
+                return 'gaugeNeedle'
+            }
+        })
         .attr('stroke-width', 3)
         .attr('fill', '#820812')
         .attr('class', 'needle')
         .attr('points', "0,0 -" + "0," + 0.02 * divHeight +
             " " + -divWidth / 4 + ",0 " + "0," + -divHeight * 0.02)
-        .on('click', function () {
-            d3.select('#gaugeNeedle')
-                .transition()
-                .ease(d3.easeLinear)
-                .duration(400)
-                .attr("transform", "rotate(180)")
-                .transition()
-                .ease(d3.easeElastic)
-                .duration(5000)
-                .attr("transform", "rotate(" + (sentimentScore / 100 * 240 - 30) + ")")
-
-        })
         .transition()
         .ease(d3.easeLinear)
         .duration(200)
@@ -127,15 +122,7 @@ function makeGauge(divID, sentimentScore) {
         .style("fill", "black")
         .attr("r", 0.02 * divHeight)
         .attr("cx", divWidth / 2)
-        .attr("cy", 3 * divHeight / 5)
-        .on('click', function () {
-            d3.select('#gaugeNeedle').attr("transform", "rotate(-)")
-            d3.select('#gaugeNeedle')
-                .transition()
-                .ease(d3.easeElastic)
-                .duration(3000)
-                .attr("transform", "rotate(" + (sentimentScore / 100 * 240 - 30) + ")")
-        })
+        .attr("cy", 3 * divHeight / 5);
 
     /* gaugeSVG.append('g')
         .append('rect')
@@ -165,17 +152,32 @@ function makeGauge(divID, sentimentScore) {
             .attr("transform", "translate(" + divWidth / 2 + ',' + 3 * divHeight / 5 + ")")
             .attr("fill", color)
             .on('click', function () {
-                d3.select('#gaugeNeedle')
-                    .transition()
-                    .ease(d3.easeLinear)
-                    .duration(400)
-                    .attr("transform", "rotate(180)")
-                    .transition()
-                    .ease(d3.easeElastic)
-                    .duration(5000)
-                    .attr("transform", "rotate(" + (sentimentScore / 100 * 240 - 30) + ")")
+                if (divID == 'enlargedChart') {
+                    d3.select('#gaugeNeedleEnlarged')
+                        .transition()
+                        .ease(d3.easeLinear)
+                        .duration(400)
+                        .attr("transform", "rotate(180)")
+                        .transition()
+                        .ease(d3.easeElastic)
+                        .duration(5000)
+                        .attr("transform", "rotate(" + (sentimentScore / 100 * 240 - 30) + ")")
 
-            });
+                }
+                else {
+                    d3.select('#gaugeNeedle')
+                        .transition()
+                        .ease(d3.easeLinear)
+                        .duration(400)
+                        .attr("transform", "rotate(180)")
+                        .transition()
+                        .ease(d3.easeElastic)
+                        .duration(5000)
+                        .attr("transform", "rotate(" + (sentimentScore / 100 * 240 - 30) + ")")
+
+                }
+
+            })
     }
 
     function appendArcLabel(g, divWidth, divHeight, x, dy, arclabel, label) {
@@ -273,7 +275,7 @@ function makeSentimentTimeGraph(data, divID) {
     }
 
     var svg = d3.select("#" + divID).append("svg")
-        .attr('class', function() { if (divID == 'enlargedChart') {return 'largeSVG'} else {return 'visSVG'}})
+        .attr('class', function () { if (divID == 'enlargedChart') { return 'largeSVG' } else { return 'visSVG' } })
         .attr("width", "100%")
         .attr("height", "100%");
 
@@ -528,7 +530,7 @@ function makeSentimentBoxPlot(sentimentData, divID) {
         .on("zoom", zoom);
 
     var svg = d3.select("#" + divID).append("svg")
-        .attr('class', function() { if (divID == 'enlargedChart') {return 'largeSVG'} else {return 'visSVG'}})
+        .attr('class', function () { if (divID == 'enlargedChart') { return 'largeSVG' } else { return 'visSVG' } })
         .attr("width", "100%")
         .attr("height", "100%")
         .attr('pointer-events', 'all')
@@ -883,7 +885,7 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
             .tickSizeOuter(0);
 
         var svg = d3.select("#" + divID).append("svg")
-            .attr('class', function() { if (divID == 'enlargedChart') {return 'largeSVG'} else {return 'visSVG'}})
+            .attr('class', function () { if (divID == 'enlargedChart') { return 'largeSVG' } else { return 'visSVG' } })
             .attr("width", "100%")
             .attr("height", "100%");
 
@@ -972,7 +974,14 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
         var yAxis = plot.append('g')
             .attr('id', 'keywordYAxis')
             .attr("transform", "translate(" + xPadding + ",0)")
-            .style('font-size', divHeight * 0.038 + 'px')
+            .style('font-size', function () {
+                if (nCutoff <= 20) {
+                    return divHeight * 0.038 + 'px'
+                }
+                else {
+                    return divHeight * 0.038 * 20 / nCutoff + 'px'
+                }
+            })
             .call(yAxis);
 
         var leftWidth = document.getElementById('keywordYAxis').getBoundingClientRect().width;
@@ -1079,7 +1088,7 @@ function makeArticleCounts(data, divID) {
         .on("zoom", zoom);
 
     var svg = d3.select("#" + divID).append("svg")
-        .attr('class', function() { if (divID == 'enlargedChart') {return 'largeSVG'} else {return 'visSVG'}})
+        .attr('class', function () { if (divID == 'enlargedChart') { return 'largeSVG' } else { return 'visSVG' } })
         .attr("width", "100%")
         .attr("height", "100%")
         .append("g");
@@ -1106,7 +1115,7 @@ function makeArticleCounts(data, divID) {
             .style("pointer-events", "all")
             .call(zoomBeh);
         var clip = svg.append("defs").append("svg:clipPath")
-            .attr('class', function() { if (divID == 'enlargedChart') {return 'largeSVG'} else {return 'visSVG'}})
+            .attr('class', function () { if (divID == 'enlargedChart') { return 'largeSVG' } else { return 'visSVG' } })
             .attr('id', 'stockClipEnlarged')
             .append('svg:rect')
             .attr('width', 944 - 2 * xPadding)
@@ -1347,7 +1356,7 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
         .on("zoom", zoom);
 
     var svg = d3.select("#" + divID).append("svg")
-        .attr('class', function() { if (divID == 'enlargedChart') {return 'largeSVG'} else {return 'visSVG'}})
+        .attr('class', function () { if (divID == 'enlargedChart') { return 'largeSVG' } else { return 'visSVG' } })
         .attr("width", "100%")
         .attr("height", "100%")
         .attr('pointer-events', 'all')
@@ -1733,11 +1742,11 @@ function makeStockGraph(data, divID) {
         .on("zoom", zoom);
 
     var svg = d3.select("#" + divID).append("svg")
-        .attr('class', function() { if (divID == 'enlargedChart') {return 'largeSVG'} else {return 'visSVG'}})
+        .attr('class', function () { if (divID == 'enlargedChart') { return 'largeSVG' } else { return 'visSVG' } })
         .attr("width", "100%")
         .attr("height", "100%")
         .attr('pointer-events', 'all')
-        
+
 
     if (divID == 'enlargedChart') {
         svg.call(zoomBeh);
@@ -1776,7 +1785,7 @@ function makeStockGraph(data, divID) {
         .attr('y', yPadding);
 
     var clip = svg.append("defs").append("svg:clipPath")
-        .attr('class', function() { if (divID == 'enlargedChart') {return 'largeSVG'} else {return 'visSVG'}})
+        .attr('class', function () { if (divID == 'enlargedChart') { return 'largeSVG' } else { return 'visSVG' } })
         .attr('id', 'stockClipEnlarged')
         .append('svg:rect')
         .attr('width', 944 - 2 * xPadding)
@@ -1935,7 +1944,7 @@ function makePieChart(data, divID, nCutofftoShow, nCutoff) {
     console.log(propData)
 
     var svg = d3.select("#" + divID).append("svg")
-        .attr('class', function() { if (divID == 'enlargedChart') {return 'largeSVG'} else {return 'visSVG'}})
+        .attr('class', function () { if (divID == 'enlargedChart') { return 'largeSVG' } else { return 'visSVG' } })
         .attr("width", "100%")
         .attr("height", "100%");
 
@@ -2355,7 +2364,7 @@ function drawWordcloud(words, divID) {
             .range([0, divWidth]);
 
         var svg = d3.select("#" + divID).append("svg")
-            .attr('class', function() { if (divID == 'enlargedChart') {return 'largeSVG'} else {return 'visSVG'}})
+            .attr('class', function () { if (divID == 'enlargedChart') { return 'largeSVG' } else { return 'visSVG' } })
             .attr("transform", "translate(" + xPadding + "," + yPadding + ")")
             .attr("width", layout.size()[0])
             .attr("height", layout.size()[1])
@@ -2512,7 +2521,7 @@ function drawWordcloud2(words, divID) {
             .range([0, divWidth]);
 
         var svg = d3.select("#" + divID).append("svg")
-            .attr('class', function() { if (divID == 'enlargedChart') {return 'largeSVG'} else {return 'visSVG'}})
+            .attr('class', function () { if (divID == 'enlargedChart') { return 'largeSVG' } else { return 'visSVG' } })
             .attr("transform", "translate(" + xPadding + "," + yPadding + ")")
             .attr("width", layout.size()[0])
             .attr("height", layout.size()[1])
@@ -2871,6 +2880,7 @@ function getChartQuery2() {
 }
 
 function getChartQuery(queryInput, queryType) {
+    console.log('##########RUNNING CHART QUERY' + queryType)
     console.log(queryInput)
     d3.selectAll('.visSVG').remove();
 
@@ -2889,7 +2899,7 @@ function getChartQuery(queryInput, queryType) {
         selectedName = queryInput;
         console.log(data)
     }
-    else if (queryType == 4){
+    else if (queryType == 4) {
         selectedName = queryInput.selectedName;
         data = queryInput;
         data.searchWord = selectedName;

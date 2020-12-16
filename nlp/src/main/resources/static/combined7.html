@@ -2736,7 +2736,7 @@
         $("#keywordBarSlider").on("input", function () {
             document.getElementById('keywordMaxValueBar').innerHTML = document.getElementById('keywordBarSlider').value;
             makeKeywordBarPlot(window.newsChartData.keywords, 'enlargedChart', document.getElementById('keywordBarSlider').value)
-            makeKeywordBarPlot(window.newsChartData.keywords, 'keywordBar', document.getElementById('keywordBarSlider').value)
+            //makeKeywordBarPlot(window.newsChartData.keywords, 'keywordBar', document.getElementById('keywordBarSlider').value)
         })
         $(".card_list").css('max-height', $(".contents_panel:first").height())
         console.log($(".contents_panel:first").height());
