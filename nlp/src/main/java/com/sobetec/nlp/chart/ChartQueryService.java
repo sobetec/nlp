@@ -115,7 +115,9 @@ public class ChartQueryService {
 			// //logger.debug(invDocFreq);
 			// //logger.debug(termFreq * invDocFreq);
 			newsKeywordMap.get(morph).setTf_idf(termFreq * invDocFreq);
-			newsKeywords.add(newsKeywordMap.get(morph));
+			if (newsKeywordMap.get(morph).getTotalDocFreq() != 0) {
+				newsKeywords.add(newsKeywordMap.get(morph));
+			}
 		}
 		// logger.debug(testMax);
 
@@ -219,8 +221,8 @@ public class ChartQueryService {
 					tokens.add(morph);
 				}
 			}
-			System.out.println(morphs.length);
-			System.out.println(tokens.size());
+			// System.out.println(morphs.length);
+			// System.out.println(tokens.size());
 			for (String morph : tokens) {
 				newsKeywordMap.get(morph).setSubsetDocFreq(newsKeywordMap.get(morph).getSubsetDocFreq() + 1);
 			}

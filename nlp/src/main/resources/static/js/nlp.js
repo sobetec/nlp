@@ -20,7 +20,7 @@ function makeGauge(divID, sentimentScore) {
 
 
     gaugeSVG = d3.select("#" + divID).append("svg")
-        .attr('class', 'visSVG')
+        .attr('class', function() { if (divID == 'enlargedChart') {return 'largeSVG'} else {return 'visSVG'}})
         .attr("width", "100%")
         .attr("height", "100%");
 
@@ -273,7 +273,7 @@ function makeSentimentTimeGraph(data, divID) {
     }
 
     var svg = d3.select("#" + divID).append("svg")
-        .attr('class', 'visSVG')
+        .attr('class', function() { if (divID == 'enlargedChart') {return 'largeSVG'} else {return 'visSVG'}})
         .attr("width", "100%")
         .attr("height", "100%");
 
@@ -528,7 +528,7 @@ function makeSentimentBoxPlot(sentimentData, divID) {
         .on("zoom", zoom);
 
     var svg = d3.select("#" + divID).append("svg")
-        .attr('class', 'visSVG')
+        .attr('class', function() { if (divID == 'enlargedChart') {return 'largeSVG'} else {return 'visSVG'}})
         .attr("width", "100%")
         .attr("height", "100%")
         .attr('pointer-events', 'all')
@@ -832,8 +832,6 @@ function makeSentimentBoxPlot(sentimentData, divID) {
 }
 
 function makeKeywordBarPlot(data, divID, nCutoff) {
-    var xPadding = 50;
-    var yPadding = 10;
     var colorVec = ['#83afd5', '#fbbe81', '#80c89c', '#be7cbf']
     var graphDiv = document.getElementById(divID);
     data.sort(function (a, b) { return b.tf_idf - a.tf_idf });
@@ -856,6 +854,8 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
             var divHeight = graphDiv.clientHeight;
             var divWidth = graphDiv.clientWidth;
         }
+        var xPadding = 0.164 * divWidth;
+        var yPadding = 10;
         var INNER_HEIGHT = divHeight - 2 * yPadding;
         var INNER_WIDTH = divWidth - 2 * xPadding;
 
@@ -883,11 +883,13 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
             .tickSizeOuter(0);
 
         var svg = d3.select("#" + divID).append("svg")
-            .attr('class', 'visSVG')
+            .attr('class', function() { if (divID == 'enlargedChart') {return 'largeSVG'} else {return 'visSVG'}})
             .attr("width", "100%")
             .attr("height", "100%");
 
-        svg.append('g')
+        var plot = svg.append('g')
+
+        plot.append('g')
             .attr('class', 'x axis-grid')
             .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
             .call(xAxisGrid)
@@ -902,7 +904,7 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
 
 
 
-        svg.selectAll(".keywordBar")
+        plot.selectAll(".keywordBar")
             .data(dataSlice)
             .enter().append('rect')
             .attr("class", function (d) {
@@ -967,13 +969,14 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
                 }
             });
 
-        var yAxis = svg.append('g')
+        var yAxis = plot.append('g')
             .attr('id', 'keywordYAxis')
             .attr("transform", "translate(" + xPadding + ",0)")
+            .style('font-size', divHeight * 0.038 + 'px')
             .call(yAxis);
 
         var leftWidth = document.getElementById('keywordYAxis').getBoundingClientRect().width;
-        svg.attr('transform', 'translate(' + (leftWidth / 4) + ',0)');
+        plot.attr('transform', 'translate(' + (leftWidth / 4) + ',0)');
 
         if (divID == 'enlargedChart') {
             window.SVG = svg;
@@ -1076,7 +1079,7 @@ function makeArticleCounts(data, divID) {
         .on("zoom", zoom);
 
     var svg = d3.select("#" + divID).append("svg")
-        .attr('class', 'visSVG')
+        .attr('class', function() { if (divID == 'enlargedChart') {return 'largeSVG'} else {return 'visSVG'}})
         .attr("width", "100%")
         .attr("height", "100%")
         .append("g");
@@ -1103,7 +1106,7 @@ function makeArticleCounts(data, divID) {
             .style("pointer-events", "all")
             .call(zoomBeh);
         var clip = svg.append("defs").append("svg:clipPath")
-            .attr('class', 'visSVG')
+            .attr('class', function() { if (divID == 'enlargedChart') {return 'largeSVG'} else {return 'visSVG'}})
             .attr('id', 'stockClipEnlarged')
             .append('svg:rect')
             .attr('width', 944 - 2 * xPadding)
@@ -1344,7 +1347,7 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
         .on("zoom", zoom);
 
     var svg = d3.select("#" + divID).append("svg")
-        .attr('class', 'visSVG')
+        .attr('class', function() { if (divID == 'enlargedChart') {return 'largeSVG'} else {return 'visSVG'}})
         .attr("width", "100%")
         .attr("height", "100%")
         .attr('pointer-events', 'all')
@@ -1730,7 +1733,7 @@ function makeStockGraph(data, divID) {
         .on("zoom", zoom);
 
     var svg = d3.select("#" + divID).append("svg")
-        .attr('class', 'visSVG')
+        .attr('class', function() { if (divID == 'enlargedChart') {return 'largeSVG'} else {return 'visSVG'}})
         .attr("width", "100%")
         .attr("height", "100%")
         .attr('pointer-events', 'all')
@@ -1773,7 +1776,7 @@ function makeStockGraph(data, divID) {
         .attr('y', yPadding);
 
     var clip = svg.append("defs").append("svg:clipPath")
-        .attr('class', 'visSVG')
+        .attr('class', function() { if (divID == 'enlargedChart') {return 'largeSVG'} else {return 'visSVG'}})
         .attr('id', 'stockClipEnlarged')
         .append('svg:rect')
         .attr('width', 944 - 2 * xPadding)
@@ -1932,7 +1935,7 @@ function makePieChart(data, divID, nCutofftoShow, nCutoff) {
     console.log(propData)
 
     var svg = d3.select("#" + divID).append("svg")
-        .attr('class', 'visSVG')
+        .attr('class', function() { if (divID == 'enlargedChart') {return 'largeSVG'} else {return 'visSVG'}})
         .attr("width", "100%")
         .attr("height", "100%");
 
@@ -2331,7 +2334,7 @@ function drawWordcloud(words, divID) {
         .rotate(0)
         /* .rotate(function () { return ~~(Math.random() * 2) * 90; }) */
         .fontSize(function (d) {
-            return d.value / maxValue *
+            return Math.sqrt(d.value / maxValue) *
                 document.getElementById('fontSizeSlider').value;
         })
         .on("end", function (output) {
@@ -2352,7 +2355,7 @@ function drawWordcloud(words, divID) {
             .range([0, divWidth]);
 
         var svg = d3.select("#" + divID).append("svg")
-            .attr('class', 'visSVG')
+            .attr('class', function() { if (divID == 'enlargedChart') {return 'largeSVG'} else {return 'visSVG'}})
             .attr("transform", "translate(" + xPadding + "," + yPadding + ")")
             .attr("width", layout.size()[0])
             .attr("height", layout.size()[1])
@@ -2379,7 +2382,7 @@ function drawWordcloud(words, divID) {
             .on("mouseout", onMouseOut)
             .transition()
             .style("font-size", function (d) {
-                return d.value / maxValue *
+                return Math.sqrt(d.value / maxValue) *
                     document.getElementById('fontSizeSlider').value + "px";
             })
             .duration(500);
@@ -2488,7 +2491,7 @@ function drawWordcloud2(words, divID) {
         .rotate(0)
         .rotate(function () { return ~~(Math.random() * 2) * 90; })
         .fontSize(function (d) {
-            return d.value / maxValue *
+            return Math.sqrt(d.value / maxValue) *
                 document.getElementById('fontSizeSlider').value;
         })
         .on("end", function (output) {
@@ -2509,7 +2512,7 @@ function drawWordcloud2(words, divID) {
             .range([0, divWidth]);
 
         var svg = d3.select("#" + divID).append("svg")
-            .attr('class', 'visSVG')
+            .attr('class', function() { if (divID == 'enlargedChart') {return 'largeSVG'} else {return 'visSVG'}})
             .attr("transform", "translate(" + xPadding + "," + yPadding + ")")
             .attr("width", layout.size()[0])
             .attr("height", layout.size()[1])
@@ -2536,7 +2539,7 @@ function drawWordcloud2(words, divID) {
             .on("mouseout", onMouseOut)
             .transition()
             .style("font-size", function (d) {
-                return d.value / maxValue *
+                return Math.sqrt(d.value / maxValue) *
                     document.getElementById('fontSizeSlider').value + "px";
             })
             .duration(500);
@@ -2615,7 +2618,7 @@ function getChartQuery1() {
     ////console.log(document.getElementById('articleCountRange').value);
     d3.selectAll('.visSVG').remove();
     var search_company = document.getElementById('search_company').value;
-    //console.log(search_company);
+    console.log(search_company);
     $.ajax({
         url: "/getChartQueryByCompany/" + search_company,
         method: 'GET',
@@ -2877,16 +2880,17 @@ function getChartQuery(queryInput, queryType) {
     //console.log(search_company);
     document.getElementById('chartModal').innerHTML = modalhtml4;
     var data;
+    var selectedName;
     $('#chartModal').show();
     if (queryType == 3) {
         data = parameters();
         data.gubunJaName = $("#fold").val();
         data.selectedName = queryInput;
-        companyName = queryInput;
+        selectedName = queryInput;
         console.log(data)
     }
     else if (queryType == 4){
-        var selectedName = queryInput.selectedName;
+        selectedName = queryInput.selectedName;
         data = queryInput;
         data.searchWord = selectedName;
     }
@@ -2968,7 +2972,7 @@ function getChartQuery(queryInput, queryType) {
                 console.log("스톡옵션");
                 console.log(stockOptions);
                 for (var i = 0; i < companies.length; i++) {
-                    if (companies[i] == companyName) {
+                    if (companies[i] == selectedName) {
                         var tempHTML = `<option value='${companies[i]}' selected>${companies[i]}</option>`;
                     }
                     else {
