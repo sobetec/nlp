@@ -149,7 +149,7 @@
             /* 15% from the top and centered */
             padding: 20px;
             border: 1px solid #888;
-            width: 50%;
+            width: 60%;
             /* Could be more or less, depending on screen size */
             max-height: 60px;
             position: relative;
@@ -161,7 +161,7 @@
             /* 15% from the top and centered */
             padding: 40px;
             border: 1px solid #888;
-            width: 50%;
+            width: 60%;
             /* Could be more or less, depending on screen size */
             max-height: 600px;
             position: relative;
@@ -460,6 +460,36 @@
             font-size: 14px;
         }
 
+        .td_comp:hover,
+        .td_subs:hover,
+        .td_inds:hover{
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bolder;
+            color: #7c130c;
+        }
+
+        .td_comp,
+        .td_subs,
+        .td_inds{
+            font-size: 14px;
+            text-align: left; 
+            padding-left: 16px; 
+            padding-right:10px;
+        }
+
+        .th_list{
+            font-size: 16px;
+            text-align: left;
+            padding-left: 16px; 
+            padding-right:10px;
+            font-weight: bold;
+            background-color: #f7f7f7;
+        }
+
+        
+
         .disabled {
             pointer-events: none;
             opacity: 0.6;
@@ -518,6 +548,14 @@
         .select[multiple] {
 			background-color: white;
 			border-radius: 4px;
+        }
+        
+        .comp_td:nth-child(even){
+            background-color: #f0ecec;
+        }
+
+        .comp_td:nth-child(odd){
+            background-color: #f7f7f7;
         } 
         
         .maximize {
@@ -1003,6 +1041,9 @@
                         datassss.pageCount = countPages(datassss.rowCount);
                         getChartQuery(datassss.searchWord, 3);
                         paginationByRowCount(datassss);
+
+                        document.getElementById('main_title').focus();
+         
                     }
                 },
                 error: function () {
@@ -1115,6 +1156,8 @@
                     document.getElementById('main_title').innerText = '뉴스 조회';
                     $('#chartDiv').show();
                     setTimeout(() => drawTable(result_area, ''), 1000);
+
+                    document.getElementById('main_title').focus();
 
                 },
                 error: function () {
@@ -1425,6 +1468,9 @@
                     if ($('#fold').val() == 'subsidiary' || $('#fold').val() == 'industry') {
                         //itemChangeFold();
                         $('#resetContentButton').show();
+                        $('#search_box_news').hide();
+                        $('#gubunSelect').hide();
+                        $('#yearSelect').hide();
                     }
 
                     $('#chartDiv').show();
@@ -1433,6 +1479,8 @@
                     $('#myModal').show();
                     setTimeout(() => drawTable(result_area, table_id), 1000);
                     document.getElementById('main_title').innerHTML = `뉴스 조회<h4 style="display:inline">(` + selectedName + `)</h4>`;
+
+                    document.getElementById('main_title').focus();
 
                 },
                 error: function () {
@@ -1788,36 +1836,6 @@
                     else {
                         window.companyResponseData = responseData;
 
-                        var companyliList = [];
-                        var companyliListHTML = ``;
-
-                        var subsidiaryliList = [];
-                        var subsidiaryliListHTML = ``;
-
-                        var industryliList = [];
-                        var industryliListHTML = ``;
-
-                        for (var i = 0; i < responseData.length; i++) {
-                            companyliList[i] = `<li>` + window.companyResponseData[i].cmpy + `</li>`;
-                            companyliListHTML = companyliListHTML + companyliList[i];
-
-                            if (window.companyResponseData[i].subsName == null) {
-                                subsidiaryliList[i] = `<li class="disabled">　</li>`;
-                            }
-                            else {
-                                subsidiaryliList[i] = `<li>` + window.companyResponseData[i].subsName + `</li>`;
-                            }
-                            subsidiaryliListHTML = subsidiaryliListHTML + subsidiaryliList[i];
-
-                            if (window.companyResponseData[i].instName == null) {
-                                industryliList[i] = `<li class="disabled">　</li>`;
-                            }
-                            else {
-                                industryliList[i] = `<li>` + window.companyResponseData[i].instName + `</li>`;
-                            }
-                            industryliListHTML = industryliListHTML + industryliList[i];
-                        }
-
                         $('#myModal').hide();
 
                         var modalContents =
@@ -1827,51 +1845,62 @@
                             </div>
 
                             <div class="modal-list">
-                                <table border="1" width="100%">
+                                <table style="border-color:#ccc4c3; margin-left:auto; margin-right:auto;" width="90%" rules=cols>
                                     <tr>
-                                        <th>기업</th>
-                                        <th>계열</th>
-                                        <th>산업</th>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <ul class="list_company">
-                                                ` + companyliListHTML + `
-                                            </ul>
-                                        </td>
-                                        <td>
-                                            <ul class="list_subsidiary">
-                                                ` + subsidiaryliListHTML + `
-                                            </ul>
-                                        </td>
-                                        <td>
-                                            <ul class="list_industry">
-                                                ` + industryliListHTML + `
-                                            </ul>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                        `;
+                                        <th class="th_list">기업</th>
+                                        <th class="th_list" width: 20%;">계열</th>
+                                        <th class="th_list">산업</th>
+                                    </tr>                                        
+                            `;
+                        
+                        var modalContentsBody = ``;
+                            for (let i = 0; i < responseData.length; i++){
+                                let subsTempHTML = ``;
+                                let indsTempHTML = ``;
+
+                                if (window.companyResponseData[i].subsName == null) {
+                                    subsTempHTML = `<td class="disabled">　</td>`;
+                                }
+                                else {
+                                    subsTempHTML = `<td class="td_subs">` + window.companyResponseData[i].subsName + `</td>`;
+                                }
+                                if (window.companyResponseData[i].instName == null) {
+                                    indsTempHTML = `<td class="disabled">　</td>`;
+                                }
+                                else {
+                                    indsTempHTML = `<td class="td_inds">` + window.companyResponseData[i].instName + `</td>`;
+                                }
+                                
+                                modalContentsBody += `<tr class = "comp_td"><td class="td_comp">` + window.companyResponseData[i].cmpy + '</td>' 
+                                    + subsTempHTML
+                                    + indsTempHTML
+                            }
+
+                        var modalContentsTail =
+                            `            
+                                    </table>
+                                </div>
+                            `;
+
+                        modalContents = modalContents + modalContentsBody;
+                        modalContents = modalContents + modalContentsTail;
                     }
-
-
 
                     document.getElementById('myModal').innerHTML = modalContents;
                     $('#myModal').show();
 
-                    $(".list_company").on("click", "li", function () {
+                    $(".td_comp").on("click", function () {
                         var companyName = $(this).text();
                         getNewsListByCompanyName(companyName);
                     });
 
-                    $(".list_subsidiary").on("click", "li", function () {
+                    $(".td_subs").on("click", function () {
                         var companyName = $(this).text();
                         $('#fold').val('subsidiary').prop('selected', true);
                         getNewsListByIndustryAndSubsidiary('subsidiary', companyName);
                     });
 
-                    $(".list_industry").on("click", "li", function () {
+                    $(".td_inds").on("click", function () {
                         var companyName = $(this).text();
                         $('#fold').val('industry').prop('selected', true);
                         getNewsListByIndustryAndSubsidiary('industry', companyName);
