@@ -80,7 +80,6 @@
             <version>2.11.0</version>
         </dependency>
 
-<<<<<<< HEAD
 		<!-- encryiption -->
 		<dependency>
 			<groupId>com.github.ulisesbocchio</groupId>
@@ -91,13 +90,11 @@
 
 
 
-=======
         <dependency>
         	<groupId>org.springframework.boot</groupId>
         	<artifactId>spring-boot-configuration-processor</artifactId>
         	<optional>true</optional>
         </dependency>
->>>>>>> branch 'master' of https://github.com/sobetec/nlp
 	</dependencies>
 
 	<build>
