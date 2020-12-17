@@ -1361,10 +1361,9 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
 
 
         var zoomBeh = d3.zoom()
-            .scaleExtent([0, 100])
-            //.translateExtent([[xPadding, yPadding],[xPadding + INNER_WIDTH, yPadding]])
-            /* .translateExtent(extent)
-            .extent(extent) */
+            .extent([[xPadding, yPadding], [xPadding + INNER_WIDTH, yPadding + INNER_HEIGHT]])
+            .scaleExtent([1, 500])
+            .translateExtent([[xPadding, yPadding], [xPadding + INNER_WIDTH, yPadding + INNER_HEIGHT]])
             .on("zoom", zoom);
 
         var svg = d3.select("#" + divID).append("svg")
@@ -1601,30 +1600,7 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
         }
 
         function zoom() {
-            //console.log('zooming')
-
-            xScale.range([xPadding, divWidth - xPadding].map((d, i) => {
-                if (i == 0) {
-                    if (d3.event.transform.applyX(d) > xPadding) {
-                        return xPadding
-                    }
-                    else {
-                        console.log(d - d3.event.transform.applyX(d))
-                        return d3.event.transform.applyX(d);
-                    }
-                }
-                else if (i == 1) {
-                    if (d3.event.transform.applyX(d) < (divWidth - xPadding)) {
-                        return divWidth - xPadding
-                    }
-                    else {
-                        return d3.event.transform.applyX(d)
-                    }
-                }
-                else {
-                }
-            }));
-            /* xScale.rangeRound([xPadding, divWidth - xPadding].map((d) => d3.event.transform.applyX(d))); */
+            xScale.range([xPadding, xPadding + INNER_WIDTH].map(d => d3.event.transform.applyX(d)))
 
             gX.call(xAxis.scale(xScale))
 
@@ -1753,14 +1729,12 @@ function makeStockGraph(data, divID) {
     var xAxis = d3.axisBottom()
         .scale(xScale)
         .tickSizeOuter(0);
-    var xAxisGrid = d3.axisBottom(xScale)
-        .tickSize(-INNER_HEIGHT)
-        .tickFormat('')
-        .tickSizeOuter(0);
 
 
     var zoomBeh = d3.zoom()
-        .scaleExtent([0, 500])
+        .extent([[xPadding, yPadding], [xPadding + INNER_WIDTH, yPadding + INNER_HEIGHT]])
+        .scaleExtent([1, 500])
+        .translateExtent([[xPadding, yPadding], [xPadding + INNER_WIDTH, yPadding + INNER_HEIGHT]])
         .on("zoom", zoom);
 
     var svg = d3.select("#" + divID).append("svg")
@@ -1785,36 +1759,46 @@ function makeStockGraph(data, divID) {
         .attr("transform", "translate(" + xPadding + ",0)")
         .call(yAxisGrid);
 
-    var gX = svg.append('g')
-        .attr('class', 'xAxis')
-        .attr('id', 'stockXAxis')
-        .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
-        .call(xAxis);
+
     /* var gXGrid = svg.append('g')
         .attr('class', 'x axis-grid')
         .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
         .call(xAxisGrid); */
 
 
+    if (divID == 'enlargedChart') {
+        var clip = svg.append("defs").append("svg:clipPath")
+            .attr('class', function () { if (divID == 'enlargedChart') { return 'largeSVG' } else { return 'visSVG' } })
+            .attr('id', 'stockClipEnlarged')
+            .append('svg:rect')
+            .attr('width', 1250 - 2 * xPadding)
+            .attr('height', divHeight)
+            .attr('x', xPadding)
+            .attr('y', 0);
 
+        var gX = svg.append('g')
+            .attr('class', 'xAxis')
+            .attr('clip-path', 'url(#stockClipEnlarged)')
+            .attr('id', 'stockXAxis')
+            .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
+            .call(xAxis);
+    }
+    else {
+        var clip = svg.append("defs").append("svg:clipPath")
+            .attr('id', 'stockClip')
+            .append('svg:rect')
+            .attr('width', INNER_WIDTH)
+            .attr('height', divHeight)
+            .attr('x', xPadding)
+            .attr('y', 0);
 
-    var clip = svg.append("defs").append("svg:clipPath")
-        .attr('id', 'stockClip')
-        .append('svg:rect')
-        .attr('width', INNER_WIDTH)
-        .attr('height', INNER_HEIGHT)
-        .attr('x', xPadding)
-        .attr('y', yPadding);
-
-    var clip = svg.append("defs").append("svg:clipPath")
-        .attr('class', function () { if (divID == 'enlargedChart') { return 'largeSVG' } else { return 'visSVG' } })
-        .attr('id', 'stockClipEnlarged')
-        .append('svg:rect')
-        .attr('width', 1250 - 2 * xPadding)
-        .attr('height', 550 - 2 * yPadding)
-        .attr('x', xPadding)
-        .attr('y', yPadding);
-
+        var gX = svg.append('g')
+            .attr('class', 'xAxis')
+            .attr('clip-path', 'url(#stockClip)')
+            .attr('id', 'stockXAxis')
+            .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
+            .call(xAxis);
+    }
 
     var lines = svg.append('g')
         .attr('class', 'linechartarea')
@@ -1880,7 +1864,8 @@ function makeStockGraph(data, divID) {
 
     function zoom() {
         console.log('zooming')
-        xScale.range([xPadding, divWidth - xPadding].map((d, i) => {
+        new_xScale = d3.event.transform.rescaleX(xScale)
+        /* xScale.range([xPadding, divWidth - xPadding].map((d, i) => {
             if (i == 0) {
                 if (d3.event.transform.applyX(d) > xPadding) {
                     return xPadding
@@ -1900,17 +1885,17 @@ function makeStockGraph(data, divID) {
             }
             else {
             }
-        }));
+        })); */
 
-        gX.call(xAxis.scale(xScale))
+        gX.call(xAxis.scale(new_xScale))
         /*  gXGrid.call(xAxisGrid.scale(xScale)) */
 
         lines.data(stockData)
-            .attr('x1', function (d) { return xScale(d.time) })
+            .attr('x1', function (d) { return new_xScale(d.time) })
             .attr('y1', function (d) { return yScale(d.stock) })
             .attr('x2', function (d, i) {
-                if (i == 0) { return xScale(d.time) }
-                return xScale(stockData[i - 1].time);
+                if (i == 0) { return new_xScale(d.time) }
+                return new_xScale(stockData[i - 1].time);
             })
             .attr('y2', function (d, i) {
                 if (i == 0) { return yScale(d.stock) }
@@ -1918,7 +1903,7 @@ function makeStockGraph(data, divID) {
             })
         points.data(stockData)
             .attr('fill', 'red')
-            .attr("cx", function (d) { return xScale(d.time) })
+            .attr("cx", function (d) { return new_xScale(d.time) })
             .attr("cy", function (d) { return yScale(d.stock) })
     }
 
