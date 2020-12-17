@@ -1934,12 +1934,15 @@ function makeStockBarGraph(data, divID) {
     var company = document.getElementById('stockRange').value;
     console.log(company);
 
+
+
     stockData = [];
     for (var i = 0; i < data[company].length; i++) {
         /* //console.log(data[i].date)
         //console.log(data[i].price) */
         stockData.push({ time: dateParser(data[company][i].date), stock: parseFloat(data[company][i].price) });
     }
+    stockData.sort(function (a, b) { return a.date - b.date })
     //console.log(stockData)
     var timeVector = [];
     var stockVector = [];
@@ -1966,12 +1969,12 @@ function makeStockBarGraph(data, divID) {
     var INNER_HEIGHT = divHeight - 2 * yPadding;
     var INNER_WIDTH = divWidth - 2 * xPadding;
 
-    var xMax = d3.max(stockData, function (d) { return d['time']; }) * 1.05,
+    /* var xMax = d3.max(stockData, function (d) { return d['time']; }) * 1.05,
         xMin = d3.min(stockData, function (d) { return d['time']; }),
         xMin = xMin > 0 ? 0 : xMin,
         yMax = d3.max(stockData, function (d) { return d['stock']; }) * 1.05,
         yMin = d3.min(stockData, function (d) { return d['stock']; }),
-        yMin = yMin > 0 ? 0 : yMin;
+        yMin = yMin > 0 ? 0 : yMin; */
 
     var dataPadding = (d3.max(stockVector) - d3.min(stockVector)) / 10
     var yScale = d3.scaleLinear()
@@ -1990,21 +1993,43 @@ function makeStockBarGraph(data, divID) {
     /* var xScale = d3.scaleLinear()
         .domain([d3.min(timeVector) - 1, d3.max(timeVector) + 1])
         .range([xPadding, divWidth - xPadding]); */
-    var mappings = [];
-    var toAdd = xPadding;
-    for (var i = 0; i < timeVector.length; i++) {
-        mappings.push(toAdd)
-        toAdd += INNER_WIDTH / timeVector.length;
-    }
-    console.log(mappings)
-    console.log(stockData)
-    var xScale = d3.scaleTime()
+    /* var xScale = d3.scaleTime()
         .domain(timeVector)
         //.domain([d3.min(timeVector), d3.max(timeVector)])
-        .range(mappings);
-    var xAxis = d3.axisBottom()
-        .scale(xScale)
-        .tickSizeOuter(0);
+        .range(mappings); */
+    var xScale = d3.scaleBand()
+        .domain(timeVector)
+        .range([xPadding, divWidth - xPadding])
+        .padding(0.05);
+
+    var gubun = $("#gubunNews").val()
+    if (gubun == 'month') {
+        var xAxis = d3.axisBottom()
+            .scale(xScale)
+            .tickValues(xScale.domain().filter(function (d, i) {
+                return !((i + Math.floor(stockData.length / 8)) % (Math.floor(stockData.length / 4)))
+            }))
+            .ticks(5)
+            .tickPadding(5)
+            .tickFormat(d3.timeFormat("%Y년%b%d일"))
+    }
+    else {
+        var xAxis = d3.axisBottom()
+            .scale(xScale)
+            .tickValues(xScale.domain().filter(function (d, i) {
+                if (gubun == 'quarter') {
+                    return !((i + Math.floor(stockData.length / 6)) % (Math.floor(stockData.length / 3)))
+                }
+                else if (gubun == 'year')
+                    return !((i + Math.floor(stockData.length / 12)) % (Math.floor(stockData.length / 6)))
+                else {
+                    return !((i + Math.floor(stockData.length / 16)) % (Math.floor(stockData.length / 8)))
+                }
+            }))
+            .ticks(5)
+            .tickPadding(5)
+            .tickFormat(d3.timeFormat("%Y년%b"))
+    }
 
 
     var zoomBeh = d3.zoom()
@@ -2024,7 +2049,15 @@ function makeStockBarGraph(data, divID) {
         svg.call(zoomBeh);
     }
 
-
+    svg.append('g')
+        .attr('class', 'yAxis')
+        .attr('id', 'stocksYAxis')
+        .attr("transform", "translate(" + xPadding + ",0)")
+        .call(yAxis);
+    svg.append('g')
+        .attr('class', 'y axis-grid')
+        .attr("transform", "translate(" + xPadding + ",0)")
+        .call(yAxisGrid);
 
 
 
@@ -2051,36 +2084,16 @@ function makeStockBarGraph(data, divID) {
             .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
             .call(xAxis);
 
-        var gY = svg.append('g')
-            .attr('class', 'yAxis')
-            .attr('id', 'stocksYAxis')
-            .attr("transform", "translate(" + xPadding + ",0)")
-            .call(yAxis);
-        var gYGrid = svg.append('g')
-            .attr('class', 'y axis-grid')
-            .attr("transform", "translate(" + xPadding + ",0)")
-            .call(yAxisGrid);
+
     }
     else {
         var gX = svg.append('g')
             .attr('class', 'xAxis')
-            .attr('clip-path', 'url(#stockClip)')
             .attr('id', 'stockXAxis')
             .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
             .call(xAxis);
-
-        var gY = svg.append('g')
-            .attr('class', 'yAxis')
-            //.attr('clip-path', 'url(#stockClip2)')
-            .attr('id', 'stocksYAxis')
-            .attr("transform", "translate(" + xPadding + ",0)")
-            .call(yAxis);
-        var gYGrid = svg.append('g')
-            .attr('class', 'y axis-grid')
-            .attr('clip-path', 'url(#stockClip2)')
-            .attr("transform", "translate(" + xPadding + ",0)")
-            .call(yAxisGrid);
     }
+
     var bars = svg.append('g')
         .attr('class', 'barchartarea')
         .attr('clip-path', function () {
@@ -2103,8 +2116,7 @@ function makeStockBarGraph(data, divID) {
             }
         })
         .attr('x', function (d, i) {
-            return (i < stockData.length - 1) ?
-                (xScale(d.time) + Math.abs(xScale(d.time) - xScale(stockData[i + 1].time)) / 20) : 0
+            return xScale(d.time)
         })
         .attr('y', function (d, i) {
             if (i == stockData.length - 1) {
@@ -2115,13 +2127,7 @@ function makeStockBarGraph(data, divID) {
             }
         })
         .attr('width', function (d, i) {
-            if (i == stockData.length - 1) {
-                return 0
-            }
-            else {
-                return xScale(stockData[i + 1].time) - xScale(d.time) -
-                    (Math.abs(xScale(d.time) - xScale(stockData[i + 1].time))) / 10;
-            }
+            return (i < stockData.length - 1) ? xScale.bandwidth() : 0;
         })
         .attr('height', function (d, i) {
             if (i == stockData.length - 1) { return 0 }
@@ -2148,6 +2154,50 @@ function makeStockBarGraph(data, divID) {
         .on("mousemove", onMouseMove)
         .on("mouseout", onMouseOut);
 
+    var sentLines = svg.append('g')
+        .attr('class', 'barchartarea')
+        .attr('clip-path', function () {
+            if (divID == 'enlargedChart') {
+                return 'url(#stockClipEnlarged)';
+            }
+            else {
+                return 'url(#stockClip)';
+            }
+        })
+        .selectAll('.sentimentLineEnlarged')
+        .data(stockData)
+        .enter()
+        .append('line')
+        .attr('class', 'sentimentLineEnlarged')
+        .attr('x1', function (d) { return xScale(d.time) + (xScale.bandwidth() / 2); })
+        .attr('y1', function (d, i) {
+            if (i == stockData.length - 1) {
+                return 0
+            }
+            else if (yScale(d.stock) == yScale(stockData[i + 1].stock)) {
+                return yScale(d.stock) - 2;
+            }
+            else {
+                var diff = Math.abs(yScale(stockData[i + 1].stock) - yScale(d.stock))
+                return d3.min([yScale(stockData[i + 1].stock), yScale(d.stock)]) - diff / 4
+            }
+        })
+        .attr('x2', function (d, i) {
+            return xScale(d.time) + (xScale.bandwidth() / 2);
+        })
+        .attr('y2', function (d, i) {
+            if (i == stockData.length - 1) { return 0 }
+            else if (yScale(d.stock) == yScale(stockData[i + 1].stock)) {
+                return yScale(d.stock) + 2;
+            }
+            else {
+                var diff = Math.abs(yScale(stockData[i + 1].stock) - yScale(d.stock))
+                return d3.max([yScale(d.stock), yScale(stockData[i + 1].stock)]) + diff / 4;
+            }
+        })
+        .attr('stroke', '#990000')
+        .attr('stroke-width', 1);
+
 
 
     svg.append('text')
@@ -2164,23 +2214,22 @@ function makeStockBarGraph(data, divID) {
 
     function zoom() {
         console.log('zooming')
-        new_xScale = d3.event.transform.rescaleX(xScale)
-        gX.call(xAxis.scale(new_xScale))
+        //new_xScale = d3.event.transform.rescaleX(xScale)
+        xScale.range([xPadding, xPadding + INNER_WIDTH].map(d => d3.event.transform.applyX(d)))
+        gX.call(xAxis.scale(xScale))
         /*  gXGrid.call(xAxisGrid.scale(xScale)) */
 
         bars.data(stockData)
-            .attr('x', function (d, i) {
-                return (i < stockData.length - 1) ?
-                    (new_xScale(d.time) + Math.abs(new_xScale(d.time) - new_xScale(stockData[i + 1].time)) / 20) : 0
+            .attr('x', function (d) {
+                return xScale(d.time)
             })
             .attr('width', function (d, i) {
-                if (i == stockData.length - 1) {
-                    return 0
-                }
-                else {
-                    return new_xScale(stockData[i + 1].time) - new_xScale(d.time) -
-                        (Math.abs(new_xScale(d.time) - new_xScale(stockData[i + 1].time))) / 10;
-                }
+                return (i < stockData.length - 1) ? xScale.bandwidth() : 0;
+            })
+        sentLines.data(stockData)
+            .attr('x1', function (d) { return xScale(d.time) + (xScale.bandwidth() / 2); })
+            .attr('x2', function (d, i) {
+                return xScale(d.time) + (xScale.bandwidth() / 2);
             })
     }
 
