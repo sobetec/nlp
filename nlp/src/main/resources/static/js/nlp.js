@@ -1602,7 +1602,7 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
         function zoom() {
             xScale.range([xPadding, xPadding + INNER_WIDTH].map(d => d3.event.transform.applyX(d)))
 
-            var inScope = xScale.domain().filter(function(d) {
+            var inScope = xScale.domain().filter(function (d) {
                 return xScale(d) > xPadding && xScale(d) < (INNER_WIDTH - xPadding)
             })
             console.log(inScope)
@@ -1972,9 +1972,9 @@ function makeStockBarGraph(data, divID) {
         yMin = d3.min(stockData, function (d) { return d['stock']; }),
         yMin = yMin > 0 ? 0 : yMin;
 
+    var dataPadding = (d3.max(stockVector) - d3.min(stockVector)) / 10
     var yScale = d3.scaleLinear()
-        /* .domain([d3.min(stockVector) - 100, d3.max(stockVector) + 100]) */
-        .domain([0, d3.max(stockVector) + 100])
+        .domain([d3.min(stockVector) - dataPadding, d3.max(stockVector) + dataPadding])
         .range([divHeight - yPadding, yPadding])
     var yAxis = d3.axisLeft()
         .scale(yScale)
@@ -1989,9 +1989,18 @@ function makeStockBarGraph(data, divID) {
     /* var xScale = d3.scaleLinear()
         .domain([d3.min(timeVector) - 1, d3.max(timeVector) + 1])
         .range([xPadding, divWidth - xPadding]); */
+    var mappings = [];
+    var toAdd = xPadding;
+    for (var i = 0; i < timeVector.length; i++) {
+        mappings.push(toAdd)
+        toAdd += INNER_WIDTH / timeVector.length;
+    }
+    console.log(mappings)
+    console.log(stockData)
     var xScale = d3.scaleTime()
-        .domain([d3.min(timeVector), d3.max(timeVector)])
-        .range([xPadding, divWidth - xPadding]);
+        .domain(timeVector)
+        //.domain([d3.min(timeVector), d3.max(timeVector)])
+        .range(mappings);
     var xAxis = d3.axisBottom()
         .scale(xScale)
         .tickSizeOuter(0);
@@ -2015,15 +2024,7 @@ function makeStockBarGraph(data, divID) {
     }
 
 
-    var gY = svg.append('g')
-        .attr('class', 'yAxis')
-        .attr('id', 'stocksYAxis')
-        .attr("transform", "translate(" + xPadding + ",0)")
-        .call(yAxis);
-    var gYGrid = svg.append('g')
-        .attr('class', 'y axis-grid')
-        .attr("transform", "translate(" + xPadding + ",0)")
-        .call(yAxisGrid);
+
 
 
     /* var gXGrid = svg.append('g')
@@ -2034,13 +2035,13 @@ function makeStockBarGraph(data, divID) {
 
     if (divID == 'enlargedChart') {
         var clip = svg.append("defs").append("svg:clipPath")
-            .attr('class', function () { if (divID == 'enlargedChart') { return 'largeSVG' } else { return 'visSVG' } })
             .attr('id', 'stockClipEnlarged')
             .append('svg:rect')
             .attr('width', 1250 - 2 * xPadding)
-            .attr('height', divHeight)
+            .attr('height', 550)
             .attr('x', xPadding)
             .attr('y', 0);
+
 
         var gX = svg.append('g')
             .attr('class', 'xAxis')
@@ -2048,24 +2049,37 @@ function makeStockBarGraph(data, divID) {
             .attr('id', 'stockXAxis')
             .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
             .call(xAxis);
+
+        var gY = svg.append('g')
+            .attr('class', 'yAxis')
+            .attr('id', 'stocksYAxis')
+            .attr("transform", "translate(" + xPadding + ",0)")
+            .call(yAxis);
+        var gYGrid = svg.append('g')
+            .attr('class', 'y axis-grid')
+            .attr("transform", "translate(" + xPadding + ",0)")
+            .call(yAxisGrid);
     }
     else {
-        var clip = svg.append("defs").append("svg:clipPath")
-            .attr('id', 'stockClip')
-            .append('svg:rect')
-            .attr('width', INNER_WIDTH)
-            .attr('height', divHeight)
-            .attr('x', xPadding)
-            .attr('y', 0);
-
         var gX = svg.append('g')
             .attr('class', 'xAxis')
             .attr('clip-path', 'url(#stockClip)')
             .attr('id', 'stockXAxis')
             .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
             .call(xAxis);
-    }
 
+        var gY = svg.append('g')
+            .attr('class', 'yAxis')
+            //.attr('clip-path', 'url(#stockClip2)')
+            .attr('id', 'stocksYAxis')
+            .attr("transform", "translate(" + xPadding + ",0)")
+            .call(yAxis);
+        var gYGrid = svg.append('g')
+            .attr('class', 'y axis-grid')
+            .attr('clip-path', 'url(#stockClip2)')
+            .attr("transform", "translate(" + xPadding + ",0)")
+            .call(yAxisGrid);
+    }
     var bars = svg.append('g')
         .attr('class', 'barchartarea')
         .attr('clip-path', function () {
@@ -2079,42 +2093,61 @@ function makeStockBarGraph(data, divID) {
         .selectAll(".stockBar")
         .data(stockData)
         .enter().append('rect')
-        .attr("class", "stockLine")
-        .attr('x', function (d) { return xScale(d.time) })
-        .attr('y', function (d) { return yScale(d.stock) })
-        .attr('width', function (d, i) {
-            if (i == 0) {
-                return xScale(d.time)
-            }
-            return xScale(d.time) - xScale(stockData[i - 1].time);
-        })
-        .attr('y2', function (d, i) {
-            if (i == 0) { return yScale(d.stock) }
-            return yScale(stockData[i - 1].stock);
-        })
-        .attr('stroke', '#368dff')
-        .attr('stroke-width', 2);
-
-
-    var points = svg.selectAll(".stockPoint")
-        .data(stockData)
-        .enter().append("circle")
         .attr("class", function (d) {
             if (divID == 'enlargedChart') {
-                return "stockPointEnlarged";
+                return "stockBarEnlarged";
             }
             else {
-                return "stockPoint";
+                return "stockBar";
             }
         })
-        .style('fill-opacity', '0')
-        .attr("r", 5)
-        .attr('fill', 'red')
-        .attr("cx", function (d) { return xScale(d.time) })
-        .attr("cy", function (d) { return yScale(d.stock) })
+        .attr('x', function (d, i) {
+            return (i < stockData.length - 1) ?
+                (xScale(d.time) + Math.abs(xScale(d.time) - xScale(stockData[i + 1].time)) / 20) : 0
+        })
+        .attr('y', function (d, i) {
+            if (i == stockData.length - 1) {
+                return yScale(d.stock)
+            }
+            else {
+                return d3.min([yScale(stockData[i + 1].stock), yScale(d.stock)])
+            }
+        })
+        .attr('width', function (d, i) {
+            if (i == stockData.length - 1) {
+                return 0
+            }
+            else {
+                return xScale(stockData[i + 1].time) - xScale(d.time) -
+                    (Math.abs(xScale(d.time) - xScale(stockData[i + 1].time))) / 10;
+            }
+        })
+        .attr('height', function (d, i) {
+            if (i == stockData.length - 1) { return 0 }
+            else if (yScale(d.stock) == yScale(stockData[i + 1].stock)) {
+                return 2;
+            }
+            else {
+                return Math.abs(yScale(d.stock) - yScale(stockData[i + 1].stock));
+            }
+        })
+        .attr('fill', function (d, i) {
+            if (i == stockData.length - 1) {
+                return 'none'
+            }
+            if (d.stock < stockData[i + 1].stock) {
+                return 'red'
+            }
+            else {
+                return 'blue'
+            }
+        })
+        .style('opacity', '100%')
         .on("mouseover", onMouseOver)
         .on("mousemove", onMouseMove)
         .on("mouseout", onMouseOut);
+
+
 
     svg.append('text')
         .attr('transform', 'translate(' + (divWidth / 2) + ',' + (3 * yPadding / 4) + ")")
@@ -2123,7 +2156,7 @@ function makeStockBarGraph(data, divID) {
         .text('주가지수 추이');
 
     var leftWidth = document.getElementById('stocksYAxis').getBoundingClientRect().width;
-    svg.attr('transform', 'translate(' + (leftWidth / 4) + ',0)');
+    //svg.attr('transform', 'translate(' + (leftWidth / 4) + ',0)');
 
 
 
@@ -2131,46 +2164,23 @@ function makeStockBarGraph(data, divID) {
     function zoom() {
         console.log('zooming')
         new_xScale = d3.event.transform.rescaleX(xScale)
-        /* xScale.range([xPadding, divWidth - xPadding].map((d, i) => {
-            if (i == 0) {
-                if (d3.event.transform.applyX(d) > xPadding) {
-                    return xPadding
-                }
-                else {
-                    console.log(d - d3.event.transform.applyX(d))
-                    return d3.event.transform.applyX(d)
-                }
-            }
-            else if (i == 1) {
-                if (d3.event.transform.applyX(d) < (divWidth - xPadding)) {
-                    return divWidth - xPadding
-                }
-                else {
-                    return d3.event.transform.applyX(d)
-                }
-            }
-            else {
-            }
-        })); */
-
         gX.call(xAxis.scale(new_xScale))
         /*  gXGrid.call(xAxisGrid.scale(xScale)) */
 
-        lines.data(stockData)
-            .attr('x1', function (d) { return new_xScale(d.time) })
-            .attr('y1', function (d) { return yScale(d.stock) })
-            .attr('x2', function (d, i) {
-                if (i == 0) { return new_xScale(d.time) }
-                return new_xScale(stockData[i - 1].time);
+        bars.data(stockData)
+            .attr('x', function (d, i) {
+                return (i < stockData.length - 1) ?
+                    (new_xScale(d.time) + Math.abs(new_xScale(d.time) - new_xScale(stockData[i + 1].time)) / 20) : 0
             })
-            .attr('y2', function (d, i) {
-                if (i == 0) { return yScale(d.stock) }
-                return yScale(stockData[i - 1].stock);
+            .attr('width', function (d, i) {
+                if (i == stockData.length - 1) {
+                    return 0
+                }
+                else {
+                    return new_xScale(stockData[i + 1].time) - new_xScale(d.time) -
+                        (Math.abs(new_xScale(d.time) - new_xScale(stockData[i + 1].time))) / 10;
+                }
             })
-        points.data(stockData)
-            .attr('fill', 'red')
-            .attr("cx", function (d) { return new_xScale(d.time) })
-            .attr("cy", function (d) { return yScale(d.stock) })
     }
 
     if (divID == 'enlargedChart') {
@@ -2346,6 +2356,22 @@ function onMouseOver(d, i) {
             + '월' + date.getDate() + '일') + '<br />주가: ' + d.stock)
         tooltipEnlarged.style('background-color', '#f0f0f0');
     }
+    else if (elementClass == 'stockBar') {
+        var date = new Date(d.time)
+        d3.select(this).style('opacity', '100%');
+        tooltip.style('visibility', 'visible');
+        tooltip.html('날짜: ' + (date.getFullYear() + '년' + (date.getMonth() + 1)
+            + '월' + date.getDate() + '일') + '<br />주가: ' + d.stock)
+        tooltip.style('background-color', '#f0f0f0');
+    }
+    else if (elementClass == 'stockBarEnlarged') {
+        var date = new Date(d.time)
+        d3.select(this).style('opacity', '100%');
+        tooltipEnlarged.style('visibility', 'visible');
+        tooltipEnlarged.html('날짜: ' + (date.getFullYear() + '년' + (date.getMonth() + 1)
+            + '월' + date.getDate() + '일') + '<br />주가: ' + d.stock)
+        tooltipEnlarged.style('background-color', '#f0f0f0');
+    }
     else if (elementClass == 'posSentimentCircle' || elementClass == 'negSentimentCircle') {
         var date = new Date(d.time)
         d3.select(this).style('opacity', '50%');
@@ -2466,6 +2492,14 @@ function onMouseOut(d, i) {
     }
     else if (elementClass == 'stockPointEnlarged') {
         d3.select(this).style('fill', 'black');
+        tooltipEnlarged.style('visibility', 'hidden');
+    }
+    else if (elementClass == 'stockBar') {
+        d3.select(this).style('opacity', '100%');
+        tooltip.style('visibility', 'hidden');
+    }
+    else if (elementClass == 'stockBarEnlarged') {
+        d3.select(this).style('opacity', '100%');
         tooltipEnlarged.style('visibility', 'hidden');
     }
     else if (elementClass == 'posSentimentCircle' || elementClass == 'negSentimentCircle') {
@@ -3266,14 +3300,14 @@ function getChartQuery(queryInput, queryType) {
 
                 document.getElementById('maximizeStock').addEventListener('click', function () {
                     document.getElementById('resetChart').addEventListener('click', function () {
-                        makeStockGraph(allStockData, 'enlargedChart');
+                        makeStockBarGraph(allStockData, 'enlargedChart');
                     })
-                    makeStockGraph(allStockData, 'enlargedChart');
+                    makeStockBarGraph(allStockData, 'enlargedChart');
                 })
                 document.getElementById('stockRange').addEventListener('change', function () {
-                    makeStockGraph(allStockData, 'stockTime');
+                    makeStockBarGraph(allStockData, 'stockTime');
                 })
-                makeStockGraph(allStockData, 'stockTime');
+                makeStockBarGraph(allStockData, 'stockTime');
             }
             else {
                 var stockContents = `
