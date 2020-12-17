@@ -12,7 +12,8 @@ function makeGauge(divID, sentimentScore) {
             return 50 * ((50 - x) / (sFactor2 + Math.abs(50 - x))) + 50
         }
         console.log(sentimentScore)
-        sentimentScore = sobeDangerScore(sentimentScore);
+        var sentimentScore = sobeDangerScore(sentimentScore);
+        var rotation = sentimentScore / 100 * 240 - 30;
 
         var gauge = document.getElementById(divID);
         var divHeight = gauge.scrollHeight;
@@ -27,7 +28,7 @@ function makeGauge(divID, sentimentScore) {
 
         if (divID == "enlargedChart") {
             var divHeight = 602;
-            var divWidth = 944;
+            var divWidth = 1500;
         }
         else {
             var divHeight = gauge.offsetHeight;
@@ -61,11 +62,11 @@ function makeGauge(divID, sentimentScore) {
         appendArc(gaugeSVG, divWidth, divHeight, 24, 72, "#ffc990", 'high' + divID);
         appendArc(gaugeSVG, divWidth, divHeight, 72, 120, "#ff9090", 'veryHigh' + divID);
 
-        appendArcLabel(gaugeSVG, divWidth, divHeight, 0.077 * 0.6377118 * divWidth, 0.11 * 0.6377118 * divWidth, '#veryLow' + divID, 'VERY LOW')
-        appendArcLabel(gaugeSVG, divWidth, divHeight, 0.125 * 0.6377118 * divWidth, 0.11 * 0.6377118 * divWidth, '#low' + divID, 'LOW')
-        appendArcLabel(gaugeSVG, divWidth, divHeight, 0.1 * 0.6377118 * divWidth, 0.11 * 0.6377118 * divWidth, '#medium' + divID, 'MEDIUM')
-        appendArcLabel(gaugeSVG, divWidth, divHeight, 0.16 * 0.6377118 * divWidth, 0.11 * 0.6377118 * divWidth, '#high' + divID, 'HIGH')
-        appendArcLabel(gaugeSVG, divWidth, divHeight, 0.065 * 0.6377118 * divWidth, 0.11 * 0.6377118 * divWidth, '#veryHigh' + divID, 'VERY HIGH')
+        appendArcLabel(gaugeSVG, divWidth, divHeight, 0.077 * divHeight, 0.11 * divHeight, '#veryLow' + divID, 'VERY LOW')
+        appendArcLabel(gaugeSVG, divWidth, divHeight, 0.125 * divHeight, 0.11 * divHeight, '#low' + divID, 'LOW')
+        appendArcLabel(gaugeSVG, divWidth, divHeight, 0.1 * divHeight, 0.11 * divHeight, '#medium' + divID, 'MEDIUM')
+        appendArcLabel(gaugeSVG, divWidth, divHeight, 0.16 * divHeight, 0.11 * divHeight, '#high' + divID, 'HIGH')
+        appendArcLabel(gaugeSVG, divWidth, divHeight, 0.065 * divHeight, 0.11 * divHeight, '#veryHigh' + divID, 'VERY HIGH')
 
         gaugeSVG.append('g')
             .attr('transform', 'translate(' + divWidth / 2 + ',' + 3 * divHeight / 5 + ")")
@@ -82,15 +83,15 @@ function makeGauge(divID, sentimentScore) {
             .attr('fill', '#820812')
             .attr('class', 'needle')
             .attr('points', "0,0 -" + "0," + 0.02 * divHeight +
-                " " + -divWidth / 4 + ",0 " + "0," + -divHeight * 0.02)
+                " " + -divHeight / 2.6 + ",0 " + "0," + -divHeight * 0.02)
             .transition()
             .ease(d3.easeLinear)
             .duration(200)
-            .attr("transform", "rotate(120)")
+            .attr("transform", "rotate(180)")
             .transition()
             .ease(d3.easeElastic)
             .duration(5000)
-            .attr("transform", "rotate(" + (sentimentScore / 100 * 240 - 30) + ")")
+            .attr("transform", "rotate(" + rotation + ")")
 
 
         /* gaugeSVG.append('g')
@@ -141,15 +142,15 @@ function makeGauge(divID, sentimentScore) {
 
         function appendArc(g, divWidth, divHeight, startAngle, endAngle, color, arcID) {
             var arc = d3.arc()
-                .innerRadius(divWidth / 5)
-                .outerRadius(divWidth / 3)
+                .innerRadius(divHeight / 5 / 0.6377118)
+                .outerRadius(divHeight / 3 / 0.6377118)
                 .startAngle(startAngle * (Math.PI / 180))  //180 degree = ㅍ radian , 1 degree = ㅍ / 180 radian
                 .endAngle(endAngle * (Math.PI / 180));
             g.append("path")
                 .attr("d", arc)
                 .attr('id', arcID)
                 .attr('class', 'shadowArc')
-                .style('filter', 'url(#drop-shadow)')
+                //.style('filter', 'url(#drop-shadow)')
                 .attr("transform", "translate(" + divWidth / 2 + ',' + 3 * divHeight / 5 + ")")
                 .attr("fill", color)
                 .on('click', function () {
@@ -157,24 +158,24 @@ function makeGauge(divID, sentimentScore) {
                         d3.select('#gaugeNeedleEnlarged')
                             .transition()
                             .ease(d3.easeLinear)
-                            .duration(400)
-                            .attr("transform", "rotate(180)")
+                            .duration(200)
+                            .attr("transform", "rotate(150)")
                             .transition()
                             .ease(d3.easeElastic)
                             .duration(5000)
-                            .attr("transform", "rotate(" + (sentimentScore / 100 * 240 - 30) + ")")
+                            .attr("transform", "rotate(" + rotation + ")")
 
                     }
                     else {
                         d3.select('#gaugeNeedle')
                             .transition()
                             .ease(d3.easeLinear)
-                            .duration(400)
-                            .attr("transform", "rotate(180)")
+                            .duration(200)
+                            .attr("transform", "rotate(150)")
                             .transition()
                             .ease(d3.easeElastic)
                             .duration(5000)
-                            .attr("transform", "rotate(" + (sentimentScore / 100 * 240 - 30) + ")")
+                            .attr("transform", "rotate(" + rotation + ")")
 
                     }
 
@@ -188,7 +189,7 @@ function makeGauge(divID, sentimentScore) {
                 .attr("class", "arcLabel")
                 .append("textPath")
                 .attr("xlink:href", arclabel)
-                .style("font-size", 0.05474 * 0.6377118 * divWidth)
+                .style("font-size", 0.05474 * divHeight)
                 .style("font-color", 'black')
                 .text(label);
         }
@@ -221,7 +222,7 @@ function makeSentimentTimeGraph(data, divID) {
 
     if (divID == "enlargedChart") {
         var divHeight = 602;
-        var divWidth = 944;
+        var divWidth = 1500;
         document.getElementById(divID).innerHTML = "";
     }
     else {
@@ -495,7 +496,7 @@ function makeSentimentBoxPlot(sentimentData, divID) {
     var graphDiv = document.getElementById(divID);
     if (divID == "enlargedChart") {
         var divHeight = 602;
-        var divWidth = 944;
+        var divWidth = 1500;
         document.getElementById(divID).innerHTML = "";
     }
     else {
@@ -859,7 +860,7 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
         document.getElementById(divID).innerHTML = keywordBarContents;
         if (divID == "enlargedChart") {
             var divHeight = 602;
-            var divWidth = 944;
+            var divWidth = 1500;
             document.getElementById(divID).innerHTML = "";
         }
         else {
@@ -1052,7 +1053,7 @@ function makeArticleCounts(data, divID) {
 
     if (divID == "enlargedChart") {
         var divHeight = 602;
-        var divWidth = 944;
+        var divWidth = 1500;
         document.getElementById(divID).innerHTML = "";
     }
     else {
@@ -1128,7 +1129,7 @@ function makeArticleCounts(data, divID) {
             .attr('class', function () { if (divID == 'enlargedChart') { return 'largeSVG' } else { return 'visSVG' } })
             .attr('id', 'stockClipEnlarged')
             .append('svg:rect')
-            .attr('width', 944 - 2 * xPadding)
+            .attr('width', 1500 - 2 * xPadding)
             .attr('height', 602)
             .attr('x', xPadding)
             .attr('y', 0);
@@ -1289,7 +1290,7 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
 
         if (divID == "enlargedChart") {
             var divHeight = 602;
-            var divWidth = 944;
+            var divWidth = 1500;
             document.getElementById(divID).innerHTML = "";
         }
         else {
@@ -1712,7 +1713,7 @@ function makeStockGraph(data, divID) {
 
     if (divID == 'enlargedChart') {
         var divHeight = 602;
-        var divWidth = 944;
+        var divWidth = 1500;
     }
     else {
         var divHeight = graphDiv.offsetHeight;
@@ -1809,7 +1810,7 @@ function makeStockGraph(data, divID) {
         .attr('class', function () { if (divID == 'enlargedChart') { return 'largeSVG' } else { return 'visSVG' } })
         .attr('id', 'stockClipEnlarged')
         .append('svg:rect')
-        .attr('width', 944 - 2 * xPadding)
+        .attr('width', 1500 - 2 * xPadding)
         .attr('height', 602 - 2 * yPadding)
         .attr('x', xPadding)
         .attr('y', yPadding);
@@ -1971,7 +1972,7 @@ function makePieChart(data, divID, nCutofftoShow, nCutoff) {
 
     if (divID == "enlargedChart") {
         var divHeight = 602;
-        var divWidth = 944;
+        var divWidth = 1500;
     }
     else {
         var divHeight = pieChart.offsetHeight;
@@ -2296,7 +2297,7 @@ async function getMaxWords(words, sizeMax, divID) {
     var yPadding = 20;
     if (divID == "enlargedChart") {
         var divHeight = 602;
-        var divWidth = 944;
+        var divWidth = 1500;
     }
     else {
         var divHeight = graphDiv.offsetHeight;
@@ -2347,7 +2348,7 @@ function drawWordcloud(words, divID) {
 
     if (divID == "enlargedChart") {
         var divHeight = 602;
-        var divWidth = 944;
+        var divWidth = 1500;
         document.getElementById(divID).innerHTML = "";
     }
     else {
@@ -2504,7 +2505,7 @@ function drawWordcloud2(words, divID) {
 
     if (divID == "enlargedChart") {
         var divHeight = 602;
-        var divWidth = 944;
+        var divWidth = 1500;
         document.getElementById(divID).innerHTML = "";
     }
     else {
@@ -3032,7 +3033,7 @@ function getChartQuery(queryInput, queryType) {
                 document.getElementById('stockTime').innerHTML = stockContents;
             }
             $('#chartModal').hide();
-            window.scrollTo(0,0);
+            window.scrollTo(0, 0);
         },
         error: function () {
             alert('조회 실패');
