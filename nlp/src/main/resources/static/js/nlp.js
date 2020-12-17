@@ -27,8 +27,8 @@ function makeGauge(divID, sentimentScore) {
             .attr("height", "100%");
 
         if (divID == "enlargedChart") {
-            var divHeight = 602;
-            var divWidth = 1500;
+            var divHeight = 550;
+            var divWidth = 1250;
         }
         else {
             var divHeight = gauge.offsetHeight;
@@ -221,8 +221,8 @@ function makeSentimentTimeGraph(data, divID) {
     var graphDiv = document.getElementById(divID);
 
     if (divID == "enlargedChart") {
-        var divHeight = 602;
-        var divWidth = 1500;
+        var divHeight = 550;
+        var divWidth = 1250;
         document.getElementById(divID).innerHTML = "";
     }
     else {
@@ -495,8 +495,8 @@ function makeSentimentBoxPlot(sentimentData, divID) {
     }
     var graphDiv = document.getElementById(divID);
     if (divID == "enlargedChart") {
-        var divHeight = 602;
-        var divWidth = 1500;
+        var divHeight = 550;
+        var divWidth = 1250;
         document.getElementById(divID).innerHTML = "";
     }
     else {
@@ -859,8 +859,8 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
         var keywordBarContents = ``;
         document.getElementById(divID).innerHTML = keywordBarContents;
         if (divID == "enlargedChart") {
-            var divHeight = 602;
-            var divWidth = 1500;
+            var divHeight = 550;
+            var divWidth = 1250;
             document.getElementById(divID).innerHTML = "";
         }
         else {
@@ -1052,8 +1052,8 @@ function makeArticleCounts(data, divID) {
     var graphDiv = document.getElementById(divID);
 
     if (divID == "enlargedChart") {
-        var divHeight = 602;
-        var divWidth = 1500;
+        var divHeight = 550;
+        var divWidth = 1250;
         document.getElementById(divID).innerHTML = "";
     }
     else {
@@ -1129,8 +1129,8 @@ function makeArticleCounts(data, divID) {
             .attr('class', function () { if (divID == 'enlargedChart') { return 'largeSVG' } else { return 'visSVG' } })
             .attr('id', 'stockClipEnlarged')
             .append('svg:rect')
-            .attr('width', 1500 - 2 * xPadding)
-            .attr('height', 602)
+            .attr('width', 1250 - 2 * xPadding)
+            .attr('height', 550)
             .attr('x', xPadding)
             .attr('y', 0);
 
@@ -1289,8 +1289,8 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
 
 
         if (divID == "enlargedChart") {
-            var divHeight = 602;
-            var divWidth = 1500;
+            var divHeight = 550;
+            var divWidth = 1250;
             document.getElementById(divID).innerHTML = "";
         }
         else {
@@ -1712,8 +1712,8 @@ function makeStockGraph(data, divID) {
 
 
     if (divID == 'enlargedChart') {
-        var divHeight = 602;
-        var divWidth = 1500;
+        var divHeight = 550;
+        var divWidth = 1250;
     }
     else {
         var divHeight = graphDiv.offsetHeight;
@@ -1810,8 +1810,8 @@ function makeStockGraph(data, divID) {
         .attr('class', function () { if (divID == 'enlargedChart') { return 'largeSVG' } else { return 'visSVG' } })
         .attr('id', 'stockClipEnlarged')
         .append('svg:rect')
-        .attr('width', 1500 - 2 * xPadding)
-        .attr('height', 602 - 2 * yPadding)
+        .attr('width', 1250 - 2 * xPadding)
+        .attr('height', 550 - 2 * yPadding)
         .attr('x', xPadding)
         .attr('y', yPadding);
 
@@ -1971,8 +1971,8 @@ function makePieChart(data, divID, nCutofftoShow, nCutoff) {
         .attr("height", "100%");
 
     if (divID == "enlargedChart") {
-        var divHeight = 602;
-        var divWidth = 1500;
+        var divHeight = 550;
+        var divWidth = 1250;
     }
     else {
         var divHeight = pieChart.offsetHeight;
@@ -2296,8 +2296,8 @@ async function getMaxWords(words, sizeMax, divID) {
     var xPadding = 20;
     var yPadding = 20;
     if (divID == "enlargedChart") {
-        var divHeight = 602;
-        var divWidth = 1500;
+        var divHeight = 550;
+        var divWidth = 1250;
     }
     else {
         var divHeight = graphDiv.offsetHeight;
@@ -2347,8 +2347,8 @@ function drawWordcloud(words, divID) {
 
 
     if (divID == "enlargedChart") {
-        var divHeight = 602;
-        var divWidth = 1500;
+        var divHeight = 550;
+        var divWidth = 1250;
         document.getElementById(divID).innerHTML = "";
     }
     else {
@@ -2504,8 +2504,8 @@ function drawWordcloud2(words, divID) {
 
 
     if (divID == "enlargedChart") {
-        var divHeight = 602;
-        var divWidth = 1500;
+        var divHeight = 550;
+        var divWidth = 1250;
         document.getElementById(divID).innerHTML = "";
     }
     else {
