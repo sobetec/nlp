@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ko">
+
+<BODY>
+    <form name='test_form'>
+        <textarea name='content' cols=50 rows=10>우sdsdsdsd...</textarea><br>
+        <iframe name="test_frame" width=300 height=100 src='test.htm'></iframe>
+        <input type='button' value='내용보이기' onClick='frames.test_frame.document.body.innerHTML=test_form.content.value'>
+    </form>
+</BODY>
+<SCRIPT LANGUAGE="JavaScript">
+        // 첫번째 방법
+        frames.test_frame.document.body.innerHTML=test_form.content.value;
+
+    // 두번째 방법
+    function loading() {
+        frames.test_frame.document.body.innerHTML = test_form.content.value;
+    }
+    document.onload = loading();
+
+    //-->
+</SCRIPT>
+
+</html>

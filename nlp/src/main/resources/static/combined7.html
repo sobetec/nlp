@@ -92,12 +92,12 @@
         /* Modal Content/Box */
         .modal-content {
             background-color: #fefefe;
-            margin: -7% auto;
+            margin: -6% auto;
             /* 15% from the top and centered */
-            padding-top: 20px;
-            padding-bottom: 20px;
-            padding-left: 40px;
-            padding-right: 40px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            padding-left: 20px;
+            padding-right: 10px;
             width: 72%;
             /* Could be more or less, depending on screen size */
             min-height: 300px;
@@ -106,29 +106,48 @@
         }
 
         .modal-title {
-            margin: 7% auto;
+            margin: 6% auto;
             /* 15% from the top and centered */
-            min-height: 40px;
-            background-color: #0508b1;
+            min-height: 30px;
+            background-color: #aaabeb;
             text-align: center;
             vertical-align: middle;
             position: relative;
-            padding: 20px;
+            padding: 13px;
             width: 72%;
             /* Could be more or less, depending on screen size */
         }
 
         .modal-close {
             background-color: #fefefe;
-            margin: 7% auto;
-            padding-top: 20px;
-            padding-bottom: 20px;
-            padding-left: 40px;
-            padding-right: 40px;
+            margin: 6% auto;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            padding-left: 20px;
+            padding-right: 20px;
             width: 72%;
             min-height: 50px;
             position: relative;
             vertical-align: middle;
+        }
+
+        .modal-title .btn_close {
+            position: absolute;
+            right: 20px;
+        }
+
+        .modal-title .btn_close:before {
+            content: '';
+            display: block;
+            width: 24px;
+            height: 24px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23484D55'%3E%3Cg%3E%3Cpath d='M19.97 3.09l.85.849-8.062 8.06 8.061 8.062-.848.849-8.062-8.062-8.06 8.062L3 20.06l8.061-8.062L3 3.94l.849-.849 8.06 8.061 8.062-8.06z' transform='translate(-1612 -4656) translate(1612 4656)'/%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }   
+
+        .iframecss {
+            height: 70vh;
+            width: 100%;
+            /* border-top: 1px solid; */
         }
 
         .modal-loading {
@@ -218,12 +237,12 @@
 
         .carousel::before,
         .carousel__prev {
-            left: 1rem;
+            left: 7rem;
         }
 
         .carousel::after,
         .carousel__next {
-            right: 1rem;
+            right: 7rem;
         }
 
         .carousel::before {
@@ -285,12 +304,12 @@
 
         .carouselNoPrev::before,
         .carouselNoPrev__prev {
-            left: 1rem;
+            left: 7rem;
         }
 
         .carouselNoPrev::after,
         .carouselNoPrev__next {
-            right: 1rem;
+            right: 7rem;
         }
 
         .carouselNoPrev::before {
@@ -354,12 +373,12 @@
 
         .carouselNoNext::before,
         .carouselNoNext__prev {
-            left: 1rem;
+            left: 7rem;
         }
 
         .carouselNoNext::after,
         .carouselNoNext__next {
-            right: 1rem;
+            right: 7rem;
         }
 
         .carouselNoNext::before {
@@ -631,38 +650,37 @@
                     </div>
                 </section>  
             `;
-
-
+    
 
             var modalhtml =
                 `   
                 <div class="modal-title">
                     ` + sectionHtml + `
-                    <p style="text-align: center; vertical-align: middle;"><b><span style="font-size: 13pt; color:white; vertical-align: middle;">` + window.newsResponseData[i].newsTtl + `</span></b></p>
+                    <p style="text-align: center; vertical-align: middle;">
+                        <b>
+                            <span style="font-size: 13pt; color:black; vertical-align: middle;">` + window.newsResponseData[i].newsTtl + `</span>
+                                <button class="btn_close" onClick="close_pop();"><span class="blind">닫기</span></button>
+                            </span>
+                            
+                        </b>
+                    </p>
                 </div>
 
                 <div class="modal-content">
 
                     <section>
                         <div>
+                            
                             <table style="width:100%;">
                                 <tr>
                                     <td>
-                                        <p style="text-align: right; line-height: 1;"><br />` + window.newsResponseData[i].newsDate + `</p>
-
-                                        <div style="border: 1px solid #888;">
-                                            <p style="text-align: center; line-height: 1.5;"><br />` + window.newsResponseData[i].rawData + `</p>
-                                        </div>
-
-                                        <p><br/></p>
-                                        <p><br/></p>
-                                        <p><br></p>
-                                        <p><br></p>
-
+                                        <p style="text-align: right; line-height: 1; padding-right:20px;"><br />` + window.newsResponseData[i].newsDate + `</p>
                                     </td>
                                 </tr>
                             </table>
+                            
                         </div>
+                        <iframe name="modal_frame" class="iframecss" frameBorder="0"></iframe>
                     </section>
 
                     <div>
@@ -670,25 +688,15 @@
 
                 </div>
                 
-                <div class="modal-close">
-                    <table style="width:100%;">
-                        <tr>
-                            <td>
-                                <div style="cursor:pointer;background-color:#DDDDDD;text-align: center;padding-bottom: 10px; padding-top: 10px; position:absolute; bottom:10px; width:85%; left:50%; transform:translate(-50%, 0);" onClick="close_pop();">
-                                    <span class="pop_bt" style="font-size: 13pt;">
-                                        닫기
-                                    </span>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-
-
-                
             `;
             document.getElementById('myModal').innerHTML = modalhtml;
+            frames.modal_frame.document.body.innerHTML = window.newsResponseData[i].rawData;
+            //frames.modal_frame2.document.body.innerHTML = window.newsResponseData[i].rawData;
             $('#myModal').show();
+
+            var temp = `<div style="border: 1px solid #888;">
+                                            <p style="text-align: center; line-height: 1.5;"><br />` + window.newsResponseData[i].rawData + `</p>
+                                        </div>`;
         }
 
 
@@ -1401,27 +1409,26 @@
         }
 
         function setDisplay() {
-            itemChangeFold();
-            d3.selectAll('.visSVG').remove();
+            // itemChangeFold();
 
             if ($('input:radio[id=news_radio]').is(':checked')) {
                 document.getElementById('main_title').innerText = '뉴스 조회';
-                createEmptyDatatableNews();
+                // createEmptyDatatableNews();
                 $('#contents_section_news').show();
                 $('#contents_section_report').hide();
                 $('#date_picker_div_News').hide();
-                $('#example_news').DataTable();
+                // $('#example_news').DataTable();
                 $('.visualize').show();
                 $('#option_set_report').hide();
                 $('#option_set_news').show();
 
             } else {
                 document.getElementById('main_title').innerText = '행내 보고서 조회';
-                createEmptyDatatableReport();
+                // createEmptyDatatableReport();
                 $('#contents_section_report').show();
                 $('#contents_section_news').hide();
                 $('#date_picker_div_Report').hide();
-                $('#example_report').DataTable();
+                // $('#example_report').DataTable();
                 $('.visualize').hide();
                 $('#option_set_news').hide();
                 $('#option_set_report').show();
@@ -2004,7 +2011,7 @@
             document.getElementById('main_title').innerText = '뉴스 조회';
 
             if (selectItem == "company") {
-                createEmptyDatatableNews();
+                // createEmptyDatatableNews();
                 $('#chartDiv').show();
                 $('#result_area_subsidiary').hide();
                 $('#result_area_industry').hide();
@@ -2045,7 +2052,7 @@
                 $('#chartDiv').hide();
             }
             else if (selectItem == "keyword") {
-                createEmptyDatatableNews();
+                // createEmptyDatatableNews();
                 $('#chartDiv').show();
                 $('#result_area_subsidiary').hide();
                 $('#result_area_industry').hide();
@@ -2755,13 +2762,14 @@
         //close if click outside
         $(document).mouseup(function (e) {
             var chartEnlargedContainer = $('.layer_dimmed .layer_box');
-            var articlePreviewContainer = $('.modal .modal-content')
+            var articleTitle = $('.modal .modal-title');
+            var articleContent = $('.modal .modal-content');
             if (!chartEnlargedContainer.is(e.target) && chartEnlargedContainer.has(e.target).length === 0) {
                 $('.layer_dimmed').removeClass('is_active');
                 $('.enlargedChartSettings').css("display", "none");
                 /*  $('.stockLine').attr('clip-path', 'url(#stockClip)'); */
             }
-            if (!articlePreviewContainer.is(e.target) && articlePreviewContainer.has(e.target).length === 0) {
+            if (!articleContent.is(e.target) && !articleTitle.is(e.target) && articleContent.has(e.target).length === 0 && articleTitle.has(e.target).length === 0) {
                 close_pop();
             }
         });
