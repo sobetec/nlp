@@ -47,12 +47,17 @@
             font-size: 11px;
         }
 
-     
+        #example_news {
+            text-align: center;
+            font-size: 11px;
+        }
 
-    
+        #example_report {
+            text-align: center;
+            font-size: 11px;
+        }
 
         /*news and report part*/
-        
         #example_report,
         #example_news,
         #example,
@@ -517,7 +522,7 @@
         #myBtn {
             display: none;
             position: fixed;
-            bottom: 72px;
+            bottom: 70px;
             right: 30px;
             z-index: 99;
             font-size: 18px;
@@ -2179,7 +2184,7 @@
     
         if (((document.getElementById("scroll_button").scrollHeight - $(window).height()) >= document.getElementById("scroll_button").scrollTop) && (document.getElementById("scroll_button").scrollTop > 20)) {
         mybutton.style.display = "block";
-        mybutton.style.bottom = "72px";
+        mybutton.style.bottom = "70px";
         mybutton2.style.display = "block";
         } else if (document.getElementById("scroll_button").scrollTop > (document.getElementById("scroll_button").scrollHeight - $(window).height())){
             mybutton.style.display = "block";
@@ -2187,13 +2192,13 @@
         mybutton2.style.display = "none";
         } else {
         mybutton.style.display = "none";
-        mybutton.style.bottom = "72px";
+        mybutton.style.bottom = "70px";
         mybutton2.style.display = "none";
         }
         
         if (document.getElementById("scroll_button").scrollTop == 0){
             mybutton.style.display = "none";
-            mybutton.style.bottom = "72px";
+            mybutton.style.bottom = "70px";
             mybutton2.style.display = "none";
         }
         

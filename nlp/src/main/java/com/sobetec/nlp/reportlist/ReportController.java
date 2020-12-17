@@ -6,6 +6,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLConnection;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -32,11 +34,18 @@ public class ReportController {
 
 	protected Log logger = LogFactory.getLog(ReportController.class);
 	private static final String EXTERNAL_FILE_PATH = "C:/Users/sdb/Documents/doc_down_test/";
-
-	@Autowired
-	private ReportRepositoryImpl repository;
+	private final Path filePathpdf;
+	private final Path filePathhwp;
+	
 	@Resource(name = "reportService")
 	private ReportService reportService;
+	
+	
+	@Autowired
+	public ReportController(ReportFileProperties filePathpdf, ReportFileProperties filePathhwp) {
+		this.filePathpdf = Paths.get(filePathpdf.getFilePathpdf()).toAbsolutePath().normalize();
+		this.filePathhwp = Paths.get(filePathhwp.getFilePathhwp()).toAbsolutePath().normalize();
+	}
 
 	/**
 	 * 목록조회 Sample
@@ -65,8 +74,24 @@ public class ReportController {
 	
 	@RequestMapping("/file/{fileName:.+}")
 	public void downloadReport(HttpServletRequest request, HttpServletResponse response, @PathVariable("fileName") String fileName) throws IOException {
+		
+		/*
 		File file = new File(EXTERNAL_FILE_PATH + fileName);
-//		System.out.println(fileName);
+		System.out.println(fileName);
+		*/
+		
+		System.out.println(filePathpdf);
+		System.out.println(filePathhwp);
+		File file;
+		
+		if (fileName.substring(fileName.length()-3, fileName.length()).equals("hwp")) {
+			file = new File(filePathpdf + "/" + fileName);
+		}
+		else{
+			file = new File(filePathhwp + "/" + fileName);
+		}
+		
+		
 		if (file.exists()) {
 
 			//get the mimetype

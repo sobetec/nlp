@@ -27,8 +27,8 @@ function makeGauge(divID, sentimentScore) {
             .attr("height", "100%");
 
         if (divID == "enlargedChart") {
-            var divHeight = 602;
-            var divWidth = 1500;
+            var divHeight = 550;
+            var divWidth = 1250;
         }
         else {
             var divHeight = gauge.offsetHeight;
@@ -221,8 +221,8 @@ function makeSentimentTimeGraph(data, divID) {
     var graphDiv = document.getElementById(divID);
 
     if (divID == "enlargedChart") {
-        var divHeight = 602;
-        var divWidth = 1500;
+        var divHeight = 550;
+        var divWidth = 1250;
         document.getElementById(divID).innerHTML = "";
     }
     else {
@@ -495,8 +495,8 @@ function makeSentimentBoxPlot(sentimentData, divID) {
     }
     var graphDiv = document.getElementById(divID);
     if (divID == "enlargedChart") {
-        var divHeight = 602;
-        var divWidth = 1500;
+        var divHeight = 550;
+        var divWidth = 1250;
         document.getElementById(divID).innerHTML = "";
     }
     else {
@@ -859,8 +859,8 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
         var keywordBarContents = ``;
         document.getElementById(divID).innerHTML = keywordBarContents;
         if (divID == "enlargedChart") {
-            var divHeight = 602;
-            var divWidth = 1500;
+            var divHeight = 550;
+            var divWidth = 1250;
             document.getElementById(divID).innerHTML = "";
         }
         else {
@@ -1052,8 +1052,8 @@ function makeArticleCounts(data, divID) {
     var graphDiv = document.getElementById(divID);
 
     if (divID == "enlargedChart") {
-        var divHeight = 602;
-        var divWidth = 1500;
+        var divHeight = 550;
+        var divWidth = 1250;
         document.getElementById(divID).innerHTML = "";
     }
     else {
@@ -1129,8 +1129,8 @@ function makeArticleCounts(data, divID) {
             .attr('class', function () { if (divID == 'enlargedChart') { return 'largeSVG' } else { return 'visSVG' } })
             .attr('id', 'stockClipEnlarged')
             .append('svg:rect')
-            .attr('width', 1500 - 2 * xPadding)
-            .attr('height', 602)
+            .attr('width', 1250 - 2 * xPadding)
+            .attr('height', 550)
             .attr('x', xPadding)
             .attr('y', 0);
 
@@ -1289,8 +1289,8 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
 
 
         if (divID == "enlargedChart") {
-            var divHeight = 602;
-            var divWidth = 1500;
+            var divHeight = 550;
+            var divWidth = 1250;
             document.getElementById(divID).innerHTML = "";
         }
         else {
@@ -1361,10 +1361,9 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
 
 
         var zoomBeh = d3.zoom()
-            .scaleExtent([0, 100])
-            //.translateExtent([[xPadding, yPadding],[xPadding + INNER_WIDTH, yPadding]])
-            /* .translateExtent(extent)
-            .extent(extent) */
+            .extent([[xPadding, yPadding], [xPadding + INNER_WIDTH, yPadding + INNER_HEIGHT]])
+            .scaleExtent([1, 500])
+            .translateExtent([[xPadding, yPadding], [xPadding + INNER_WIDTH, yPadding + INNER_HEIGHT]])
             .on("zoom", zoom);
 
         var svg = d3.select("#" + divID).append("svg")
@@ -1601,32 +1600,24 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
         }
 
         function zoom() {
-            //console.log('zooming')
+            xScale.range([xPadding, xPadding + INNER_WIDTH].map(d => d3.event.transform.applyX(d)))
 
-            xScale.range([xPadding, divWidth - xPadding].map((d, i) => {
-                if (i == 0) {
-                    if (d3.event.transform.applyX(d) > xPadding) {
-                        return xPadding
-                    }
-                    else {
-                        console.log(d - d3.event.transform.applyX(d))
-                        return d3.event.transform.applyX(d);
-                    }
-                }
-                else if (i == 1) {
-                    if (d3.event.transform.applyX(d) < (divWidth - xPadding)) {
-                        return divWidth - xPadding
-                    }
-                    else {
-                        return d3.event.transform.applyX(d)
-                    }
-                }
-                else {
-                }
-            }));
-            /* xScale.rangeRound([xPadding, divWidth - xPadding].map((d) => d3.event.transform.applyX(d))); */
+            var inScope = xScale.domain().filter(function(d) {
+                return xScale(d) > xPadding && xScale(d) < (INNER_WIDTH - xPadding)
+            })
+            console.log(inScope)
 
-            gX.call(xAxis.scale(xScale))
+            gX.call(xAxis.scale(xScale)
+                .tickValues(xScale.domain().filter(function (d, i) {
+                    if (gubun == 'quarter') {
+                        return !((i + Math.floor(articleCounts.length / 6)) % (Math.floor(articleCounts.length / 3)))
+                    }
+                    else if (gubun == 'year')
+                        return !((i + Math.floor(articleCounts.length / 12)) % (Math.floor(articleCounts.length / 6)))
+                    else {
+                        return !((i + Math.floor(articleCounts.length / 16)) % (Math.floor(articleCounts.length / 8)))
+                    }
+                })))
 
             console.log(this);
 
@@ -1690,6 +1681,7 @@ function makeStockGraph(data, divID) {
     console.log(data)
     var company = document.getElementById('stockRange').value;
     console.log(company);
+    console.log(data.length);
 
     stockData = [];
     for (var i = 0; i < data[company].length; i++) {
@@ -1712,8 +1704,8 @@ function makeStockGraph(data, divID) {
 
 
     if (divID == 'enlargedChart') {
-        var divHeight = 602;
-        var divWidth = 1500;
+        var divHeight = 550;
+        var divWidth = 1250;
     }
     else {
         var divHeight = graphDiv.offsetHeight;
@@ -1753,14 +1745,12 @@ function makeStockGraph(data, divID) {
     var xAxis = d3.axisBottom()
         .scale(xScale)
         .tickSizeOuter(0);
-    var xAxisGrid = d3.axisBottom(xScale)
-        .tickSize(-INNER_HEIGHT)
-        .tickFormat('')
-        .tickSizeOuter(0);
 
 
     var zoomBeh = d3.zoom()
-        .scaleExtent([0, 500])
+        .extent([[xPadding, yPadding], [xPadding + INNER_WIDTH, yPadding + INNER_HEIGHT]])
+        .scaleExtent([1, 500])
+        .translateExtent([[xPadding, yPadding], [xPadding + INNER_WIDTH, yPadding + INNER_HEIGHT]])
         .on("zoom", zoom);
 
     var svg = d3.select("#" + divID).append("svg")
@@ -1785,36 +1775,46 @@ function makeStockGraph(data, divID) {
         .attr("transform", "translate(" + xPadding + ",0)")
         .call(yAxisGrid);
 
-    var gX = svg.append('g')
-        .attr('class', 'xAxis')
-        .attr('id', 'stockXAxis')
-        .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
-        .call(xAxis);
+
     /* var gXGrid = svg.append('g')
         .attr('class', 'x axis-grid')
         .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
         .call(xAxisGrid); */
 
 
+    if (divID == 'enlargedChart') {
+        var clip = svg.append("defs").append("svg:clipPath")
+            .attr('class', function () { if (divID == 'enlargedChart') { return 'largeSVG' } else { return 'visSVG' } })
+            .attr('id', 'stockClipEnlarged')
+            .append('svg:rect')
+            .attr('width', 1250 - 2 * xPadding)
+            .attr('height', divHeight)
+            .attr('x', xPadding)
+            .attr('y', 0);
 
+        var gX = svg.append('g')
+            .attr('class', 'xAxis')
+            .attr('clip-path', 'url(#stockClipEnlarged)')
+            .attr('id', 'stockXAxis')
+            .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
+            .call(xAxis);
+    }
+    else {
+        var clip = svg.append("defs").append("svg:clipPath")
+            .attr('id', 'stockClip')
+            .append('svg:rect')
+            .attr('width', INNER_WIDTH)
+            .attr('height', divHeight)
+            .attr('x', xPadding)
+            .attr('y', 0);
 
-    var clip = svg.append("defs").append("svg:clipPath")
-        .attr('id', 'stockClip')
-        .append('svg:rect')
-        .attr('width', INNER_WIDTH)
-        .attr('height', INNER_HEIGHT)
-        .attr('x', xPadding)
-        .attr('y', yPadding);
-
-    var clip = svg.append("defs").append("svg:clipPath")
-        .attr('class', function () { if (divID == 'enlargedChart') { return 'largeSVG' } else { return 'visSVG' } })
-        .attr('id', 'stockClipEnlarged')
-        .append('svg:rect')
-        .attr('width', 1500 - 2 * xPadding)
-        .attr('height', 602 - 2 * yPadding)
-        .attr('x', xPadding)
-        .attr('y', yPadding);
-
+        var gX = svg.append('g')
+            .attr('class', 'xAxis')
+            .attr('clip-path', 'url(#stockClip)')
+            .attr('id', 'stockXAxis')
+            .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
+            .call(xAxis);
+    }
 
     var lines = svg.append('g')
         .attr('class', 'linechartarea')
@@ -1880,7 +1880,8 @@ function makeStockGraph(data, divID) {
 
     function zoom() {
         console.log('zooming')
-        xScale.range([xPadding, divWidth - xPadding].map((d, i) => {
+        new_xScale = d3.event.transform.rescaleX(xScale)
+        /* xScale.range([xPadding, divWidth - xPadding].map((d, i) => {
             if (i == 0) {
                 if (d3.event.transform.applyX(d) > xPadding) {
                     return xPadding
@@ -1900,17 +1901,17 @@ function makeStockGraph(data, divID) {
             }
             else {
             }
-        }));
+        })); */
 
-        gX.call(xAxis.scale(xScale))
+        gX.call(xAxis.scale(new_xScale))
         /*  gXGrid.call(xAxisGrid.scale(xScale)) */
 
         lines.data(stockData)
-            .attr('x1', function (d) { return xScale(d.time) })
+            .attr('x1', function (d) { return new_xScale(d.time) })
             .attr('y1', function (d) { return yScale(d.stock) })
             .attr('x2', function (d, i) {
-                if (i == 0) { return xScale(d.time) }
-                return xScale(stockData[i - 1].time);
+                if (i == 0) { return new_xScale(d.time) }
+                return new_xScale(stockData[i - 1].time);
             })
             .attr('y2', function (d, i) {
                 if (i == 0) { return yScale(d.stock) }
@@ -1918,7 +1919,258 @@ function makeStockGraph(data, divID) {
             })
         points.data(stockData)
             .attr('fill', 'red')
-            .attr("cx", function (d) { return xScale(d.time) })
+            .attr("cx", function (d) { return new_xScale(d.time) })
+            .attr("cy", function (d) { return yScale(d.stock) })
+    }
+
+    if (divID == 'enlargedChart') {
+        window.SVG = svg;
+    }
+
+}
+
+function makeStockBarGraph(data, divID) {
+    console.log(data)
+    var company = document.getElementById('stockRange').value;
+    console.log(company);
+
+    stockData = [];
+    for (var i = 0; i < data[company].length; i++) {
+        /* //console.log(data[i].date)
+        //console.log(data[i].price) */
+        stockData.push({ time: dateParser(data[company][i].date), stock: parseFloat(data[company][i].price) });
+    }
+    //console.log(stockData)
+    var timeVector = [];
+    var stockVector = [];
+    for (var i = 0; i < stockData.length; i++) {
+        timeVector.push(stockData[i].time);
+        stockVector.push(stockData[i].stock);
+    }
+
+    var xPadding = 50;
+    var yPadding = 25;
+    var graphDiv = document.getElementById(divID);
+    graphDiv.innerHTML = '';
+
+
+    if (divID == 'enlargedChart') {
+        var divHeight = 550;
+        var divWidth = 1250;
+    }
+    else {
+        var divHeight = graphDiv.offsetHeight;
+        var divWidth = graphDiv.offsetWidth;
+    }
+
+    var INNER_HEIGHT = divHeight - 2 * yPadding;
+    var INNER_WIDTH = divWidth - 2 * xPadding;
+
+    var xMax = d3.max(stockData, function (d) { return d['time']; }) * 1.05,
+        xMin = d3.min(stockData, function (d) { return d['time']; }),
+        xMin = xMin > 0 ? 0 : xMin,
+        yMax = d3.max(stockData, function (d) { return d['stock']; }) * 1.05,
+        yMin = d3.min(stockData, function (d) { return d['stock']; }),
+        yMin = yMin > 0 ? 0 : yMin;
+
+    var yScale = d3.scaleLinear()
+        /* .domain([d3.min(stockVector) - 100, d3.max(stockVector) + 100]) */
+        .domain([0, d3.max(stockVector) + 100])
+        .range([divHeight - yPadding, yPadding])
+    var yAxis = d3.axisLeft()
+        .scale(yScale)
+        .tickSizeOuter(0);
+    var yAxisGrid = d3.axisLeft(yScale)
+        .tickSize(-INNER_WIDTH)
+        .tickFormat('')
+        .tickSizeOuter(0);
+
+
+
+    /* var xScale = d3.scaleLinear()
+        .domain([d3.min(timeVector) - 1, d3.max(timeVector) + 1])
+        .range([xPadding, divWidth - xPadding]); */
+    var xScale = d3.scaleTime()
+        .domain([d3.min(timeVector), d3.max(timeVector)])
+        .range([xPadding, divWidth - xPadding]);
+    var xAxis = d3.axisBottom()
+        .scale(xScale)
+        .tickSizeOuter(0);
+
+
+    var zoomBeh = d3.zoom()
+        .extent([[xPadding, yPadding], [xPadding + INNER_WIDTH, yPadding + INNER_HEIGHT]])
+        .scaleExtent([1, 500])
+        .translateExtent([[xPadding, yPadding], [xPadding + INNER_WIDTH, yPadding + INNER_HEIGHT]])
+        .on("zoom", zoom);
+
+    var svg = d3.select("#" + divID).append("svg")
+        .attr('class', function () { if (divID == 'enlargedChart') { return 'largeSVG' } else { return 'visSVG' } })
+        .attr("width", "100%")
+        .attr("height", "100%")
+        .attr('pointer-events', 'all')
+
+
+    if (divID == 'enlargedChart') {
+        svg.call(zoomBeh);
+    }
+
+
+    var gY = svg.append('g')
+        .attr('class', 'yAxis')
+        .attr('id', 'stocksYAxis')
+        .attr("transform", "translate(" + xPadding + ",0)")
+        .call(yAxis);
+    var gYGrid = svg.append('g')
+        .attr('class', 'y axis-grid')
+        .attr("transform", "translate(" + xPadding + ",0)")
+        .call(yAxisGrid);
+
+
+    /* var gXGrid = svg.append('g')
+        .attr('class', 'x axis-grid')
+        .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
+        .call(xAxisGrid); */
+
+
+    if (divID == 'enlargedChart') {
+        var clip = svg.append("defs").append("svg:clipPath")
+            .attr('class', function () { if (divID == 'enlargedChart') { return 'largeSVG' } else { return 'visSVG' } })
+            .attr('id', 'stockClipEnlarged')
+            .append('svg:rect')
+            .attr('width', 1250 - 2 * xPadding)
+            .attr('height', divHeight)
+            .attr('x', xPadding)
+            .attr('y', 0);
+
+        var gX = svg.append('g')
+            .attr('class', 'xAxis')
+            .attr('clip-path', 'url(#stockClipEnlarged)')
+            .attr('id', 'stockXAxis')
+            .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
+            .call(xAxis);
+    }
+    else {
+        var clip = svg.append("defs").append("svg:clipPath")
+            .attr('id', 'stockClip')
+            .append('svg:rect')
+            .attr('width', INNER_WIDTH)
+            .attr('height', divHeight)
+            .attr('x', xPadding)
+            .attr('y', 0);
+
+        var gX = svg.append('g')
+            .attr('class', 'xAxis')
+            .attr('clip-path', 'url(#stockClip)')
+            .attr('id', 'stockXAxis')
+            .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
+            .call(xAxis);
+    }
+
+    var bars = svg.append('g')
+        .attr('class', 'barchartarea')
+        .attr('clip-path', function () {
+            if (divID == 'enlargedChart') {
+                return 'url(#stockClipEnlarged)';
+            }
+            else {
+                return 'url(#stockClip)';
+            }
+        })
+        .selectAll(".stockBar")
+        .data(stockData)
+        .enter().append('rect')
+        .attr("class", "stockLine")
+        .attr('x', function (d) { return xScale(d.time) })
+        .attr('y', function (d) { return yScale(d.stock) })
+        .attr('width', function (d, i) {
+            if (i == 0) {
+                return xScale(d.time)
+            }
+            return xScale(d.time) - xScale(stockData[i - 1].time);
+        })
+        .attr('y2', function (d, i) {
+            if (i == 0) { return yScale(d.stock) }
+            return yScale(stockData[i - 1].stock);
+        })
+        .attr('stroke', '#368dff')
+        .attr('stroke-width', 2);
+
+
+    var points = svg.selectAll(".stockPoint")
+        .data(stockData)
+        .enter().append("circle")
+        .attr("class", function (d) {
+            if (divID == 'enlargedChart') {
+                return "stockPointEnlarged";
+            }
+            else {
+                return "stockPoint";
+            }
+        })
+        .style('fill-opacity', '0')
+        .attr("r", 5)
+        .attr('fill', 'red')
+        .attr("cx", function (d) { return xScale(d.time) })
+        .attr("cy", function (d) { return yScale(d.stock) })
+        .on("mouseover", onMouseOver)
+        .on("mousemove", onMouseMove)
+        .on("mouseout", onMouseOut);
+
+    svg.append('text')
+        .attr('transform', 'translate(' + (divWidth / 2) + ',' + (3 * yPadding / 4) + ")")
+        .attr('alignment-baseline', 'middle')
+        .attr('text-anchor', 'middle')
+        .text('주가지수 추이');
+
+    var leftWidth = document.getElementById('stocksYAxis').getBoundingClientRect().width;
+    svg.attr('transform', 'translate(' + (leftWidth / 4) + ',0)');
+
+
+
+
+    function zoom() {
+        console.log('zooming')
+        new_xScale = d3.event.transform.rescaleX(xScale)
+        /* xScale.range([xPadding, divWidth - xPadding].map((d, i) => {
+            if (i == 0) {
+                if (d3.event.transform.applyX(d) > xPadding) {
+                    return xPadding
+                }
+                else {
+                    console.log(d - d3.event.transform.applyX(d))
+                    return d3.event.transform.applyX(d)
+                }
+            }
+            else if (i == 1) {
+                if (d3.event.transform.applyX(d) < (divWidth - xPadding)) {
+                    return divWidth - xPadding
+                }
+                else {
+                    return d3.event.transform.applyX(d)
+                }
+            }
+            else {
+            }
+        })); */
+
+        gX.call(xAxis.scale(new_xScale))
+        /*  gXGrid.call(xAxisGrid.scale(xScale)) */
+
+        lines.data(stockData)
+            .attr('x1', function (d) { return new_xScale(d.time) })
+            .attr('y1', function (d) { return yScale(d.stock) })
+            .attr('x2', function (d, i) {
+                if (i == 0) { return new_xScale(d.time) }
+                return new_xScale(stockData[i - 1].time);
+            })
+            .attr('y2', function (d, i) {
+                if (i == 0) { return yScale(d.stock) }
+                return yScale(stockData[i - 1].stock);
+            })
+        points.data(stockData)
+            .attr('fill', 'red')
+            .attr("cx", function (d) { return new_xScale(d.time) })
             .attr("cy", function (d) { return yScale(d.stock) })
     }
 
@@ -1971,8 +2223,8 @@ function makePieChart(data, divID, nCutofftoShow, nCutoff) {
         .attr("height", "100%");
 
     if (divID == "enlargedChart") {
-        var divHeight = 602;
-        var divWidth = 1500;
+        var divHeight = 550;
+        var divWidth = 1250;
     }
     else {
         var divHeight = pieChart.offsetHeight;
@@ -2296,8 +2548,8 @@ async function getMaxWords(words, sizeMax, divID) {
     var xPadding = 20;
     var yPadding = 20;
     if (divID == "enlargedChart") {
-        var divHeight = 602;
-        var divWidth = 1500;
+        var divHeight = 550;
+        var divWidth = 1250;
     }
     else {
         var divHeight = graphDiv.offsetHeight;
@@ -2347,8 +2599,8 @@ function drawWordcloud(words, divID) {
 
 
     if (divID == "enlargedChart") {
-        var divHeight = 602;
-        var divWidth = 1500;
+        var divHeight = 550;
+        var divWidth = 1250;
         document.getElementById(divID).innerHTML = "";
     }
     else {
@@ -2504,8 +2756,8 @@ function drawWordcloud2(words, divID) {
 
 
     if (divID == "enlargedChart") {
-        var divHeight = 602;
-        var divWidth = 1500;
+        var divHeight = 550;
+        var divWidth = 1250;
         document.getElementById(divID).innerHTML = "";
     }
     else {
