@@ -606,6 +606,7 @@
             $('#condition').hide();
             $('#condition_report').hide();
             $('#resetContentButton').hide();
+            document.getElementById("articleCountRange").disabled = true;
             document.getElementById("scroll_button").onscroll = function () { scrollFunction() };
         });
 
@@ -827,6 +828,10 @@
 
                 var hiddenData = escapeHtml(window.newsResponseData[i].rawData);
 
+                if (window.newsResponseData[i].cmpyName == null){
+                    window.newsResponseData[i].cmpyName = '';
+                }
+
                 var htmlContents =
                     `
                     <tr>
@@ -1043,6 +1048,7 @@
                     if (datassss.rowCount == 0) {
                         alert('뉴스기사가 없습니다');
                         datassss.pageCount = 0;
+                        $('#myModal').hide();
 
                     } else {
                         alert('총 ' + datassss.rowCount + ' 건의 뉴스 기사가 검색됨');

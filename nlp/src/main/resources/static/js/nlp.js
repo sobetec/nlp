@@ -1681,6 +1681,7 @@ function makeStockGraph(data, divID) {
     console.log(data)
     var company = document.getElementById('stockRange').value;
     console.log(company);
+    console.log(data.length);
 
     stockData = [];
     for (var i = 0; i < data[company].length; i++) {
