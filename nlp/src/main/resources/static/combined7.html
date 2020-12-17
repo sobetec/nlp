@@ -828,6 +828,10 @@
 
                 var hiddenData = escapeHtml(window.newsResponseData[i].rawData);
 
+                if (window.newsResponseData[i].cmpyName == null){
+                    window.newsResponseData[i].cmpyName = '';
+                }
+
                 var htmlContents =
                     `
                     <tr>
