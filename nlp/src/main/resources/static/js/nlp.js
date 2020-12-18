@@ -197,14 +197,17 @@ function makeGauge(divID, sentimentScore) {
         if (divID == 'enlargedChart') {
             window.SVG = gaugeSVG;
         }
+        $('#maximizeGaugeSpan').show();
+        $('#resetDiv').hide();
     }
     else {
         var keywordBarContents = `
                                     <div style="text-align:center; font-size:35px; margin-top:70px;">
-                                        뉴스 정보 없음
+                                        뉴스 정보 없음 <img src="/img/not-found.png" height="70" width="70"/>
                                     </div>
                                  `;
         document.getElementById(divID).innerHTML = keywordBarContents;
+        $('#maximizeGaugeSpan').hide();
     }
 
 }
@@ -1002,14 +1005,17 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
         if (divID == 'enlargedChart') {
             window.SVG = svg;
         }
+        $('#maximizeKeywordBarSpan').show();
+        $('#resetDiv').hide();
     }
     else {
         var keywordBarContents = `
                                     <div style="text-align:center; font-size:35px; margin-top:70px;">
-                                        뉴스 정보 없음
+                                        뉴스 정보 없음 <img src="/img/not-found.png" height="70" width="70"/>
                                     </div>
                                  `;
         document.getElementById(divID).innerHTML = keywordBarContents;
+        $('#maximizeKeywordBarSpan').hide();
     }
 
 
@@ -1670,14 +1676,17 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
         if (divID == 'enlargedChart') {
             window.SVG = svg;
         }
+        $('#maximizeCombinedSpan').show();
+        $('#resetDiv').show();
     }
     else {
         var keywordBarContents = `
                                     <div style="text-align:center; font-size:35px; margin-top:70px;">
-                                        뉴스 정보 없음
+                                        뉴스 정보 없음 <img src="/img/not-found.png" height="70" width="70"/>
                                     </div>
                                  `;
         document.getElementById(divID).innerHTML = keywordBarContents;
+        $('#maximizeCombinedSpan').hide();
     }
 }
 
@@ -3364,14 +3373,17 @@ function getChartQuery(queryInput, queryType) {
                     makeStockBarGraph(allStockData, 'stockTime');
                 })
                 makeStockBarGraph(allStockData, 'stockTime');
+                $('#maximizeStockSpan').show();
+                $('#resetDiv').show();
             }
             else {
                 var stockContents = `
                                         <div style="text-align:center; font-size:40px; margin-top:60px;">
-                                            주가 정보 없음
+                                            주가 정보 없음 <img src="/img/not-found.png" height="70" width="70"/>
                                         </div>
                                     `;
                 document.getElementById('stockTime').innerHTML = stockContents;
+                $('#maximizeStockSpan').hide();
             }
             $('#chartModal').hide();
             window.scrollTo(0, 0);
