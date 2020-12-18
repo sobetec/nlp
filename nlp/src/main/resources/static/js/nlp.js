@@ -526,6 +526,7 @@ function makeSentimentBoxPlot(sentimentData, divID) {
         .padding(0.05);
     var xAxis = d3.axisBottom()
         .scale(xScale)
+        .tickSizeOuter(0)
         .tickValues(xScale.domain().filter(function (d, i) { return !(i % (Math.floor(sentimentData.length / 8))) }))
         /* .tickSize(0)
         .tickValues([]) */
@@ -1088,6 +1089,7 @@ function makeArticleCounts(data, divID) {
         /* .tickSize(0)
         .tickValues([]) */
         .ticks(5)
+        .tickSizeOuter(0)
         .tickPadding(5)
         .tickFormat(d3.timeFormat("%d/%b"))
 
@@ -1336,6 +1338,7 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
                     return !((i + Math.floor(articleCounts.length / 8)) % (Math.floor(articleCounts.length / 4)))
                 }))
                 .ticks(5)
+                .tickSizeOuter(0)
                 .tickPadding(5)
                 .tickFormat(d3.timeFormat("%Y년%b%d일"))
         }
@@ -1353,6 +1356,7 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
                     }
                 }))
                 .ticks(5)
+                .tickSizeOuter(0)
                 .tickPadding(5)
                 .tickFormat(d3.timeFormat("%Y년%b"))
         }
@@ -2011,6 +2015,7 @@ function makeStockBarGraph(data, divID) {
             }))
             .ticks(5)
             .tickPadding(5)
+            .tickSizeOuter(0)
             .tickFormat(d3.timeFormat("%Y년%b%d일"))
     }
     else {
@@ -2028,6 +2033,7 @@ function makeStockBarGraph(data, divID) {
             }))
             .ticks(5)
             .tickPadding(5)
+            .tickSizeOuter(0)
             .tickFormat(d3.timeFormat("%Y년%b"))
     }
 
