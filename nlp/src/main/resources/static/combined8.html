@@ -109,7 +109,7 @@
             margin: 6% auto;
             /* 15% from the top and centered */
             min-height: 30px;
-            background-color: #2266a5;
+            background-color: #cfd0ec;
             text-align: center;
             vertical-align: middle;
             position: relative;
@@ -141,7 +141,7 @@
             display: block;
             width: 24px;
             height: 24px;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23484D55'%3E%3Cg%3E%3Cpath d='M19.97 3.09l.85.849-8.062 8.06 8.061 8.062-.848.849-8.062-8.062-8.06 8.062L3 20.06l8.061-8.062L3 3.94l.849-.849 8.06 8.061 8.062-8.06z' transform='translate(-1612 -4656) translate(1612 4656)'/%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23fefefe'%3E%3Cg%3E%3Cpath d='M19.97 3.09l.85.849-8.062 8.06 8.061 8.062-.848.849-8.062-8.062-8.06 8.062L3 20.06l8.061-8.062L3 3.94l.849-.849 8.06 8.061 8.062-8.06z' transform='translate(-1612 -4656) translate(1612 4656)'/%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
         }   
 
         .iframecss {
@@ -263,7 +263,7 @@
         .carousel::after {
             content: '';
             z-index: 1;
-            /* background-color: rgb(141, 29, 29); */
+            /* background-color: #cfd0ec; */
             background-size: 1rem 1rem;
             background-repeat: no-repeat;
             background-position: center center;
@@ -659,7 +659,7 @@
                     ` + sectionHtml + `
                     <p style="text-align: center; vertical-align: middle;">
                         <b>
-                            <span style="font-size: 13pt; color:white; vertical-align: middle;">` + window.newsResponseData[i].newsTtl + `</span>
+                            <span style="font-size: 13pt; color:black; vertical-align: middle;">` + window.newsResponseData[i].newsTtl + `</span>
                                 <button class="btn_close" onClick="close_pop();"><span class="blind">닫기</span></button>
                             </span>
                             
@@ -2248,8 +2248,11 @@
             <div class="layer_box" id='entirePopupBox'>
                 <div class="layer_body">
                     <div class="chart_detail">
-                        <div>
-                            <button type="button" id='resetChart'>Reset</button></div>
+                        <div id="resetDiv">
+                            <p style="text-align: left;">
+                                <button style="position:relative; left:0; top:-10px;" type="button" class="btn point" id='resetChart'>Reset</button>
+                            </p>
+                        </div>
                         <div id='wordCloudSettings' class='enlargedChartSettings' style='display:none'>
                             <span>패딩 선택: </span>
                             <span id='paddingValue'></span>
@@ -2512,7 +2515,7 @@
 
                                                         <option class='hiddenoption' value='all' selected>전체</option>
                                                     </select>
-                                                    <span  style="float: right;"><i class="maximize" id="maximizeGauge"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></i></span>
+                                                    <span  style="float: right;" id="maximizeGaugeSpan"><i class="maximize" id="maximizeGauge"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></i></span>
                                                 </div>
                                                 <div class="chart_area" style=" height: 16vw;">
                                                     <div class="chart" id="dangerGauge">
@@ -2576,7 +2579,7 @@
                                                         <option value='5'>5년</option>
                                                         <option value='all' selected>전체</option>
                                                     </select>
-                                                    <span  style="float: right;"><i class="maximize" id="maximizeCombined"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></i></span>
+                                                    <span  style="float: right;" id="maximizeCombinedSpan"><i class="maximize" id="maximizeCombined"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></i></span>
                                                 </div>
                                                 <div class="chart_area" style=" height: 16vw;">
                                                     <div class="chart" id='articleCounts'>
@@ -2608,7 +2611,7 @@
 
                                                     <select size="1" id='stockRangeee' class='select'>
                                                     </select>
-                                                    <span  style="float: right;"><i class="maximize" id="maximizeKeywordBar"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></i></span>
+                                                    <span  style="float: right;" id="maximizeKeywordBarSpan"><i class="maximize" id="maximizeKeywordBar"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></i></span>
                                                 </div>
                                                 <div class="card_content">
                                                     <div class="chart_area" style=" height: 15.5vw;">
@@ -2631,7 +2634,7 @@
                                                     <span>주가&nbsp;</span>
                                                     <select size="1" id='stockRange' class='select'>
                                                     </select>
-                                                    <span  style="float: right;"><i class="maximize" id="maximizeStock"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></i></span>
+                                                    <span  style="float: right;" id="maximizeStockSpan"><i class="maximize" id="maximizeStock"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></i></span>
                                                 </div>
                                                 <div class="chart_area" style=" height: 15.5vw;">
                                                     <div class="chart" id="stockTime">
