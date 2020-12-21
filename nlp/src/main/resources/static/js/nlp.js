@@ -1005,7 +1005,7 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
     else {
         var keywordBarContents = `
                                     <div style="text-align:center;">
-                                        <img src="/img/no_keyword2.png" style="max-width:100%; max-height:80%"/>
+                                        <img src="/img/no_keyword4.png" style="max-width:100%; max-height:80%"/>
                                     </div>
                                  `;
         document.getElementById(divID).innerHTML = keywordBarContents;
