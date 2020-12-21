@@ -935,14 +935,25 @@
                     rred = `<td style='color:black'>` + sscoreWord + `</td>`;
                 }
 
+                console.log(window.reportResponseData[i].orgnFileName);
                 var downImg = '';
                 var paramFileName = window.reportResponseData[i].orgnFileName;
 
+                paramFileName = paramFileName.replace(/\%/g, "%25");
                 paramFileName = paramFileName.replace(/&/g, "%26");
+                paramFileName = paramFileName.replace(/'/g, "%27");
                 paramFileName = paramFileName.replace(/\+/g, "%2B");
                 paramFileName = paramFileName.replace(/=/g, "%3D");
                 paramFileName = paramFileName.replace(/\[/g, "%5B");
                 paramFileName = paramFileName.replace(/\]/g, "%5D");
+                paramFileName = paramFileName.replace(/\,/g, "%2C");
+                paramFileName = paramFileName.replace(/\$/g, "%24");
+                paramFileName = paramFileName.replace(/\//g, "%2F");
+                paramFileName = paramFileName.replace(/·/g, "%B7");
+                paramFileName = paramFileName.replace(/\‘/g, "%E2%80%98");
+                paramFileName = paramFileName.replace(/\’/g, "%E2%80%99");
+                
+                console.log(paramFileName);
 
                 if (window.reportResponseData[i].docCaty == 'pdf') {
                     downImg = `
