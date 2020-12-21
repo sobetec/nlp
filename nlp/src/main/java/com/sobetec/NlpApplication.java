@@ -44,7 +44,7 @@ public class NlpApplication {
 			try (BufferedReader br = new BufferedReader(new FileReader(file))) {
 	    		String line = null;
 	    	    while ((line = br.readLine()) != null) {
-	    	       // System.out.println("im encryptorBean " + line);
+	    	       // System.out.println("im encr yptorBean " + line);
 	    	        passss = line;
 	    	    }
 	    	} catch (IOException e) {
