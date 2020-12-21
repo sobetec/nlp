@@ -33,19 +33,25 @@ public class NlpApplication {
 	@Bean("encryptorBean")
     public StandardPBEStringEncryptor stringEncryptor() {
     	StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
+    	
+    	
+    	
+    	
     	File file = new File("/home/alex/nlp_encrypt_test/temp.txt");
-    	
-    	
+    	    	
     	String passss = null;
-    	try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-    		String line = null;
-    	    while ((line = br.readLine()) != null) {
-    	       // System.out.println("im encryptorBean " + line);
-    	        passss = line;
-    	    }
-    	} catch (IOException e) {
-    	    e.printStackTrace();
-    	} 
+    	if(file.exists()) {
+			try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+	    		String line = null;
+	    	    while ((line = br.readLine()) != null) {
+	    	       // System.out.println("im encryptorBean " + line);
+	    	        passss = line;
+	    	    }
+	    	} catch (IOException e) {
+	    	    e.printStackTrace();
+	    	    
+	    	}
+    	}
     	
     	//file.delete();
     	
