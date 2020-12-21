@@ -2759,7 +2759,7 @@
             makeGauge('dangerGauge', window.newsChartData.averageScore)
             makeCombinedGraph(window.newsChartData.sentimentDates, window.newsChartData.allNews, 'articleCounts');
             makeKeywordBarPlot(window.newsChartData.keywords, 'keywordBar', document.getElementById('keywordBarSlider').value)
-            makeStockGraph(window.newsChartData.allStockData, 'stockTime');
+            makeStockBarGraph(window.newsChartData.allStockData, 'stockTime');
             console.log('resized')
         });
         $('.stockPoint').on("scroll", function (e) {

@@ -155,15 +155,15 @@ function makeGauge(divID, sentimentScore) {
             .outerRadius(divHeight / 3 / 0.6377118)
             .startAngle(startAngle * (Math.PI / 180))  //180 degree = ㅍ radian , 1 degree = ㅍ / 180 radian
             .endAngle(endAngle * (Math.PI / 180));
-        g.append("path")
-            .attr("d", arc)
-            .attr('id', arcID)
-            .attr('class', 'shadowArc')
-            //.style('filter', 'url(#drop-shadow)')
-            .attr("transform", "translate(" + divWidth / 2 + ',' + 3 * divHeight / 5 + ")")
-            .attr("fill", color)
-            .on('click', function () {
-                if (divID == 'enlargedChart') {
+        if (divID == 'enlargedChart') {
+            g.append("path")
+                .attr("d", arc)
+                .attr('id', arcID)
+                .attr('class', 'shadowArc')
+                .style('filter', 'url(#drop-shadow)')
+                .attr("transform", "translate(" + divWidth / 2 + ',' + 3 * divHeight / 5 + ")")
+                .attr("fill", color)
+                .on('click', function () {
                     d3.select('#gaugeNeedleEnlarged')
                         .transition()
                         .ease(d3.easeLinear)
@@ -173,9 +173,17 @@ function makeGauge(divID, sentimentScore) {
                         .ease(d3.easeElastic)
                         .duration(5000)
                         .attr("transform", "rotate(" + rotation + ")")
-
-                }
-                else {
+                })
+        }
+        else {
+            g.append("path")
+                .attr("d", arc)
+                .attr('id', arcID)
+                .attr('class', 'shadowArc')
+                //.style('filter', 'url(#drop-shadow)')
+                .attr("transform", "translate(" + divWidth / 2 + ',' + 3 * divHeight / 5 + ")")
+                .attr("fill", color)
+                .on('click', function () {
                     d3.select('#gaugeNeedle')
                         .transition()
                         .ease(d3.easeLinear)
@@ -185,10 +193,9 @@ function makeGauge(divID, sentimentScore) {
                         .ease(d3.easeElastic)
                         .duration(5000)
                         .attr("transform", "rotate(" + rotation + ")")
+                })
+        }
 
-                }
-
-            })
     }
 
     function appendArcLabel(g, divWidth, divHeight, x, dy, arclabel, label) {
@@ -1011,7 +1018,7 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
     else {
         dataSlice = [];
         for (var i = 0; i < 10; i++) {
-            dataSlice.push({keyword: '', tf_idf: 0})
+            dataSlice.push({ keyword: '', tf_idf: 0 })
         }
         console.log(dataSlice)
         var yScale = d3.scaleBand()
@@ -2143,13 +2150,7 @@ function makeStockBarGraph(data, divID) {
         .attr("transform", "translate(" + xPadding + ",0)")
         .call(yAxisGrid);
 
-    /* MAKE LEGEND */
-    var legend = svg.append('g')
-        .attr('transform', 'translate(' + divWidth / 2 + ',0)')
-        .attr('width', '50%')
-        .attr('height', '100%')
-        .style('fill', 'black')
-    console.log(legend)
+
 
 
 
@@ -2374,6 +2375,43 @@ function makeStockBarGraph(data, divID) {
         .attr('alignment-baseline', 'middle')
         .attr('text-anchor', 'middle')
         .text('주가지수 추이');
+    /* MAKE LEGEND */
+    var legend = svg.append('g')
+        .attr('transform', 'translate(' + divWidth / 2 + ',0)')
+        .attr('width', (divWidth / 2) + 'px')
+        .attr('height', '30px');
+
+    var legend1Offset = divWidth / 3.8;
+    legend.append('circle')
+        .attr('transform', 'translate(0,' + yPadding / 3 + ')')
+        .attr('r', yPadding / 4)
+        .attr('cx', legend1Offset)
+        .attr('cy', yPadding / 3)
+        .attr('width', '100px')
+        .style('fill', '#990000')
+    legend.append('text')
+        .attr('transform', 'translate(' + (legend1Offset + yPadding / 2.5) + ',' + (3 * yPadding / 4) + ")")
+        .attr('alignment-baseline', 'middle')
+        .attr('text-anchor', 'left')
+        .style('font-size', '12px')
+        .text('일주 이동평균');
+
+    var legend2Offset = divWidth / 2.7
+    legend.append('circle')
+        .attr('transform', 'translate(0,' + yPadding / 3 + ')')
+        .attr('r', yPadding / 4)
+        .attr('cx', legend2Offset)
+        .attr('cy', yPadding / 3)
+        .attr('width', '100px')
+        .style('fill', '#664be8')
+    legend.append('text')
+        .attr('transform', 'translate(' + (legend2Offset + yPadding / 2.5) + ',' + (3 * yPadding / 4) + ")")
+        .attr('alignment-baseline', 'middle')
+        .attr('text-anchor', 'left')
+        .style('font-size', '12px')
+        .text('한달 이동평균');
+
+    console.log(legend)
 
     var leftWidth = document.getElementById('stocksYAxis').getBoundingClientRect().width;
     //svg.attr('transform', 'translate(' + (leftWidth / 4) + ',0)');
