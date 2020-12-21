@@ -1,214 +1,208 @@
 function makeGauge(divID, sentimentScore) {
-    if (!isNaN(sentimentScore)) {
-        var sFactor = 7.1;
-        function sobescore(x) {
-            return 100 / (1 + Math.exp(-(x - 50) / sFactor));
-        }
-        var sFactor2 = 4;
-        function sobescore2(x) {
-            return 50 * ((x - 50) / (sFactor2 + Math.abs(x - 50))) + 50
-        }
-        function sobeDangerScore(x) {
-            return 50 * ((50 - x) / (sFactor2 + Math.abs(50 - x))) + 50
-        }
-        console.log(sentimentScore)
-        var sentimentScore = sobeDangerScore(sentimentScore);
-        var rotation = sentimentScore / 100 * 240 - 30;
+    if (isNaN(sentimentScore)) {
+        sentimentScore = 100;
+    }
+    var sFactor = 7.1;
+    function sobescore(x) {
+        return 100 / (1 + Math.exp(-(x - 50) / sFactor));
+    }
+    var sFactor2 = 4;
+    function sobescore2(x) {
+        return 50 * ((x - 50) / (sFactor2 + Math.abs(x - 50))) + 50
+    }
+    function sobeDangerScore(x) {
+        return 50 * ((50 - x) / (sFactor2 + Math.abs(50 - x))) + 50
+    }
+    console.log(sentimentScore)
+    var sentimentScore = sobeDangerScore(sentimentScore);
+    var rotation = sentimentScore / 100 * 240 - 30;
 
-        var gauge = document.getElementById(divID);
-        var divHeight = gauge.scrollHeight;
-        var divWidth = gauge.scrollWidth;
-        gauge.innerHTML = "";
+    var gauge = document.getElementById(divID);
+    var divHeight = gauge.scrollHeight;
+    var divWidth = gauge.scrollWidth;
+    gauge.innerHTML = "";
 
 
-        gaugeSVG = d3.select("#" + divID).append("svg")
-            .attr('class', function () { if (divID == 'enlargedChart') { return 'largeSVG' } else { return 'visSVG' } })
-            .attr("width", "100%")
-            .attr("height", "100%");
+    gaugeSVG = d3.select("#" + divID).append("svg")
+        .attr('class', function () { if (divID == 'enlargedChart') { return 'largeSVG' } else { return 'visSVG' } })
+        .attr("width", "100%")
+        .attr("height", "100%");
 
-        if (divID == "enlargedChart") {
-            var divHeight = 550;
-            var divWidth = 1250;
-        }
-        else {
-            var divHeight = gauge.offsetHeight;
-            var divWidth = gauge.offsetWidth;
-        }
-        var defs = gaugeSVG.append("defs");
-        var filter = defs.append('filter')
-            .attr('id', 'drop-shadow')
-            .attr('height', '130%')
+    if (divID == "enlargedChart") {
+        var divHeight = 550;
+        var divWidth = 1250;
+    }
+    else {
+        var divHeight = gauge.offsetHeight;
+        var divWidth = gauge.offsetWidth;
+    }
+    var defs = gaugeSVG.append("defs");
+    var filter = defs.append('filter')
+        .attr('id', 'drop-shadow')
+        .attr('height', '130%')
 
-        filter.append("feGaussianBlur")
-            .attr("in", "SourceAlpha")
-            .attr("stdDeviation", 1)
-            .attr("result", "blur");
-        filter.append("feOffset")
-            .attr("in", "blur")
-            .attr("dx", 0.0083056478 * divHeight)
-            .attr("dy", 0.0083056478 * divHeight)
-            .attr("result", "offsetBlur");
+    filter.append("feGaussianBlur")
+        .attr("in", "SourceAlpha")
+        .attr("stdDeviation", 1)
+        .attr("result", "blur");
+    filter.append("feOffset")
+        .attr("in", "blur")
+        .attr("dx", 0.0083056478 * divHeight)
+        .attr("dy", 0.0083056478 * divHeight)
+        .attr("result", "offsetBlur");
 
-        var feMerge = filter.append('feMerge')
+    var feMerge = filter.append('feMerge')
 
-        feMerge.append("feMergeNode")
-            .attr("in", "offsetBlur")
-        feMerge.append("feMergeNode")
-            .attr("in", "SourceGraphic");
+    feMerge.append("feMergeNode")
+        .attr("in", "offsetBlur")
+    feMerge.append("feMergeNode")
+        .attr("in", "SourceGraphic");
 
-        appendArc(gaugeSVG, divWidth, divHeight, 288, 336, "#f3ff90", 'low' + divID);
-        appendArc(gaugeSVG, divWidth, divHeight, 240, 288, "#b7ff90", 'veryLow' + divID);
-        appendArc(gaugeSVG, divWidth, divHeight, 336, 384, "#ffea90", 'medium' + divID);
-        appendArc(gaugeSVG, divWidth, divHeight, 24, 72, "#ffc990", 'high' + divID);
-        appendArc(gaugeSVG, divWidth, divHeight, 72, 120, "#ff9090", 'veryHigh' + divID);
+    appendArc(gaugeSVG, divWidth, divHeight, 288, 336, "#f3ff90", 'low' + divID);
+    appendArc(gaugeSVG, divWidth, divHeight, 240, 288, "#b7ff90", 'veryLow' + divID);
+    appendArc(gaugeSVG, divWidth, divHeight, 336, 384, "#ffea90", 'medium' + divID);
+    appendArc(gaugeSVG, divWidth, divHeight, 24, 72, "#ffc990", 'high' + divID);
+    appendArc(gaugeSVG, divWidth, divHeight, 72, 120, "#ff9090", 'veryHigh' + divID);
 
-        appendArcLabel(gaugeSVG, divWidth, divHeight, 0.077 * divHeight, 0.11 * divHeight, '#veryLow' + divID, 'VERY LOW')
-        appendArcLabel(gaugeSVG, divWidth, divHeight, 0.125 * divHeight, 0.11 * divHeight, '#low' + divID, 'LOW')
-        appendArcLabel(gaugeSVG, divWidth, divHeight, 0.1 * divHeight, 0.11 * divHeight, '#medium' + divID, 'MEDIUM')
-        appendArcLabel(gaugeSVG, divWidth, divHeight, 0.16 * divHeight, 0.11 * divHeight, '#high' + divID, 'HIGH')
-        appendArcLabel(gaugeSVG, divWidth, divHeight, 0.065 * divHeight, 0.11 * divHeight, '#veryHigh' + divID, 'VERY HIGH')
+    appendArcLabel(gaugeSVG, divWidth, divHeight, 0.077 * divHeight, 0.11 * divHeight, '#veryLow' + divID, 'VERY LOW')
+    appendArcLabel(gaugeSVG, divWidth, divHeight, 0.125 * divHeight, 0.11 * divHeight, '#low' + divID, 'LOW')
+    appendArcLabel(gaugeSVG, divWidth, divHeight, 0.1 * divHeight, 0.11 * divHeight, '#medium' + divID, 'MEDIUM')
+    appendArcLabel(gaugeSVG, divWidth, divHeight, 0.16 * divHeight, 0.11 * divHeight, '#high' + divID, 'HIGH')
+    appendArcLabel(gaugeSVG, divWidth, divHeight, 0.065 * divHeight, 0.11 * divHeight, '#veryHigh' + divID, 'VERY HIGH')
 
-        gaugeSVG.append('g')
-            .attr('transform', 'translate(' + divWidth / 2 + ',' + 3 * divHeight / 5 + ")")
+    gaugeSVG.append('g')
+        .attr('transform', 'translate(' + divWidth / 2 + ',' + 3 * divHeight / 5 + ")")
+        .append("polygon")
+        .attr('id', function () {
+            if (divID == 'enlargedChart') {
+                return 'gaugeNeedleEnlarged';
+            }
+            else {
+                return 'gaugeNeedle'
+            }
+        })
+        .attr('stroke-width', 3)
+        .attr('fill', '#820812')
+        .attr('class', 'needle')
+        .attr('points', "0,0 -" + "0," + 0.02 * divHeight +
+            " " + -divHeight / 2.6 + ",0 " + "0," + -divHeight * 0.02)
+        .transition()
+        .ease(d3.easeLinear)
+        .duration(200)
+        .attr("transform", "rotate(180)")
+        .transition()
+        .ease(d3.easeElastic)
+        .duration(5000)
+        .attr("transform", "rotate(" + rotation + ")")
+
+
+    /* gaugeSVG.append('g')
+            .attr('transform', 'translate(' + divWidth / 2 + ',' + 3*divHeight / 5 + ")")
             .append("polygon")
-            .attr('id', function () {
-                if (divID == 'enlargedChart') {
-                    return 'gaugeNeedleEnlarged';
-                }
-                else {
-                    return 'gaugeNeedle'
-                }
-            })
-            .attr('stroke-width', 3)
-            .attr('fill', '#820812')
             .attr('class', 'needle')
-            .attr('points', "0,0 -" + "0," + 0.02 * divHeight +
-                " " + -divHeight / 2.6 + ",0 " + "0," + -divHeight * 0.02)
-            .transition()
-            .ease(d3.easeLinear)
-            .duration(200)
-            .attr("transform", "rotate(180)")
+            .attr('points', "0,0 -" + 0.04 * divHeight + "," + 0.02 * divHeight +
+                " " + -divWidth / 4 + ",0 " + -divHeight * 0.04 + "," + -divHeight * 0.02)
             .transition()
             .ease(d3.easeElastic)
             .duration(5000)
-            .attr("transform", "rotate(" + rotation + ")")
+            .attr("transform", "rotate(180)"); */
 
 
-        /* gaugeSVG.append('g')
-                .attr('transform', 'translate(' + divWidth / 2 + ',' + 3*divHeight / 5 + ")")
-                .append("polygon")
-                .attr('class', 'needle')
-                .attr('points', "0,0 -" + 0.04 * divHeight + "," + 0.02 * divHeight +
-                    " " + -divWidth / 4 + ",0 " + -divHeight * 0.04 + "," + -divHeight * 0.02)
-                .transition()
-                .ease(d3.easeElastic)
-                .duration(5000)
-                .attr("transform", "rotate(180)"); */
+    gaugeSVG.append('g')
+        .attr('transform', 'translate(' + divWidth / 2 + ',' + divHeight / 1.2 + ")")
+        .append('text')
+        .text('ƒ(s): ' + String(sentimentScore.toFixed(1)))
+        .attr('id', 'sentimentIndicator')
+        .style('alignment-baseline', 'middle')
+        .style('font-style', 'italic')
+        .style('font-weight', 'bold')
+        .style('text-anchor', 'middle')
+        .style('font-size', 0.08 * divHeight);
 
 
-        gaugeSVG.append('g')
-            .attr('transform', 'translate(' + divWidth / 2 + ',' + divHeight / 1.2 + ")")
-            .append('text')
-            .text('ƒ(s): ' + String(sentimentScore.toFixed(1)))
-            .attr('id', 'sentimentIndicator')
-            .style('alignment-baseline', 'middle')
-            .style('font-style', 'italic')
-            .style('font-weight', 'bold')
-            .style('text-anchor', 'middle')
-            .style('font-size', 0.08 * divHeight);
+    var textHeight = document.getElementById('sentimentIndicator').getBoundingClientRect().height
+    var textWidth = document.getElementById('sentimentIndicator').getBoundingClientRect().width
+    gaugeSVG.append("circle")
+        .style("fill", "black")
+        .attr("r", 0.02 * divHeight)
+        .attr("cx", divWidth / 2)
+        .attr("cy", 3 * divHeight / 5);
 
+    /* gaugeSVG.append('g')
+        .append('rect')
+        .attr('class', 'gauge-box')
+        .attr('x', divWidth / 2 - textWidth / 2 - 5)
+        .attr('y', divHeight / 1.2 - textHeight / 2 - 5)
+        .attr('height', textHeight + 10)
+        .attr('width',  textWidth + 10)
+        .attr('fill', 'none')
+        .attr('stroke', 'black')
+        .attr('stroke-width', '0.1px')
+        .attr('box-shadow', '5px 10px 5px black inset') */
 
-        var textHeight = document.getElementById('sentimentIndicator').getBoundingClientRect().height
-        var textWidth = document.getElementById('sentimentIndicator').getBoundingClientRect().width
-        gaugeSVG.append("circle")
-            .style("fill", "black")
-            .attr("r", 0.02 * divHeight)
-            .attr("cx", divWidth / 2)
-            .attr("cy", 3 * divHeight / 5);
+    document.getElementById('')
 
-        /* gaugeSVG.append('g')
-            .append('rect')
-            .attr('class', 'gauge-box')
-            .attr('x', divWidth / 2 - textWidth / 2 - 5)
-            .attr('y', divHeight / 1.2 - textHeight / 2 - 5)
-            .attr('height', textHeight + 10)
-            .attr('width',  textWidth + 10)
-            .attr('fill', 'none')
-            .attr('stroke', 'black')
-            .attr('stroke-width', '0.1px')
-            .attr('box-shadow', '5px 10px 5px black inset') */
+    function appendArc(g, divWidth, divHeight, startAngle, endAngle, color, arcID) {
+        var arc = d3.arc()
+            .innerRadius(divHeight / 5 / 0.6377118)
+            .outerRadius(divHeight / 3 / 0.6377118)
+            .startAngle(startAngle * (Math.PI / 180))  //180 degree = ㅍ radian , 1 degree = ㅍ / 180 radian
+            .endAngle(endAngle * (Math.PI / 180));
+        g.append("path")
+            .attr("d", arc)
+            .attr('id', arcID)
+            .attr('class', 'shadowArc')
+            //.style('filter', 'url(#drop-shadow)')
+            .attr("transform", "translate(" + divWidth / 2 + ',' + 3 * divHeight / 5 + ")")
+            .attr("fill", color)
+            .on('click', function () {
+                if (divID == 'enlargedChart') {
+                    d3.select('#gaugeNeedleEnlarged')
+                        .transition()
+                        .ease(d3.easeLinear)
+                        .duration(200)
+                        .attr("transform", "rotate(150)")
+                        .transition()
+                        .ease(d3.easeElastic)
+                        .duration(5000)
+                        .attr("transform", "rotate(" + rotation + ")")
 
-        document.getElementById('')
+                }
+                else {
+                    d3.select('#gaugeNeedle')
+                        .transition()
+                        .ease(d3.easeLinear)
+                        .duration(200)
+                        .attr("transform", "rotate(150)")
+                        .transition()
+                        .ease(d3.easeElastic)
+                        .duration(5000)
+                        .attr("transform", "rotate(" + rotation + ")")
 
-        function appendArc(g, divWidth, divHeight, startAngle, endAngle, color, arcID) {
-            var arc = d3.arc()
-                .innerRadius(divHeight / 5 / 0.6377118)
-                .outerRadius(divHeight / 3 / 0.6377118)
-                .startAngle(startAngle * (Math.PI / 180))  //180 degree = ㅍ radian , 1 degree = ㅍ / 180 radian
-                .endAngle(endAngle * (Math.PI / 180));
-            g.append("path")
-                .attr("d", arc)
-                .attr('id', arcID)
-                .attr('class', 'shadowArc')
-                //.style('filter', 'url(#drop-shadow)')
-                .attr("transform", "translate(" + divWidth / 2 + ',' + 3 * divHeight / 5 + ")")
-                .attr("fill", color)
-                .on('click', function () {
-                    if (divID == 'enlargedChart') {
-                        d3.select('#gaugeNeedleEnlarged')
-                            .transition()
-                            .ease(d3.easeLinear)
-                            .duration(200)
-                            .attr("transform", "rotate(150)")
-                            .transition()
-                            .ease(d3.easeElastic)
-                            .duration(5000)
-                            .attr("transform", "rotate(" + rotation + ")")
+                }
 
-                    }
-                    else {
-                        d3.select('#gaugeNeedle')
-                            .transition()
-                            .ease(d3.easeLinear)
-                            .duration(200)
-                            .attr("transform", "rotate(150)")
-                            .transition()
-                            .ease(d3.easeElastic)
-                            .duration(5000)
-                            .attr("transform", "rotate(" + rotation + ")")
-
-                    }
-
-                })
-        }
-
-        function appendArcLabel(g, divWidth, divHeight, x, dy, arclabel, label) {
-            g.append("text")
-                .attr('x', x)
-                .attr('dy', dy)
-                .attr("class", "arcLabel")
-                .append("textPath")
-                .attr("xlink:href", arclabel)
-                .style("font-size", 0.05474 * divHeight)
-                .style("font-color", 'black')
-                .text(label);
-        }
-
-        if (divID == 'enlargedChart') {
-            window.SVG = gaugeSVG;
-        }
-        $('#maximizeGaugeSpan').show();
-        $('#resetDiv').hide();
+            })
     }
-    else {
-        var keywordBarContents = `
-                                    <div style="text-align:center; font-size:35px; margin-top:70px;">
-                                        뉴스 정보 없음 <img src="/img/not-found.png" height="70" width="70"/>
-                                    </div>
-                                 `;
-        document.getElementById(divID).innerHTML = keywordBarContents;
-        $('#maximizeGaugeSpan').hide();
+
+    function appendArcLabel(g, divWidth, divHeight, x, dy, arclabel, label) {
+        g.append("text")
+            .attr('x', x)
+            .attr('dy', dy)
+            .attr("class", "arcLabel")
+            .append("textPath")
+            .attr("xlink:href", arclabel)
+            .style("font-size", 0.05474 * divHeight)
+            .style("font-color", 'black')
+            .text(label);
     }
+
+    if (divID == 'enlargedChart') {
+        window.SVG = gaugeSVG;
+    }
+    $('#maximizeGaugeSpan').show();
+    $('#resetDiv').hide();
+    
+
 
 }
 
@@ -1010,8 +1004,8 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
     }
     else {
         var keywordBarContents = `
-                                    <div style="text-align:center; font-size:35px; margin-top:70px;">
-                                        뉴스 정보 없음 <img src="/img/not-found.png" height="70" width="70"/>
+                                    <div style="text-align:center;">
+                                        <img src="/img/not-found.png" style="max-width:100%; max-height:80%"/>
                                     </div>
                                  `;
         document.getElementById(divID).innerHTML = keywordBarContents;
@@ -1681,8 +1675,8 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
     }
     else {
         var keywordBarContents = `
-                                    <div style="text-align:center; font-size:35px; margin-top:70px;">
-                                        뉴스 정보 없음 <img src="/img/not-found.png" height="70" width="70"/>
+                                    <div style="text-align:center;">
+                                        <img src="/img/no_gisa4.png" style="max-width:100%; max-height:80%"/>
                                     </div>
                                  `;
         document.getElementById(divID).innerHTML = keywordBarContents;
@@ -3541,8 +3535,8 @@ function getChartQuery(queryInput, queryType) {
             }
             else {
                 var stockContents = `
-                                        <div style="text-align:center; font-size:40px; margin-top:60px;">
-                                            주가 정보 없음 <img src="/img/not-found.png" height="70" width="70"/>
+                                        <div style="text-align:center;">
+                                            <img src="/img/no_gisa4.png" style="max-width:100%; max-height:80%"/>
                                         </div>
                                     `;
                 document.getElementById('stockTime').innerHTML = stockContents;
