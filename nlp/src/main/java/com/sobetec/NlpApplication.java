@@ -40,7 +40,7 @@ public class NlpApplication {
     	try (BufferedReader br = new BufferedReader(new FileReader(file))) {
     		String line = null;
     	    while ((line = br.readLine()) != null) {
-    	        System.out.println("im encryptorBean " + line);
+    	       // System.out.println("im encryptorBean " + line);
     	        passss = line;
     	    }
     	} catch (IOException e) {
@@ -51,7 +51,7 @@ public class NlpApplication {
     	
     	
     	
-    	System.out.println("im encryptorBean " + passss);
+    	//System.out.println("im encryptorBean " + passss);
         //encryptor.setPassword(passss);
     	encryptor.setPassword("sobehub");
         encryptor.setAlgorithm("PBEWithMD5AndDES");
