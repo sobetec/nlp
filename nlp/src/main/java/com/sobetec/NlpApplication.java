@@ -18,6 +18,40 @@ public class NlpApplication {
 		SpringApplication.run(NlpApplication.class, args);
 	}
 	
+	@Bean("encryptorBean")
+    public StandardPBEStringEncryptor stringEncryptor() {
+    	StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
+    	
+    	
+    	
+    	
+    	File file = new File("/home/alex/nlp_encrypt_test/temp.txt");
+    	    	
+    	String passss = null;
+    	if(file.exists()) {
+			try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+	    		String line = null;
+	    	    while ((line = br.readLine()) != null) {
+	    	       // System.out.println("im encryptorBean " + line);
+	    	        passss = line;
+	    	    }
+	    	} catch (IOException e) {
+	    	    e.printStackTrace();
+	    	    
+	    	}
+    	}
+    	
+    	//file.delete();
+    	
+    	
+    	
+    	//System.out.println("im encryptorBean " + passss);
+        //encryptor.setPassword(passss);
+    	encryptor.setPassword("sobehub");
+        encryptor.setAlgorithm("PBEWithMD5AndDES");
+        return encryptor;
+    }
+	
 	@Bean
 	public WebMvcConfigurer webMvcConfigurer() {
 	    return new WebMvcConfigurer() {
