@@ -1,6 +1,6 @@
 function makeGauge(divID, sentimentScore) {
     if (isNaN(sentimentScore)) {
-        sentimentScore = 100;
+        sentimentScore = 101;
     }
     var sFactor = 7.1;
     function sobescore(x) {
@@ -11,7 +11,7 @@ function makeGauge(divID, sentimentScore) {
         return 50 * ((x - 50) / (sFactor2 + Math.abs(x - 50))) + 50
     }
     function sobeDangerScore(x) {
-        return 50 * ((50 - x) / (sFactor2 + Math.abs(50 - x))) + 50
+        return (50 + sFactor2) * ((50 - x) / (sFactor2 + Math.abs(50 - x))) + 50
     }
     console.log(sentimentScore)
     var sentimentScore = sobeDangerScore(sentimentScore);
@@ -89,7 +89,7 @@ function makeGauge(divID, sentimentScore) {
         .transition()
         .ease(d3.easeLinear)
         .duration(200)
-        .attr("transform", "rotate(180)")
+        .attr("transform", "rotate(149)")
         .transition()
         .ease(d3.easeElastic)
         .duration(5000)
@@ -111,7 +111,14 @@ function makeGauge(divID, sentimentScore) {
     gaugeSVG.append('g')
         .attr('transform', 'translate(' + divWidth / 2 + ',' + divHeight / 1.2 + ")")
         .append('text')
-        .text('ƒ(s): ' + String(sentimentScore.toFixed(1)))
+        .text(function (d) {
+            if (sentimentScore < 0) {
+                return 'NO RESULT'
+            }
+            else {
+                return 'ƒ(s): ' + String(sentimentScore.toFixed(1))
+            }
+        })
         .attr('id', 'sentimentIndicator')
         .style('alignment-baseline', 'middle')
         .style('font-style', 'italic')
@@ -148,15 +155,15 @@ function makeGauge(divID, sentimentScore) {
             .outerRadius(divHeight / 3 / 0.6377118)
             .startAngle(startAngle * (Math.PI / 180))  //180 degree = ㅍ radian , 1 degree = ㅍ / 180 radian
             .endAngle(endAngle * (Math.PI / 180));
-        g.append("path")
-            .attr("d", arc)
-            .attr('id', arcID)
-            .attr('class', 'shadowArc')
-            //.style('filter', 'url(#drop-shadow)')
-            .attr("transform", "translate(" + divWidth / 2 + ',' + 3 * divHeight / 5 + ")")
-            .attr("fill", color)
-            .on('click', function () {
-                if (divID == 'enlargedChart') {
+        if (divID == 'enlargedChart') {
+            g.append("path")
+                .attr("d", arc)
+                .attr('id', arcID)
+                .attr('class', 'shadowArc')
+                .style('filter', 'url(#drop-shadow)')
+                .attr("transform", "translate(" + divWidth / 2 + ',' + 3 * divHeight / 5 + ")")
+                .attr("fill", color)
+                .on('click', function () {
                     d3.select('#gaugeNeedleEnlarged')
                         .transition()
                         .ease(d3.easeLinear)
@@ -166,9 +173,17 @@ function makeGauge(divID, sentimentScore) {
                         .ease(d3.easeElastic)
                         .duration(5000)
                         .attr("transform", "rotate(" + rotation + ")")
-
-                }
-                else {
+                })
+        }
+        else {
+            g.append("path")
+                .attr("d", arc)
+                .attr('id', arcID)
+                .attr('class', 'shadowArc')
+                //.style('filter', 'url(#drop-shadow)')
+                .attr("transform", "translate(" + divWidth / 2 + ',' + 3 * divHeight / 5 + ")")
+                .attr("fill", color)
+                .on('click', function () {
                     d3.select('#gaugeNeedle')
                         .transition()
                         .ease(d3.easeLinear)
@@ -178,10 +193,9 @@ function makeGauge(divID, sentimentScore) {
                         .ease(d3.easeElastic)
                         .duration(5000)
                         .attr("transform", "rotate(" + rotation + ")")
+                })
+        }
 
-                }
-
-            })
     }
 
     function appendArcLabel(g, divWidth, divHeight, x, dy, arclabel, label) {
@@ -201,7 +215,7 @@ function makeGauge(divID, sentimentScore) {
     }
     $('#maximizeGaugeSpan').show();
     $('#resetDiv').hide();
-    
+
 
 
 }
@@ -845,30 +859,29 @@ function makeSentimentBoxPlot(sentimentData, divID) {
 function makeKeywordBarPlot(data, divID, nCutoff) {
     var colorVec = ['#83afd5', '#fbbe81', '#80c89c', '#be7cbf']
     var graphDiv = document.getElementById(divID);
-    data.sort(function (a, b) { return b.tf_idf - a.tf_idf });
-    dataSlice = data.slice(0, nCutoff)
-    dataSlice.sort(function (a, b) { return a.tf_idf - b.tf_idf });
 
-    console.log(data);
-    console.log(divID);
-    console.log(nCutoff);
+    if (divID == "enlargedChart") {
+        var divHeight = 550;
+        var divWidth = 1250;
+        document.getElementById(divID).innerHTML = "";
+    }
+    else {
+        var divHeight = graphDiv.clientHeight;
+        var divWidth = graphDiv.clientWidth;
+    }
+    var xPadding = 0.164 * divWidth;
+    var yPadding = 10;
+    var INNER_HEIGHT = divHeight - 2 * yPadding;
+    var INNER_WIDTH = divWidth - 2 * xPadding;
 
     if (data.length != 0) {
+        data.sort(function (a, b) { return b.tf_idf - a.tf_idf });
+        dataSlice = data.slice(0, nCutoff)
+        dataSlice.sort(function (a, b) { return a.tf_idf - b.tf_idf });
+
         var keywordBarContents = ``;
         document.getElementById(divID).innerHTML = keywordBarContents;
-        if (divID == "enlargedChart") {
-            var divHeight = 550;
-            var divWidth = 1250;
-            document.getElementById(divID).innerHTML = "";
-        }
-        else {
-            var divHeight = graphDiv.clientHeight;
-            var divWidth = graphDiv.clientWidth;
-        }
-        var xPadding = 0.164 * divWidth;
-        var yPadding = 10;
-        var INNER_HEIGHT = divHeight - 2 * yPadding;
-        var INNER_WIDTH = divWidth - 2 * xPadding;
+
 
         var yScale = d3.scaleBand()
             .domain(dataSlice.map(function (d) { return d.keyword }))
@@ -1003,13 +1016,55 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
         $('#resetDiv').hide();
     }
     else {
-        var keywordBarContents = `
-                                    <div style="text-align:center;">
-                                        <img src="/img/no_keyword4.png" style="max-width:100%; max-height:80%"/>
-                                    </div>
-                                 `;
-        document.getElementById(divID).innerHTML = keywordBarContents;
-        $('#maximizeKeywordBarSpan').hide();
+        dataSlice = [];
+        for (var i = 0; i < 10; i++) {
+            dataSlice.push({ keyword: '', tf_idf: 0 })
+        }
+        console.log(dataSlice)
+        var yScale = d3.scaleBand()
+            .domain(dataSlice.map(function (d) { return d.keyword }))
+            .rangeRound([divHeight - yPadding, yPadding])
+            .paddingInner(0.1);
+        var yAxis = d3.axisLeft()
+            .tickSizeOuter(0)
+            .scale(yScale);
+
+
+        var xScale = d3.scaleLinear()
+            .domain([0, 1])
+            .range([xPadding, divWidth - xPadding])
+
+        var xAxisGrid = d3.axisBottom(xScale)
+            .tickSize(-INNER_HEIGHT)
+            .tickFormat('')
+            .tickSizeOuter(0);
+
+        var svg = d3.select("#" + divID).append("svg")
+            .attr('class', function () { if (divID == 'enlargedChart') { return 'largeSVG' } else { return 'visSVG' } })
+            .attr("width", "100%")
+            .attr("height", "100%");
+
+        var plot = svg.append('g')
+
+        plot.append('g')
+            .attr('class', 'x axis-grid')
+            .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
+            .call(xAxisGrid)
+            .call(g => g.select('.domain').remove());
+
+        plot.append('g')
+            .attr('id', 'keywordYAxis')
+            .attr("transform", "translate(" + xPadding + ",0)")
+            .style('font-size', function () {
+                if (nCutoff <= 20) {
+                    return divHeight * 0.038 + 'px'
+                }
+                else {
+                    return divHeight * 0.038 * 20 / nCutoff + 'px'
+                }
+            })
+            .call(yAxis);
+
     }
 
 
@@ -2097,6 +2152,8 @@ function makeStockBarGraph(data, divID) {
 
 
 
+
+
     /* var gXGrid = svg.append('g')
         .attr('class', 'x axis-grid')
         .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
@@ -2235,7 +2292,14 @@ function makeStockBarGraph(data, divID) {
             .data(fiveDay)
             .enter()
             .append('line')
-            .attr('class', 'fiveDayLine')
+            .attr("class", function (d) {
+                if (divID == 'enlargedChart') {
+                    return "fiveDayLineEnlarged";
+                }
+                else {
+                    return "fiveDayLine";
+                }
+            })
             .attr('x1', function (d) { return xScale(d.time) + (xScale.bandwidth() / 2); })
             .attr('y1', function (d) { return yScale(d.average); })
             .attr('x2', function (d, i) {
@@ -2253,7 +2317,10 @@ function makeStockBarGraph(data, divID) {
                 }
             })
             .attr('stroke', '#990000')
-            .attr('stroke-width', 1);
+            .attr('stroke-width', 1)
+            .on("mouseover", onMouseOver)
+            .on("mousemove", onMouseMove)
+            .on("mouseout", onMouseOut);
     }
 
     if (stockData.length > 20) {
@@ -2270,7 +2337,14 @@ function makeStockBarGraph(data, divID) {
             .data(twentyDay)
             .enter()
             .append('line')
-            .attr('class', 'twentyDayLine')
+            .attr("class", function (d) {
+                if (divID == 'enlargedChart') {
+                    return "twentyDayLineEnlarged";
+                }
+                else {
+                    return "twentyDayLine";
+                }
+            })
             .attr('x1', function (d) { return xScale(d.time) + (xScale.bandwidth() / 2); })
             .attr('y1', function (d) { return yScale(d.average); })
             .attr('x2', function (d, i) {
@@ -2288,7 +2362,10 @@ function makeStockBarGraph(data, divID) {
                 }
             })
             .attr('stroke', '#664be8')
-            .attr('stroke-width', 1);
+            .attr('stroke-width', 1)
+            .on("mouseover", onMouseOver)
+            .on("mousemove", onMouseMove)
+            .on("mouseout", onMouseOut);
     }
 
 
@@ -2298,6 +2375,43 @@ function makeStockBarGraph(data, divID) {
         .attr('alignment-baseline', 'middle')
         .attr('text-anchor', 'middle')
         .text('주가지수 추이');
+    /* MAKE LEGEND */
+    var legend = svg.append('g')
+        .attr('transform', 'translate(' + divWidth / 2 + ',0)')
+        .attr('width', (divWidth / 2) + 'px')
+        .attr('height', '30px');
+
+    var legend1Offset = divWidth / 3.8;
+    legend.append('circle')
+        .attr('transform', 'translate(0,' + yPadding / 3 + ')')
+        .attr('r', yPadding / 4)
+        .attr('cx', legend1Offset)
+        .attr('cy', yPadding / 3)
+        .attr('width', '100px')
+        .style('fill', '#990000')
+    legend.append('text')
+        .attr('transform', 'translate(' + (legend1Offset + yPadding / 2.5) + ',' + (3 * yPadding / 4) + ")")
+        .attr('alignment-baseline', 'middle')
+        .attr('text-anchor', 'left')
+        .style('font-size', '12px')
+        .text('일주 이동평균');
+
+    var legend2Offset = divWidth / 2.7
+    legend.append('circle')
+        .attr('transform', 'translate(0,' + yPadding / 3 + ')')
+        .attr('r', yPadding / 4)
+        .attr('cx', legend2Offset)
+        .attr('cy', yPadding / 3)
+        .attr('width', '100px')
+        .style('fill', '#664be8')
+    legend.append('text')
+        .attr('transform', 'translate(' + (legend2Offset + yPadding / 2.5) + ',' + (3 * yPadding / 4) + ")")
+        .attr('alignment-baseline', 'middle')
+        .attr('text-anchor', 'left')
+        .style('font-size', '12px')
+        .text('한달 이동평균');
+
+    console.log(legend)
 
     var leftWidth = document.getElementById('stocksYAxis').getBoundingClientRect().width;
     //svg.attr('transform', 'translate(' + (leftWidth / 4) + ',0)');
@@ -2528,7 +2642,7 @@ function onMouseOver(d, i) {
         d3.select(this).style('opacity', '100%');
         tooltip.style('visibility', 'visible');
         tooltip.html('날짜: ' + (date.getFullYear() + '년' + (date.getMonth() + 1)
-            + '월' + date.getDate() + '일') + '<br />주가: ' + d.stock)
+            + '월' + date.getDate() + '일') + '<br />주가: ' + d.stock1)
         tooltip.style('background-color', '#f0f0f0');
     }
     else if (elementClass == 'stockBarEnlarged') {
@@ -2536,8 +2650,25 @@ function onMouseOver(d, i) {
         d3.select(this).style('opacity', '100%');
         tooltipEnlarged.style('visibility', 'visible');
         tooltipEnlarged.html('날짜: ' + (date.getFullYear() + '년' + (date.getMonth() + 1)
-            + '월' + date.getDate() + '일') + '<br />주가: ' + d.stock)
+            + '월' + date.getDate() + '일') + '<br />주가: ' + d.stock1)
         tooltipEnlarged.style('background-color', '#f0f0f0');
+    }
+    else if (elementClass.includes('DayLine')) {
+        var date = new Date(d.time)
+        d3.select(this).style('opacity', '100%');
+        if (elementClass.includes('Enlarged')) {
+            tooltipEnlarged.style('visibility', 'visible');
+            tooltipEnlarged.html('날짜: ' + (date.getFullYear() + '년' + (date.getMonth() + 1)
+                + '월' + date.getDate() + '일') + '<br />평균: ' + d.average)
+            tooltipEnlarged.style('background-color', '#f0f0f0');
+        }
+        else {
+            tooltip.style('visibility', 'visible');
+            tooltip.html('날짜: ' + (date.getFullYear() + '년' + (date.getMonth() + 1)
+                + '월' + date.getDate() + '일') + '<br />평균: ' + d.average)
+            tooltip.style('background-color', '#f0f0f0');
+        }
+
     }
     else if (elementClass == 'posSentimentCircle' || elementClass == 'negSentimentCircle') {
         var date = new Date(d.time)
@@ -2668,6 +2799,16 @@ function onMouseOut(d, i) {
     else if (elementClass == 'stockBarEnlarged') {
         d3.select(this).style('opacity', '100%');
         tooltipEnlarged.style('visibility', 'hidden');
+    }
+    else if (elementClass.includes('DayLine')) {
+        d3.select(this).style('opacity', '100%');
+        if (elementClass.includes('Enlarged')) {
+            tooltipEnlarged.style('visibility', 'hidden');
+        }
+        else {
+            tooltip.style('visibility', 'hidden');
+        }
+
     }
     else if (elementClass == 'posSentimentCircle' || elementClass == 'negSentimentCircle') {
         d3.select(this).style('opacity', '100%');

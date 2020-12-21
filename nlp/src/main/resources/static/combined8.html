@@ -2759,7 +2759,7 @@
             makeGauge('dangerGauge', window.newsChartData.averageScore)
             makeCombinedGraph(window.newsChartData.sentimentDates, window.newsChartData.allNews, 'articleCounts');
             makeKeywordBarPlot(window.newsChartData.keywords, 'keywordBar', document.getElementById('keywordBarSlider').value)
-            makeStockGraph(window.newsChartData.allStockData, 'stockTime');
+            makeStockBarGraph(window.newsChartData.allStockData, 'stockTime');
             console.log('resized')
         });
         $('.stockPoint').on("scroll", function (e) {
@@ -2810,7 +2810,7 @@
         $('#downloadButton').on('click', function () {
             var svg = window.SVG
             var svgString = getSVGString(svg.node());
-            svgToImage(svgString, 944, 602, 'png', save)
+            svgToImage(svgString, 1250, 550, 'png', save)
 
             function save(dataBlob, filesize) {
                 saveAs(dataBlob, 'chart.png'); // FileSaver.js function
