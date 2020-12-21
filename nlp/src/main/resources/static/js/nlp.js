@@ -202,8 +202,8 @@ function makeGauge(divID, sentimentScore) {
     }
     else {
         var keywordBarContents = `
-                                    <div style="text-align:center; font-size:35px; margin-top:70px;">
-                                        뉴스 정보 없음 <img src="/img/not-found.png" height="70" width="70"/>
+                                    <div style="text-align:center;">
+                                        <img src="/img/not-found.png" style="max-width:100%; max-height:80%"/>
                                     </div>
                                  `;
         document.getElementById(divID).innerHTML = keywordBarContents;
@@ -1009,8 +1009,8 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
     }
     else {
         var keywordBarContents = `
-                                    <div style="text-align:center; font-size:35px; margin-top:70px;">
-                                        뉴스 정보 없음 <img src="/img/not-found.png" height="70" width="70"/>
+                                    <div style="text-align:center;">
+                                        <img src="/img/not-found.png" style="max-width:100%; max-height:80%"/>
                                     </div>
                                  `;
         document.getElementById(divID).innerHTML = keywordBarContents;
@@ -1677,8 +1677,8 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
     }
     else {
         var keywordBarContents = `
-                                    <div style="text-align:center; font-size:35px; margin-top:70px;">
-                                        뉴스 정보 없음 <img src="/img/not-found.png" height="70" width="70"/>
+                                    <div style="text-align:center;">
+                                        <img src="/img/no_gisa4.png" style="max-width:100%; max-height:80%"/>
                                     </div>
                                  `;
         document.getElementById(divID).innerHTML = keywordBarContents;
@@ -3372,8 +3372,8 @@ function getChartQuery(queryInput, queryType) {
             }
             else {
                 var stockContents = `
-                                        <div style="text-align:center; font-size:40px; margin-top:60px;">
-                                            주가 정보 없음 <img src="/img/not-found.png" height="70" width="70"/>
+                                        <div style="text-align:center;">
+                                            <img src="/img/no_gisa4.png" style="max-width:100%; max-height:80%"/>
                                         </div>
                                     `;
                 document.getElementById('stockTime').innerHTML = stockContents;
