@@ -610,8 +610,6 @@
             document.getElementById("scroll_button").onscroll = function () { scrollFunction() };
         });
 
-
-
         function viewNewsContents(i) {
             console.log(window.newsResponseData[i]);
             console.log(window.newsResponseData[i].indexNum);
@@ -940,18 +938,19 @@
                 var paramFileName = window.reportResponseData[i].orgnFileName;
 
                 paramFileName = paramFileName.replace(/\%/g, "%25");
-                paramFileName = paramFileName.replace(/&/g, "%26");
-                paramFileName = paramFileName.replace(/'/g, "%27");
+                paramFileName = paramFileName.replace(/\&/g, "%26");
+                paramFileName = paramFileName.replace(/\'/g, "%27");
                 paramFileName = paramFileName.replace(/\+/g, "%2B");
-                paramFileName = paramFileName.replace(/=/g, "%3D");
+                paramFileName = paramFileName.replace(/\=/g, "%3D");
                 paramFileName = paramFileName.replace(/\[/g, "%5B");
                 paramFileName = paramFileName.replace(/\]/g, "%5D");
                 paramFileName = paramFileName.replace(/\,/g, "%2C");
                 paramFileName = paramFileName.replace(/\$/g, "%24");
                 paramFileName = paramFileName.replace(/\//g, "%2F");
-                paramFileName = paramFileName.replace(/·/g, "%B7");
+                paramFileName = paramFileName.replace(/\·/g, "%C2%B7");
                 paramFileName = paramFileName.replace(/\‘/g, "%E2%80%98");
                 paramFileName = paramFileName.replace(/\’/g, "%E2%80%99");
+                paramFileName = paramFileName.replace(/\•/g, "%E2%80%A2");
                 
                 console.log(paramFileName);
 
@@ -1136,6 +1135,7 @@
                     console.log(responseData.length);
                     window.newsResponseData = responseData;
                     console.log(window.newsResponseData[0]);
+                    $('#result_area_news').show();
 
                     $('#myModal').hide();
 
@@ -1173,6 +1173,7 @@
                     console.log(responseData.length);
                     window.newsResponseData = responseData;
                     console.log(window.newsResponseData[0]);
+                    $('#result_area_news').show();
 
                     $('#myModal').hide();
 
@@ -1464,16 +1465,14 @@
             dataIndSub.selectedName = selectedName;
 
             if (gubunJaName == "industry") {
-                result_area = 'result_area_industry';
+                result_area = 'result_area_news';
                 table_id = 'industry_news_list';
-                $('#result_area_industry').show();
             } else {
-                result_area = 'result_area_subsidiary';
+                result_area = 'result_area_news';
                 table_id = 'subsidiary_news_list';
-                $('#result_area_subsidiary').show();
             };
             $('#chartDiv').hide();
-            $('#result_area_news').hide();
+            $('#result_area_news').show();
 
             console.log('산업명' + gubunJaName);
             loading1("뉴스");
@@ -1489,6 +1488,9 @@
                     console.log(responseData.length);
                     window.newsResponseData = responseData;
                     console.log(window.newsResponseData[0]);
+                    $('#result_area_industry').hide();
+                    $('#result_area_subsidiary').hide();
+
 
                     $('#myModal').hide();
                     if ($('#fold').val() == 'subsidiary' || $('#fold').val() == 'industry') {
@@ -1946,7 +1948,7 @@
 
             console.log('산업명' + industryName);
             loading1("뉴스");
-            var result_area = 'result_area_industry';
+            var result_area = 'result_area_news';
             var table_id = 'industry_news_list';
             $.ajax({
                 url: "/getNewsListByIndustry/" + industryName,
@@ -2032,17 +2034,19 @@
                 $('#chartDiv').show();
                 $('#result_area_subsidiary').hide();
                 $('#result_area_industry').hide();
+                $('#result_area_news').show();
                 $('#yearSelect').show();
                 $('#gubunSelect').show();
                 $('#search_box_news').show();
                 document.getElementById("search_company_news").disabled = false;
                 document.getElementById("search_button_news").disabled = false;
                 document.getElementById('search_company_news').value = '';
-                $('#result_area_news').show();
+                //$('#result_area_news').show();
                 getFunction = `getCompanyListByCompany();`;
             }
             else if (selectItem == "subsidiary") {
                 getIndustryAndSubsidiaryList('subsidiary');
+                $('#result_area_subsidiary').show();
                 $('#result_area_industry').hide();
                 $('#result_area_news').hide();
                 $('#yearSelect').show();
@@ -2051,21 +2055,19 @@
                 document.getElementById("search_company_news").disabled = true;
                 document.getElementById("search_button_news").disabled = true;
                 document.getElementById('search_company_news').value = '';
-                $('#result_area_subsidiary').show();
                 $('#chartDiv').hide();
-
             }
             else if (selectItem == "industry") {
                 getIndustryAndSubsidiaryList('industry');
-                $('#result_area_news').hide();
+                $('#result_area_industry').show();
                 $('#result_area_subsidiary').hide();
+                $('#result_area_news').hide();
                 $('#yearSelect').show();
                 $('#gubunSelect').show();
                 $('#search_box_news').hide();
                 document.getElementById("search_company_news").disabled = true;
                 document.getElementById("search_button_news").disabled = true;
                 document.getElementById('search_company_news').value = '';
-                $('#result_area_industry').show();
                 $('#chartDiv').hide();
             }
             else if (selectItem == "keyword") {
@@ -2073,13 +2075,14 @@
                 $('#chartDiv').show();
                 $('#result_area_subsidiary').hide();
                 $('#result_area_industry').hide();
+                $('#result_area_news').show();
                 $('#yearSelect').show();
                 $('#gubunSelect').show();
                 $('#search_box_news').show();
                 document.getElementById("search_company_news").disabled = false;
                 document.getElementById("search_button_news").disabled = false;
                 document.getElementById('search_company_news').value = '';
-                $('#result_area_news').show();
+                //$('#result_area_news').show();
                 getFunction = `getRowCount();`;
             }
 
@@ -2756,7 +2759,7 @@
             makeGauge('dangerGauge', window.newsChartData.averageScore)
             makeCombinedGraph(window.newsChartData.sentimentDates, window.newsChartData.allNews, 'articleCounts');
             makeKeywordBarPlot(window.newsChartData.keywords, 'keywordBar', document.getElementById('keywordBarSlider').value)
-            makeStockGraph(window.newsChartData.allStockData, 'stockTime');
+            makeStockBarGraph(window.newsChartData.allStockData, 'stockTime');
             console.log('resized')
         });
         $('.stockPoint').on("scroll", function (e) {
@@ -2807,7 +2810,7 @@
         $('#downloadButton').on('click', function () {
             var svg = window.SVG
             var svgString = getSVGString(svg.node());
-            svgToImage(svgString, 944, 602, 'png', save)
+            svgToImage(svgString, 1250, 550, 'png', save)
 
             function save(dataBlob, filesize) {
                 saveAs(dataBlob, 'chart.png'); // FileSaver.js function
