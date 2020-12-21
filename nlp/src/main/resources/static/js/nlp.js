@@ -1,6 +1,6 @@
 function makeGauge(divID, sentimentScore) {
     if (isNaN(sentimentScore)) {
-        sentimentScore = 100;
+        sentimentScore = 101;
     }
     var sFactor = 7.1;
     function sobescore(x) {
@@ -11,7 +11,7 @@ function makeGauge(divID, sentimentScore) {
         return 50 * ((x - 50) / (sFactor2 + Math.abs(x - 50))) + 50
     }
     function sobeDangerScore(x) {
-        return 50 * ((50 - x) / (sFactor2 + Math.abs(50 - x))) + 50
+        return (50 + sFactor2) * ((50 - x) / (sFactor2 + Math.abs(50 - x))) + 50
     }
     console.log(sentimentScore)
     var sentimentScore = sobeDangerScore(sentimentScore);
@@ -89,7 +89,7 @@ function makeGauge(divID, sentimentScore) {
         .transition()
         .ease(d3.easeLinear)
         .duration(200)
-        .attr("transform", "rotate(180)")
+        .attr("transform", "rotate(149)")
         .transition()
         .ease(d3.easeElastic)
         .duration(5000)
@@ -111,7 +111,14 @@ function makeGauge(divID, sentimentScore) {
     gaugeSVG.append('g')
         .attr('transform', 'translate(' + divWidth / 2 + ',' + divHeight / 1.2 + ")")
         .append('text')
-        .text('ƒ(s): ' + String(sentimentScore.toFixed(1)))
+        .text(function (d) {
+            if (sentimentScore < 0) {
+                return 'NO RESULT'
+            }
+            else {
+                return 'ƒ(s): ' + String(sentimentScore.toFixed(1))
+            }
+        })
         .attr('id', 'sentimentIndicator')
         .style('alignment-baseline', 'middle')
         .style('font-style', 'italic')
@@ -201,7 +208,7 @@ function makeGauge(divID, sentimentScore) {
     }
     $('#maximizeGaugeSpan').show();
     $('#resetDiv').hide();
-    
+
 
 
 }
@@ -845,30 +852,29 @@ function makeSentimentBoxPlot(sentimentData, divID) {
 function makeKeywordBarPlot(data, divID, nCutoff) {
     var colorVec = ['#83afd5', '#fbbe81', '#80c89c', '#be7cbf']
     var graphDiv = document.getElementById(divID);
-    data.sort(function (a, b) { return b.tf_idf - a.tf_idf });
-    dataSlice = data.slice(0, nCutoff)
-    dataSlice.sort(function (a, b) { return a.tf_idf - b.tf_idf });
 
-    console.log(data);
-    console.log(divID);
-    console.log(nCutoff);
+    if (divID == "enlargedChart") {
+        var divHeight = 550;
+        var divWidth = 1250;
+        document.getElementById(divID).innerHTML = "";
+    }
+    else {
+        var divHeight = graphDiv.clientHeight;
+        var divWidth = graphDiv.clientWidth;
+    }
+    var xPadding = 0.164 * divWidth;
+    var yPadding = 10;
+    var INNER_HEIGHT = divHeight - 2 * yPadding;
+    var INNER_WIDTH = divWidth - 2 * xPadding;
 
     if (data.length != 0) {
+        data.sort(function (a, b) { return b.tf_idf - a.tf_idf });
+        dataSlice = data.slice(0, nCutoff)
+        dataSlice.sort(function (a, b) { return a.tf_idf - b.tf_idf });
+
         var keywordBarContents = ``;
         document.getElementById(divID).innerHTML = keywordBarContents;
-        if (divID == "enlargedChart") {
-            var divHeight = 550;
-            var divWidth = 1250;
-            document.getElementById(divID).innerHTML = "";
-        }
-        else {
-            var divHeight = graphDiv.clientHeight;
-            var divWidth = graphDiv.clientWidth;
-        }
-        var xPadding = 0.164 * divWidth;
-        var yPadding = 10;
-        var INNER_HEIGHT = divHeight - 2 * yPadding;
-        var INNER_WIDTH = divWidth - 2 * xPadding;
+
 
         var yScale = d3.scaleBand()
             .domain(dataSlice.map(function (d) { return d.keyword }))
@@ -1003,13 +1009,55 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
         $('#resetDiv').hide();
     }
     else {
-        var keywordBarContents = `
-                                    <div style="text-align:center;">
-                                        <img src="/img/not-found.png" style="max-width:100%; max-height:80%"/>
-                                    </div>
-                                 `;
-        document.getElementById(divID).innerHTML = keywordBarContents;
-        $('#maximizeKeywordBarSpan').hide();
+        dataSlice = [];
+        for (var i = 0; i < 10; i++) {
+            dataSlice.push({keyword: '', tf_idf: 0})
+        }
+        console.log(dataSlice)
+        var yScale = d3.scaleBand()
+            .domain(dataSlice.map(function (d) { return d.keyword }))
+            .rangeRound([divHeight - yPadding, yPadding])
+            .paddingInner(0.1);
+        var yAxis = d3.axisLeft()
+            .tickSizeOuter(0)
+            .scale(yScale);
+
+
+        var xScale = d3.scaleLinear()
+            .domain([0, 1])
+            .range([xPadding, divWidth - xPadding])
+
+        var xAxisGrid = d3.axisBottom(xScale)
+            .tickSize(-INNER_HEIGHT)
+            .tickFormat('')
+            .tickSizeOuter(0);
+
+        var svg = d3.select("#" + divID).append("svg")
+            .attr('class', function () { if (divID == 'enlargedChart') { return 'largeSVG' } else { return 'visSVG' } })
+            .attr("width", "100%")
+            .attr("height", "100%");
+
+        var plot = svg.append('g')
+
+        plot.append('g')
+            .attr('class', 'x axis-grid')
+            .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
+            .call(xAxisGrid)
+            .call(g => g.select('.domain').remove());
+
+        plot.append('g')
+            .attr('id', 'keywordYAxis')
+            .attr("transform", "translate(" + xPadding + ",0)")
+            .style('font-size', function () {
+                if (nCutoff <= 20) {
+                    return divHeight * 0.038 + 'px'
+                }
+                else {
+                    return divHeight * 0.038 * 20 / nCutoff + 'px'
+                }
+            })
+            .call(yAxis);
+
     }
 
 
