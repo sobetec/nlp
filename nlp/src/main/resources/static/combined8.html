@@ -2807,7 +2807,7 @@
         $('#downloadButton').on('click', function () {
             var svg = window.SVG
             var svgString = getSVGString(svg.node());
-            svgToImage(svgString, 944, 602, 'png', save)
+            svgToImage(svgString, 1250, 550, 'png', save)
 
             function save(dataBlob, filesize) {
                 saveAs(dataBlob, 'chart.png'); // FileSaver.js function

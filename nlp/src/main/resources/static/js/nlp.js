@@ -2101,6 +2101,14 @@ function makeStockBarGraph(data, divID) {
         .attr("transform", "translate(" + xPadding + ",0)")
         .call(yAxisGrid);
 
+    /* MAKE LEGEND */
+    var legend = svg.append('g')
+        .attr('transform', 'translate(' + divWidth / 2 + ',0)')
+        .attr('width', '50%')
+        .attr('height', '100%')
+        .style('fill', 'black')
+    console.log(legend)
+
 
 
     /* var gXGrid = svg.append('g')
@@ -2241,7 +2249,14 @@ function makeStockBarGraph(data, divID) {
             .data(fiveDay)
             .enter()
             .append('line')
-            .attr('class', 'fiveDayLine')
+            .attr("class", function (d) {
+                if (divID == 'enlargedChart') {
+                    return "fiveDayLineEnlarged";
+                }
+                else {
+                    return "fiveDayLine";
+                }
+            })
             .attr('x1', function (d) { return xScale(d.time) + (xScale.bandwidth() / 2); })
             .attr('y1', function (d) { return yScale(d.average); })
             .attr('x2', function (d, i) {
@@ -2259,7 +2274,10 @@ function makeStockBarGraph(data, divID) {
                 }
             })
             .attr('stroke', '#990000')
-            .attr('stroke-width', 1);
+            .attr('stroke-width', 1)
+            .on("mouseover", onMouseOver)
+            .on("mousemove", onMouseMove)
+            .on("mouseout", onMouseOut);
     }
 
     if (stockData.length > 20) {
@@ -2276,7 +2294,14 @@ function makeStockBarGraph(data, divID) {
             .data(twentyDay)
             .enter()
             .append('line')
-            .attr('class', 'twentyDayLine')
+            .attr("class", function (d) {
+                if (divID == 'enlargedChart') {
+                    return "twentyDayLineEnlarged";
+                }
+                else {
+                    return "twentyDayLine";
+                }
+            })
             .attr('x1', function (d) { return xScale(d.time) + (xScale.bandwidth() / 2); })
             .attr('y1', function (d) { return yScale(d.average); })
             .attr('x2', function (d, i) {
@@ -2294,7 +2319,10 @@ function makeStockBarGraph(data, divID) {
                 }
             })
             .attr('stroke', '#664be8')
-            .attr('stroke-width', 1);
+            .attr('stroke-width', 1)
+            .on("mouseover", onMouseOver)
+            .on("mousemove", onMouseMove)
+            .on("mouseout", onMouseOut);
     }
 
 
@@ -2534,7 +2562,7 @@ function onMouseOver(d, i) {
         d3.select(this).style('opacity', '100%');
         tooltip.style('visibility', 'visible');
         tooltip.html('날짜: ' + (date.getFullYear() + '년' + (date.getMonth() + 1)
-            + '월' + date.getDate() + '일') + '<br />주가: ' + d.stock)
+            + '월' + date.getDate() + '일') + '<br />주가: ' + d.stock1)
         tooltip.style('background-color', '#f0f0f0');
     }
     else if (elementClass == 'stockBarEnlarged') {
@@ -2542,8 +2570,25 @@ function onMouseOver(d, i) {
         d3.select(this).style('opacity', '100%');
         tooltipEnlarged.style('visibility', 'visible');
         tooltipEnlarged.html('날짜: ' + (date.getFullYear() + '년' + (date.getMonth() + 1)
-            + '월' + date.getDate() + '일') + '<br />주가: ' + d.stock)
+            + '월' + date.getDate() + '일') + '<br />주가: ' + d.stock1)
         tooltipEnlarged.style('background-color', '#f0f0f0');
+    }
+    else if (elementClass.includes('DayLine')) {
+        var date = new Date(d.time)
+        d3.select(this).style('opacity', '100%');
+        if (elementClass.includes('Enlarged')) {
+            tooltipEnlarged.style('visibility', 'visible');
+            tooltipEnlarged.html('날짜: ' + (date.getFullYear() + '년' + (date.getMonth() + 1)
+                + '월' + date.getDate() + '일') + '<br />평균: ' + d.average)
+            tooltipEnlarged.style('background-color', '#f0f0f0');
+        }
+        else {
+            tooltip.style('visibility', 'visible');
+            tooltip.html('날짜: ' + (date.getFullYear() + '년' + (date.getMonth() + 1)
+                + '월' + date.getDate() + '일') + '<br />평균: ' + d.average)
+            tooltip.style('background-color', '#f0f0f0');
+        }
+
     }
     else if (elementClass == 'posSentimentCircle' || elementClass == 'negSentimentCircle') {
         var date = new Date(d.time)
@@ -2674,6 +2719,16 @@ function onMouseOut(d, i) {
     else if (elementClass == 'stockBarEnlarged') {
         d3.select(this).style('opacity', '100%');
         tooltipEnlarged.style('visibility', 'hidden');
+    }
+    else if (elementClass.includes('DayLine')) {
+        d3.select(this).style('opacity', '100%');
+        if (elementClass.includes('Enlarged')) {
+            tooltipEnlarged.style('visibility', 'hidden');
+        }
+        else {
+            tooltip.style('visibility', 'hidden');
+        }
+
     }
     else if (elementClass == 'posSentimentCircle' || elementClass == 'negSentimentCircle') {
         d3.select(this).style('opacity', '100%');
