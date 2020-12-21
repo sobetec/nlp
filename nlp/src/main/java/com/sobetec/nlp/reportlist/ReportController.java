@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReportController {
 
 	protected Log logger = LogFactory.getLog(ReportController.class);
+	//private static final String EXTERNAL_FILE_PATH = "C:/Users/sdb/Documents/doc_down_test/";
 	private static final String EXTERNAL_FILE_PATH = "C:/Users/sdb/Documents/doc_down_test";
 	private final Path filePathpdf;
 	private final Path filePathhwp;
@@ -100,7 +101,7 @@ public class ReportController {
 		
 		if (file.exists()) {
 			System.out.println("file exist!");
-
+			
 			//get the mimetype
 			String mimeType = URLConnection.guessContentTypeFromName(file.getName());
 			if (mimeType == null) {
