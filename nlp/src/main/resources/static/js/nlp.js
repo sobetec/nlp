@@ -1697,7 +1697,7 @@ function makeStockGraph(data, divID) {
     console.log(data.length);
 
     stockData = [];
-    for (var i = 0; i < data[company].length; i++) {
+    for (var i = 0; i < data[company].length - 1; i++) {
         /* //console.log(data[i].date)
         //console.log(data[i].price) */
         stockData.push({ time: dateParser(data[company][i].date), stock: parseFloat(data[company][i].price) });
@@ -1957,12 +1957,39 @@ function makeStockBarGraph(data, divID) {
     }
     stockData.sort(function (a, b) { return a.date - b.date })
     //console.log(stockData)
+
+    var plotData = []
     var timeVector = [];
     var stockVector = [];
-    for (var i = 0; i < stockData.length; i++) {
+    for (var i = 0; i < stockData.length - 1; i++) {
+        plotData.push({ time: stockData[i].time, stock1: stockData[i].stock, stock2: stockData[i + 1].stock })
         timeVector.push(stockData[i].time);
         stockVector.push(stockData[i].stock);
     }
+
+    if (stockData.length > 5) {
+        var fiveDay = [];
+        for (var i = 4; i < stockData.length - 1; i++) {
+            var average = 0;
+            for (var j = i - 4; j <= i; j++) {
+                average += stockData[j].stock
+            }
+            average = average / 5;
+            fiveDay.push({ time: stockData[i].time, average: average })
+        }
+    }
+    if (stockData.length > 20) {
+        var twentyDay = [];
+        for (var i = 19; i < stockData.length - 1; i++) {
+            var average = 0;
+            for (var j = i - 19; j <= i; j++) {
+                average += stockData[j].stock
+            }
+            average = average / 20;
+            twentyDay.push({ time: stockData[i].time, average: average })
+        }
+    }
+
 
     var xPadding = 50;
     var yPadding = 25;
@@ -2120,7 +2147,7 @@ function makeStockBarGraph(data, divID) {
             }
         })
         .selectAll(".stockBar")
-        .data(stockData)
+        .data(plotData)
         .enter().append('rect')
         .attr("class", function (d) {
             if (divID == 'enlargedChart') {
@@ -2134,34 +2161,25 @@ function makeStockBarGraph(data, divID) {
             return xScale(d.time)
         })
         .attr('y', function (d, i) {
-            if (i == stockData.length - 1) {
-                return yScale(d.stock)
-            }
-            else {
-                return d3.min([yScale(stockData[i + 1].stock), yScale(d.stock)])
-            }
+            return d3.min([yScale(d.stock1), yScale(d.stock2)])
         })
         .attr('width', function (d, i) {
-            return (i < stockData.length - 1) ? xScale.bandwidth() : 0;
+            return xScale.bandwidth();
         })
         .attr('height', function (d, i) {
-            if (i == stockData.length - 1) { return 0 }
-            else if (yScale(d.stock) == yScale(stockData[i + 1].stock)) {
+            if (yScale(d.stock1) == yScale(d.stock2)) {
                 return 2;
             }
             else {
-                return Math.abs(yScale(d.stock) - yScale(stockData[i + 1].stock));
+                return Math.abs(yScale(d.stock1) - yScale(d.stock2));
             }
         })
         .attr('fill', function (d, i) {
-            if (i == stockData.length - 1) {
-                return 'none'
-            }
-            if (d.stock < stockData[i + 1].stock) {
-                return 'red'
+            if (d.stock1 < d.stock2) {
+                return '#f14811'
             }
             else {
-                return 'blue'
+                return '#089ac9'
             }
         })
         .style('opacity', '100%')
@@ -2180,38 +2198,104 @@ function makeStockBarGraph(data, divID) {
             }
         })
         .selectAll('.sentimentLineEnlarged')
-        .data(stockData)
+        .data(plotData)
         .enter()
         .append('line')
         .attr('class', 'sentimentLineEnlarged')
         .attr('x1', function (d) { return xScale(d.time) + (xScale.bandwidth() / 2); })
         .attr('y1', function (d, i) {
-            if (i == stockData.length - 1) {
-                return 0
-            }
-            else if (yScale(d.stock) == yScale(stockData[i + 1].stock)) {
-                return yScale(d.stock) - 2;
+            if (yScale(d.stock1) == yScale(d.stock2)) {
+                return yScale(d.stock1) - 2;
             }
             else {
-                var diff = Math.abs(yScale(stockData[i + 1].stock) - yScale(d.stock))
-                return d3.min([yScale(stockData[i + 1].stock), yScale(d.stock)]) - diff / 4
+                var diff = Math.abs(yScale(d.stock2) - yScale(d.stock1))
+                return d3.min([yScale(d.stock2), yScale(d.stock1)]) - diff / 4
             }
         })
         .attr('x2', function (d, i) {
             return xScale(d.time) + (xScale.bandwidth() / 2);
         })
         .attr('y2', function (d, i) {
-            if (i == stockData.length - 1) { return 0 }
-            else if (yScale(d.stock) == yScale(stockData[i + 1].stock)) {
-                return yScale(d.stock) + 2;
+            if (yScale(d.stock1) == yScale(d.stock2)) {
+                return yScale(d.stock1) + 2;
             }
             else {
-                var diff = Math.abs(yScale(stockData[i + 1].stock) - yScale(d.stock))
-                return d3.max([yScale(d.stock), yScale(stockData[i + 1].stock)]) + diff / 4;
+                var diff = Math.abs(yScale(d.stock2) - yScale(d.stock1))
+                return d3.max([yScale(d.stock1), yScale(d.stock2)]) + diff / 4;
             }
         })
         .attr('stroke', '#990000')
         .attr('stroke-width', 1);
+
+    if (stockData.length > 5) {
+        var fiveDayLine = svg.append('g')
+            .attr('clip-path', function () {
+                if (divID == 'enlargedChart') {
+                    return 'url(#stockClipEnlarged)';
+                }
+                else {
+                    return 'url(#stockClip)';
+                }
+            })
+            .selectAll('.fiveDayLine')
+            .data(fiveDay)
+            .enter()
+            .append('line')
+            .attr('class', 'fiveDayLine')
+            .attr('x1', function (d) { return xScale(d.time) + (xScale.bandwidth() / 2); })
+            .attr('y1', function (d) { return yScale(d.average); })
+            .attr('x2', function (d, i) {
+                if (i == fiveDay.length - 1) {
+                    return xScale(d.time) + (xScale.bandwidth() / 2)
+                }
+                else {
+                    return xScale(fiveDay[i + 1].time) + (xScale.bandwidth() / 2);
+                }
+            })
+            .attr('y2', function (d, i) {
+                if (i == fiveDay.length - 1) { return yScale(d.average) }
+                else {
+                    return yScale(fiveDay[i + 1].average)
+                }
+            })
+            .attr('stroke', '#990000')
+            .attr('stroke-width', 1);
+    }
+
+    if (stockData.length > 20) {
+        var twentyDayLine = svg.append('g')
+            .attr('clip-path', function () {
+                if (divID == 'enlargedChart') {
+                    return 'url(#stockClipEnlarged)';
+                }
+                else {
+                    return 'url(#stockClip)';
+                }
+            })
+            .selectAll('.twentyDayLine')
+            .data(twentyDay)
+            .enter()
+            .append('line')
+            .attr('class', 'twentyDayLine')
+            .attr('x1', function (d) { return xScale(d.time) + (xScale.bandwidth() / 2); })
+            .attr('y1', function (d) { return yScale(d.average); })
+            .attr('x2', function (d, i) {
+                if (i == twentyDay.length - 1) {
+                    return xScale(d.time) + (xScale.bandwidth() / 2)
+                }
+                else {
+                    return xScale(twentyDay[i + 1].time) + (xScale.bandwidth() / 2);
+                }
+            })
+            .attr('y2', function (d, i) {
+                if (i == twentyDay.length - 1) { return yScale(d.average) }
+                else {
+                    return yScale(twentyDay[i + 1].average)
+                }
+            })
+            .attr('stroke', '#664be8')
+            .attr('stroke-width', 1);
+    }
 
 
 
@@ -2234,18 +2318,42 @@ function makeStockBarGraph(data, divID) {
         gX.call(xAxis.scale(xScale))
         /*  gXGrid.call(xAxisGrid.scale(xScale)) */
 
-        bars.data(stockData)
+        bars.data(plotData)
             .attr('x', function (d) {
                 return xScale(d.time)
             })
             .attr('width', function (d, i) {
-                return (i < stockData.length - 1) ? xScale.bandwidth() : 0;
+                return (i < plotData.length - 1) ? xScale.bandwidth() : 0;
             })
-        sentLines.data(stockData)
+        sentLines.data(plotData)
             .attr('x1', function (d) { return xScale(d.time) + (xScale.bandwidth() / 2); })
             .attr('x2', function (d, i) {
                 return xScale(d.time) + (xScale.bandwidth() / 2);
             })
+        if (stockData.length > 5) {
+            fiveDayLine.data(fiveDay)
+                .attr('x1', function (d) { return xScale(d.time) + (xScale.bandwidth() / 2); })
+                .attr('x2', function (d, i) {
+                    if (i == fiveDay.length - 1) {
+                        return xScale(d.time) + (xScale.bandwidth() / 2)
+                    }
+                    else {
+                        return xScale(fiveDay[i + 1].time) + (xScale.bandwidth() / 2);
+                    }
+                })
+        }
+        if (stockData.length > 20) {
+            twentyDayLine.data(twentyDay)
+                .attr('x1', function (d) { return xScale(d.time) + (xScale.bandwidth() / 2); })
+                .attr('x2', function (d, i) {
+                    if (i == twentyDay.length - 1) {
+                        return xScale(d.time) + (xScale.bandwidth() / 2)
+                    }
+                    else {
+                        return xScale(twentyDay[i + 1].time) + (xScale.bandwidth() / 2);
+                    }
+                })
+        }
     }
 
     if (divID == 'enlargedChart') {
