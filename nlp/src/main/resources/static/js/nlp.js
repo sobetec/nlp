@@ -1005,7 +1005,7 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
     else {
         var keywordBarContents = `
                                     <div style="text-align:center;">
-                                        <img src="/img/not-found.png" style="max-width:100%; max-height:80%"/>
+                                        <img src="/img/no_keyword2.png" style="max-width:100%; max-height:80%"/>
                                     </div>
                                  `;
         document.getElementById(divID).innerHTML = keywordBarContents;
@@ -1676,7 +1676,7 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
     else {
         var keywordBarContents = `
                                     <div style="text-align:center;">
-                                        <img src="/img/no_gisa4.png" style="max-width:100%; max-height:80%"/>
+                                        <img src="/img/no_gisa5.png" style="max-width:100%; max-height:80%"/>
                                     </div>
                                  `;
         document.getElementById(divID).innerHTML = keywordBarContents;
@@ -3481,7 +3481,7 @@ function getChartQuery(queryInput, queryType) {
             else {
                 var stockContents = `
                                         <div style="text-align:center;">
-                                            <img src="/img/no_gisa4.png" style="max-width:100%; max-height:80%"/>
+                                            <img src="/img/no_gisa5.png" style="max-width:100%; max-height:80%"/>
                                         </div>
                                     `;
                 document.getElementById('stockTime').innerHTML = stockContents;
