@@ -34,6 +34,7 @@ public class ReportController {
 
 	protected Log logger = LogFactory.getLog(ReportController.class);
 	//private static final String EXTERNAL_FILE_PATH = "C:/Users/sdb/Documents/doc_down_test/";
+	private static final String EXTERNAL_FILE_PATH = "C:/Users/sdb/Documents/doc_down_test";
 	private final Path filePathpdf;
 	private final Path filePathhwp;
 	
@@ -75,24 +76,32 @@ public class ReportController {
 	@RequestMapping("/file/{fileName:.+}")
 	public void downloadReport(HttpServletRequest request, HttpServletResponse response, @PathVariable("fileName") String fileName) throws IOException {
 		
-		/*
-		File file = new File(EXTERNAL_FILE_PATH + fileName);
-		System.out.println(fileName);
-		*/
+		
+		//File file = new File(EXTERNAL_FILE_PATH + "/" + fileName);
+		
 		
 		System.out.println(filePathpdf);
 		System.out.println(filePathhwp);
+
+		
 		File file;
 		
 		if (fileName.substring(fileName.length()-3, fileName.length()).equals("hwp")) {
-			file = new File(filePathpdf + "/" + fileName);
+			file = new File(filePathhwp + "/" + fileName);
+			System.out.println("hwp");
 		}
 		else{
-			file = new File(filePathhwp + "/" + fileName);
+			file = new File(filePathpdf + "/" + fileName);
+			System.out.println("pdf");
 		}
 		
 		
+		
+		System.out.println(file);
+		System.out.println(fileName);		
+		
 		if (file.exists()) {
+			System.out.println("file exist!");
 			
 			//get the mimetype
 			String mimeType = URLConnection.guessContentTypeFromName(file.getName());
@@ -101,14 +110,17 @@ public class ReportController {
 			}
 
 			response.setContentType(mimeType);
-			response.setHeader("Content-Disposition", String.format("attachment; filename*=UTF-8" + file.getName() + "\""));
+			response.setHeader("Content-Disposition", String.format("attachment; filename*=UTF-8" + "\"" + file.getName() + "\""));
 			response.setHeader("Content-Transfer-Encoding", "binary");
 			response.setContentLength((int) file.length());
 
 			InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
+			System.out.println(response.getOutputStream());
 
 			FileCopyUtils.copy(inputStream, response.getOutputStream());
-
+		}
+		else {
+			System.out.println("file not exist!");
 		}
 	}
 
