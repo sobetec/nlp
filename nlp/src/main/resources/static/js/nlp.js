@@ -2260,7 +2260,7 @@ function makeStockBarGraph(data, divID) {
             }
             else {
                 var diff = Math.abs(yScale(d.stock2) - yScale(d.stock1))
-                return d3.min([yScale(d.stock2), yScale(d.stock1)]) - diff / 4
+                return d3.max([d3.min([yScale(d.stock2), yScale(d.stock1)]) - diff / 4, yPadding]);
             }
         })
         .attr('x2', function (d, i) {
@@ -2272,7 +2272,7 @@ function makeStockBarGraph(data, divID) {
             }
             else {
                 var diff = Math.abs(yScale(d.stock2) - yScale(d.stock1))
-                return d3.max([yScale(d.stock1), yScale(d.stock2)]) + diff / 4;
+                return d3.min([d3.max([yScale(d.stock1), yScale(d.stock2)]) + diff / 4, divHeight - yPadding]);
             }
         })
         .attr('stroke', '#990000')
@@ -2394,7 +2394,7 @@ function makeStockBarGraph(data, divID) {
         .attr('alignment-baseline', 'middle')
         .attr('text-anchor', 'left')
         .style('font-size', '12px')
-        .text('일주 이동평균');
+        .text('5일 이동평균');
 
     var legend2Offset = divWidth / 2.7
     legend.append('circle')
@@ -2409,7 +2409,7 @@ function makeStockBarGraph(data, divID) {
         .attr('alignment-baseline', 'middle')
         .attr('text-anchor', 'left')
         .style('font-size', '12px')
-        .text('한달 이동평균');
+        .text('20일 이동평균');
 
     console.log(legend)
 
@@ -3501,6 +3501,7 @@ function getChartQuery(queryInput, queryType) {
 
     document.getElementById('keywordBarSlider').value = 10;
     console.log(document.getElementById('keywordBarSlider').value)
+    document.getElementById('keywordMaxValueBar').innerHTML = document.getElementById('keywordBarSlider').value;
     // var search_company = document.getElementById('search_company_news').value;
     //console.log(search_company);
     document.getElementById('chartModal').innerHTML = modalhtml4;
