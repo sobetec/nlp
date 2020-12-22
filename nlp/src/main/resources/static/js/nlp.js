@@ -221,9 +221,13 @@ function makeGauge(divID, sentimentScore) {
 }
 
 function makeSentimentTimeGraph(data, divID) {
+    var sFactor2 = 4;
+    function sobeSigmoid(x) {
+        return (50 + sFactor2) * ((x - 50) / (sFactor2 + Math.abs(50 - x))) + 50
+    }
     var sentimentData = []
     for (var i = 0; i < data.length; i++) {
-        sentimentData.push({ time: Date.parse(data[i].date), sentiment: data[i].mean })
+        sentimentData.push({ time: Date.parse(data[i].date), sentiment: sobeSigmoid(data[i].mean) })
     }
     var xPadding = 30;
     var yPadding = 20;
