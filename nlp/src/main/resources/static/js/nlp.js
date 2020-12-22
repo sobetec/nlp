@@ -1016,6 +1016,15 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
         $('#resetDiv').hide();
     }
     else {
+        var keywordBarContents = `
+                                    <div style="text-align:center;">
+                                        <img src="/img/no_keyword4.png" style="max-width:100%; max-height:80%"/>
+                                    </div>
+                                 `;
+        document.getElementById(divID).innerHTML = keywordBarContents;
+        $('#maximizeKeywordBarSpan').hide();
+
+        /*
         dataSlice = [];
         for (var i = 0; i < 10; i++) {
             dataSlice.push({ keyword: '', tf_idf: 0 })
@@ -1064,7 +1073,7 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
                 }
             })
             .call(yAxis);
-
+        */
     }
 
 
@@ -1731,7 +1740,7 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
     else {
         var keywordBarContents = `
                                     <div style="text-align:center;">
-                                        <img src="/img/no_gisa4.png" style="max-width:100%; max-height:80%"/>
+                                        <img src="/img/no_gisa5.png" style="max-width:100%; max-height:80%"/>
                                     </div>
                                  `;
         document.getElementById(divID).innerHTML = keywordBarContents;
@@ -3623,7 +3632,7 @@ function getChartQuery(queryInput, queryType) {
             else {
                 var stockContents = `
                                         <div style="text-align:center;">
-                                            <img src="/img/no_gisa4.png" style="max-width:100%; max-height:80%"/>
+                                            <img src="/img/no_gisa5.png" style="max-width:100%; max-height:80%"/>
                                         </div>
                                     `;
                 document.getElementById('stockTime').innerHTML = stockContents;

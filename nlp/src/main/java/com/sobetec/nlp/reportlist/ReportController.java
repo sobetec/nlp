@@ -74,20 +74,23 @@ public class ReportController {
 	
 	@RequestMapping("/file/{fileName:.+}")
 	public void downloadReport(HttpServletRequest request, HttpServletResponse response, @PathVariable("fileName") String fileName) throws IOException {
-		System.out.println(fileName);
+		String tempFileName = "";
 		
 		if (fileName.contains("%")) {
-			System.out.println("%있다");
-			fileName = fileName.replaceAll("%", "%%");
+			tempFileName = fileName.replaceAll("%", "%%");
+		}
+		else {
+			tempFileName = fileName;
 		}
 		
-		File file = new File(EXTERNAL_FILE_PATH + "/" + fileName);
+		
+		//File file = new File(EXTERNAL_FILE_PATH + "/" + fileName);
 		
 		
 		System.out.println(filePathpdf);
 		System.out.println(filePathhwp);
 
-		/*
+		
 		File file;
 		
 		if (fileName.substring(fileName.length()-3, fileName.length()).equals("hwp")) {
@@ -98,10 +101,10 @@ public class ReportController {
 			file = new File(filePathpdf + "/" + fileName);
 			System.out.println("pdf");
 		}
-		*/
+		
 		
 		System.out.println(file);
-		System.out.println(fileName);		
+		System.out.println(fileName);
 		
 		if (file.exists()) {
 			System.out.println("file exist!");
@@ -113,18 +116,18 @@ public class ReportController {
 			}
 
 			response.setContentType(mimeType);
-			response.setHeader("Content-Disposition", String.format("attachment; filename*=UTF-8" + "\"" + file.getName() + "\""));
+			response.setHeader("Content-Disposition", String.format("attachment; filename*=UTF-8" + "\"" + tempFileName + "\""));
 			response.setHeader("Content-Transfer-Encoding", "binary");
 			response.setContentLength((int) file.length());
 
 			InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
-			System.out.println(response.getOutputStream());
 
 			FileCopyUtils.copy(inputStream, response.getOutputStream());
 		}
-		else {
-			System.out.println("file not exist!");
+		else { 
+			System.out.println("file not exist!"); 
 		}
+
 	}
 
 }
