@@ -1887,7 +1887,7 @@
                                 let subsTempHTML = ``;
                                 let indsTempHTML = ``;
 
-                                if (window.companyResponseData[i].subsName == null) {
+                                if (window.companyResponseData[i].subsName == null || window.companyResponseData[i].subsName == 'NaN') {
                                     subsTempHTML = `<td class="disabled">　</td>`;
                                 }
                                 else {

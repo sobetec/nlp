@@ -84,13 +84,13 @@ public class ReportController {
 		}
 		
 		
-		//File file = new File(EXTERNAL_FILE_PATH + "/" + fileName);
+		File file = new File(EXTERNAL_FILE_PATH + "/" + fileName);
 		
 		
 		System.out.println(filePathpdf);
 		System.out.println(filePathhwp);
 
-		
+		/*
 		File file;
 		
 		if (fileName.substring(fileName.length()-3, fileName.length()).equals("hwp")) {
@@ -101,7 +101,7 @@ public class ReportController {
 			file = new File(filePathpdf + "/" + fileName);
 			System.out.println("pdf");
 		}
-		
+		*/
 		
 		System.out.println(file);
 		System.out.println(fileName);
