@@ -2387,7 +2387,7 @@ function makeStockBarGraph(data, divID) {
         .attr('transform', 'translate(' + (divWidth / 2) + ',' + (3 * yPadding / 4) + ")")
         .attr('alignment-baseline', 'middle')
         .attr('text-anchor', 'middle')
-        .text('주가지수 추이');
+        .text(company + ' 주가지수 추이');
     /* MAKE LEGEND */
     var legend = svg.append('g')
         .attr('transform', 'translate(' + divWidth / 2 + ',0)')
