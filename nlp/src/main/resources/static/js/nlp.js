@@ -213,7 +213,13 @@ function makeGauge(divID, sentimentScore) {
     if (divID == 'enlargedChart') {
         window.SVG = gaugeSVG;
     }
-    $('#maximizeGaugeSpan').show();
+    
+    if (sentimentScore < 0) {
+        $('#maximizeGaugeSpan').hide();
+    }
+    else {
+        $('#maximizeGaugeSpan').show();
+    }
     $('#resetDiv').hide();
 
 
@@ -1327,6 +1333,10 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
         console.log(sentimentData)
         console.log(articlesData)
         document.getElementById(divID).innerHTML = "";
+        console.log(window.newsResponseData.selectedName);
+        if (window.newsResponseData.selectedName != null){
+            document.getElementById('paramName').innerHTML = window.newsResponseData.selectedName;
+        }
         var timeRange = document.getElementById('articleCountRange').value;
         if (timeRange == 'all') {
             var timeRangeStart = new Date('1970-01-01')
