@@ -1134,6 +1134,7 @@
                     //alert('조회 성공');
                     console.log(responseData.length);
                     window.newsResponseData = responseData;
+                    window.newsResponseData.selectedName = data.searchWord;
                     console.log(window.newsResponseData[0]);
                     $('#result_area_news').show();
 
@@ -1172,6 +1173,7 @@
                     getChartQuery(companyName, 3);
                     console.log(responseData.length);
                     window.newsResponseData = responseData;
+                    window.newsResponseData.selectedName = companyName;                    
                     console.log(window.newsResponseData[0]);
                     $('#result_area_news').show();
 
@@ -1463,13 +1465,15 @@
             var dataIndSub = parameters();
             dataIndSub.gubunJaName = gubunJaName;
             dataIndSub.selectedName = selectedName;
-
+            
             if (gubunJaName == "industry") {
                 result_area = 'result_area_news';
                 table_id = 'industry_news_list';
+                window.industry = selectedName;
             } else {
                 result_area = 'result_area_news';
                 table_id = 'subsidiary_news_list';
+                window.subsidiary = selectedName;
             };
             $('#chartDiv').hide();
             $('#result_area_news').show();
@@ -1487,6 +1491,7 @@
                     getChartQuery(dataIndSub, 4);
                     console.log(responseData.length);
                     window.newsResponseData = responseData;
+                    window.newsResponseData.selectedName = dataIndSub.selectedName;
                     console.log(window.newsResponseData[0]);
                     $('#result_area_industry').hide();
                     $('#result_area_subsidiary').hide();
@@ -1730,16 +1735,13 @@
                     $(".list").on("click", "li", function () {
                         alert($(this).text());
                         var listName = $(this).text();
-                        window.subsidiary = listName
-                        console.log(listName);
+                        
                         getNewsListByIndustryAndSubsidiary(gubunJa, listName);
                     });
 
                     $(".hide").on("click", "li", function () {
                         alert($(this).text());
                         var listName = $(this).text();
-                        window.industry = listName;
-                        console.log(listName);
                         getNewsListByIndustryAndSubsidiary(gubunJa, listName);
                     });
 
@@ -2265,11 +2267,18 @@
             <div class="layer_box" id='entirePopupBox'>
                 <div class="layer_body">
                     <div class="chart_detail">
-                        <div id="resetDiv">
+                        <div style="height: 30px; position: relative; top: -40px">
+                            <p style="text-align: center; font-size: 25px; font-weight: bold;" id=paramName></p>
+                        </div>
+                        <!-- <div id="resetDiv">
                             <p style="text-align: left;">
                                 <button style="position:relative; left:0; top:-10px;" type="button" class="btn point"
                                     id='resetChart'>Reset</button>
                             </p>
+                        </div> -->
+                        <div id="resetDiv" style="height: 1px;">
+                                <button style="position:relative; left:0; top:-40px;" type="button" class="btn point"
+                                    id='resetChart'>Reset</button>
                         </div>
                         <div id='wordCloudSettings' class='enlargedChartSettings' style='display:none'>
                             <span>패딩 선택: </span>

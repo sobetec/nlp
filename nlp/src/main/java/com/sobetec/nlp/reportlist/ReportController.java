@@ -83,13 +83,11 @@ public class ReportController {
 			tempFileName = fileName;
 		}
 		
+		System.out.println(filePathpdf);
+		System.out.println(filePathhwp);
 		
 		File file = new File(EXTERNAL_FILE_PATH + "/" + fileName);
 		
-		
-		System.out.println(filePathpdf);
-		System.out.println(filePathhwp);
-
 		/*
 		File file;
 		
