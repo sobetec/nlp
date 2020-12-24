@@ -3550,7 +3550,6 @@ function getChartQuery(queryInput, queryType) {
                 makeGauge('enlargedChart', responseData.averageScore);
             })
 
-
             var sentimentData = [];
             for (var i = 0; i < responseData.sentimentDates.length; i++) {
                 sentimentData.push({
