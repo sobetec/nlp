@@ -26,6 +26,8 @@ public interface NewsRepositoryImpl {
 
 	List<News> getNewsListBySubsidiary(NewsCondition newsCondition) throws Exception;
 
+	List<News> getNewsListByIndustrySystem(NewsCondition newsCondition) throws Exception;
+
 	
 	
 	

@@ -118,7 +118,7 @@
 		  </choose>
 		 order by news_date desc
 	</select>
-	
+		
 	<select id="selectChartIndustryStocksByCondition" parameterType="com.sobetec.nlp.chart.ChartCondition" resultType="com.sobetec.nlp.chart.Stocks">
 	select d.date, d.company, d.closing_price as "price" from (
 		select s.company, 
@@ -131,6 +131,69 @@
 		from nlp.nlp_stock as s
 		join nlp.company_code as b
 		on (s.company_code = b.code and b.industry_name = #{selectedName}))as d
+				
+	where
+		 
+		 <choose>
+		  	<when test="gubun == 'year'">
+		  		year = #{newsYear}
+		  	</when>
+		  	<when test="gubun == 'month'">
+		  		year = #{newsYear}
+		  		and month = #{gubunItem}
+		  	</when>
+		  	<when test="gubun == 'quarter'">
+		  		year = #{newsYear}
+		  		and quarter = #{gubunItem}
+		  	</when>
+		  	<when test="gubun == 'custom'">
+		  		date between  to_date(#{startDate}, 'yyyy-mm-dd') and to_date(#{endDate}, 'yyyy-mm-dd')
+		  	</when>
+		  </choose>
+		 ORDER BY date
+	</select>
+
+	<select id="selectChartSystemNewsByCondition" parameterType="com.sobetec.nlp.chart.ChartCondition" resultType="com.sobetec.nlp.chart.News">
+		SELECT "composite_key"						AS "cmpyKey"
+			 , "news_date"							AS "newsDate"
+			 , "company_name"						AS "cmpyName"
+			 , round(cast(ta_score as numeric),4)	AS "taScre"
+			 , "news_title"							AS "newsTtl"
+			 , "ext_morphs"							AS "extMorp"
+		 FROM NLP."nlp_news"
+		 where system_code = (select system_code from nlp.company_code where system_name like concat('%',#{selectedName},'%') limit 1)
+		 <choose>
+		  	<when test="gubun == 'year'">
+		  		and year = #{newsYear}
+		  	</when>
+		  	<when test="gubun == 'month'">
+		  		and year = #{newsYear}
+		  		and month = #{gubunItem}
+		  	</when>
+		  	<when test="gubun == 'quarter'">
+		  		and year = #{newsYear}
+		  		and quarter = #{gubunItem}
+		  	</when>
+		  	<when test="gubun == 'custom'">
+		  		and news_date between  to_date(#{startDate}, 'yyyy-mm-dd') and to_date(#{endDate}, 'yyyy-mm-dd')
+		  	</when>
+		  
+		  </choose>
+		 order by news_date desc
+	</select>
+	
+	<select id="selectChartSystemStocksByCondition" parameterType="com.sobetec.nlp.chart.ChartCondition" resultType="com.sobetec.nlp.chart.Stocks">
+	select d.date, d.company, d.closing_price as "price" from (
+		select s.company, 
+				to_date(s.date, 'yyyymmdd') as date, 
+				date_part('year', to_date(s.date, 'yyyymmdd')) as year, 
+			 	date_part('month', to_date(s.date, 'yyyymmdd')) as month,
+			 	date_part('day', to_date(s.date, 'yyyymmdd')) as day, 
+			 	date_part('quarter', to_date(s.date, 'yyyymmdd')) as quarter, 
+				s.closing_price 
+		from nlp.nlp_stock as s
+		join nlp.company_code as b
+		on (s.company_code = b.code and b.system_name = #{selectedName}))as d
 				
 	where
 		 

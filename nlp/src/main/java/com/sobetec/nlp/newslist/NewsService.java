@@ -89,11 +89,21 @@ public class NewsService {
     public List<News> getNewsListByIndustryAndSubsidiary(NewsCondition newsCondition) throws Exception {
     	
     	List<News> listNews = new ArrayList<News>();
-    	if (newsCondition.getGubunJaName().equals("industry")) {
-    		listNews = repository.getNewsListByIndustry(newsCondition);
-    	}else {
+    	if (newsCondition.getGubunJaName().equals("industry") && (newsCondition.getSelectedName().contains("_system"))) {
+    		String name = newsCondition.getSelectedName();
+    		System.out.println("겟뉴스쿼리 셀렉트네임 셋팅 : "+name.substring(0,name.length()-7));
+    		newsCondition.setSelectedName(name.substring(0,name.length()-7));
+    		listNews = repository.getNewsListByIndustrySystem(newsCondition);
+    		
+    	}else if(newsCondition.getGubunJaName().equals("subsidiary")){
+    		
     		listNews = repository.getNewsListBySubsidiary(newsCondition);
+    		
+    	}else {
+    		
+    		listNews = repository.getNewsListByIndustry(newsCondition);
     	}
+    	
     	for(int i = 0; i < listNews.size(); i++) {
     		
     		if (listNews.get(i).getTaScre() != null) {
