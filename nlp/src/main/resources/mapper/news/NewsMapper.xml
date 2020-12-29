@@ -110,7 +110,7 @@
 			 , "ㅎ"		AS "hiEut"
 			 , "기타"   AS "guiTar"
 			 
-			 FROM NLP."industry_list"
+			 FROM NLP."system_industry"
 		 
 	</select>
 	
@@ -162,6 +162,35 @@
 		  </choose>
 		  order by news_date desc
  	</select>
+ 	
+	<select id="selectNewsListByIndustrySystem" parameterType="com.sobetec.nlp.newslist.NewsCondition" resultType="com.sobetec.nlp.newslist.News">
+		SELECT "composite_key"		AS "cmpyKey"
+			 , "news_date"		AS "newsDate"
+			 , "company_name"		AS "cmpyName"
+			 , round(cast(ta_score as numeric),4)		AS "taScre"
+			 , "news_title"		AS "newsTtl"
+			 , "raw_data"		AS "rawData"
+		  FROM NLP."nlp_news"
+		  where system_code = (select system_code from nlp.company_code where system_name like concat('%',#{selectedName},'%') limit 1)
+		  <choose>
+		  	<when test="gubun == 'year'">
+		  		and year = #{newsYear}
+		  	</when>
+		  	<when test="gubun == 'month'">
+		  		and year = #{newsYear}
+		  		and month = #{gubunItem}
+		  	</when>
+		  	<when test="gubun == 'quarter'">
+		  		and year = #{newsYear}
+		  		and quarter = #{gubunItem}
+		  	</when>
+		  	<when test="gubun == 'custom'">
+		  		and news_date between  to_date(#{startDate}, 'yyyy-mm-dd') and to_date(#{endDate}, 'yyyy-mm-dd')
+		  	</when>
+		  </choose>
+		  order by news_date desc
+ 	</select>
+ 	
  	
 	<select id="selectNewsListBySubsidiary" parameterType="com.sobetec.nlp.newslist.NewsCondition" resultType="com.sobetec.nlp.newslist.News">
 		SELECT "composite_key"		AS "cmpyKey"

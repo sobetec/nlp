@@ -590,6 +590,12 @@
             opacity: 40%;
             cursor: pointer;
         }
+
+        .system_code {
+            font-size: 14px;
+            font-weight: bolder;
+            font-style: oblique;
+        }
     </style>
 
     <script type="text/javascript" src="js/jquery-3.5.1.js"></script>
@@ -1488,10 +1494,22 @@
                 data: dataIndSub,
                 success: function (responseData) {
                     //alert('조회 성공');
-                    getChartQuery(dataIndSub, 4);
+
                     console.log(responseData.length);
                     window.newsResponseData = responseData;
                     window.newsResponseData.selectedName = dataIndSub.selectedName;
+
+                    var selectNameCheck;
+                    if(selectedName.indexOf("_system") != -1){
+                        selectNameCheck = selectedName.split('_');
+                        document.getElementById('main_title').innerHTML = `뉴스 조회<h4 style="display:inline">(` + selectNameCheck[0] + `)</h4>`;
+                    }else{
+                        document.getElementById('main_title').innerHTML = `뉴스 조회<h4 style="display:inline">(` + selectedName + `)</h4>`;
+                    }
+                    //dataIndSub.selectedName = selectNameCheck;
+
+                    getChartQuery(dataIndSub, 4);
+                    
                     console.log(window.newsResponseData[0]);
                     $('#result_area_industry').hide();
                     $('#result_area_subsidiary').hide();
@@ -1511,7 +1529,9 @@
                     document.getElementById('myModal').innerHTML = modalhtml2;
                     $('#myModal').show();
                     setTimeout(() => drawTable(result_area, table_id), 1000);
-                    document.getElementById('main_title').innerHTML = `뉴스 조회<h4 style="display:inline">(` + selectedName + `)</h4>`;
+                    
+                  
+                    
                     topFunction();
 
                     document.getElementById('main_title').focus();
@@ -1565,6 +1585,8 @@
                     var tables = ``;
 
                     var expend_all = `
+                    <div style="float:left; font-size:13px;"> &nbsp;&nbsp;* 표시가 있는 경우 산업별 59개 Category </div>
+
                 <div class="buttons" align="right" >
                     <a id="toggleee" class="btn" style="min-width: 110px;" href="javascript:togglee();">전체 펼치기</a>
                     
@@ -1612,23 +1634,48 @@
                             k = 0;
                             for (var i = 0; i < responseData.length; i++) {
                                 var colJavaName = eval(industry_column_list_java[j]);
-                                // console.log('컬럼이름 '+colJavaName);
+                                //console.log('산업별이름 '+colJavaName);
                                 if (k < 5) {
                                     if (colJavaName != null) {
+                                       
+                                       if(colJavaName.indexOf("_system") != -1){
+                                        var strArray = colJavaName.split('_');
+                                        var htmlli1 =
+                                            
+                                            `
+                                                <li class="system_code" value="`+colJavaName+`">`+ strArray[0] + `&nbsp;*</li>
+                                                `;
+                                       }else {
                                         var htmlli1 =
                                             `
-                                                <li>`+ colJavaName + `</li>
+                                                <li value="`+colJavaName+`">`+ colJavaName + `</li>
                                                 `;
+
+                                       }
 
                                         htmlhead += htmlli1;
                                         k++;
+                                       
                                     }
 
                                 } else if ((colJavaName != null)) {
-                                    var htmlli2 =
-                                        `
-                                                <li>`+ colJavaName + `</li>
+                                    
+                                    if(colJavaName.indexOf("_system") != -1){
+                                        var strArray = colJavaName.split('_');
+                                        var htmlli2 =
+                                            
+                                            `
+                                                <li class="system_code" value="`+colJavaName+`">`+ strArray[0] + `&nbsp;*</li>
                                                 `;
+                                       }else {
+                                        var htmlli2 =
+                                            `
+                                                <li value="`+colJavaName+`">`+ colJavaName + `</li>
+                                                `;
+
+                                       }
+
+                                    
                                     htmlmiddle += htmlli2;
                                 };
                             };
@@ -1733,15 +1780,15 @@
                     });
 
                     $(".list").on("click", "li", function () {
-                        alert($(this).text());
-                        var listName = $(this).text();
+                        alert($(this).attr("value"));
+                        var listName = $(this).attr("value");
                         
                         getNewsListByIndustryAndSubsidiary(gubunJa, listName);
                     });
 
                     $(".hide").on("click", "li", function () {
-                        alert($(this).text());
-                        var listName = $(this).text();
+                        alert($(this).attr("value"));
+                        var listName = $(this).attr("value");
                         getNewsListByIndustryAndSubsidiary(gubunJa, listName);
                     });
 
