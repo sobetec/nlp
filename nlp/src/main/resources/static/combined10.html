@@ -606,7 +606,7 @@
             $('#condition').hide();
             $('#condition_report').hide();
             $('#resetContentButton').hide();
-            document.getElementById("articleCountRange").disabled = true;
+            // document.getElementById("articleCountRange").disabled = true;
             document.getElementById("scroll_button").onscroll = function () { scrollFunction() };
         });
 
@@ -1338,7 +1338,7 @@
                 changeItem = selectListData.quarter.text;
                 document.getElementById("choicesNews").disabled = false;
                 document.getElementById("newsYear").disabled = false;
-                document.getElementById("articleCountRange").disabled = true;
+                // document.getElementById("articleCountRange").disabled = true;
                 $('#yearSelect').show();
                 $('#date_picker_div_News').hide();
                 $('#condition').show();
@@ -1347,7 +1347,7 @@
                 changeItem = selectListData.month.text;
                 document.getElementById("choicesNews").disabled = false;
                 document.getElementById("newsYear").disabled = false;
-                document.getElementById("articleCountRange").disabled = true;
+                // document.getElementById("articleCountRange").disabled = true;
                 $('#yearSelect').show();
                 $('#date_picker_div_News').hide();
                 $('#condition').show();
@@ -1356,7 +1356,7 @@
                 changeItem = '';
                 document.getElementById("choicesNews").disabled = true;
                 document.getElementById("newsYear").disabled = false;
-                document.getElementById("articleCountRange").disabled = true;
+                // document.getElementById("articleCountRange").disabled = true;
                 $('#yearSelect').show();
                 $('#date_picker_div_News').hide();
                 $('#condition').hide();
@@ -1365,7 +1365,7 @@
                 changeItem = '';
                 //document.getElementById("choicesNews").disabled = true;
                 //document.getElementById("newsYear").disabled = true;
-                document.getElementById("articleCountRange").disabled = false;
+                // document.getElementById("articleCountRange").disabled = false;
                 $('#yearSelect').hide();
                 $('#date_picker_div_News').show();
                 $('#condition').hide();
@@ -2101,13 +2101,16 @@
             var selectItem = $("#chartFold").val();
 
             if (selectItem == "stock") {
-                $('#chartStock').show();
+                $('#stockRange').show();
             }
             else if (selectItem == "credit") {
-                $('#chartStock').hide();
+                $('#stockRange').hide();
             }
             else if (selectItem == "sales") {
-                $('#chartStock').hide();
+                $('#stockRange').hide();
+            }
+            else if (selectItem == "grade") {
+                $('#stockRange').hide();
             }
        
         }
@@ -2616,17 +2619,15 @@
                                                         }
                                                     </style>
 
-                                                    <select multiple size="1" id='articleCountRange' class='yearSelect' style="display: none;">
-                                                        <option value='1'>1년</option>
-                                                        <option value='3'>3년</option>
-                                                        <option value='5'>5년</option>
-                                                        <option value='all' selected>전체</option>
+                                                    <select multiple size="1" id='articleCo' class='yearSelect'>
+
+                                                        <option class='hiddenoption' value='all' selected>전체</option>
                                                     </select>
                                                     <span style="float: right;" id="maximizeCombinedSpan"><i
                                                             class="maximize"
                                                             id="maximizeCombined"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></i></span>
                                                 </div>
-                                                <div class="chart_area" style=" height: 16.5vw;">
+                                                <div class="chart_area" style=" height: 16vw;">
                                                     <div class="chart" id='articleCounts'>
                                                         <script>
                                                             var divID = 'articleCounts';
@@ -2698,22 +2699,24 @@
                                                 </div> -->
 
                                                 <div class="card_head">
-                                                    <select class="select" id="chartFold" style="min-width: 90px; width:90px; float:left"
+                                                    <select size="1" class="select" id="chartFold" style="min-width: 90px; width:90px;"
                                                         onChange="itemChangeFoldChart()">
                                                         <option value="stock">주가</option>
-                                                        <option value="credit">신용</option>
+                                                        <option value="credit">신용공여</option>
                                                         <option value="sales">매출액</option>
+                                                        <option value="grade">등급</option>
                                                     </select>
 
-                                                     <div class="data_set_chart" id="chartStock" style="float: left; height: 3.5vw;">
-                                                        <a style="margin-right: 5px; margin-left: 10px;">회사</a>
-                                                        <select size="1" id='stockRange' class='select'>
-                                                        </select>
-                                                    </div>
-
                                                     <span style="float: right;" id="maximizeStockSpan"><i
-                                                            class="maximize"
-                                                            id="maximizeStock"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></i></span>
+                                                        class="maximize"
+                                                        id="maximizeStock"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></i></span>
+
+                       
+                                                    <select size="1" id='stockRange' class='select' style="margin-left: 10px;">
+                                                    </select>
+                                             
+
+                                                    
                                                 </div>
 
                                                 <div class="chart_area" style=" height: 15.5vw;">
