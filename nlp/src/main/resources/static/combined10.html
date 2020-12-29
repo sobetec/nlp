@@ -2097,6 +2097,21 @@
             document.getElementById('pagination-container').innerHTML = ``;
         }
 
+        function itemChangeFoldChart() {
+            var selectItem = $("#chartFold").val();
+
+            if (selectItem == "stock") {
+                $('#chartStock').show();
+            }
+            else if (selectItem == "credit") {
+                $('#chartStock').hide();
+            }
+            else if (selectItem == "sales") {
+                $('#chartStock').hide();
+            }
+       
+        }
+
         function createEmptyChartDiv() {
             document.getElementById('chartDiv').innerHTML = chartDivHTML;
         }
@@ -2601,17 +2616,17 @@
                                                         }
                                                     </style>
 
-                                                    <!-- <select multiple size="1" id='articleCountRange' class='yearSelect'>
+                                                    <select multiple size="1" id='articleCountRange' class='yearSelect' style="display: none;">
                                                         <option value='1'>1년</option>
                                                         <option value='3'>3년</option>
                                                         <option value='5'>5년</option>
                                                         <option value='all' selected>전체</option>
-                                                    </select> -->
+                                                    </select>
                                                     <span style="float: right;" id="maximizeCombinedSpan"><i
                                                             class="maximize"
                                                             id="maximizeCombined"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></i></span>
                                                 </div>
-                                                <div class="chart_area" style=" height: 16vw;">
+                                                <div class="chart_area" style=" height: 16.5vw;">
                                                     <div class="chart" id='articleCounts'>
                                                         <script>
                                                             var divID = 'articleCounts';
@@ -2660,14 +2675,47 @@
                                         <!-- 주가 플롯 -->
                                         <div class="card_item_large">
                                             <div class="card_box_right">
-                                                <div class="card_head">
-                                                    <span>주가&nbsp;</span>
-                                                    <select size="1" id='stockRange' class='select'>
+                                                <!-- <div class="card_head">
+                                                    <span>dd</span>
+                                                    <select class="select" id="chartFold" style="min-width: 90px; width:90px; float:left"
+                                                        onChange="itemChangeFoldChart()">
+                                                        <option value="stock">주가</option>
+                                                        <option value="credit">신용</option>
+                                                        <option value="sales">매출액</option>
                                                     </select>
+                                                    <span style="float: right;" id="maximizeStockSpan"><i
+                                                        class="maximize"
+                                                        id="maximizeStock"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></i>
+                                                    </span>
+                                
+
+                                                    <div class="data_set_chart" id="chartStock" style="float :left">
+                                                        <a style="margin-right: 5px; margin-left: 10px;">회사</a>
+                                                        <select size="1" id='stockRange' class='select'>
+                                                        </select>
+                                                    </div>
+ 
+                                                </div> -->
+
+                                                <div class="card_head">
+                                                    <select class="select" id="chartFold" style="min-width: 90px; width:90px; float:left"
+                                                        onChange="itemChangeFoldChart()">
+                                                        <option value="stock">주가</option>
+                                                        <option value="credit">신용</option>
+                                                        <option value="sales">매출액</option>
+                                                    </select>
+
+                                                     <div class="data_set_chart" id="chartStock" style="float: left; height: 3.5vw;">
+                                                        <a style="margin-right: 5px; margin-left: 10px;">회사</a>
+                                                        <select size="1" id='stockRange' class='select'>
+                                                        </select>
+                                                    </div>
+
                                                     <span style="float: right;" id="maximizeStockSpan"><i
                                                             class="maximize"
                                                             id="maximizeStock"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></i></span>
                                                 </div>
+
                                                 <div class="chart_area" style=" height: 15.5vw;">
                                                     <div class="chart" id="stockTime">
                                                         <script>

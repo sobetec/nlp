@@ -116,7 +116,7 @@ function makeGauge(divID, sentimentScore) {
                 return 'NO RESULT'
             }
             else {
-                return 'ƒ(s): ' + String(sentimentScore.toFixed(1))
+                return '위험도: ' + String(sentimentScore.toFixed(1))
             }
         })
         .attr('id', 'sentimentIndicator')
