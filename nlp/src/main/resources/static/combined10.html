@@ -64,7 +64,7 @@
         #industry_news_list,
         #subsidiary_news_list {
             text-align: center;
-            font-size: 12px;       
+            font-size: 12px;
         }
 
         /* The Modal (background) */
@@ -590,7 +590,7 @@
             opacity: 40%;
             cursor: pointer;
         }
-        
+
         .system_code {
             font-size: 14px;
             font-weight: bolder;
@@ -1179,8 +1179,8 @@
                     getChartQuery(companyName, 3);
                     console.log(responseData.length);
                     window.newsResponseData = responseData;
-                    window.newsResponseData.selectedName = companyName;                    
-                    // console.log(window.newsResponseData[0]);
+                    window.newsResponseData.selectedName = companyName;
+                    console.log(window.newsResponseData[0]);
                     $('#result_area_news').show();
 
                     $('#myModal').hide();
@@ -1485,7 +1485,7 @@
             var dataIndSub = parameters();
             dataIndSub.gubunJaName = gubunJaName;
             dataIndSub.selectedName = selectedName;
-            
+
             if (gubunJaName == "industry") {
                 result_area = 'result_area_news';
                 table_id = 'industry_news_list';
@@ -1508,13 +1508,13 @@
                 data: dataIndSub,
                 success: function (responseData) {
                     //alert('조회 성공');
-                    
+
                     console.log(responseData.length);
                     window.newsResponseData = responseData;
                     window.newsResponseData.selectedName = dataIndSub.selectedName;
-                    
+
                     var selectNameCheck;
-                    if(selectedName.indexOf("_system") != -1){
+                    if (selectedName.indexOf("_system") != -1) {
                         selectNameCheck = selectedName.split('_');
                         document.getElementById('main_title').innerHTML = `뉴스 조회<h4 style="display:inline">(` + selectNameCheck[0] + `)</h4>`;
                         window.newsResponseData.selectedName = selectNameCheck[0];
@@ -1524,7 +1524,7 @@
                     
 
                     getChartQuery(dataIndSub, 4);
-                    
+
                     console.log(window.newsResponseData[0]);
                     $('#result_area_industry').hide();
                     $('#result_area_subsidiary').hide();
@@ -1544,7 +1544,7 @@
                     document.getElementById('myModal').innerHTML = modalhtml2;
                     $('#myModal').show();
                     setTimeout(() => drawTable(result_area, table_id), 1000);
-                    
+
 
 
                     topFunction();
@@ -1654,20 +1654,20 @@
                                 if (k < 5) {
                                     if (colJavaName != null) {
 
-                                        if(colJavaName.indexOf("_system") != -1){
-                                        var strArray = colJavaName.split('_');
-                                        var htmlli1 =
-        
-                                        `
-                                                <li class="system_code" value="`+colJavaName+`">`+ strArray[0] + `&nbsp;*</li>
+                                        if (colJavaName.indexOf("_system") != -1) {
+                                            var strArray = colJavaName.split('_');
+                                            var htmlli1 =
+
+                                                `
+                                                <li class="system_code" value="`+ colJavaName + `">` + strArray[0] + `&nbsp;*</li>
                                                 `;
-                                       }else {
-                                        var htmlli1 =
-                                            `
-                                                <li value="`+colJavaName+`">`+ colJavaName + `</li>
+                                        } else {
+                                            var htmlli1 =
+                                                `
+                                                <li value="`+ colJavaName + `">` + colJavaName + `</li>
                                                 `;
 
-                                       }
+                                        }
 
                                         htmlhead += htmlli1;
                                         k++;
@@ -1676,17 +1676,17 @@
 
                                 } else if ((colJavaName != null)) {
 
-                                    if(colJavaName.indexOf("_system") != -1){
+                                    if (colJavaName.indexOf("_system") != -1) {
                                         var strArray = colJavaName.split('_');
                                         var htmlli2 =
-                                            
+
                                             `
-                                                <li class="system_code" value="`+colJavaName+`">`+ strArray[0] + `&nbsp;*</li>
+                                                <li class="system_code" value="`+ colJavaName + `">` + strArray[0] + `&nbsp;*</li>
                                                 `;
-                                       }else {
+                                    } else {
                                         var htmlli2 =
                                             `
-                                                <li value="`+colJavaName+`">`+ colJavaName + `</li>
+                                                <li value="`+ colJavaName + `">` + colJavaName + `</li>
                                                 `;
 
                                     }
@@ -1798,7 +1798,7 @@
                     $(".list").on("click", "li", function () {
                         alert($(this).attr("value"));
                         var listName = $(this).attr("value");
-                        
+
                         getNewsListByIndustryAndSubsidiary(gubunJa, listName);
                     });
 
@@ -2336,6 +2336,7 @@
     <script type="text/javascript" src='./js/nlp.js'></script>
     <script type="text/javascript" src='./js/nlp2.js'></script>
     <script type="text/javascript" src='./js/FileSaver.min.js'></script>
+    <script type="text/javascript" src="./js/d3.layout.cloud.js"></script>
 
 
 
@@ -2372,8 +2373,8 @@
                             </p>
                         </div> -->
                         <div id="resetDiv" style="height: 1px;">
-                                <button style="position:relative; left:0; top:-40px;" type="button" class="btn point"
-                                    id='resetChart'>Reset</button>
+                            <button style="position:relative; left:0; top:-40px;" type="button" class="btn point"
+                                id='resetChart'>Reset</button>
                         </div>
                         <div id='wordCloudSettings' class='enlargedChartSettings' style='display:none'>
                             <span>패딩 선택: </span>
@@ -2381,10 +2382,10 @@
                             <input id="paddingSlider" type="range" min="1" max="4" step="0.25" value="1.5">
                             <span>숫자 선택: </span>
                             <span id='textMaxValue'></span>
-                            <input id="textNumberSlider" type="range" min="1" max="50" step="1" value="50">
+                            <input id="textNumberSlider" type="range" min="1" max="100" step="1" value="50">
                             <span>글자 크기: </span>
                             <span id='fontSizeValue'></span>
-                            <input id="fontSizeSlider" type="range" min="1" max="500" step="1" value="50">
+                            <input id="fontSizeSlider" type="range" min="1" max="70" step="1" value="30">
                         </div>
                         <div id='keywordBarSettings' class='enlargedChartSettings' style='display:none'>
                             <span>숫자 선택: </span>
@@ -2718,6 +2719,121 @@
                                     </div>
 
                                     <div class="card_list">
+                                        <!-- WORD CLOUD -->
+                                        <div class="card_item_small">
+                                            <div class="card_box_left">
+                                                <div class="card_head">
+                                                    Word Cloud
+
+                                                    <style>
+                                                        #data {
+                                                            overflow: hidden;
+                                                            padding: 0;
+                                                        }
+
+                                                        #articleCo {
+                                                            visibility: hidden;
+                                                            padding: 0;
+                                                            padding-left: 1px;
+                                                            border: none;
+                                                            background-color: #eee;
+                                                        }
+
+                                                        .hiddenoption {
+                                                            visibility: hidden;
+                                                            border: 1px solid #000;
+                                                            background-color: white;
+                                                            padding-left: 5px;
+                                                            padding-right: 5px;
+                                                            margin-left: -1px;
+
+                                                        }
+                                                    </style>
+
+                                                    <select multiple size="1" id='articleCo' class='yearSelect'>
+
+                                                        <option class='hiddenoption' value='all' selected>전체</option>
+                                                    </select>
+                                                    <span style="float: right;" id="maximizeWordCloudSpan"><i
+                                                            class="maximize"
+                                                            id="maximizeWordCloud"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></i></span>
+                                                </div>
+                                                <div class="chart_area" style=" height: 16vw;">
+                                                    <div class="chart" id="wordCloud" style="cursor:default">
+
+                                                        <script type="text/javascript" src='./js/nlp.js'></script>
+
+                                                        <script>
+                                                            var gauge = document.getElementById('wordCloud');
+
+
+                                                        </script>
+
+                                                    </div>
+
+                                                </div>
+
+
+
+                                            </div>
+                                        </div>
+
+                                        <!-- SENTIMENT BOX -->
+                                        <div class="card_item_large">
+                                            <div class="card_box_right">
+                                                <div class="card_head">
+                                                    <span style="vertical-align: middle;" class="title">감성지수</span>
+                                                    <style>
+                                                        #data {
+                                                            overflow: hidden;
+                                                            padding: 0;
+                                                        }
+
+                                                        .yearSelect {
+                                                            padding: 0;
+                                                            padding-left: 1px;
+                                                            border: none;
+                                                            background-color: #ffffff;
+                                                        }
+
+                                                        .yearSelect option {
+                                                            display: inline-block;
+                                                            border: 1px solid #CDCDCD;
+                                                            background-color: white;
+                                                            padding-top: 2px;
+                                                            padding-bottom: 2px;
+                                                            padding-left: 5px;
+                                                            padding-right: 5px;
+                                                            margin-left: 0px;
+                                                        }
+
+                                                        .yearSelect::-webkit-scrollbar {
+                                                            display: none;
+                                                        }
+                                                    </style>
+
+                                                    <select multiple size="1" id='articleCo' class='yearSelect'>
+
+                                                        <option class='hiddenoption' value='all' selected>전체</option>
+                                                    </select>
+                                                    <span style="float: right;" id="maximizeSentimentBoxSpan"><i
+                                                            class="maximize"
+                                                            id="maximizeSentimentBox"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></i></span>
+                                                </div>
+                                                <div class="chart_area" style=" height: 16vw;">
+                                                    <div class="chart" id='sentimentBoxPlot'>
+                                                        <script>
+                                                            var divID = 'sentimentBoxPlot';
+
+
+                                                        </script>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="card_list">
                                         <!-- 키워드 빠 플롯 -->
                                         <div class="card_item_small">
                                             <div class="card_box_left">
@@ -2786,15 +2902,16 @@
                                                     </select>
 
                                                     <span style="float: right;" id="maximizeStockSpan"><i
-                                                        class="maximize"
-                                                        id="maximizeStock"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></i></span>
+                                                            class="maximize"
+                                                            id="maximizeStock"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></i></span>
 
-                       
-                                                    <select size="1" id='stockRange' class='select' style="margin-left: 10px;">
+
+                                                    <select size="1" id='stockRange' class='select'
+                                                        style="margin-left: 10px;">
                                                     </select>
-                                             
 
-                                                    
+
+
                                                 </div>
 
                                                 <div class="chart_area" style=" height: 15.5vw;">
@@ -2904,9 +3021,11 @@
         $(window).resize(function () {
             d3.selectAll('.visSVG').remove();
             makeGauge('dangerGauge', window.newsChartData.averageScore)
-            makeCombinedGraph(window.newsChartData.sentimentDates, window.newsChartData.allNews, 'articleCounts');
+            makeCombinedGraph(window.newsChartData.sentimentData, window.newsChartData.allNews, 'articleCounts');
             makeKeywordBarPlot(window.newsChartData.keywords, 'keywordBar', document.getElementById('keywordBarSlider').value)
             makeStockBarGraph(window.newsChartData.allStockData, 'stockTime');
+            makeSentimentBoxPlot(window.newsChartData.sentimentData, 'sentimentBoxPlot');
+            makeWordcloud(window.newsChartData.keywords);
             console.log('resized')
         });
         $('.stockPoint').on("scroll", function (e) {
@@ -2980,7 +3099,7 @@
             } else if (allParams.gubun == 'month') {
                 var fileName = term + '_' + allParams.newsYear + '년' + allParams.gubunItem + '월.png'
             } else {
-                var fileName = term + '_' + allParams.startDate.replace(/\//g,'-') + '~' + allParams.endDate.replace(/\//g,'-') + '.png'
+                var fileName = term + '_' + allParams.startDate.replace(/\//g, '-') + '~' + allParams.endDate.replace(/\//g, '-') + '.png'
             }
 
 
