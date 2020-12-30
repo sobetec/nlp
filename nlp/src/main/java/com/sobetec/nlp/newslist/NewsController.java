@@ -75,6 +75,20 @@ public class NewsController {
 		return resultList;
 	}
 	
+	// 임시~~
+	@GetMapping(path = "/getIndustryAndSubsidiaryListTest/{gubunJa}")
+	public List<Industry> getIndustryAndSubsidiaryListTest(@PathVariable String gubunJa) throws Exception {
+		System.out.println("구분자 =" + gubunJa  );
+		List<Industry> resultList = new ArrayList<Industry>();
+		if (gubunJa.equals("industry")) {
+			resultList = repository.getIndustryList();
+		}else {
+			resultList = repository.getSubsidiaryList();
+		};
+		
+		return resultList;
+	}
+	
 	@PostMapping(path = "/getNewsListByIndustryAndSubsidiary")
 	public List<News> getNewsListByIndustry(NewsCondition newsCondition) throws Exception {
 		System.out.println("구분자 네임= " + newsCondition.getGubunJaName());

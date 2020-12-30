@@ -64,7 +64,7 @@
         #industry_news_list,
         #subsidiary_news_list {
             text-align: center;
-            font-size: 12px;       
+            font-size: 12px;
         }
 
         /* The Modal (background) */
@@ -590,7 +590,7 @@
             opacity: 40%;
             cursor: pointer;
         }
-        
+
         .system_code {
             font-size: 14px;
             font-weight: bolder;
@@ -840,7 +840,7 @@
                     `
                     <tr>
                         <td>` + indexNum + `</td>
-
+                        
                         <td>` + window.newsResponseData[i].newsDate + `</td>
                         <td>` + window.newsResponseData[i].cmpyName + `</td>
                         <td><a href="javascript:viewNewsContents(` + i + `);">` + window.newsResponseData[i].newsTtl + `</a>
@@ -1494,11 +1494,11 @@
                 data: dataIndSub,
                 success: function (responseData) {
                     //alert('조회 성공');
-                    
+
                     console.log(responseData.length);
                     window.newsResponseData = responseData;
                     window.newsResponseData.selectedName = dataIndSub.selectedName;
-                    
+
                     var selectNameCheck;
                     if(selectedName.indexOf("_system") != -1){
                         selectNameCheck = selectedName.split('_');
@@ -1530,8 +1530,8 @@
                     $('#myModal').show();
                     setTimeout(() => drawTable(result_area, table_id), 1000);
                     
-
-
+                  
+                    
                     topFunction();
 
                     document.getElementById('main_title').focus();
@@ -1637,12 +1637,12 @@
                                 //console.log('산업별이름 '+colJavaName);
                                 if (k < 5) {
                                     if (colJavaName != null) {
-
-                                        if(colJavaName.indexOf("_system") != -1){
+                                       
+                                       if(colJavaName.indexOf("_system") != -1){
                                         var strArray = colJavaName.split('_');
                                         var htmlli1 =
-        
-                                        `
+                                            
+                                            `
                                                 <li class="system_code" value="`+colJavaName+`">`+ strArray[0] + `&nbsp;*</li>
                                                 `;
                                        }else {
@@ -1655,11 +1655,11 @@
 
                                         htmlhead += htmlli1;
                                         k++;
-
+                                       
                                     }
 
                                 } else if ((colJavaName != null)) {
-
+                                    
                                     if(colJavaName.indexOf("_system") != -1){
                                         var strArray = colJavaName.split('_');
                                         var htmlli2 =
@@ -1673,9 +1673,9 @@
                                                 <li value="`+colJavaName+`">`+ colJavaName + `</li>
                                                 `;
 
-                                    }
+                                       }
 
-
+                                    
                                     htmlmiddle += htmlli2;
                                 };
                             };
@@ -2144,24 +2144,6 @@
             document.getElementById('pagination-container').innerHTML = ``;
         }
 
-        function itemChangeFoldChart() {
-            var selectItem = $("#chartFold").val();
-
-            if (selectItem == "stock") {
-                $('#stockRange').show();
-            }
-            else if (selectItem == "credit") {
-                $('#stockRange').hide();
-            }
-            else if (selectItem == "sales") {
-                $('#stockRange').hide();
-            }
-            else if (selectItem == "grade") {
-                $('#stockRange').hide();
-            }
-       
-        }
-
         function createEmptyChartDiv() {
             document.getElementById('chartDiv').innerHTML = chartDivHTML;
         }
@@ -2180,7 +2162,7 @@
                                 <thead>
                                 <tr>
                                     <th>인덱스</th>
-
+                                    
                                     <th>날짜</th>
                                     <th>기업명</th>
                                     <th>제목</th>
@@ -2636,7 +2618,7 @@
                                         <div class="card_item_large">
                                             <div class="card_box_right">
                                                 <div class="card_head">
-                                                    <span style="vertical-align: middle;" class="title">감성지수</span>
+                                                    <span>기사수&nbsp;</span>
                                                     <style>
                                                         #data {
                                                             overflow: hidden;
@@ -2659,6 +2641,7 @@
                                                             padding-left: 5px;
                                                             padding-right: 5px;
                                                             margin-left: 0px;
+
                                                         }
 
                                                         .yearSelect::-webkit-scrollbar {
@@ -2666,9 +2649,11 @@
                                                         }
                                                     </style>
 
-                                                    <select multiple size="1" id='articleCo' class='yearSelect'>
-
-                                                        <option class='hiddenoption' value='all' selected>전체</option>
+                                                    <select multiple size="1" id='articleCountRange' class='yearSelect'>
+                                                        <option value='1'>1년</option>
+                                                        <option value='3'>3년</option>
+                                                        <option value='5'>5년</option>
+                                                        <option value='all' selected>전체</option>
                                                     </select>
                                                     <span style="float: right;" id="maximizeCombinedSpan"><i
                                                             class="maximize"
@@ -2723,49 +2708,14 @@
                                         <!-- 주가 플롯 -->
                                         <div class="card_item_large">
                                             <div class="card_box_right">
-                                                <!-- <div class="card_head">
-                                                    <span>dd</span>
-                                                    <select class="select" id="chartFold" style="min-width: 90px; width:90px; float:left"
-                                                        onChange="itemChangeFoldChart()">
-                                                        <option value="stock">주가</option>
-                                                        <option value="credit">신용</option>
-                                                        <option value="sales">매출액</option>
-                                                    </select>
-                                                    <span style="float: right;" id="maximizeStockSpan"><i
-                                                        class="maximize"
-                                                        id="maximizeStock"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></i>
-                                                    </span>
-                                
-
-                                                    <div class="data_set_chart" id="chartStock" style="float :left">
-                                                        <a style="margin-right: 5px; margin-left: 10px;">회사</a>
-                                                        <select size="1" id='stockRange' class='select'>
-                                                        </select>
-                                                    </div>
- 
-                                                </div> -->
-
                                                 <div class="card_head">
-                                                    <select size="1" class="select" id="chartFold" style="min-width: 90px; width:90px;"
-                                                        onChange="itemChangeFoldChart()">
-                                                        <option value="stock">주가</option>
-                                                        <option value="credit">신용공여</option>
-                                                        <option value="sales">매출액</option>
-                                                        <option value="grade">등급</option>
+                                                    <span>주가&nbsp;</span>
+                                                    <select size="1" id='stockRange' class='select'>
                                                     </select>
-
                                                     <span style="float: right;" id="maximizeStockSpan"><i
-                                                        class="maximize"
-                                                        id="maximizeStock"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></i></span>
-
-                       
-                                                    <select size="1" id='stockRange' class='select' style="margin-left: 10px;">
-                                                    </select>
-                                             
-
-                                                    
+                                                            class="maximize"
+                                                            id="maximizeStock"><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></i></span>
                                                 </div>
-
                                                 <div class="chart_area" style=" height: 15.5vw;">
                                                     <div class="chart" id="stockTime">
                                                         <script>

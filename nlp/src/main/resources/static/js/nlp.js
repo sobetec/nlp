@@ -497,19 +497,19 @@ function makeSentimentBoxPlot(sentimentData, divID) {
     console.log('making sentiment box')
     console.log(sentimentData)
     document.getElementById(divID).innerHTML = "";
-    var timeRange = document.getElementById('articleCountRange').value;
-    if (timeRange == 'all') {
-        var timeRangeStart = new Date('1970-01-01')
-    }
-    else {
-        var currDate = new Date();
-        var timeRangeStart = d3.timeYear.offset(currDate, -timeRange);
-        //console.log(timeRangeStart)
-    }
+    // var timeRange = document.getElementById('articleCountRange').value;
+    // if (timeRange == 'all') {
+    //     var timeRangeStart = new Date('1970-01-01')
+    // }
+    // else {
+    //     var currDate = new Date();
+    //     var timeRangeStart = d3.timeYear.offset(currDate, -timeRange);
+    //     //console.log(timeRangeStart)
+    // }
 
     sentimentData.sort(function (a, b) { return dateParser(b.date) - dateParser(a.date) });
 
-    sentimentData = sentimentData.filter(x => dateParser(x.date) > timeRangeStart)
+    // sentimentData = sentimentData.filter(x => dateParser(x.date) > timeRangeStart)
     var dateArray = [];
     for (var i = sentimentData.length - 1; i > -1; i--) {
         dateArray.push(dateParser(sentimentData[i].date));
@@ -1125,9 +1125,9 @@ function dateParser(dateString) {
 }
 
 function makeArticleCounts(data, divID) {
-    var timeRange = document.getElementById('articleCountRange').value;
+    // var timeRange = document.getElementById('articleCountRange').value;
     var currDate = new Date();
-    var timeRangeStart = d3.timeYear.offset(currDate, -timeRange);
+    // var timeRangeStart = d3.timeYear.offset(currDate, -timeRange);
     //console.log(timeRangeStart)
 
     var counts = {};
@@ -1361,14 +1361,14 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
         if (window.newsResponseData.selectedName != null) {
             document.getElementById('paramName').innerHTML = window.newsResponseData.selectedName;
         }
-        var timeRange = document.getElementById('articleCountRange').value;
-        if (timeRange == 'all') {
-            var timeRangeStart = new Date('1970-01-01')
-        }
-        else {
-            var currDate = new Date();
-            var timeRangeStart = d3.timeYear.offset(currDate, -timeRange);
-        }
+        // var timeRange = document.getElementById('articleCountRange').value;
+        // if (timeRange == 'all') {
+        //     var timeRangeStart = new Date('1970-01-01')
+        // }
+        // else {
+        //     var currDate = new Date();
+        //     var timeRangeStart = d3.timeYear.offset(currDate, -timeRange);
+        // }
 
         var counts = {};
         for (var i = 0; i < articlesData.length; i++) {
@@ -1382,8 +1382,8 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
         for (var i = 0; i < Object.keys(counts).length; i++) {
             articleCounts.push({ date: Object.keys(counts)[i], count: counts[Object.keys(counts)[i]] })
         }
-        sentimentData = sentimentData.filter(x => dateParser(x.date) > timeRangeStart)
-        articleCounts = articleCounts.filter(x => dateParser(x.date) > timeRangeStart)
+        // sentimentData = sentimentData.filter(x => dateParser(x.date) > timeRangeStart)
+        // articleCounts = articleCounts.filter(x => dateParser(x.date) > timeRangeStart)
         var dateArray = [];
         for (var i = sentimentData.length - 1; i > -1; i--) {
             dateArray.push(dateParser(sentimentData[i].date));
@@ -3367,9 +3367,9 @@ function getChartQuery1() {
                 console.log('clicked');
                 makeCombinedGraph(responseData.sentimentDates, responseData.allNews, 'enlargedChart');
             })
-            document.getElementById('articleCountRange').addEventListener('change', function () {
-                makeCombinedGraph(responseData.sentimentDates, responseData.allNews, 'articleCounts');
-            })
+            // document.getElementById('articleCountRange').addEventListener('change', function () {
+            //     makeCombinedGraph(responseData.sentimentDates, responseData.allNews, 'articleCounts');
+            // })
 
             /* var chart = document.getElementById('articleCounts');
             makeArticleCounts(responseData.allNews, 'articleCounts');
@@ -3494,9 +3494,9 @@ function getChartQuery2() {
                 //console.log('clicked');
                 makeCombinedGraph(responseData.sentimentDates, responseData.allNews, 'enlargedChart');
             })
-            document.getElementById('articleCountRange').addEventListener('change', function () {
-                makeCombinedGraph(responseData.sentimentDates, responseData.allNews, 'articleCounts');
-            })
+            // document.getElementById('articleCountRange').addEventListener('change', function () {
+            //     makeCombinedGraph(responseData.sentimentDates, responseData.allNews, 'articleCounts');
+            // })
 
             /* var chart = document.getElementById('articleCounts');
             makeArticleCounts(responseData.allNews, 'articleCounts');
@@ -3674,9 +3674,9 @@ function getChartQuery(queryInput, queryType) {
                 //console.log('clicked');
                 makeCombinedGraph(sentimentData, responseData.allNews, 'enlargedChart');
             })
-            document.getElementById('articleCountRange').addEventListener('change', function () {
-                makeCombinedGraph(sentimentData, responseData.allNews, 'articleCounts');
-            })
+            // document.getElementById('articleCountRange').addEventListener('change', function () {
+            //     makeCombinedGraph(responseData.sentimentDates, responseData.allNews, 'articleCounts');
+            // })
 
             makeKeywordBarPlot(responseData.keywords, 'keywordBar', document.getElementById('keywordBarSlider').value)
             document.getElementById('maximizeKeywordBar').addEventListener('click', function () {

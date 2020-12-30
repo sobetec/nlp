@@ -83,6 +83,21 @@ public class NewsRepository implements NewsRepositoryImpl {
 	}
 	
 	@Override
+	public List<News> getNewsListByIndustrySystem(NewsCondition newsCondition) throws Exception {
+		if (newsCondition.getGubun().equals("custom")) {
+			String startDate = newsCondition.getStartDate();
+			String endDate = newsCondition.getEndDate();
+			String sd[] = startDate.split("/");
+			String ed[] = endDate.split("/");
+			startDate = sd[2] + "-" + sd[0] + "-" + sd[1];
+			endDate = ed[2] + "-" + ed[0] + "-" + ed[1];
+			newsCondition.setStartDate(startDate);
+			newsCondition.setEndDate(endDate);
+		}
+		return sqlSession.selectList("mapper.newsMapper.selectNewsListByIndustrySystem", newsCondition);
+	}
+	
+	@Override
 	public List<News> getNewsListBySubsidiary(NewsCondition newsCondition) throws Exception {
 		if (newsCondition.getGubun().equals("custom")) {
 			String startDate = newsCondition.getStartDate();

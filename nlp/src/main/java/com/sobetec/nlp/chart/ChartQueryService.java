@@ -175,8 +175,19 @@ public class ChartQueryService {
 		List<NewsKeyword> allDocFreqs = new ArrayList<NewsKeyword>();
 
 		if (chartCondition.getGubunJaName().equals("industry")) {
-			allNews = repository.getChartIndustryNewsByCondition(chartCondition);
-			allStocks = repository.getChartIndustryStocksByCondition(chartCondition);			
+			if (chartCondition.getSelectedName().contains("_system")) {
+				
+				String name = chartCondition.getSelectedName();
+				System.out.println("차트쿼리 셀랙트네임 전달 : "+name.substring(0,name.length()-7));
+				chartCondition.setSelectedName(name.substring(0,name.length()-7));
+	    		allNews = repository.getChartSystemNewsByCondition(chartCondition);
+	    		allStocks = repository.getChartSystemStocksByCondition(chartCondition);
+			}else {
+				allNews = repository.getChartIndustryNewsByCondition(chartCondition);
+				allStocks = repository.getChartIndustryStocksByCondition(chartCondition);
+			}
+			
+			
 		} else if (chartCondition.getGubunJaName().equals("subsidiary")) {
 			allNews = repository.getChartSubsidiaryNewsByCondition(chartCondition);
 			allStocks = repository.getChartSubsidiaryStocksByCondition(chartCondition);

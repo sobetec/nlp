@@ -27,5 +27,9 @@ public interface ChartNewsRepositoryImpl {
 	List<News> getChartSubsidiaryNewsByCondition(ChartCondition chartCondition) throws Exception;
 	
 	List<Stocks> getChartSubsidiaryStocksByCondition(ChartCondition chartCondition) throws Exception;
+
+	List<News> getChartSystemNewsByCondition(ChartCondition chartCondition) throws Exception;
+
+	List<Stocks> getChartSystemStocksByCondition(ChartCondition chartCondition) throws Exception;
 		
 }
