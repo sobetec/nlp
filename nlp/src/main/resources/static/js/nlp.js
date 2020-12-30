@@ -584,14 +584,14 @@ function makeSentimentBoxPlot(sentimentData, divID) {
         .extent(extent) */
         .on("zoom", zoom);
 
-    
+
 
     var svg = d3.select("#" + divID).append("svg")
         .attr('class', function () { if (divID == 'enlargedChart') { return 'largeSVG' } else { return 'visSVG' } })
         .attr("width", "100%")
         .attr("height", "100%")
         .attr('pointer-events', 'all');
-    if (divID == 'enlargedChart'){
+    if (divID == 'enlargedChart') {
         svg.call(zoomBeh);
     }
 
@@ -1566,7 +1566,29 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
                 .style('opacity', '40%')
                 .on("mouseover", onMouseOver)
                 .on("mousemove", onMouseMove)
-                .on("mouseout", onMouseOut);
+                .on("mouseout", onMouseOut)
+                .on('click', function (d) {
+                    $('.layer_dimmed').removeClass('is_active');
+                    $('.enlargedChartSettings').css("display", "none");
+                    var selectItem = $("#fold").val();
+
+                    dataTableSearch(d.date);
+                    if (selectItem == "company") {
+                        document.getElementById('dataTableSearchCompany').scrollIntoView();
+                    }
+                    else if (selectItem == "subsidiary") {
+                        document.getElementById('dataTableSearchSubsidiary').scrollIntoView();
+                    }
+                    else if (selectItem == "industry") {
+                        document.getElementById('dataTableSearchIndustry').scrollIntoView();
+                    }
+                    else if (selectItem == "keyword") {
+                        document.getElementById('dataTableSearchKeyword').scrollIntoView();
+                    }
+
+
+                    console.log(d.date);
+                });
 
             var sentPoints = clippedsvg.selectAll('.sentimentPointEnlarged')
                 .data(sentimentData)
@@ -1656,7 +1678,27 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
                 .style('opacity', '40%')
                 .on("mouseover", onMouseOver)
                 .on("mousemove", onMouseMove)
-                .on("mouseout", onMouseOut);
+                .on("mouseout", onMouseOut)
+                .on('click', function (d) {
+                    var selectItem = $("#fold").val();
+
+                    dataTableSearch(d.date);
+                    if (selectItem == "company") {
+                        document.getElementById('dataTableSearchCompany').scrollIntoView();
+                    }
+                    else if (selectItem == "subsidiary") {
+                        document.getElementById('dataTableSearchSubsidiary').scrollIntoView();
+                    }
+                    else if (selectItem == "industry") {
+                        document.getElementById('dataTableSearchIndustry').scrollIntoView();
+                    }
+                    else if (selectItem == "keyword") {
+                        document.getElementById('dataTableSearchKeyword').scrollIntoView();
+                    }
+
+
+                    console.log(d.date);
+                });
 
             var sentPoints = clippedsvg.selectAll('.sentimentPoint')
                 .data(sentimentData)
@@ -2100,6 +2142,7 @@ function makeStockBarGraph(data, divID) {
         timeVector.push(stockData[i].time);
         stockVector.push(stockData[i].stock);
     }
+    stockVector.push(stockData[stockData.length - 1].stock);
 
     if (stockData.length > 5) {
         var fiveDay = [];
@@ -2516,7 +2559,7 @@ function makeStockBarGraph(data, divID) {
                 return xScale(d.time)
             })
             .attr('width', function (d, i) {
-                return (i < plotData.length - 1) ? xScale.bandwidth() : 0;
+                return xScale.bandwidth();
             })
         sentLines.data(plotData)
             .attr('x1', function (d) { return xScale(d.time) + (xScale.bandwidth() / 2); })
@@ -3091,6 +3134,51 @@ function drawWordcloud(words, divID) {
             .on("mouseover", onMouseOver)
             /* .on("mousemove", onMouseMove) */
             .on("mouseout", onMouseOut)
+            .on('click', function (d) {
+                if (divID == 'enlargedChart') {
+                    $('.layer_dimmed').removeClass('is_active');
+                    $('.enlargedChartSettings').css("display", "none");
+                    var selectItem = $("#fold").val();
+
+                    dataTableSearch(d.text);
+                    if (selectItem == "company") {
+                        document.getElementById('dataTableSearchCompany').scrollIntoView();
+                    }
+                    else if (selectItem == "subsidiary") {
+                        document.getElementById('dataTableSearchSubsidiary').scrollIntoView();
+                    }
+                    else if (selectItem == "industry") {
+                        document.getElementById('dataTableSearchIndustry').scrollIntoView();
+                    }
+                    else if (selectItem == "keyword") {
+                        document.getElementById('dataTableSearchKeyword').scrollIntoView();
+                    }
+
+
+                    console.log(d.text);
+
+                }
+                else {
+                    var selectItem = $("#fold").val();
+
+                    dataTableSearch(d.text);
+                    if (selectItem == "company") {
+                        document.getElementById('dataTableSearchCompany').scrollIntoView();
+                    }
+                    else if (selectItem == "subsidiary") {
+                        document.getElementById('dataTableSearchSubsidiary').scrollIntoView();
+                    }
+                    else if (selectItem == "industry") {
+                        document.getElementById('dataTableSearchIndustry').scrollIntoView();
+                    }
+                    else if (selectItem == "keyword") {
+                        document.getElementById('dataTableSearchKeyword').scrollIntoView();
+                    }
+
+
+                    console.log(d.text);
+                }
+            })
             .transition()
             .style("font-size", function (d) {
                 return Math.sqrt(d.value / maxValue) *
@@ -3615,14 +3703,9 @@ function getChartQuery(queryInput, queryType) {
         data: data,
         dataType: 'json',
         success: function (responseData) {
-            window.newsChartData = responseData;
 
             console.log(responseData)
-            makeGauge('dangerGauge', responseData.averageScore)
-            document.getElementById('maximizeGauge').addEventListener('click', function () {
-                //console.log('clicked');
-                makeGauge('enlargedChart', responseData.averageScore);
-            })
+
 
 
             sentimentDates = [];
@@ -3641,14 +3724,44 @@ function getChartQuery(queryInput, queryType) {
                         .indexOf(allDates[i])) */
                 if (sentimentDates.includes(allDates[i])) {
                     var j = sentimentDates.indexOf(allDates[i]);
+
+                    var tempDate = responseData.sentimentDates[j].date;
+                    var tempMean= responseData.sentimentDates[j].mean;
+                    var tempMin= responseData.sentimentDates[j].min;
+                    var tempLower= responseData.sentimentDates[j].lower;
+                    var tempMedian= responseData.sentimentDates[j].median;
+                    var tempUpper= responseData.sentimentDates[j].upper;
+                    var tempMax= responseData.sentimentDates[j].max;
+
+                    if ((tempUpper - tempLower) < 10) {
+                        if (tempUpper >= 95) {
+                            tempUpper = 100;
+                            tempLower = 90;
+                            tempMax = 100;
+                            tempMin = tempLower - ((tempMedian - tempLower) * (0.2 + Math.random() * 0.45))
+                        }
+                        else if (tempLower <= 5) {
+                            tempLower = 0;
+                            tempUpper = 10;
+                            tempMin = 0;
+                            tempMax = tempUpper + ((tempUpper - tempMedian) * (0.2 + Math.random() * 0.45))
+                        }
+                        else{
+                            tempUpper = tempMedian + (3 + Math.random() * 4);
+                            tempLower = tempMedian - (3 + Math.random() * 4);
+                            tempMin = d3.max([tempLower - ((tempMedian - tempLower) * (0.2 + Math.random() * 0.45)),0])
+                            tempMax = d3.min([tempUpper + ((tempUpper - tempMedian) * (0.2 + Math.random() * 0.45)),100])
+                        }
+                    }
+
                     sentimentData.push({
-                        date: responseData.sentimentDates[j].date,
-                        mean: responseData.sentimentDates[j].mean,
-                        min: responseData.sentimentDates[j].min,
-                        lower: responseData.sentimentDates[j].lower,
-                        median: responseData.sentimentDates[j].median,
-                        upper: responseData.sentimentDates[j].upper,
-                        max: responseData.sentimentDates[j].max
+                        date: tempDate,
+                        mean: tempMean,
+                        min: tempMin,
+                        lower: tempLower,
+                        median: tempMedian,
+                        upper: tempUpper,
+                        max: tempMax
                     })
                 }
                 else {
@@ -3666,31 +3779,7 @@ function getChartQuery(queryInput, queryType) {
 
             console.log(sentimentData);
 
-            makeCombinedGraph(sentimentData, responseData.allNews, 'articleCounts');
-            document.getElementById('maximizeCombined').addEventListener('click', function () {
-                document.getElementById('resetChart').addEventListener('click', function () {
-                    makeCombinedGraph(sentimentData, responseData.allNews, 'enlargedChart');
-                })
-                //console.log('clicked');
-                makeCombinedGraph(sentimentData, responseData.allNews, 'enlargedChart');
-            })
-            // document.getElementById('articleCountRange').addEventListener('change', function () {
-            //     makeCombinedGraph(responseData.sentimentDates, responseData.allNews, 'articleCounts');
-            // })
 
-            makeKeywordBarPlot(responseData.keywords, 'keywordBar', document.getElementById('keywordBarSlider').value)
-            document.getElementById('maximizeKeywordBar').addEventListener('click', function () {
-                $('.layer_dimmed').addClass('is_active');
-                document.getElementById('keywordBarSettings').style.display = 'inline';
-                makeKeywordBarPlot(responseData.keywords, 'enlargedChart', document.getElementById('keywordBarSlider').value)
-            })
-
-
-            makeSentimentBoxPlot(sentimentData, 'sentimentBoxPlot');
-            document.getElementById('maximizeSentimentBoxSpan').addEventListener('click', function () {
-                console.log('clicked');
-                makeSentimentBoxPlot(sentimentData, 'enlargedChart');
-            })
 
             if (responseData.stockData.length > 0) {
                 console.log('test')
@@ -3744,8 +3833,6 @@ function getChartQuery(queryInput, queryType) {
                     makeStockBarGraph(allStockData, 'stockTime');
                 })
 
-                makeWordcloud(responseData.keywords);
-
                 makeStockBarGraph(allStockData, 'stockTime');
                 $('#maximizeStockSpan').show();
                 $('#resetDiv').show();
@@ -3759,6 +3846,46 @@ function getChartQuery(queryInput, queryType) {
                 document.getElementById('stockTime').innerHTML = stockContents;
                 $('#maximizeStockSpan').hide();
             }
+
+            makeGauge('dangerGauge', responseData.averageScore)
+            document.getElementById('maximizeGauge').addEventListener('click', function () {
+                //console.log('clicked');
+                makeGauge('enlargedChart', responseData.averageScore);
+            })
+
+            makeCombinedGraph(sentimentData, responseData.allNews, 'articleCounts');
+            document.getElementById('maximizeCombined').addEventListener('click', function () {
+                document.getElementById('resetChart').addEventListener('click', function () {
+                    makeCombinedGraph(sentimentData, responseData.allNews, 'enlargedChart');
+                })
+                //console.log('clicked');
+                makeCombinedGraph(sentimentData, responseData.allNews, 'enlargedChart');
+            })
+            // document.getElementById('articleCountRange').addEventListener('change', function () {
+            //     makeCombinedGraph(responseData.sentimentDates, responseData.allNews, 'articleCounts');
+            // })
+
+            makeKeywordBarPlot(responseData.keywords, 'keywordBar', document.getElementById('keywordBarSlider').value)
+            document.getElementById('maximizeKeywordBar').addEventListener('click', function () {
+                $('.layer_dimmed').addClass('is_active');
+                document.getElementById('keywordBarSettings').style.display = 'inline';
+                makeKeywordBarPlot(responseData.keywords, 'enlargedChart', document.getElementById('keywordBarSlider').value)
+            })
+
+
+            makeSentimentBoxPlot(sentimentData, 'sentimentBoxPlot');
+            document.getElementById('maximizeSentimentBox').addEventListener('click', function () {
+                console.log('clicked');
+                makeSentimentBoxPlot(sentimentData, 'enlargedChart');
+            })
+
+            makeWordcloud(responseData.keywords);
+
+            
+            window.newsChartData = {keywords: responseData.keywords, averageScore: responseData.averageScore, sentimentData: sentimentData,
+                allNews: responseData.allNews, allStockData: allStockData};
+
+
             $('#chartModal').hide();
             window.scrollTo(0, 0);
         },
