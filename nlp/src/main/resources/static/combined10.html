@@ -1583,15 +1583,30 @@
                     //				console.log(gigi);
 
                     var tables = ``;
-
-                    var expend_all = `
-                    <div style="float:left; font-size:13px;"> &nbsp;&nbsp;* 표시가 있는 경우 산업별 59개 Category </div>
-
-                <div class="buttons" align="right" >
-                    <a id="toggleee" class="btn" style="min-width: 110px;" href="javascript:togglee();">전체 펼치기</a>
+                
+                    var expend_all;
                     
-                </div>
-                `
+                    if ( gubunJa == 'industry') {
+                        expend_all = `
+                            <div style="float:left; font-size:13px;"> &nbsp;&nbsp;* 표시가 있는 경우 산업별 59개 Category </div>
+                                <div class="buttons" align="right" >
+                                <a id="toggleee" class="btn" style="min-width: 110px;" href="javascript:togglee();">전체 펼치기</a>
+                                
+                            </div>
+                          `
+                
+                    }else {
+
+                        expend_all =
+                        `
+                        <div class="buttons" align="right" >
+                            <a id="toggleee" class="btn" style="min-width: 110px;" href="javascript:togglee();">전체 펼치기</a>
+                            
+                        </div>
+                         `
+
+                    }
+                    
 
                     for (var n = 0; n < 3; n++) {
                         var htmlTableHead =
