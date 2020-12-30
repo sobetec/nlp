@@ -617,9 +617,9 @@
         });
 
         function viewNewsContents(i) {
-            console.log(window.newsResponseData[i]);
-            console.log(window.newsResponseData[i].indexNum);
-            console.log(window.newsResponseData.length);
+            // console.log(window.newsResponseData[i]);
+            // console.log(window.newsResponseData[i].indexNum);
+            // console.log(window.newsResponseData.length);
 
             var prev = ``;
             var next = ``;
@@ -939,7 +939,7 @@
                     rred = `<td style='color:black'>` + sscoreWord + `</td>`;
                 }
 
-                console.log(window.reportResponseData[i].orgnFileName);
+                // console.log(window.reportResponseData[i].orgnFileName);
                 var downImg = '';
                 var paramFileName = window.reportResponseData[i].orgnFileName;
 
@@ -958,7 +958,7 @@
                 paramFileName = paramFileName.replace(/\’/g, "%E2%80%99");
                 paramFileName = paramFileName.replace(/\•/g, "%E2%80%A2");
 
-                console.log(paramFileName);
+                // console.log(paramFileName);
 
                 if (window.reportResponseData[i].docCaty == 'pdf') {
                     downImg = `
@@ -1020,7 +1020,7 @@
         }
 
         function parameters() {
-            console.log("CURRENTLY RUNNING PARAMETERSSSSSS")
+            // console.log("CURRENTLY RUNNING PARAMETERSSSSSS")
             var data = new Object();
 
             data.newsYear = parseInt($("#newsYear").val());
@@ -1028,12 +1028,12 @@
 
             if ($("#gubunNews").val() == "month") {
                 var temp = $("#choicesNews").val().split("월")[0];
-                console.log(temp);
+                // console.log(temp);
                 data.gubunItem = parseInt(temp);
             }
             else if ($("#gubunNews").val() == "quarter") {
                 var temp = $("#choicesNews").val().split("분기")[0];
-                console.log(temp);
+                // console.log(temp);
                 data.gubunItem = parseInt(temp);
             }
 
@@ -1049,7 +1049,7 @@
 
         function getRowCount() {
             let datassss = parameters();
-            console.log(parameters());
+            // console.log(parameters());
 
             loading1("뉴스");
 
@@ -1059,7 +1059,7 @@
                 data: datassss,
                 dataType: 'json',
                 success: function (responseData) {
-                    console.log(responseData);
+                    // console.log(responseData);
                     datassss.rowCount = responseData;
                     if (datassss.rowCount == 0) {
                         alert('뉴스기사가 없습니다');
@@ -1141,7 +1141,7 @@
                     console.log(responseData.length);
                     window.newsResponseData = responseData;
                     window.newsResponseData.selectedName = data.searchWord;
-                    console.log(window.newsResponseData[0]);
+                    // console.log(window.newsResponseData[0]);
                     $('#result_area_news').show();
 
                     $('#myModal').hide();
@@ -1180,7 +1180,7 @@
                     console.log(responseData.length);
                     window.newsResponseData = responseData;
                     window.newsResponseData.selectedName = companyName;                    
-                    console.log(window.newsResponseData[0]);
+                    // console.log(window.newsResponseData[0]);
                     $('#result_area_news').show();
 
                     $('#myModal').hide();
@@ -1218,12 +1218,12 @@
 
             if ($("#gubunReport").val() == "month") {
                 var temp = $("#choicesReport").val().split("월")[0];
-                console.log(temp);
+                // console.log(temp);
                 data.gubunItem = parseInt(temp);
             }
             else if ($("#gubunReport").val() == "quarter") {
                 var temp = $("#choicesReport").val().split("분기")[0];
-                console.log(temp);
+                // console.log(temp);
                 data.gubunItem = parseInt(temp);
             }
 
@@ -1231,7 +1231,7 @@
             data.endDate = $("#date_to_report").val();
             data.searchWord = document.getElementById('search_company_report').value;
 
-            console.log(data);
+            // console.log(data);
 
             loading1("행내 보고서");
 
@@ -1245,7 +1245,7 @@
                     console.log(responseData.length);
                     if (responseData.length != 0) {
                         window.reportResponseData = responseData;
-                        console.log(window.reportResponseData[0]);
+                        // console.log(window.reportResponseData[0]);
 
                         $('#myModal').hide();
 
@@ -1438,7 +1438,21 @@
             // itemChangeFold();
 
             if ($('input:radio[id=news_radio]').is(':checked')) {
-                document.getElementById('main_title').innerText = '뉴스 조회';
+
+                var selectItem = $("#fold").val();
+                if (selectItem == "subsidiary" || selectItem == "industry"){
+                    var selectNameCheck;
+                    if(window.newsResponseData.selectedName.indexOf("_system") != -1){
+                        selectNameCheck = window.newsResponseData.selectedName.split('_');
+                        document.getElementById('main_title').innerHTML = `뉴스 조회<h4 style="display:inline">(` + selectNameCheck[0] + `)</h4>`;
+                    }else{
+                        document.getElementById('main_title').innerHTML = `뉴스 조회<h4 style="display:inline">(` + window.newsResponseData.selectedName + `)</h4>`;
+                    }
+                }
+                else{
+                    document.getElementById('main_title').innerText = '뉴스 조회';
+                }
+
                 // createEmptyDatatableNews();
                 $('#contents_section_news').show();
                 $('#contents_section_report').hide();
@@ -1503,10 +1517,11 @@
                     if(selectedName.indexOf("_system") != -1){
                         selectNameCheck = selectedName.split('_');
                         document.getElementById('main_title').innerHTML = `뉴스 조회<h4 style="display:inline">(` + selectNameCheck[0] + `)</h4>`;
+                        window.newsResponseData.selectedName = selectNameCheck[0];
                     }else{
                         document.getElementById('main_title').innerHTML = `뉴스 조회<h4 style="display:inline">(` + selectedName + `)</h4>`;
                     }
-                    //dataIndSub.selectedName = selectNameCheck;
+                    
 
                     getChartQuery(dataIndSub, 4);
                     
@@ -1584,14 +1599,15 @@
 
                     var tables = ``;
 
-                    var expend_all = `
+                    var categoryMark = `
                     <div style="float:left; font-size:13px;"> &nbsp;&nbsp;* 표시가 있는 경우 산업별 59개 Category </div>
-
-                <div class="buttons" align="right" >
-                    <a id="toggleee" class="btn" style="min-width: 110px;" href="javascript:togglee();">전체 펼치기</a>
+                    `;
                     
-                </div>
-                `
+                    var expend_all = `
+                    <div class="buttons" align="right" >
+                        <a id="toggleee" class="btn" style="min-width: 110px;" href="javascript:togglee();">전체 펼치기</a>    
+                    </div>
+                    `;
 
                     for (var n = 0; n < 3; n++) {
                         var htmlTableHead =
@@ -1715,7 +1731,7 @@
                     };
 
                     if (gubunJa == 'industry') {
-                        document.getElementById('result_area_industry').innerHTML = expend_all + tables;
+                        document.getElementById('result_area_industry').innerHTML = categoryMark + expend_all + tables;
                     } else {
                         document.getElementById('result_area_subsidiary').innerHTML = expend_all + tables;
                     }
@@ -2073,6 +2089,17 @@
                 <button id="search_button_news" class="btn_search" onclick="` + getFunction + `"><span class="blind" >검색</span></button>`;
             document.getElementById('search_box_news').innerHTML = searchBoxHTML;
 
+
+            var companyChartSelect = `<option value="stock">주가</option>
+                                    <option value="credit">신용공여</option>
+                                    <option value="sales">매출액</option>
+                                    <option value="grade">재무위험등급</option>
+                                    <option value="sinyong">신용평가등급</option>`;
+            var elseChartSelect = `<option value="stock">주가</option>
+                                    <option value="credit">신용공여</option>
+                                    <option value="sales">매출액</option>
+                                    <option value="grade">재무위험등급</option>`;
+
             document.getElementById('gubunSelect').innerHTML = gubunSelectHTML;
             document.getElementById('yearSelect').innerHTML = yearSelectHTML;
             document.getElementById('condition').innerHTML = conditionHTML;
@@ -2157,6 +2184,9 @@
                 $('#stockRange').hide();
             }
             else if (selectItem == "grade") {
+                $('#stockRange').hide();
+            }
+            else if (selectItem == "sinyong") {
                 $('#stockRange').hide();
             }
        
@@ -2746,12 +2776,13 @@
                                                 </div> -->
 
                                                 <div class="card_head">
-                                                    <select size="1" class="select" id="chartFold" style="min-width: 90px; width:90px;"
+                                                    <select size="1" class="select" id="chartFold" style="min-width: 90px; width:140px;"
                                                         onChange="itemChangeFoldChart()">
                                                         <option value="stock">주가</option>
                                                         <option value="credit">신용공여</option>
                                                         <option value="sales">매출액</option>
-                                                        <option value="grade">등급</option>
+                                                        <option value="grade">재무위험등급</option>
+                                                        <option value="sinyong">신용평가등급</option>
                                                     </select>
 
                                                     <span style="float: right;" id="maximizeStockSpan"><i

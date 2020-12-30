@@ -2712,12 +2712,14 @@ function onMouseOver(d, i) {
     else if (elementClass == 'keywordBar') {
         d3.select(this).style('opacity', '70%');
         tooltip.style('visibility', 'visible');
-        tooltip.text(d.keyword + ': ' + d.tf_idf);
+        // tooltip.text(d.keyword + ': ' + d.tf_idf);
+        tooltip.text(d.keyword);
     }
     else if (elementClass == 'keywordBarEnlarged') {
         d3.select(this).style('opacity', '70%');
         tooltipEnlarged.style('visibility', 'visible');
-        tooltipEnlarged.text(d.keyword + ': ' + d.tf_idf);
+        // tooltipEnlarged.text(d.keyword + ': ' + d.tf_idf);
+        tooltipEnlarged.text(d.keyword);
     }
     else if (elementClass == 'svgArc') {
         d3.select(this).style('opacity', '70%');
