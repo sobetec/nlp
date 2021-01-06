@@ -54,7 +54,7 @@ public class ChartNewsRepository implements ChartNewsRepositoryImpl {
 	public List<Stocks> getChartStocksByCondition(ChartCondition chartCondition) throws Exception {
 		return sqlSession.selectList("mapper.chartMapper.selectChartStocksByCondition", chartCondition);
 	}
-	
+
 	@Override
 	public List<News> getChartIndustryNewsByCondition(ChartCondition chartCondition) throws Exception {
 		if (chartCondition.getGubun().equals("custom")) {
@@ -69,7 +69,7 @@ public class ChartNewsRepository implements ChartNewsRepositoryImpl {
 		}
 		return sqlSession.selectList("mapper.chartMapper.selectChartIndustryNewsByCondition", chartCondition);
 	}
-	
+
 	@Override
 	public List<News> getChartSystemNewsByCondition(ChartCondition chartCondition) throws Exception {
 		if (chartCondition.getGubun().equals("custom")) {
@@ -84,17 +84,18 @@ public class ChartNewsRepository implements ChartNewsRepositoryImpl {
 		}
 		return sqlSession.selectList("mapper.chartMapper.selectChartSystemNewsByCondition", chartCondition);
 	}
-	
+
 	@Override
 	public List<Stocks> getChartSystemStocksByCondition(ChartCondition chartCondition) throws Exception {
-		
+
 		return sqlSession.selectList("mapper.chartMapper.selectChartSystemStocksByCondition", chartCondition);
 	}
-	
-	
+
 	@Override
 	public List<Stocks> getChartIndustryStocksByCondition(ChartCondition chartCondition) throws Exception {
-		//List<Stocks> a = sqlSession.selectList("mapper.chartMapper.selectChartIndustryStocksByCondition", chartCondition);
+		// List<Stocks> a =
+		// sqlSession.selectList("mapper.chartMapper.selectChartIndustryStocksByCondition",
+		// chartCondition);
 		return sqlSession.selectList("mapper.chartMapper.selectChartIndustryStocksByCondition", chartCondition);
 	}
 
@@ -137,7 +138,25 @@ public class ChartNewsRepository implements ChartNewsRepositoryImpl {
 	public List<Stocks> getChartSubsidiaryStocksByCondition(ChartCondition chartCondition) throws Exception {
 		return sqlSession.selectList("mapper.chartMapper.selectChartSubsidiaryStocksByCondition", chartCondition);
 	}
-	
-	
+
+	@Override
+	public List<LineData> getChartCreditsByCondition(ChartCondition chartCondition) throws Exception {
+		return sqlSession.selectList("mapper.chartMapper.selectChartCreditsByCondition", chartCondition);
+	}
+
+	@Override
+	public List<LineData> getChartSalesByCondition(ChartCondition chartCondition) throws Exception {
+		return sqlSession.selectList("mapper.chartMapper.selectChartSalesByCondition", chartCondition);
+	}
+
+	@Override
+	public List<LineData> getChartGradesByCondition(ChartCondition chartCondition) throws Exception {
+		return sqlSession.selectList("mapper.chartMapper.selectChartGradesByCondition", chartCondition);
+	}
+
+	@Override
+	public List<LineData> getChartGrades2ByCondition(ChartCondition chartCondition) throws Exception {
+		return sqlSession.selectList("mapper.chartMapper.selectChartGrades2ByCondition", chartCondition);
+	}
 
 }

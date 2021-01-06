@@ -11,25 +11,33 @@ public interface ChartNewsRepositoryImpl {
 	List<NewsKeyword> getDocFreqCounts() throws Exception;
 
 	List<Integer> getAllNewCount() throws Exception;
-	
+
 	List<News> getChartNewsByCondition(ChartCondition chartCondition) throws Exception;
-	
+
 	List<Stocks> getChartStocksByCondition(ChartCondition chartCondition) throws Exception;
-	
+
 	List<News> getChartIndustryNewsByCondition(ChartCondition chartCondition) throws Exception;
-	
+
 	List<Stocks> getChartIndustryStocksByCondition(ChartCondition chartCondition) throws Exception;
-	
+
 	List<News> getChartCompanyNewsByCondition(ChartCondition chartCondition) throws Exception;
-	
+
 	List<Stocks> getChartCompanyStocksByCondition(ChartCondition chartCondition) throws Exception;
-	
+
 	List<News> getChartSubsidiaryNewsByCondition(ChartCondition chartCondition) throws Exception;
-	
+
 	List<Stocks> getChartSubsidiaryStocksByCondition(ChartCondition chartCondition) throws Exception;
 
 	List<News> getChartSystemNewsByCondition(ChartCondition chartCondition) throws Exception;
 
 	List<Stocks> getChartSystemStocksByCondition(ChartCondition chartCondition) throws Exception;
-		
+
+	List<LineData> getChartCreditsByCondition(ChartCondition chartCondition) throws Exception;
+
+	List<LineData> getChartSalesByCondition(ChartCondition chartCondition) throws Exception;
+
+	List<LineData> getChartGradesByCondition(ChartCondition chartCondition) throws Exception;
+
+	List<LineData> getChartGrades2ByCondition(ChartCondition chartCondition) throws Exception;
+
 }
