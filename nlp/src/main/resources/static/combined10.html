@@ -2771,7 +2771,7 @@
                                         <div class="card_item_large">
                                             <div class="card_box_right">
                                                 <div class="card_head">
-                                                    <span style="vertical-align: middle;" class="title">감성지수</span>
+                                                    <span style="vertical-align: middle;" class="title">감성지수 Ⅰ</span>
                                                     <style>
                                                         #data {
                                                             overflow: hidden;
@@ -2886,7 +2886,7 @@
                                         <div class="card_item_large">
                                             <div class="card_box_right">
                                                 <div class="card_head">
-                                                    <span style="vertical-align: middle;" class="title">감성지수</span>
+                                                    <span style="vertical-align: middle;" class="title">감성지수 Ⅱ</span>
                                                     <style>
                                                         #data {
                                                             overflow: hidden;
@@ -3145,10 +3145,12 @@
         $(".card_list").css('max-height', $(".contents_panel:first").height())
         console.log($(".contents_panel:first").height());
 
+        /* ------------------ ALL CLOSE MODAL FUNCTIONS ------------------ */
         // modal
         $('.layer_dimmed .btn_close').on('click', function () {
             $(this).parents('.layer_dimmed').removeClass('is_active');
             $('.enlargedChartSettings').css("display", "none");
+            document.getElementById('enlargedChart').innerHTML = ''
             /* $('.stockLine').attr('clip-path', 'url(#stockClip)'); */
         });
 
@@ -3161,6 +3163,7 @@
             if (!chartEnlargedContainer.is(e.target) && chartEnlargedContainer.has(e.target).length === 0) {
                 $('.layer_dimmed').removeClass('is_active');
                 $('.enlargedChartSettings').css("display", "none");
+                document.getElementById('enlargedChart').innerHTML = ''
                 /*  $('.stockLine').attr('clip-path', 'url(#stockClip)'); */
             }
             if (!articleContent.is(e.target) && !articleTitle.is(e.target) && articleContent.has(e.target).length === 0 && articleTitle.has(e.target).length === 0) {
@@ -3173,6 +3176,7 @@
             if (e.keyCode === 27) { // ESC
                 $('.layer_dimmed').removeClass('is_active');
                 $('.enlargedChartSettings').css("display", "none");
+                document.getElementById('enlargedChart').innerHTML = ''
                 close_pop();
                 /*  $('.stockLine').attr('clip-path', 'url(#stockClip)'); */
             }
