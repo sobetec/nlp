@@ -1,6 +1,6 @@
 function makeGauge(divID, sentimentScore) {
-    if (isNaN(sentimentScore)) {
-        sentimentScore = 101;
+    if (!isFinite(sentimentScore)) {
+        sentimentScore = 0;
     }
     var sFactor = 7.1;
     function sobescore(x) {
@@ -11,7 +11,7 @@ function makeGauge(divID, sentimentScore) {
         return 50 * ((x - 50) / (sFactor2 + Math.abs(x - 50))) + 50
     }
     function sobeDangerScore(x) {
-        return (50 + sFactor2) * ((50 - x) / (sFactor2 + Math.abs(50 - x))) + 50
+        return (50 + sFactor2) * ((x - 50) / (sFactor2 + Math.abs(50 - x))) + 50
     }
     console.log(sentimentScore)
     var sentimentScore = sobeDangerScore(sentimentScore);
@@ -58,17 +58,17 @@ function makeGauge(divID, sentimentScore) {
     feMerge.append("feMergeNode")
         .attr("in", "SourceGraphic");
 
-    appendArc(gaugeSVG, divWidth, divHeight, 288, 336, "#f3ff90", 'low' + divID);
-    appendArc(gaugeSVG, divWidth, divHeight, 240, 288, "#b7ff90", 'veryLow' + divID);
-    appendArc(gaugeSVG, divWidth, divHeight, 336, 384, "#ffea90", 'medium' + divID);
-    appendArc(gaugeSVG, divWidth, divHeight, 24, 72, "#ffc990", 'high' + divID);
-    appendArc(gaugeSVG, divWidth, divHeight, 72, 120, "#ff9090", 'veryHigh' + divID);
+    //appendArc(gaugeSVG, divWidth, divHeight, 288, 336, "#f3ff90", 'low' + divID);
+    appendArc(gaugeSVG, divWidth, divHeight, 240, 312, "#ef5d5d", 'negative' + divID);
+    appendArc(gaugeSVG, divWidth, divHeight, 312, 408, "#ffcf49", 'neutral' + divID);
+    //appendArc(gaugeSVG, divWidth, divHeight, 24, 72, "#ffc990", 'high' + divID);
+    appendArc(gaugeSVG, divWidth, divHeight, 48, 120, "#37b76a", 'positive' + divID);
 
-    appendArcLabel(gaugeSVG, divWidth, divHeight, 0.077 * divHeight, 0.11 * divHeight, '#veryLow' + divID, 'VERY LOW')
-    appendArcLabel(gaugeSVG, divWidth, divHeight, 0.125 * divHeight, 0.11 * divHeight, '#low' + divID, 'LOW')
-    appendArcLabel(gaugeSVG, divWidth, divHeight, 0.1 * divHeight, 0.11 * divHeight, '#medium' + divID, 'MEDIUM')
-    appendArcLabel(gaugeSVG, divWidth, divHeight, 0.16 * divHeight, 0.11 * divHeight, '#high' + divID, 'HIGH')
-    appendArcLabel(gaugeSVG, divWidth, divHeight, 0.065 * divHeight, 0.11 * divHeight, '#veryHigh' + divID, 'VERY HIGH')
+    appendArcLabel(gaugeSVG, divWidth, divHeight, 0.145 * divHeight, 0.14 * divHeight, '#negative' + divID, 'NEGATIVE')
+    //appendArcLabel(gaugeSVG, divWidth, divHeight, 0.125 * divHeight, 0.11 * divHeight, '#low' + divID, 'LOW')
+    appendArcLabel(gaugeSVG, divWidth, divHeight, 0.255 * divHeight, 0.14 * divHeight, '#neutral' + divID, 'NEUTRAL')
+    //appendArcLabel(gaugeSVG, divWidth, divHeight, 0.16 * divHeight, 0.11 * divHeight, '#high' + divID, 'HIGH')
+    appendArcLabel(gaugeSVG, divWidth, divHeight, 0.17 * divHeight, 0.14 * divHeight, '#positive' + divID, 'POSITIVE')
 
     gaugeSVG.append('g')
         .attr('transform', 'translate(' + divWidth / 2 + ',' + 3 * divHeight / 5 + ")")
@@ -96,35 +96,69 @@ function makeGauge(divID, sentimentScore) {
         .attr("transform", "rotate(" + rotation + ")")
 
 
-    /* gaugeSVG.append('g')
-            .attr('transform', 'translate(' + divWidth / 2 + ',' + 3*divHeight / 5 + ")")
-            .append("polygon")
-            .attr('class', 'needle')
-            .attr('points', "0,0 -" + 0.04 * divHeight + "," + 0.02 * divHeight +
-                " " + -divWidth / 4 + ",0 " + -divHeight * 0.04 + "," + -divHeight * 0.02)
-            .transition()
-            .ease(d3.easeElastic)
-            .duration(5000)
-            .attr("transform", "rotate(180)"); */
-
-
     gaugeSVG.append('g')
-        .attr('transform', 'translate(' + divWidth / 2 + ',' + divHeight / 1.2 + ")")
+        .attr('transform', 'translate(' + divWidth / 2 + ',' + divHeight / 1.27 + ")")
         .append('text')
         .text(function (d) {
-            if (sentimentScore < 0) {
+            if (rotation < -30) {
                 return 'NO RESULT'
             }
             else {
-                return '위험도: ' + String(sentimentScore.toFixed(1))
+                if (rotation < 50) {
+                    return 'Negative'
+                }
+                else if (rotation > 130) {
+                    return 'Positive'
+                }
+                else {
+                    return 'Neutral'
+                }
             }
         })
         .attr('id', 'sentimentIndicator')
         .style('alignment-baseline', 'middle')
-        .style('font-style', 'italic')
         .style('font-weight', 'bold')
         .style('text-anchor', 'middle')
-        .style('font-size', 0.08 * divHeight);
+        .style('fill', function (d) {
+            if (rotation < 50) {
+                return '#ef5d5d'
+            }
+            else if (rotation > 130) {
+                return '#37b76a'
+            }
+            else {
+                return '#ffcf49'
+            }
+        })
+        .style('font-size', 0.12 * divHeight);
+
+    gaugeSVG.append('g')
+        .attr('transform', 'translate(' + divWidth / 2 + ',' + divHeight / 1.12 + ")")
+        .append('text')
+        .text(function (d) {
+            if (rotation < -30) {
+                return ''
+            }
+            else {
+                return '(' + String(sentimentScore.toFixed(1) + '점)')
+            }
+        })
+        .attr('id', 'sentimentIndicator')
+        .style('alignment-baseline', 'middle')
+        .style('font-weight', 'bold')
+        .style('text-anchor', 'middle')
+        .style('fill', function (d) {
+            if (rotation < 50) {
+                return '#ef5d5d'
+            }
+            else if (rotation > 130) {
+                return '#37b76a'
+            }
+            else {
+                return '#ffcf49'
+            }
+        })
+        .style('font-size', 0.06 * divHeight);
 
 
     var textHeight = document.getElementById('sentimentIndicator').getBoundingClientRect().height
@@ -205,7 +239,7 @@ function makeGauge(divID, sentimentScore) {
             .attr("class", "arcLabel")
             .append("textPath")
             .attr("xlink:href", arclabel)
-            .style("font-size", 0.05474 * divHeight)
+            .style("font-size", 0.07474 * divHeight)
             .style("font-color", 'black')
             .text(label);
     }
@@ -524,7 +558,7 @@ function makeSentimentBoxPlot(sentimentData, divID) {
         var divHeight = graphDiv.clientHeight;
         var divWidth = graphDiv.clientWidth;
     }
-    var xPadding = 60;
+    var xPadding = 75;
     var yPadding = 25;
     var INNER_HEIGHT = divHeight - 2 * yPadding;
     var INNER_WIDTH = divWidth - 2 * xPadding;
@@ -1389,6 +1423,8 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
             dateArray.push(dateParser(sentimentData[i].date));
         }
         var graphDiv = document.getElementById(divID);
+        sentimentData = sentimentData.filter((item) => item.mean > 0)
+        console.log(sentimentData)
 
 
 
@@ -1401,7 +1437,7 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
             var divHeight = graphDiv.clientHeight;
             var divWidth = graphDiv.clientWidth;
         }
-        var xPadding = 60;
+        var xPadding = 75;
         var yPadding = 25;
         var INNER_HEIGHT = divHeight - 2 * yPadding;
         var INNER_WIDTH = divWidth - 2 * xPadding;
@@ -1437,7 +1473,7 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
             var xAxis = d3.axisBottom()
                 .scale(xScale)
                 .tickValues(xScale.domain().filter(function (d, i) {
-                    return !((i + Math.floor(sentimentData.length / 8)) % (Math.floor(sentimentData.length / 4)))
+                    return !((i + Math.floor(dateArray.length / 8)) % (Math.floor(dateArray.length / 4)))
                 }))
                 .ticks(5)
                 .tickSizeOuter(0)
@@ -1449,12 +1485,12 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
                 .scale(xScale)
                 .tickValues(xScale.domain().filter(function (d, i) {
                     if (gubun == 'quarter') {
-                        return !((i + Math.floor(sentimentData.length / 6)) % (Math.floor(sentimentData.length / 3)))
+                        return !((i + Math.floor(dateArray.length / 6)) % (Math.floor(dateArray.length / 3)))
                     }
                     else if (gubun == 'year')
-                        return !((i + Math.floor(sentimentData.length / 12)) % (Math.floor(sentimentData.length / 6)))
+                        return !((i + Math.floor(dateArray.length / 12)) % (Math.floor(dateArray.length / 6)))
                     else {
-                        return !((i + Math.floor(sentimentData.length / 16)) % (Math.floor(sentimentData.length / 8)))
+                        return !((i + Math.floor(dateArray.length / 16)) % (Math.floor(dateArray.length / 8)))
                     }
                 }))
                 .ticks(5)
@@ -1602,7 +1638,7 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
                     return ySentScale(d.mean)
                 })
                 .attr('r', 5)
-                .attr('fill', 'blue')
+                .attr('fill', '#990000')
                 .style('opacity', '0%')
                 .on("mouseover", onMouseOver)
                 .on("mousemove", onMouseMove)
@@ -1626,7 +1662,7 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
                     return ySentScale(sentimentData[i - 1].mean);
                 })
                 .attr('stroke', '#990000')
-                .attr('stroke-width', 1);
+                .attr('stroke-width', 3);
 
 
 
@@ -1712,13 +1748,14 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
                     return ySentScale(d.mean)
                 })
                 .attr('r', 5)
-                .attr('fill', 'blue')
+                .attr('fill', 'black')
                 .style('opacity', '0%')
                 .on("mouseover", onMouseOver)
                 .on("mousemove", onMouseMove)
                 .on("mouseout", onMouseOut);
 
-            var sentLines = clippedsvg.selectAll('.sentimentLine')
+
+            /* var sentLines = clippedsvg.selectAll('.sentimentLine')
                 .data(sentimentData)
                 .enter()
                 .append('line')
@@ -1736,7 +1773,28 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
                     return ySentScale(sentimentData[i - 1].mean);
                 })
                 .attr('stroke', '#990000')
-                .attr('stroke-width', 1);
+                .attr('stroke-width', 1); */
+
+            var sentLineMaker = d3.line()
+                .curve(d3.curveMonotoneX)
+                .x(function (d, i) {
+                    /* if (i == 0) {
+                        return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
+                    }
+                    return xScale(dateParser(sentimentData[i - 1].date)) + (xScale.bandwidth() / 2); */
+                    return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
+                })
+                .y(function (d, i) {
+                    /* if (i == 0) { return ySentScale(d.mean) }
+                    return ySentScale(sentimentData[i - 1].mean); */
+                    return ySentScale(d.mean)
+                })
+
+            var sentLinePath = clippedsvg.append('svg:path')
+                .attr('d', sentLineMaker(sentimentData))
+                .attr('stroke', '#990000')
+                .attr('stroke-width', 1)
+                .attr('fill', 'none');
 
 
 
@@ -2168,7 +2226,7 @@ function makeStockBarGraph(data, divID) {
     }
 
 
-    var xPadding = 50;
+    var xPadding = 75;
     var yPadding = 25;
     var graphDiv = document.getElementById(divID);
     graphDiv.innerHTML = '';
@@ -2718,6 +2776,473 @@ function makePieChart(data, divID, nCutofftoShow, nCutoff) {
     }
 }
 
+function makeLineGraph(data, divID) {
+    var type = $("#chartFold").val();
+    var scope = $("#fold").val();
+    if (data.length != 0) {
+        console.log(data)
+        document.getElementById(divID).innerHTML = "";
+        console.log(window.newsResponseData.selectedName);
+        if (window.newsResponseData.selectedName != null) {
+            document.getElementById('paramName').innerHTML = window.newsResponseData.selectedName;
+        }
+
+        data.sort(function (a, b) { return dateParser(b.date) - dateParser(a.date) });
+
+        var dateArray = [];
+        var valueArray = [];
+        var toPlot = [];
+        for (var i = data.length - 1; i > -1; i--) {
+            dateArray.push(dateParser(data[i].date));
+            if (data[i].value != 'na') {
+                if (type == 'grade' || type == 'grade2') {
+                    if (scope == 'industry') {
+                        valueArray.push(Number(data[i].value.slice(-1)));
+                        toPlot.push({ date: data[i].date, value: Number(data[i].value.slice(-1)) })
+                    }
+                    else {
+                        valueArray.push(data[i].value);
+                        toPlot.push({ date: data[i].date, value: data[i].value })
+                    }
+                }
+                else {
+                    valueArray.push(Number(data[i].value));
+                    toPlot.push({ date: data[i].date, value: Number(data[i].value) })
+                }
+            }
+        }
+        var graphDiv = document.getElementById(divID);
+        console.log(data)
+
+
+
+        if (divID == "enlargedChart") {
+            var divHeight = 550;
+            var divWidth = 1250;
+            document.getElementById(divID).innerHTML = "";
+        }
+        else {
+            var divHeight = graphDiv.clientHeight;
+            var divWidth = graphDiv.clientWidth;
+        }
+        var xPadding = 75;
+        var yPadding = 25;
+        var INNER_HEIGHT = divHeight - 2 * yPadding;
+        var INNER_WIDTH = divWidth - 2 * xPadding;
+        var dataRange = d3.max([d3.max(valueArray) - d3.min(valueArray), valueArray[0]]);
+        if (type == 'grade') {
+            if (scope == 'industry') {
+                /* var domain = ['A-IRO1', 'A-IRO2', 'A-IRO3', 'A-IRO4', 'A-IRO5', 'A-IRO6'];
+                var range = Array(domain.length).fill().map((e, i) => divHeight - yPadding - INNER_HEIGHT / (domain.length - 1) * i);
+                var yScale = d3.scaleOrdinal()
+                    .domain(domain)
+                    .range(range)
+                var yAxis = d3.axisLeft(yScale)
+                    .scale(yScale)
+                    .tickSizeOuter(0);
+                for (var i = 0; i < domain.length; i++) {
+                    console.log(domain[i])
+                    console.log(yScale(domain[i]))
+                } */
+                var yScale = d3.scaleLinear()
+                    .domain([1, 6])
+                    .range([divHeight - yPadding, yPadding])
+                var yAxis = d3.axisLeft(yScale)
+                    .scale(yScale)
+                    .ticks(6)
+                    .tickFormat((d) => 'A-IRO' + d)
+                    .tickSizeOuter(0);
+            }
+            else {
+                var domain = ['E01', 'E02', 'E03', 'E04', 'E05', 'E06', 'E07', 'E08', 'E09', 'E10', 'E11', 'E12']
+                var range = Array(domain.length).fill().map((e, i) => divHeight - yPadding - INNER_HEIGHT / (domain.length - 1) * i);
+                var yScale = d3.scaleOrdinal()
+                    .domain(domain)
+                    .range(range)
+                var yAxis = d3.axisLeft(yScale)
+                    .scale(yScale)
+                    .tickSizeOuter(0);
+                for (var i = 0; i < domain.length; i++) {
+                    console.log(domain[i])
+                    console.log(yScale(domain[i]))
+                }
+            }
+        }
+        else if (type == 'grade2') {
+            var domain = ['D', 'C', 'CC', 'CCC', 'B-', 'B', 'B+', 'BB-', 'BB', 'BB+', 'BBB-', 'BBB', 'BBB+', 'A-', 'A', 'A+', 'AA-', 'AA', 'AA+', 'AAA'];
+            var range = Array(domain.length).fill().map((e, i) => divHeight - yPadding - INNER_HEIGHT / (domain.length - 1) * i);
+            var yScale = d3.scaleOrdinal()
+                .domain(domain)
+                .range(range)
+            var yAxis = d3.axisLeft(yScale)
+                .scale(yScale)
+                .tickSizeOuter(0);
+            for (var i = 0; i < domain.length; i++) {
+                console.log(domain[i])
+                console.log(yScale(domain[i]))
+            }
+        }
+        else {
+            var yScale = d3.scaleLinear()
+                .domain([d3.min(valueArray) - 0.1 * dataRange, d3.max(valueArray) + 0.1 * dataRange])
+                .range([divHeight - yPadding, yPadding])
+            var yAxis = d3.axisLeft(yScale)
+                .scale(yScale)
+                .ticks(5)
+                .tickSizeOuter(0);
+        }
+
+
+        var yAxisGrid = d3.axisLeft(yScale)
+            .tickSize(-INNER_WIDTH)
+            .ticks(6)
+            .tickFormat('')
+            .tickSizeOuter(0);
+
+        var xScale = d3.scaleBand()
+            .domain(dateArray)
+            .range([xPadding, divWidth - xPadding])
+            .padding(0.05);
+
+        var gubun = $("#gubunNews").val()
+
+        if (gubun == 'month') {
+            var xAxis = d3.axisBottom()
+                .scale(xScale)
+                .tickValues(xScale.domain().filter(function (d, i) {
+                    return !((i + Math.floor(dateArray.length / 8)) % (Math.floor(dateArray.length / 4)))
+                }))
+                .ticks(5)
+                .tickSizeOuter(0)
+                .tickPadding(5)
+                .tickFormat(d3.timeFormat("%Y년%b%d일"))
+        }
+        else {
+            var xAxis = d3.axisBottom()
+                .scale(xScale)
+                .tickValues(xScale.domain().filter(function (d, i) {
+                    if (gubun == 'quarter') {
+                        return !((i + Math.floor(dateArray.length / 6)) % (Math.floor(dateArray.length / 3)))
+                    }
+                    else if (gubun == 'year')
+                        return !((i + Math.floor(dateArray.length / 12)) % (Math.floor(dateArray.length / 6)))
+                    else {
+                        return !((i + Math.floor(dateArray.length / 16)) % (Math.floor(dateArray.length / 8)))
+                    }
+                }))
+                .ticks(5)
+                .tickSizeOuter(0)
+                .tickPadding(5)
+                .tickFormat(d3.timeFormat("%Y년%b"))
+        }
+
+
+
+
+        var zoomBeh = d3.zoom()
+            .extent([[xPadding, yPadding], [xPadding + INNER_WIDTH, yPadding + INNER_HEIGHT]])
+            .scaleExtent([1, 500])
+            .translateExtent([[xPadding, yPadding], [xPadding + INNER_WIDTH, yPadding + INNER_HEIGHT]])
+            .on("zoom", zoom);
+
+        var svg = d3.select("#" + divID).append("svg")
+            .attr('class', function () { if (divID == 'enlargedChart') { return 'largeSVG' } else { return 'visSVG' } })
+            .attr("width", "100%")
+            .attr("height", "100%")
+            .attr('pointer-events', 'all')
+
+        if (divID == 'enlargedChart') {
+            svg.call(zoomBeh);
+        }
+
+
+
+        svg.append('g')
+            .attr("transform", "translate(" + xPadding + ",0)")
+            .attr('id', 'linegraphYAxis')
+            .call(yAxis);
+
+
+
+
+
+        svg.append('g')
+            .attr('class', 'y axis-grid')
+            .attr("transform", "translate(" + xPadding + ",0)")
+            .call(yAxisGrid);
+
+
+
+        if (divID == 'enlargedChart') {
+            console.log('making enlarged')
+            var clip = svg.append("defs").append("svg:clipPath")
+                .attr('id', 'articleClipEnlarged')
+                .append('svg:rect')
+                .attr('width', INNER_WIDTH)
+                .attr('height', divHeight)
+                .attr('x', xPadding)
+                .attr('y', 0);
+
+            var clippedsvg = svg.append('g')
+                .attr('class', 'linechartarea')
+                .attr('clip-path', 'url(#articleClipEnlarged)')
+
+
+            var sentLines = clippedsvg.selectAll('.sentimentLineEnlarged')
+                .data(toPlot)
+                .enter()
+                .append('line')
+                .attr('class', 'sentimentLineEnlarged')
+                .attr('x1', function (d) { return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2) })
+                .attr('y1', function (d) { return yScale(d.value) })
+                .attr('x2', function (d, i) {
+                    if (i == 0) {
+                        return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
+                    }
+                    return xScale(dateParser(toPlot[i - 1].date)) + (xScale.bandwidth() / 2);
+                })
+                .attr('y2', function (d, i) {
+                    if (i == 0) { return yScale(d.value) }
+                    return yScale(toPlot[i - 1].value);
+                })
+                .attr('stroke', '#2266a5')
+                .attr('stroke-width', 3);
+
+            var sentPoints = clippedsvg.selectAll('.linePointEnlarged')
+                .data(toPlot)
+                .enter()
+                .append('circle')
+                .attr('class', 'linePointEnlarged')
+                .attr('cx', function (d, i) {
+                    return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
+                })
+                .attr('cy', function (d, i) {
+                    return yScale(d.value)
+                })
+                .attr('r', 3)
+                .attr('fill', '#990000')
+                .style('opacity', '0%')
+                .on("mouseover", onMouseOver)
+                .on("mousemove", onMouseMove)
+                .on("mouseout", onMouseOut);
+
+
+
+            var gX = svg.append('g')
+                .attr('id', 'articlexAxis')
+                .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
+                .attr('clip-path', 'url(#articleClipEnlarged)')
+                .call(xAxis);
+        }
+        else {
+            //console.log(INNER_WIDTH)
+            //console.log(xPadding)
+            //console.log(xScale.domain());
+            var clip = svg.append("defs").append("svg:clipPath")
+                .attr('id', 'articleClip')
+                .append('svg:rect')
+                .attr('width', INNER_WIDTH)
+                .attr('height', divHeight)
+                .attr('x', xPadding)
+                .attr('y', 0);
+
+            var clippedsvg = svg.append('g')
+                .attr('class', 'linechartarea')
+                .attr('clip-path', 'url(#articleClip)')
+
+
+            var sentLines = clippedsvg.selectAll('.sentimentLine')
+                .data(toPlot)
+                .enter()
+                .append('line')
+                .attr('class', 'sentimentLine')
+                .attr('x1', function (d) { return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2) })
+                .attr('y1', function (d) { return yScale(d.value) })
+                .attr('x2', function (d, i) {
+                    if (i == 0) {
+                        return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
+                    }
+                    return xScale(dateParser(toPlot[i - 1].date)) + (xScale.bandwidth() / 2);
+                })
+                .attr('y2', function (d, i) {
+                    if (i == 0) { return yScale(d.value) }
+                    return yScale(toPlot[i - 1].value);
+                })
+                .attr('stroke', '#2266a5')
+                .attr('stroke-width', 1);
+
+            /*     var sentLineMaker = d3.line()
+                .curve(d3.curveLinear)
+                .x(function (d, i) {
+                    return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
+                })
+                .y(function (d, i) {
+                    /* if (i == 0) { return yScale(d.mean) }
+                    return yScale(data[i - 1].mean); 
+                    console.log(d.value)
+                    console.log(yScale(d.value))
+                    return yScale(d.value)
+                })
+
+
+
+            var sentLinePath = clippedsvg.append('svg:path')
+                .attr('d', sentLineMaker(toPlot))
+                .attr('stroke', '#2266a5')
+                .attr('stroke-width', 1)
+                .attr('fill', 'none'); */
+
+
+            var sentPoints = clippedsvg.selectAll('.linePoint')
+                .data(toPlot)
+                .enter()
+                .append('circle')
+                .attr('class', 'linePoint')
+                .attr('cx', function (d, i) {
+                    return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
+                })
+                .attr('cy', function (d, i) {
+                    console.log(d.value)
+                    console.log(yScale(d.value))
+                    return yScale(d.value)
+                })
+                .attr('r', 2)
+                .attr('fill', 'black')
+                .style('opacity', '100%')
+                .on("mouseover", onMouseOver)
+                .on("mousemove", onMouseMove)
+                .on("mouseout", onMouseOut);
+
+
+            var gX = svg.append('g')
+                .attr('id', 'articlexAxis')
+                .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
+                .attr('clip-path', 'url(#articleClip)')
+                .call(xAxis);
+        }
+
+        /* MAKE LEGEND */
+
+        var yAxisWidth = document.getElementById('linegraphYAxis').getBoundingClientRect().width;
+
+        var legend = svg.append('g')
+            .attr('width', (divWidth / 2) + 'px')
+            .attr('height', '30px')
+            .attr('id', 'lineLegend');
+
+        legend.append('line')
+            .attr('x1', 0)
+            .attr('x2', yPadding / 2)
+            .attr('y1', 2 * yPadding / 3)
+            .attr('y2', 2 * yPadding / 3)
+            .attr('stroke', '#2266a5')
+            .attr('stroke-width', 2);
+
+        svg.append("text")
+            .attr("class", "y label")
+            .attr("text-anchor", "middle")
+            .attr("transform", "rotate(-90)")
+            .attr("x", -divHeight / 2)
+            .attr('y', xPadding - yAxisWidth)
+            .attr('dy', '-0.5em')
+            .text(function () {
+                if (type == 'credit') {
+                    return '신용공여점수'
+                }
+                else if (type == 'sales') {
+                    return '매출액'
+                }
+                else if (type == 'grade') {
+                    return '등급'
+                }
+                else if (type == 'grade2') {
+                    return '신용평가등급'
+                }
+            });
+
+        legend.append('text')
+            .attr('transform', 'translate(' + (yPadding / 1.6) + ',' + (3 * yPadding / 4) + ")")
+            .attr('alignment-baseline', 'middle')
+            .attr('text-anchor', 'left')
+            .style('font-size', '12px')
+            .text(function () {
+                if (type == 'credit') {
+                    return '신용공여점수'
+                }
+                else if (type == 'sales') {
+                    return '매출액 (억원)'
+                }
+                else if (type == 'grade') {
+                    return '등급'
+                }
+                else if (type == 'grade2') {
+                    return '신용평가등급'
+                }
+            });
+
+        var legendWidth = document.getElementById('lineLegend').getBoundingClientRect().width;
+
+
+        legend.attr('transform', 'translate(' + (divWidth - xPadding - legendWidth) + ',0)')
+
+
+
+
+        function zoom() {
+            xScale.range([xPadding, xPadding + INNER_WIDTH].map(d => d3.event.transform.applyX(d)))
+
+            var inScope = xScale.domain().filter(function (d) {
+                return xScale(d) > xPadding && xScale(d) < (INNER_WIDTH - xPadding)
+            })
+            console.log(inScope)
+
+            gX.call(xAxis.scale(xScale)
+                .tickValues(xScale.domain().filter(function (d, i) {
+                    if (gubun == 'quarter') {
+                        return !((i + Math.floor(dateArray.length / 6)) % (Math.floor(dateArray.length / 3)))
+                    }
+                    else if (gubun == 'year')
+                        return !((i + Math.floor(dateArray.length / 12)) % (Math.floor(dateArray.length / 6)))
+                    else {
+                        return !((i + Math.floor(dateArray.length / 16)) % (Math.floor(dateArray.length / 8)))
+                    }
+                })))
+
+            console.log(this);
+
+            svg.selectAll(".sentimentLine")
+                .attr('x1', function (d) { return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2) })
+                .attr('x2', function (d, i) {
+                    if (i == 0) {
+                        return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
+                    }
+                    return xScale(dateParser(toPlot[i - 1].date)) + (xScale.bandwidth() / 2);
+                })
+            svg.selectAll(".sentimentPoint")
+                .attr("cx", function (d) {
+                    return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
+                })
+
+
+        }
+
+        if (divID == 'enlargedChart') {
+            window.SVG = svg;
+        }
+        $('#maximizeCombinedSpan').show();
+        $('#resetDiv').show();
+    }
+    else {
+        var keywordBarContents = `
+                                    <div style="text-align:center;">
+                                        <img src="/img/no_gisa5.png" style="max-width:100%; max-height:80%"/>
+                                    </div>
+                                 `;
+        document.getElementById(divID).innerHTML = keywordBarContents;
+        $('#maximizeCombinedSpan').hide();
+    }
+}
+
 var tooltip = d3.select('.main_panel')
     .append("div")
     .attr('id', 'tooltip')
@@ -2890,6 +3415,16 @@ function onMouseOver(d, i) {
         tooltip.style('visibility', 'visible');
         tooltip.text(d.date + ': ' + d.mean);
     }
+    else if (elementClass == 'linePoint') {
+        d3.select(this).style('opacity', '60%');
+        tooltip.style('visibility', 'visible');
+        tooltip.text(d.date + ': ' + d.value);
+    }
+    else if (elementClass == 'linePoint') {
+        d3.select(this).style('opacity', '60%');
+        tooltipEnlarged.style('visibility', 'visible');
+        tooltipEnlarged.text(d.date + ': ' + d.value);
+    }
     else {
         console.log('in else')
         d3.select(this).style('fill', 'gray');
@@ -3005,8 +3540,17 @@ function onMouseOut(d, i) {
         }
         tooltip.style('visibility', 'hidden');
     }
+    else if (elementClass == 'linePoint') {
+        d3.select(this).style('opacity', '100%');
+        tooltip.style('visibility', 'hidden');
+    }
+    else if (elementClass == 'linePoint') {
+        d3.select(this).style('opacity', '100%');
+        tooltipEnlarged.style('visibility', 'hidden');
+    }
     else {
         d3.select(this).style('fill', 'black');
+        tooltip.style('visibility', 'hidden');
         tooltipEnlarged.style('visibility', 'hidden');
 
     }
@@ -3537,144 +4081,18 @@ function getChartQuery1() {
     //console.log('test')
 }
 
-function getChartQuery2() {
-    ////console.log(document.getElementById('articleCountRange').value);
-    d3.selectAll('.visSVG').remove();
-    var search_company = document.getElementById('search_company_news').value;
-    //console.log(search_company);
-    loading1('차트');
-    $.ajax({
-        url: "/getChartQueryByCompany/" + search_company,
-        method: 'GET',
-        dataType: 'json',
-        success: function (responseData) {
-            window.newsChartData = responseData;
-
-            console.log(responseData)
-            //alert('조회 성공: ' + responseData.allNews.length + '개 기사');
-
-            makeGauge('dangerGauge', responseData.averageScore)
-            document.getElementById('dangerGauge').addEventListener('click', function () {
-                //console.log('clicked');
-                makeGauge('enlargedChart', responseData.averageScore);
-            })
-
-
-            var sentimentData = [];
-            for (var i = 0; i < responseData.sentimentDates.length; i++) {
-                sentimentData.push({
-                    time: Date.parse(responseData.sentimentDates[i].date),
-                    sentiment: responseData.sentimentDates[i].mean
-                })
-            }
-            /* var chart = document.getElementById('sentimentTimeTwoLines');
-            makeSentimentTimeGraph(sentimentData, 'sentimentTimeTwoLines');
-            chart.addEventListener('click', function () {
-                //console.log('clicked');
-                makeSentimentTimeGraph(sentimentData, 'enlargedChart');
-            })
- */
-
-
-            var chart = document.getElementById('articleCounts');
-            makeCombinedGraph(responseData.sentimentDates, responseData.allNews, 'articleCounts');
-            chart.addEventListener('click', function () {
-                //console.log('clicked');
-                makeCombinedGraph(responseData.sentimentDates, responseData.allNews, 'enlargedChart');
-            })
-            // document.getElementById('articleCountRange').addEventListener('change', function () {
-            //     makeCombinedGraph(responseData.sentimentDates, responseData.allNews, 'articleCounts');
-            // })
-
-            /* var chart = document.getElementById('articleCounts');
-            makeArticleCounts(responseData.allNews, 'articleCounts');
-            chart.addEventListener('click', function () {
-                //console.log('clicked');
-                makeArticleCounts(responseData.allNews, 'enlargedChart');
-            }) */
-
-            var chart = document.getElementById('keywordBar');
-            makeKeywordBarPlot(responseData.keywords, 'keywordBar', document.getElementById('keywordBarSlider').value)
-            chart.addEventListener('click', function () {
-                document.getElementById('keywordBarSettings').style.display = 'inline';
-                makeKeywordBarPlot(responseData.keywords, 'enlargedChart', document.getElementById('keywordBarSlider').value)
-            })
-
-            if (responseData.stockData.length > 0) {
-                console.log('test')
-            }
-            var companies = [];
-            var allStockData = {};
-            for (var i = 0; i < responseData.stockData.length; i++) {
-                var tempStock = responseData.stockData[i]
-                if (!companies.includes(tempStock.company)) {
-                    companies.push(tempStock.company);
-                    allStockData[tempStock.company] = [];
-                }
-                allStockData[tempStock.company].push({ date: tempStock.date, price: tempStock.price })
-            }
-            console.log(allStockData)
-            var shortestCompany = companies.reduce(function (a, b) {
-                return a.length <= b.length ? a : b;
-            })
-            var stockOptions = document.getElementById('stockRange');
-            console.log(stockOptions);
-            for (var i = 0; i < companies.length; i++) {
-                if (companies[i] == shortestCompany) {
-                    var tempHTML = `<option value='${companies[i]}' selected>${companies[i]}</option>`;
-                }
-                else {
-                    var tempHTML = `<option value='${companies[i]}'>${companies[i]}</option>`;
-                }
-                stockOptions.insertAdjacentHTML('beforeend', tempHTML);
-            }
-
-            var divID = 'stockTime';
-            stockGraph = document.getElementById(divID)
-            console.log("2");
-            stockGraph.addEventListener('click', function () {
-                document.getElementById('resetChart').addEventListener('click', function () {
-                    console.log('clicked');
-                    makeStockGraph(allStockData, 'enlargedChart');
-                })
-                makeStockGraph(allStockData, 'enlargedChart');
-            })
-            document.getElementById('stockRange').addEventListener('change', function () {
-                makeStockGraph(allStockData, divID);
-            })
-            makeStockGraph(allStockData, divID);
-
-            $('#myModal').hide();
-
-
-
-            /* document.getElementById('keywordPieSlider2').max = responseData.keywords.length;
-            var pieChart = document.getElementById('keywordPie');
-            makePieChart(responseData.keywords, 'keywordPie', document.getElementById('keywordPieSlider').value, document.getElementById('keywordPieSlider2').value)
-            pieChart.addEventListener('click', function () {
-                //console.log('clicked');
-                document.getElementById('keywordPieSettings').style.display = 'inline';
-                makePieChart(responseData.keywords, 'enlargedChart', document.getElementById('keywordPieSlider').value, document.getElementById('keywordPieSlider2').value);
-            }) */
-
-
-            /* makeWordcloud(responseData.keywords); */
-
-        },
-        error: function () {
-            alert('조회 실패');
-        }
-    });
-
-    //console.log('test')
-}
 
 function getChartQuery(queryInput, queryType) {
     console.log('##########RUNNING CHART QUERY' + queryType)
     console.log(queryInput)
     d3.selectAll('.visSVG').remove();
+    document.getElementById('chartFold').innerHTML = ""
+
 
     document.getElementById('keywordBarSlider').value = 10;
+    document.getElementById('fontSizeSlider').value = 27;
+    document.getElementById('textNumberSlider').value = 50;
+
     console.log(document.getElementById('keywordBarSlider').value)
     document.getElementById('keywordMaxValueBar').innerHTML = document.getElementById('keywordBarSlider').value;
     // var search_company = document.getElementById('search_company_news').value;
@@ -3703,8 +4121,47 @@ function getChartQuery(queryInput, queryType) {
         data: data,
         dataType: 'json',
         success: function (responseData) {
+            var qType = $("#fold").val();
+            console.log(qType)
+            if (qType != 'company') {
+                document.getElementById('chartFold').innerHTML = `
+                <option value="stock">주가</option>
+                <option value="credit">신용공여</option>
+                <option value="sales">매출액</option>
+                <option value="grade">등급</option>`
+            }
+            else {
+                document.getElementById('chartFold').innerHTML = `
+                <option value="stock">주가</option>
+                <option value="credit">신용공여</option>
+                <option value="sales">매출액</option>
+                <option value="grade">등급</option>
+                <option value="grade2">신용평가등급</option>`
+            }
 
             console.log(responseData)
+            var tempcreditData = [];
+            for (var i = 1; i < 10; i++) {
+                tempcreditData.push({ date: '2020-0' + i + '-01', value: 3 * i + 10 });
+            }
+            var tempsalesData = [];
+            for (var i = 1; i < 10; i++) {
+                tempsalesData.push({ date: '2020-0' + i + '-01', value: 3 * i * (-1) ^ i + 10 });
+            }
+            var tempgradeData = [];
+            var ranks = ['E01', 'E02', 'E03', 'E04', 'E05', 'E06', 'E07', 'E08', 'E09', 'E10', 'E11', 'E12'];
+            for (var i = 1; i < 10; i++) {
+                tempgradeData.push({ date: '2020-0' + i + '-01', value: ranks[i] });
+            }
+            tempgrade2Data = [];
+            var ranks = ['D', 'C', 'CC', 'CCC', 'B-', 'B', 'B+', 'BB-', 'BB', 'A-', 'A', 'A+', 'AA-', 'AA', 'AA+', 'AAA']
+            for (var i = 1; i < 10; i++) {
+                tempgrade2Data.push({ date: '2020-0' + i + '-01', value: ranks[i] });
+            }
+            //responseData['creditData'] = tempcreditData;
+            //responseData['salesData'] = tempsalesData;
+            //responseData['gradeData'] = tempgradeData;
+            //responseData['grade2Data'] = tempgrade2Data;
 
 
 
@@ -3716,41 +4173,94 @@ function getChartQuery(queryInput, queryType) {
             for (var i = 0; i < responseData.stockData.length; i++) {
                 stockDates.push(responseData.stockData[i].date)
             }
-            allDates = stockDates.concat(sentimentDates.filter((item) => stockDates.indexOf(item) < 0))
+            creditDates = [];
+            for (var i = 0; i < responseData.creditData.length; i++) {
+                creditDates.push(responseData.creditData[i].date)
+            }
+            salesDates = [];
+            for (var i = 0; i < responseData.salesData.length; i++) {
+                salesDates.push(responseData.salesData[i].date)
+            }
+            gradeDates = [];
+            for (var i = 0; i < responseData.gradeData.length; i++) {
+                gradeDates.push(responseData.gradeData[i].date)
+            }
+            grade2Dates = [];
+            for (var i = 0; i < responseData.grade2Data.length; i++) {
+                grade2Dates.push(responseData.grade2Data[i].date)
+            }
 
+
+            allDates = stockDates.concat(sentimentDates.filter((item) => stockDates.indexOf(item) < 0))
+            allDates = allDates.concat(creditDates.filter((item) => allDates.indexOf(item) < 0))
+            allDates = allDates.concat(salesDates.filter((item) => allDates.indexOf(item) < 0))
+            allDates = allDates.concat(gradeDates.filter((item) => allDates.indexOf(item) < 0))
+            allDates = [...new Set(allDates)]
+
+            console.log(allDates.length);
+            console.log(sentimentDates)
+            console.log(stockDates)
+            var creditData = [];
+            var salesData = [];
+            var gradeData = [];
+            var grade2Data = [];
             var sentimentData = [];
-            for (var i = 0; i < allDates.length; i++) {
+            for (var i = 0; i < allDates.length; i++) { //Build sentimentData, creditData, salesData, and gradeData
                 /* console.log(sentimentDates
                         .indexOf(allDates[i])) */
+                if (creditDates.includes(allDates[i])) {
+                    var j = creditDates.indexOf(allDates[i]);
+                    creditData.push({ date: responseData.creditData[j].date, value: responseData.creditData[j].value })
+                }
+                else { creditData.push({ date: allDates[i], value: 'na' }) }
+
+                if (salesDates.includes(allDates[i])) {
+                    var j = salesDates.indexOf(allDates[i]);
+                    salesData.push({ date: responseData.salesData[j].date, value: responseData.salesData[j].value })
+                }
+                else { salesData.push({ date: allDates[i], value: 'na' }) }
+
+                if (gradeDates.includes(allDates[i])) {
+                    var j = gradeDates.indexOf(allDates[i]);
+                    gradeData.push({ date: responseData.gradeData[j].date, value: responseData.gradeData[j].value })
+                }
+                else { gradeData.push({ date: allDates[i], value: 'na' }) }
+
+                if (grade2Dates.includes(allDates[i])) {
+                    var j = grade2Dates.indexOf(allDates[i]);
+                    grade2Data.push({ date: responseData.grade2Data[j].date, value: responseData.grade2Data[j].value })
+                }
+                else { grade2Data.push({ date: allDates[i], value: 'na' }) }
+
                 if (sentimentDates.includes(allDates[i])) {
                     var j = sentimentDates.indexOf(allDates[i]);
 
                     var tempDate = responseData.sentimentDates[j].date;
-                    var tempMean= responseData.sentimentDates[j].mean;
-                    var tempMin= responseData.sentimentDates[j].min;
-                    var tempLower= responseData.sentimentDates[j].lower;
-                    var tempMedian= responseData.sentimentDates[j].median;
-                    var tempUpper= responseData.sentimentDates[j].upper;
-                    var tempMax= responseData.sentimentDates[j].max;
+                    var tempMean = responseData.sentimentDates[j].mean;
+                    var tempMin = responseData.sentimentDates[j].min;
+                    var tempLower = responseData.sentimentDates[j].lower;
+                    var tempMedian = responseData.sentimentDates[j].median;
+                    var tempUpper = responseData.sentimentDates[j].upper;
+                    var tempMax = responseData.sentimentDates[j].max;
 
                     if ((tempUpper - tempLower) < 10) {
                         if (tempUpper >= 95) {
                             tempUpper = 100;
                             tempLower = 90;
                             tempMax = 100;
-                            tempMin = tempLower - ((tempMedian - tempLower) * (0.2 + Math.random() * 0.45))
+                            tempMin = tempLower - ((tempMedian - tempLower) * (0.2 + Math.random() * 0.70))
                         }
                         else if (tempLower <= 5) {
                             tempLower = 0;
                             tempUpper = 10;
                             tempMin = 0;
-                            tempMax = tempUpper + ((tempUpper - tempMedian) * (0.2 + Math.random() * 0.45))
+                            tempMax = tempUpper + ((tempUpper - tempMedian) * (0.2 + Math.random() * 0.70))
                         }
-                        else{
-                            tempUpper = tempMedian + (3 + Math.random() * 4);
-                            tempLower = tempMedian - (3 + Math.random() * 4);
-                            tempMin = d3.max([tempLower - ((tempMedian - tempLower) * (0.2 + Math.random() * 0.45)),0])
-                            tempMax = d3.min([tempUpper + ((tempUpper - tempMedian) * (0.2 + Math.random() * 0.45)),100])
+                        else {
+                            tempUpper = tempMedian + (5 + Math.random() * 5);
+                            tempLower = tempMedian - (5 + Math.random() * 5);
+                            tempMin = d3.max([tempLower - ((tempMedian - tempLower) * (Math.random())), 0])
+                            tempMax = d3.min([tempUpper + ((tempUpper - tempMedian) * (Math.random())), 100])
                         }
                     }
 
@@ -3824,16 +4334,46 @@ function getChartQuery(queryInput, queryType) {
                 }
 
                 document.getElementById('maximizeStock').addEventListener('click', function () {
-                    document.getElementById('resetChart').addEventListener('click', function () {
-                        makeStockBarGraph(allStockData, 'enlargedChart');
-                    })
-                    makeStockBarGraph(allStockData, 'enlargedChart');
+                    var selectItem = $("#chartFold").val();
+                    console.log(selectItem)
+                    if (selectItem == 'stock') {
+                        document.getElementById('resetChart').addEventListener('click', function () {
+                            makeStockBarGraph(window.newsChartData.allStockData, 'enlargedChart');
+                        })
+                        makeStockBarGraph(window.newsChartData.allStockData, 'enlargedChart');
+                    }
+                    else if (selectItem == 'credit') {
+                        document.getElementById('resetChart').addEventListener('click', function () {
+                            makeLineGraph(window.newsChartData.creditData, 'enlargedChart');
+                        })
+                        makeLineGraph(window.newsChartData.creditData, 'enlargedChart');
+                    }
+                    else if (selectItem == 'sales') {
+                        document.getElementById('resetChart').addEventListener('click', function () {
+                            makeLineGraph(window.newsChartData.salesData, 'enlargedChart');
+                        })
+                        makeLineGraph(window.newsChartData.salesData, 'enlargedChart');
+                    }
+                    else if (selectItem == 'grade') {
+                        document.getElementById('resetChart').addEventListener('click', function () {
+                            makeLineGraph(window.newsChartData.gradeData, 'enlargedChart');
+                        })
+                        makeLineGraph(window.newsChartData.gradeData, 'enlargedChart');
+                    }
+                    else if (selectItem == 'grade2') {
+                        console.log(window.newsChartData.grade2Data)
+                        document.getElementById('resetChart').addEventListener('click', function () {
+                            makeLineGraph(window.newsChartData.grade2Data, 'enlargedChart');
+                        })
+                        makeLineGraph(window.newsChartData.grade2Data, 'enlargedChart');
+                    }
+
                 })
                 document.getElementById('stockRange').addEventListener('change', function () {
-                    makeStockBarGraph(allStockData, 'stockTime');
+                    makeStockBarGraph(window.newsChartData.allStockData, 'stockTime');
                 })
 
-                makeStockBarGraph(allStockData, 'stockTime');
+                makeStockBarGraph(window.newsChartData.allStockData, 'stockTime');
                 $('#maximizeStockSpan').show();
                 $('#resetDiv').show();
             }
@@ -3881,9 +4421,14 @@ function getChartQuery(queryInput, queryType) {
 
             makeWordcloud(responseData.keywords);
 
-            
-            window.newsChartData = {keywords: responseData.keywords, averageScore: responseData.averageScore, sentimentData: sentimentData,
-                allNews: responseData.allNews, allStockData: allStockData};
+
+
+
+            window.newsChartData = {
+                keywords: responseData.keywords, averageScore: responseData.averageScore, sentimentData: sentimentData,
+                allNews: responseData.allNews, allStockData: allStockData, creditData: creditData, salesData: salesData,
+                gradeData: gradeData, grade2Data: grade2Data
+            };
 
 
             $('#chartModal').hide();
