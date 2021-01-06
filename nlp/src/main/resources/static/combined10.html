@@ -1440,16 +1440,16 @@
             if ($('input:radio[id=news_radio]').is(':checked')) {
 
                 var selectItem = $("#fold").val();
-                if (selectItem == "subsidiary" || selectItem == "industry"){
+                if (selectItem == "subsidiary" || selectItem == "industry") {
                     var selectNameCheck;
-                    if(window.newsResponseData.selectedName.indexOf("_system") != -1){
+                    if (window.newsResponseData.selectedName.indexOf("_system") != -1) {
                         selectNameCheck = window.newsResponseData.selectedName.split('_');
                         document.getElementById('main_title').innerHTML = `뉴스 조회<h4 style="display:inline">(` + selectNameCheck[0] + `)</h4>`;
-                    }else{
+                    } else {
                         document.getElementById('main_title').innerHTML = `뉴스 조회<h4 style="display:inline">(` + window.newsResponseData.selectedName + `)</h4>`;
                     }
                 }
-                else{
+                else {
                     document.getElementById('main_title').innerText = '뉴스 조회';
                 }
 
@@ -1518,10 +1518,10 @@
                         selectNameCheck = selectedName.split('_');
                         document.getElementById('main_title').innerHTML = `뉴스 조회<h4 style="display:inline">(` + selectNameCheck[0] + `)</h4>`;
                         window.newsResponseData.selectedName = selectNameCheck[0];
-                    }else{
+                    } else {
                         document.getElementById('main_title').innerHTML = `뉴스 조회<h4 style="display:inline">(` + selectedName + `)</h4>`;
                     }
-                    
+
 
                     getChartQuery(dataIndSub, 4);
 
@@ -1602,7 +1602,7 @@
                     var categoryMark = `
                     <div style="float:left; font-size:13px;"> &nbsp;&nbsp;* 표시가 있는 경우 산업별 59개 Category </div>
                     `;
-                    
+
                     var expend_all = `
                     <div class="buttons" align="right" >
                         <a id="toggleee" class="btn" style="min-width: 110px;" href="javascript:togglee();">전체 펼치기</a>    
@@ -2190,7 +2190,7 @@
             }
             else if (selectItem == "credit") {
                 $('#stockRange').hide();
-                
+
                 makeLineGraph(window.newsChartData.creditData, divID)
             }
             else if (selectItem == "sales") {
@@ -2208,7 +2208,7 @@
             else if (selectItem == "sinyong") {
                 $('#stockRange').hide();
             }
-       
+
         }
 
         function createEmptyChartDiv() {
@@ -2686,7 +2686,7 @@
                                         <div class="card_item_large">
                                             <div class="card_box_right">
                                                 <div class="card_head">
-                                                    <span style="vertical-align: middle;" class="title">감성지수</span>
+                                                    <span style="vertical-align: middle;" class="title">감성지수 Ⅰ</span>
                                                     <style>
                                                         #data {
                                                             overflow: hidden;
@@ -2801,7 +2801,7 @@
                                         <div class="card_item_large">
                                             <div class="card_box_right">
                                                 <div class="card_head">
-                                                    <span style="vertical-align: middle;" class="title">감성지수</span>
+                                                    <span style="vertical-align: middle;" class="title">감성지수 Ⅱ</span>
                                                     <style>
                                                         #data {
                                                             overflow: hidden;
@@ -2911,7 +2911,8 @@
                                                 </div> -->
 
                                                 <div class="card_head">
-                                                    <select size="1" class="select" id="chartFold" style="min-width: 90px; width:140px;"
+                                                    <select size="1" class="select" id="chartFold"
+                                                        style="min-width: 90px; width:140px;"
                                                         onChange="itemChangeFoldChart()">
                                                         <option value="stock">주가</option>
                                                         <option value="credit">신용공여</option>
@@ -3059,10 +3060,12 @@
         $(".card_list").css('max-height', $(".contents_panel:first").height())
         console.log($(".contents_panel:first").height());
 
+        /* ------------------ ALL CLOSE MODAL FUNCTIONS ------------------ */
         // modal
         $('.layer_dimmed .btn_close').on('click', function () {
             $(this).parents('.layer_dimmed').removeClass('is_active');
             $('.enlargedChartSettings').css("display", "none");
+            document.getElementById('enlargedChart').innerHTML = ''
             /* $('.stockLine').attr('clip-path', 'url(#stockClip)'); */
         });
 
@@ -3075,6 +3078,7 @@
             if (!chartEnlargedContainer.is(e.target) && chartEnlargedContainer.has(e.target).length === 0) {
                 $('.layer_dimmed').removeClass('is_active');
                 $('.enlargedChartSettings').css("display", "none");
+                document.getElementById('enlargedChart').innerHTML = ''
                 /*  $('.stockLine').attr('clip-path', 'url(#stockClip)'); */
             }
             if (!articleContent.is(e.target) && !articleTitle.is(e.target) && articleContent.has(e.target).length === 0 && articleTitle.has(e.target).length === 0) {
@@ -3087,6 +3091,7 @@
             if (e.keyCode === 27) { // ESC
                 $('.layer_dimmed').removeClass('is_active');
                 $('.enlargedChartSettings').css("display", "none");
+                document.getElementById('enlargedChart').innerHTML = ''
                 close_pop();
                 /*  $('.stockLine').attr('clip-path', 'url(#stockClip)'); */
             }
