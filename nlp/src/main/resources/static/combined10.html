@@ -1050,7 +1050,8 @@
         function getRowCount() {
             let datassss = parameters();
             console.log(parameters());
-
+            let selectItem = $("#fold").val();
+            
             loading1("뉴스");
 
             $.ajax({
@@ -1067,13 +1068,43 @@
                         $('#myModal').hide();
 
                     } else {
-                        alert('총 ' + datassss.rowCount + ' 건의 뉴스 기사가 검색됨');
-                        datassss.pageCount = countPages(datassss.rowCount);
-                        getChartQuery(datassss.searchWord, 3);
-                        topFunction();
-                        paginationByRowCount(datassss);
 
-                        document.getElementById('main_title').focus();
+                        switch (selectItem){
+                            case "keyword" :
+                                alert('총 ' + datassss.rowCount + ' 건의 뉴스 기사가 검색되었습니다.');
+                                datassss.pageCount = countPages(datassss.rowCount);
+                                getChartQuery(datassss.searchWord, 3);
+                                topFunction();
+                                paginationByRowCount(datassss);
+
+                                document.getElementById('main_title').focus();
+
+                                break;
+                            default :
+
+                                if (datassss.rowCount < 30 ){
+                                    var yesNo = confirm('총 ' + datassss.rowCount + ' 건의 뉴스 기사가 검색되었습니다.\n'
+                                    +'해당 기업의 뉴스 목록이 30건 미만입니다. 상위 카테고리로 검색하시겠습니까?')
+                                    if(yesNo == true){
+                                        
+                                    }
+                                    else if(yesNo == false){
+                                            
+                                    }
+                                }else{
+
+                                    
+                                }
+                                
+                                break;
+                            
+
+
+                        }
+
+                        
+
+                        
 
                     }
                 },
@@ -1160,6 +1191,8 @@
         }
 
         function getNewsListByCompanyName(companyName) {
+
+
             var data = parameters();
             data.searchWord = document.getElementById('search_company_news').value;
             data.selectedName = companyName;
