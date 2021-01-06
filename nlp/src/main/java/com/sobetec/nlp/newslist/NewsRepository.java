@@ -135,6 +135,7 @@ public class NewsRepository implements NewsRepositoryImpl {
 	
 	@Override
 	public int getRowCount(NewsCondition newsCondition) throws Exception {
+		int rowCount = 0;
 		if (newsCondition.getGubun().equals("custom")) {
 			String startDate = newsCondition.getStartDate();
 			String endDate = newsCondition.getEndDate();
@@ -144,11 +145,27 @@ public class NewsRepository implements NewsRepositoryImpl {
 			endDate = ed[2] + "-" + ed[0] + "-" + ed[1];
 			newsCondition.setStartDate(startDate);
 			newsCondition.setEndDate(endDate);
+			
+			
 		}
-		int rowCount = sqlSession.selectOne("mapper.newsMapper.selectRowCount",newsCondition);
+		
+		if(newsCondition.getGubunJaName().equals("company")) {
+			rowCount = sqlSession.selectOne("mapper.newsMapper.selectRowCountByCompanyName",newsCondition);
+		}else {
+			rowCount = sqlSession.selectOne("mapper.newsMapper.selectRowCount",newsCondition);
+		}
+		
+		
 //		int rows = rowCount.getRowCount();
 		System.out.println("로우카운트="+ rowCount);
 		return rowCount;
+	}
+	
+	@Override
+	public String getSystemNameByCompany(String companyName) throws Exception {
+		String result = sqlSession.selectOne("mapper.newsMapper.selectSystemNameByCompany", companyName);
+		System.out.println("getSystemNameByCompany 가져왔니? "+result);
+		return result;
 	}
 	
 }

@@ -28,6 +28,8 @@ public interface NewsRepositoryImpl {
 
 	List<News> getNewsListByIndustrySystem(NewsCondition newsCondition) throws Exception;
 
+	String getSystemNameByCompany(String companyName) throws Exception;
+
 	
 	
 	

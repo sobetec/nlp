@@ -112,6 +112,13 @@ public class NewsController {
 		System.out.println(newsCondition);
 		return repository.getRowCount(newsCondition);
 	}
+	
+	@GetMapping(path = "/getSystemNameByCompany/{companyName}")
+	public String getSystemNameByCompany(@PathVariable String companyName) throws Exception {
+		String result = repository.getSystemNameByCompany(companyName);
+		System.out.println("가져왔니 getSystemNameByCompany 컨트롤러  "+result);
+		return result;
+	}
 
 	
 }

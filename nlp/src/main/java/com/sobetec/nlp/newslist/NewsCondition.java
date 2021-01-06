@@ -14,6 +14,12 @@ public class NewsCondition {
 	private String gubunJaName;
 	private String selectedName;
 	
+	
+	
+	
+
+	
+
 	public int getNewsYear() {
 		return newsYear;
 	}
@@ -88,6 +94,10 @@ public class NewsCondition {
 				+ ", rowCount=" + rowCount + ", pageCount=" + pageCount + ", gubunJaName=" + gubunJaName
 				+ ", selectedName=" + selectedName + "]";
 	}
+
+
+	
+	
 	
 	
 	

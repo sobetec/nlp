@@ -284,5 +284,39 @@
 		 
 
 	</select>
+	
+	<select id="selectRowCountByCompanyName" parameterType="com.sobetec.nlp.newslist.NewsCondition" resultType="int">
+		SELECT count(news_date)
+		
+		  FROM NLP."nlp_news"
+		 where company_name = #{selectedName} 
+		  <choose>
+		  	<when test="gubun == 'year'">
+		  		and year = #{newsYear}
+		  	</when>
+		  	<when test="gubun == 'month'">
+		  		and year = #{newsYear}
+		  		and month = #{gubunItem}
+		  	</when>
+		  	<when test="gubun == 'quarter'">
+		  		and year = #{newsYear}
+		  		and quarter = #{gubunItem}
+		  	</when>
+		  	<when test="gubun == 'custom'">
+		  		and news_date between  to_date(#{startDate}, 'yyyy-mm-dd') and to_date(#{endDate}, 'yyyy-mm-dd')
+		  	</when>
+		  
+		  </choose>
+		
+		 
+
+	</select>
+	
+	
+	<select id="selectSystemNameByCompany" parameterType="String" resultType="String">
+		SELECT system_name
+		FROM NLP."company_code"
+		where company = #{companyName} limit 1
+ 	</select>
  	
 </mapper>
