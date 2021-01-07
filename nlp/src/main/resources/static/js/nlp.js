@@ -2559,6 +2559,7 @@ function onMouseOut(d, i) {
 }
 
 function drawWordcloud(words, divID) {
+    $('#resetDiv').hide();
     var graphDiv = document.getElementById(divID);
 
     var maxValue = Math.max.apply(Math, words.map(function (o) { return o.tf_idf }));
