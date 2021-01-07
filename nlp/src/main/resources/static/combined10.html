@@ -1048,26 +1048,38 @@
         }
 
         // 기업이름 조회로 시스템 이름 반환
-        const sibla = {getSystemNameByCompany : async function (companyName) {
-            let systemName;
-            $.ajax({
+        
+        function getSystemNameByCompany(companyName) {
+           
+           
+            return new Promise(function(resolve, reject) {
+                let systemName2;
+                $.ajax({
                 url: "/getSystemNameByCompany/" + companyName,
                 method: 'GET',
-                // async: true,
+                async: false,
                 // dataType: 'json',
                 success: function (dataaa) {
                     alert('시스템 네임 조회 성공');
                     console.log('시스템 네임 조회 성공했을시 리스펀스 데이타=  ' + dataaa);
-                    systemName = dataaa;
+                    systemName2 = dataaa;
 
                 },
                 error: function () {
                     alert('시스템 코드 널 못받았씁니다...');
-                    systemName = null;
+                    systemName2 = null;
                 }
-            });
-            return systemName;
-        }};
+                
+                });
+
+                resolve(systemName2);
+                console.log('함수내부'+systemName2);
+             }); 
+            //  return systemName2;
+        }
+        
+
+       
 
         function getRowCount() {
             let datassss = parameters();
@@ -1110,35 +1122,40 @@
 
                                 if (datassss.rowCount < 30) {
                                     alert('30개미만이라고!!');
-                                    var yesNo = confirm('총 ' + datassss.rowCount + ' 건의 뉴스 기사가 검색되었습니다.\n'
-                                        + '해당 기업의 뉴스 목록이 30건 미만입니다. 상위 카테고리로 검색하시겠습니까?')
-
-
-
-                                    if (yesNo == true) {
-                                        console.log('컨펌창에서 컴퍼니내임 잘받았나 ' + companyName);
-
-                                        var systemName = sibla.getSystemNameByCompany(companyName);
-
+                                    waitTime();
+                                    async function waitTime() {
                                         
-                                        if (systemName != null) {
+                                        var yesNo = confirm('총 ' + datassss.rowCount + ' 건의 뉴스 기사가 검색되었습니다.\n'
+                                            + '해당 기업의 뉴스 목록이 30건 미만입니다. 상위 카테고리로 검색하시겠습니까?');
 
-                                            getNewsListByIndustryAndSubsidiary('industry', systemName);
-                                        } else {
-                                            alert('상위 산업 Category가 없습니다. (system_code not found) ');
-                                            $('#myModal').hide();
-                                            // break;
+                                        var systemName = await getSystemNameByCompany(companyName);
+                                        console.log('시스템이름 잘나오나 ?  = ' + systemName);
+                                        if (yesNo == true) {
+                                            console.log('컨펌창에서 컴퍼니내임 잘받았나 ' + companyName);
+                                          
+                                            
+                                            systemName = systemName + '_system';
+                                            
+                                          
+
+                                            if (systemName != null) {
+
+                                                console.log(systemName);
+                                                getNewsListByIndustryAndSubsidiary('industry', systemName);
+                                            } else {
+                                                alert('상위 산업 Category가 없습니다. (system_code not found) ');
+                                                $('#myModal').hide();
+                                               
+                                            }
+
+
                                         }
-                                       
+                                        else if (yesNo == false) {
+                                            getNewsListByCompanyName(companyName);
+
+                                        }
 
                                     }
-                                    else if (yesNo == false) {
-                                        getNewsListByCompanyName(companyName);
-
-                                    }
-
-
-
 
                                 } else {
 
