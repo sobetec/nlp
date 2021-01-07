@@ -1148,7 +1148,6 @@
                                                
                                             }
 
-
                                         }
                                         else if (yesNo == false) {
                                             getNewsListByCompanyName(companyName);
@@ -1158,7 +1157,7 @@
                                     }
 
                                 } else {
-
+                                    
                                     getNewsListByCompanyName(companyName);
 
                                 }
@@ -1288,7 +1287,7 @@
                     document.getElementById('myModal').innerHTML = modalhtml2;
                     $('#myModal').show();
 
-                    document.getElementById('main_title').innerText = '뉴스 조회';
+                    document.getElementById('main_title').innerHTML = `뉴스 조회<h4 style="display:inline">(` + companyName + `)</h4>`;
                     $('#chartDiv').show();
                     setTimeout(() => drawTable(result_area, ''), 1000);
                     topFunction();
