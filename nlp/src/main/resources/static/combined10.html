@@ -1048,12 +1048,12 @@
         }
 
         // 기업이름 조회로 시스템 이름 반환
-        const sibla = {getSystemNameByCompany : async function (companyName) {
+        function getSystemNameByCompany(companyName) {
             let systemName;
             $.ajax({
                 url: "/getSystemNameByCompany/" + companyName,
                 method: 'GET',
-                // async: true,
+                async: false,
                 // dataType: 'json',
                 success: function (dataaa) {
                     alert('시스템 네임 조회 성공');
@@ -1067,7 +1067,19 @@
                 }
             });
             return systemName;
-        }};
+        };
+
+        async function start(companyName) {
+            let promise = new Promise((resolve, reject) => {
+                setTimeout(() => resolve(getSystemNameByCompany(companyName)), 200)
+            });
+            let systemName = await promise;
+            console.log(systemName);
+
+
+
+            return systemName;
+        }
 
         function getRowCount() {
             let datassss = parameters();
@@ -1114,22 +1126,57 @@
                                         + '해당 기업의 뉴스 목록이 30건 미만입니다. 상위 카테고리로 검색하시겠습니까?')
 
 
-
                                     if (yesNo == true) {
+                                        
                                         console.log('컨펌창에서 컴퍼니내임 잘받았나 ' + companyName);
 
-                                        var systemName = sibla.getSystemNameByCompany(companyName);
+                                        var systemName;
+                                        systemName = getSystemNameByCompany(companyName);
 
-                                        
                                         if (systemName != null) {
-
+                                            console.log(systemName);
                                             getNewsListByIndustryAndSubsidiary('industry', systemName);
                                         } else {
+                                            console.log(systemName);
                                             alert('상위 산업 Category가 없습니다. (system_code not found) ');
                                             $('#myModal').hide();
                                             // break;
                                         }
-                                       
+
+                                        // var systemName = fetchUser("/getSystemNameByCompany/" + companyName); 
+                                        // var systemName = await getSystemNameByCompany(companyName);
+                                        // (async () => {
+                                        //     try {
+                                        // Promise
+                                        //     .all([start(companyName)])
+                                        //     .then(values => {
+                                        //         systemName = values
+                                        //         console.log(systemName);
+                                        //         console.log("@#@#@#@#@#");
+                                        //         if (systemName != null) {
+
+                                        //             getNewsListByIndustryAndSubsidiary('industry', systemName);
+                                        //         } else {
+                                        //             alert('상위 산업 Category가 없습니다. (system_code not found) ');
+                                        //             $('#myModal').hide();
+                                        //             // break;
+                                        //         }
+                                        //     })
+
+                                        // systemName = await start(companyName);
+
+
+                                        // console.log(systemName);
+                                        // systemName = await start(companyName);
+                                        // console.log(systemName);
+
+                                        // console.log("@#@#@#@#@#");
+
+
+                                        //     } catch (err) {
+                                        //         console.log("nonono");
+                                        //     }
+                                        // })();
 
                                     }
                                     else if (yesNo == false) {
