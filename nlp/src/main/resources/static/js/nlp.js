@@ -273,481 +273,732 @@ function makeGauge(divID, sentimentScore) {
 function makeSentimentBoxPlot(sentimentData, divID) {
     console.log('making sentiment box')
     console.log(sentimentData)
-    document.getElementById(divID).innerHTML = "";
-
-    sentimentData.sort(function (a, b) { return dateParser(b.date) - dateParser(a.date) });
-    var dateArray = [];
-    for (var i = sentimentData.length - 1; i > -1; i--) {
-        dateArray.push(dateParser(sentimentData[i].date));
-    }
-    var graphDiv = document.getElementById(divID);
-    if (divID == "enlargedChart") {
-        var divHeight = 550;
-        var divWidth = 1250;
+    console.log(sentimentData.length)
+    if (sentimentData.length > 0) {
         document.getElementById(divID).innerHTML = "";
-    }
-    else {
-        var divHeight = graphDiv.clientHeight;
-        var divWidth = graphDiv.clientWidth;
-    }
-    var xPadding = 65;
-    var yPadding = 25;
-    var INNER_HEIGHT = divHeight - 2 * yPadding;
-    var INNER_WIDTH = divWidth - 2 * xPadding;
-    var ySentScale = d3.scaleLinear()
-        .domain([0, 100])
-        .range([divHeight - yPadding, yPadding])
-    var ySentAxis = d3.axisLeft(ySentScale)
-        .scale(ySentScale)
-        .ticks(5)
-        .tickSizeOuter(0);
-    var yAxisGrid = d3.axisLeft(ySentScale)
-        .tickSize(-INNER_WIDTH)
-        .ticks(5)
-        .tickFormat('')
-        .tickSizeOuter(0);
 
-    var gubun = $("#gubunNews").val()
-
-    var xScale = d3.scaleBand()
-        .domain(dateArray)
-        .range([xPadding, divWidth - xPadding])
-        .padding(0.05);
-    if (gubun == 'month') {
-        var xAxis = d3.axisBottom()
-            .scale(xScale)
-            .tickValues(xScale.domain().filter(function (d, i) {
-                return !((i + Math.floor(sentimentData.length / 8)) % (Math.floor(sentimentData.length / 4)))
-            }))
+        sentimentData.sort(function (a, b) { return dateParser(b.date) - dateParser(a.date) });
+        var dateArray = [];
+        for (var i = sentimentData.length - 1; i > -1; i--) {
+            dateArray.push(dateParser(sentimentData[i].date));
+        }
+        var graphDiv = document.getElementById(divID);
+        if (divID == "enlargedChart") {
+            var divHeight = 550;
+            var divWidth = 1250;
+            document.getElementById(divID).innerHTML = "";
+        }
+        else {
+            var divHeight = graphDiv.clientHeight;
+            var divWidth = graphDiv.clientWidth;
+        }
+        var xPadding = 65;
+        var yPadding = 25;
+        var INNER_HEIGHT = divHeight - 2 * yPadding;
+        var INNER_WIDTH = divWidth - 2 * xPadding;
+        var ySentScale = d3.scaleLinear()
+            .domain([0, 100])
+            .range([divHeight - yPadding, yPadding])
+        var ySentAxis = d3.axisLeft(ySentScale)
+            .scale(ySentScale)
             .ticks(5)
-            .tickSizeOuter(0)
-            .tickPadding(5)
-            .tickFormat(d3.timeFormat("%Y년%b%d일"))
-    }
-    else {
-        var xAxis = d3.axisBottom()
-            .scale(xScale)
-            .tickValues(xScale.domain().filter(function (d, i) {
-                if (gubun == 'quarter') {
-                    return !((i + Math.floor(sentimentData.length / 6)) % (Math.floor(sentimentData.length / 3)))
-                }
-                else if (gubun == 'year')
-                    return !((i + Math.floor(sentimentData.length / 12)) % (Math.floor(sentimentData.length / 6)))
-                else {
-                    return !((i + Math.floor(sentimentData.length / 16)) % (Math.floor(sentimentData.length / 8)))
-                }
-            }))
+            .tickSizeOuter(0);
+        var yAxisGrid = d3.axisLeft(ySentScale)
+            .tickSize(-INNER_WIDTH)
             .ticks(5)
-            .tickSizeOuter(0)
-            .tickPadding(5)
-            .tickFormat(d3.timeFormat("%Y년%b"))
-    }
+            .tickFormat('')
+            .tickSizeOuter(0);
+
+        var gubun = $("#gubunNews").val()
+
+        var xScale = d3.scaleBand()
+            .domain(dateArray)
+            .range([xPadding, divWidth - xPadding])
+            .padding(0.05);
+        if (gubun == 'month') {
+            var xAxis = d3.axisBottom()
+                .scale(xScale)
+                .tickValues(xScale.domain().filter(function (d, i) {
+                    return !((i + Math.floor(sentimentData.length / 8)) % (Math.floor(sentimentData.length / 4)))
+                }))
+                .ticks(5)
+                .tickSizeOuter(0)
+                .tickPadding(5)
+                .tickFormat(d3.timeFormat("%Y년%b%d일"))
+        }
+        else {
+            var xAxis = d3.axisBottom()
+                .scale(xScale)
+                .tickValues(xScale.domain().filter(function (d, i) {
+                    if (gubun == 'quarter') {
+                        return !((i + Math.floor(sentimentData.length / 6)) % (Math.floor(sentimentData.length / 3)))
+                    }
+                    else if (gubun == 'year')
+                        return !((i + Math.floor(sentimentData.length / 12)) % (Math.floor(sentimentData.length / 6)))
+                    else {
+                        return !((i + Math.floor(sentimentData.length / 16)) % (Math.floor(sentimentData.length / 8)))
+                    }
+                }))
+                .ticks(5)
+                .tickSizeOuter(0)
+                .tickPadding(5)
+                .tickFormat(d3.timeFormat("%Y년%b"))
+        }
 
 
-    var zoomBeh = d3.zoom()
-        .scaleExtent([0, 100])
-        .on("zoom", zoom);
+        var zoomBeh = d3.zoom()
+            .scaleExtent([0, 100])
+            .on("zoom", zoom);
 
 
 
-    var svg = d3.select("#" + divID).append("svg")
-        .attr('class', function () { if (divID == 'enlargedChart') { return 'largeSVG' } else { return 'visSVG' } })
-        .attr("width", "100%")
-        .attr("height", "100%")
-        .attr('pointer-events', 'all');
-    if (divID == 'enlargedChart') {
-        svg.call(zoomBeh);
-    }
+        var svg = d3.select("#" + divID).append("svg")
+            .attr('class', function () { if (divID == 'enlargedChart') { return 'largeSVG' } else { return 'visSVG' } })
+            .attr("width", "100%")
+            .attr("height", "100%")
+            .attr('pointer-events', 'all');
+        if (divID == 'enlargedChart') {
+            svg.call(zoomBeh);
+        }
 
-    svg.append('rect')
-        .attr('height', '100%')
-        .attr('width', '100%')
-        .attr('fill', 'white')
-
-
-    svg.append('g')
-        .attr("transform", "translate(" + xPadding + ",0)")
-        .attr('id', 'sentYAxis')
-        .call(ySentAxis);
+        svg.append('rect')
+            .attr('height', '100%')
+            .attr('width', '100%')
+            .attr('fill', 'white')
 
 
-    svg.append("text")
-        .attr("class", "y label")
-        .attr("text-anchor", "middle")
-        .attr("transform", "rotate(-90)")
-        .attr("x", -divHeight / 2)
-        .attr('y', xPadding / 2)
-        .text("감성지수");
+        svg.append('g')
+            .attr("transform", "translate(" + xPadding + ",0)")
+            .attr('id', 'sentYAxis')
+            .call(ySentAxis);
 
 
-    svg.append('g')
-        .attr('class', 'y axis-grid')
-        .attr("transform", "translate(" + xPadding + ",0)")
-        .call(yAxisGrid);
+        svg.append("text")
+            .attr("class", "y label")
+            .attr("text-anchor", "middle")
+            .attr("transform", "rotate(-90)")
+            .attr("x", -divHeight / 2)
+            .attr('y', xPadding / 2)
+            .text("감성지수");
 
-    if (divID == 'enlargedChart') {
-        var clip = svg.append("defs").append("svg:clipPath")
-            .attr('id', 'articleClipEnlarged')
-            .append('svg:rect')
-            .attr('width', INNER_WIDTH)
-            .attr('height', divHeight)
-            .attr('x', xPadding)
-            .attr('y', 0);
 
-        var clippedsvg = svg.append('g')
-            .attr('class', 'linechartarea')
-            .attr('clip-path', 'url(#articleClipEnlarged)')
+        svg.append('g')
+            .attr('class', 'y axis-grid')
+            .attr("transform", "translate(" + xPadding + ",0)")
+            .call(yAxisGrid);
 
-        var gX = svg.append('g')
-            .attr('id', 'articlexAxis')
-            .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
-            .attr('clip-path', 'url(#articleClipEnlarged)')
-            .call(xAxis);
+        if (divID == 'enlargedChart') {
+            var clip = svg.append("defs").append("svg:clipPath")
+                .attr('id', 'articleClipEnlarged')
+                .append('svg:rect')
+                .attr('width', INNER_WIDTH)
+                .attr('height', divHeight)
+                .attr('x', xPadding)
+                .attr('y', 0);
 
-        var iqrBoxes = clippedsvg.selectAll('.iqrBoxEnlarged .upper')
+            var clippedsvg = svg.append('g')
+                .attr('class', 'linechartarea')
+                .attr('clip-path', 'url(#articleClipEnlarged)')
+
+            var gX = svg.append('g')
+                .attr('id', 'articlexAxis')
+                .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
+                .attr('clip-path', 'url(#articleClipEnlarged)')
+                .call(xAxis);
+
+            var iqrBoxes = clippedsvg.selectAll('.iqrBoxEnlarged .upper')
+                .data(sentimentData)
+                .enter()
+                .append('rect')
+                .attr('class', 'iqrBoxEnlarged upper')
+                .attr('width', function (d, i) {
+                    return xScale.bandwidth();
+                })
+                .attr('height', function (d, i) {
+                    return Math.max(0, Math.min(ySentScale(60), ySentScale(d.lower)) - ySentScale(d.upper))
+                })
+                .attr('x', function (d, i) {
+                    var tempDate = dateParser(d.date)
+                    return xScale(tempDate);
+                })
+                .attr('y', function (d, i) {
+                    return ySentScale(d.upper)
+                })
+                .attr('fill', 'red')
+                .style('opacity', '40%')
+                .on("mouseover", onMouseOver)
+                .on("mousemove", onMouseMove)
+                .on("mouseout", onMouseOut);
+
+            var iqrBoxes = clippedsvg.selectAll('.iqrBoxEnlarged .center')
+                .data(sentimentData)
+                .enter()
+                .append('rect')
+                .attr('class', 'iqrBoxEnlarged center')
+                .attr('width', function (d, i) {
+                    return xScale.bandwidth();
+                })
+                .attr('height', function (d, i) {
+                    return Math.max(0, Math.min(ySentScale(40), ySentScale(d.lower)) - Math.max(ySentScale(60), ySentScale(d.upper)))
+                })
+                .attr('x', function (d, i) {
+                    var tempDate = dateParser(d.date)
+                    return xScale(tempDate);
+                })
+                .attr('y', function (d, i) {
+                    return Math.max(ySentScale(60), ySentScale(d.upper))
+                })
+                .attr('fill', 'green')
+                .style('opacity', '40%')
+                .on("mouseover", onMouseOver)
+                .on("mousemove", onMouseMove)
+                .on("mouseout", onMouseOut);
+
+            var iqrBoxes = clippedsvg.selectAll('.iqrBoxEnlarged .lower')
+                .data(sentimentData)
+                .enter()
+                .append('rect')
+                .attr('class', 'iqrBoxEnlarged lower')
+                .attr('width', function (d, i) {
+                    return xScale.bandwidth();
+                })
+                .attr('height', function (d, i) {
+                    return Math.max(0, ySentScale(d.lower) - Math.max(ySentScale(40), ySentScale(d.upper)))
+                })
+                .attr('x', function (d, i) {
+                    var tempDate = dateParser(d.date)
+                    return xScale(tempDate);
+                })
+                .attr('y', function (d, i) {
+                    return Math.max(ySentScale(d.upper), ySentScale(40))
+                })
+                .attr('fill', 'blue')
+                .style('opacity', '40%')
+                .on("mouseover", onMouseOver)
+                .on("mousemove", onMouseMove)
+                .on("mouseout", onMouseOut);
+        }
+        else {
+            var clip = svg.append("defs").append("svg:clipPath")
+                .attr('id', 'articleClip')
+                .append('svg:rect')
+                .attr('width', INNER_WIDTH)
+                .attr('height', divHeight)
+                .attr('x', xPadding)
+                .attr('y', 0);
+
+            var clippedsvg = svg.append('g')
+                .attr('class', 'linechartarea')
+                .attr('clip-path', 'url(#articleClip)')
+            var gX = svg.append('g')
+                .attr('id', 'articlexAxis')
+                .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
+                .attr('clip-path', 'url(#articleClip)')
+                .call(xAxis);
+
+            var iqrBoxes = clippedsvg.selectAll('.iqrBox .upper')
+                .data(sentimentData)
+                .enter()
+                .append('rect')
+                .attr('class', 'iqrBox upper')
+                .attr('width', function (d, i) {
+                    return xScale.bandwidth();
+                })
+                .attr('height', function (d, i) {
+                    return Math.max(0, Math.min(ySentScale(60), ySentScale(d.lower)) - ySentScale(d.upper))
+                })
+                .attr('x', function (d, i) {
+                    var tempDate = dateParser(d.date)
+                    return xScale(tempDate);
+                })
+                .attr('y', function (d, i) {
+                    return ySentScale(d.upper)
+                })
+                .attr('fill', 'red')
+                .style('opacity', '40%')
+                .on("mouseover", onMouseOver)
+                .on("mousemove", onMouseMove)
+                .on("mouseout", onMouseOut);
+
+            var iqrBoxes = clippedsvg.selectAll('.iqrBox .center')
+                .data(sentimentData)
+                .enter()
+                .append('rect')
+                .attr('class', 'iqrBox center')
+                .attr('width', function (d, i) {
+                    return xScale.bandwidth();
+                })
+                .attr('height', function (d, i) {
+                    return Math.max(0, Math.min(ySentScale(40), ySentScale(d.lower)) - Math.max(ySentScale(60), ySentScale(d.upper)))
+                })
+                .attr('x', function (d, i) {
+                    var tempDate = dateParser(d.date)
+                    return xScale(tempDate);
+                })
+                .attr('y', function (d, i) {
+                    return Math.max(ySentScale(60), ySentScale(d.upper))
+                })
+                .attr('fill', 'green')
+                .style('opacity', '40%')
+                .on("mouseover", onMouseOver)
+                .on("mousemove", onMouseMove)
+                .on("mouseout", onMouseOut);
+
+            var iqrBoxes = clippedsvg.selectAll('.iqrBox .lower')
+                .data(sentimentData)
+                .enter()
+                .append('rect')
+                .attr('class', 'iqrBox lower')
+                .attr('width', function (d, i) {
+                    return xScale.bandwidth();
+                })
+                .attr('height', function (d, i) {
+                    return Math.max(0, ySentScale(d.lower) - Math.max(ySentScale(40), ySentScale(d.upper)))
+                })
+                .attr('x', function (d, i) {
+                    var tempDate = dateParser(d.date)
+                    return xScale(tempDate);
+                })
+                .attr('y', function (d, i) {
+                    return Math.max(ySentScale(d.upper), ySentScale(40))
+                })
+                .attr('fill', 'blue')
+                .style('opacity', '40%')
+                .on("mouseover", onMouseOver)
+                .on("mousemove", onMouseMove)
+                .on("mouseout", onMouseOut);
+        }
+
+
+        var meanLines = clippedsvg.selectAll('.meanLine')
             .data(sentimentData)
             .enter()
-            .append('rect')
-            .attr('class', 'iqrBoxEnlarged upper')
-            .attr('width', function (d, i) {
-                return xScale.bandwidth();
-            })
-            .attr('height', function (d, i) {
-                return Math.max(0, Math.min(ySentScale(60), ySentScale(d.lower)) - ySentScale(d.upper))
-            })
-            .attr('x', function (d, i) {
-                var tempDate = dateParser(d.date)
-                return xScale(tempDate);
-            })
-            .attr('y', function (d, i) {
-                return ySentScale(d.upper)
-            })
-            .attr('fill', 'red')
-            .style('opacity', '40%')
-            .on("mouseover", onMouseOver)
-            .on("mousemove", onMouseMove)
-            .on("mouseout", onMouseOut);
-
-        var iqrBoxes = clippedsvg.selectAll('.iqrBoxEnlarged .center')
-            .data(sentimentData)
-            .enter()
-            .append('rect')
-            .attr('class', 'iqrBoxEnlarged center')
-            .attr('width', function (d, i) {
-                return xScale.bandwidth();
-            })
-            .attr('height', function (d, i) {
-                return Math.max(0, Math.min(ySentScale(40), ySentScale(d.lower)) - Math.max(ySentScale(60), ySentScale(d.upper)))
-            })
-            .attr('x', function (d, i) {
-                var tempDate = dateParser(d.date)
-                return xScale(tempDate);
-            })
-            .attr('y', function (d, i) {
-                return Math.max(ySentScale(60), ySentScale(d.upper))
-            })
-            .attr('fill', 'green')
-            .style('opacity', '40%')
-            .on("mouseover", onMouseOver)
-            .on("mousemove", onMouseMove)
-            .on("mouseout", onMouseOut);
-
-        var iqrBoxes = clippedsvg.selectAll('.iqrBoxEnlarged .lower')
-            .data(sentimentData)
-            .enter()
-            .append('rect')
-            .attr('class', 'iqrBoxEnlarged lower')
-            .attr('width', function (d, i) {
-                return xScale.bandwidth();
-            })
-            .attr('height', function (d, i) {
-                return Math.max(0, ySentScale(d.lower) - Math.max(ySentScale(40), ySentScale(d.upper)))
-            })
-            .attr('x', function (d, i) {
-                var tempDate = dateParser(d.date)
-                return xScale(tempDate);
-            })
-            .attr('y', function (d, i) {
-                return Math.max(ySentScale(d.upper), ySentScale(40))
-            })
-            .attr('fill', 'blue')
-            .style('opacity', '40%')
-            .on("mouseover", onMouseOver)
-            .on("mousemove", onMouseMove)
-            .on("mouseout", onMouseOut);
-    }
-    else {
-        var clip = svg.append("defs").append("svg:clipPath")
-            .attr('id', 'articleClip')
-            .append('svg:rect')
-            .attr('width', INNER_WIDTH)
-            .attr('height', divHeight)
-            .attr('x', xPadding)
-            .attr('y', 0);
-
-        var clippedsvg = svg.append('g')
-            .attr('class', 'linechartarea')
-            .attr('clip-path', 'url(#articleClip)')
-        var gX = svg.append('g')
-            .attr('id', 'articlexAxis')
-            .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
-            .attr('clip-path', 'url(#articleClip)')
-            .call(xAxis);
-
-        var iqrBoxes = clippedsvg.selectAll('.iqrBox .upper')
-            .data(sentimentData)
-            .enter()
-            .append('rect')
-            .attr('class', 'iqrBox upper')
-            .attr('width', function (d, i) {
-                return xScale.bandwidth();
-            })
-            .attr('height', function (d, i) {
-                return Math.max(0, Math.min(ySentScale(60), ySentScale(d.lower)) - ySentScale(d.upper))
-            })
-            .attr('x', function (d, i) {
-                var tempDate = dateParser(d.date)
-                return xScale(tempDate);
-            })
-            .attr('y', function (d, i) {
-                return ySentScale(d.upper)
-            })
-            .attr('fill', 'red')
-            .style('opacity', '40%')
-            .on("mouseover", onMouseOver)
-            .on("mousemove", onMouseMove)
-            .on("mouseout", onMouseOut);
-
-        var iqrBoxes = clippedsvg.selectAll('.iqrBox .center')
-            .data(sentimentData)
-            .enter()
-            .append('rect')
-            .attr('class', 'iqrBox center')
-            .attr('width', function (d, i) {
-                return xScale.bandwidth();
-            })
-            .attr('height', function (d, i) {
-                return Math.max(0, Math.min(ySentScale(40), ySentScale(d.lower)) - Math.max(ySentScale(60), ySentScale(d.upper)))
-            })
-            .attr('x', function (d, i) {
-                var tempDate = dateParser(d.date)
-                return xScale(tempDate);
-            })
-            .attr('y', function (d, i) {
-                return Math.max(ySentScale(60), ySentScale(d.upper))
-            })
-            .attr('fill', 'green')
-            .style('opacity', '40%')
-            .on("mouseover", onMouseOver)
-            .on("mousemove", onMouseMove)
-            .on("mouseout", onMouseOut);
-
-        var iqrBoxes = clippedsvg.selectAll('.iqrBox .lower')
-            .data(sentimentData)
-            .enter()
-            .append('rect')
-            .attr('class', 'iqrBox lower')
-            .attr('width', function (d, i) {
-                return xScale.bandwidth();
-            })
-            .attr('height', function (d, i) {
-                return Math.max(0, ySentScale(d.lower) - Math.max(ySentScale(40), ySentScale(d.upper)))
-            })
-            .attr('x', function (d, i) {
-                var tempDate = dateParser(d.date)
-                return xScale(tempDate);
-            })
-            .attr('y', function (d, i) {
-                return Math.max(ySentScale(d.upper), ySentScale(40))
-            })
-            .attr('fill', 'blue')
-            .style('opacity', '40%')
-            .on("mouseover", onMouseOver)
-            .on("mousemove", onMouseMove)
-            .on("mouseout", onMouseOut);
-    }
-
-
-    var meanLines = clippedsvg.selectAll('.meanLine')
-        .data(sentimentData)
-        .enter()
-        .append('line')
-        .attr('class', 'meanLine')
-        .attr('x1', function (d) { return xScale(dateParser(d.date)) })
-        .attr('y1', function (d) { return ySentScale(d.median) })
-        .attr('x2', function (d, i) {
-            return xScale(dateParser(d.date)) + xScale.bandwidth()
-        })
-        .attr('y2', function (d, i) {
-            return ySentScale(d.median)
-        })
-        .attr('stroke', 'black')
-        .attr('stroke-width', 1);
-
-    var meanLines = clippedsvg.selectAll('.firstQuartLine')
-        .data(sentimentData)
-        .enter()
-        .append('line')
-        .attr('class', 'firstQuartLine')
-        .attr('x1', function (d) { return xScale(dateParser(d.date)) })
-        .attr('y1', function (d) { return ySentScale(d.min) })
-        .attr('x2', function (d, i) {
-            return xScale(dateParser(d.date)) + xScale.bandwidth()
-        })
-        .attr('y2', function (d, i) {
-            return ySentScale(d.min)
-        })
-        .attr('stroke', '#990000')
-        .attr('stroke-width', 1);
-
-    var meanLines = clippedsvg.selectAll('.thirdQuartLine')
-        .data(sentimentData)
-        .enter()
-        .append('line')
-        .attr('class', 'thirdQuartLine')
-        .attr('x1', function (d) { return xScale(dateParser(d.date)) })
-        .attr('y1', function (d) { return ySentScale(d.max) })
-        .attr('x2', function (d, i) {
-            return xScale(dateParser(d.date)) + xScale.bandwidth()
-        })
-        .attr('y2', function (d, i) {
-            return ySentScale(d.max)
-        })
-        .attr('stroke', '#990000')
-        .attr('stroke-width', 1);
-
-    var meanLines = clippedsvg.selectAll('.centerLine')
-        .data(sentimentData)
-        .enter()
-        .append('line')
-        .attr('class', 'centerLine')
-        .attr('x1', function (d) { return xScale(dateParser(d.date)) + xScale.bandwidth() / 2 })
-        .attr('y1', function (d) { return ySentScale(d.min) })
-        .attr('x2', function (d, i) { return xScale(dateParser(d.date)) + xScale.bandwidth() / 2 })
-        .attr('y2', function (d) { return ySentScale(d.max) })
-        .attr('stroke', '#990000')
-        .attr('stroke-width', 1);
-
-
-    /* MAKE LEGEND */
-
-    var legend = svg.append('g')
-        .attr('width', (divWidth / 2) + 'px')
-        .attr('height', '30px')
-        .attr('id', 'sentimentBoxLegend');
-
-    legend.append('rect')
-        .attr('x', 0)
-        .attr('y', yPadding / 2)
-        .attr('width', yPadding / 3)
-        .attr('height', yPadding / 3)
-        .attr('fill', 'blue')
-        .attr('opacity', '40%')
-
-    legend.append('text')
-        .attr('transform', 'translate(' + (yPadding / 2.5) + ',' + (3 * yPadding / 4) + ")")
-        .attr('alignment-baseline', 'middle')
-        .attr('text-anchor', 'left')
-        .style('font-size', '12px')
-        .text('부정');
-
-    var legendShift1 = yPadding * 1.7;
-    legend.append('rect')
-        .attr('x', legendShift1)
-        .attr('y', yPadding / 2)
-        .attr('width', yPadding / 3)
-        .attr('height', yPadding / 3)
-        .attr('fill', 'green')
-        .attr('opacity', '40%')
-
-    legend.append('text')
-        .attr('transform', 'translate(' + (yPadding / 2.5 + legendShift1) + ',' + (3 * yPadding / 4) + ")")
-        .attr('alignment-baseline', 'middle')
-        .attr('text-anchor', 'left')
-        .style('font-size', '12px')
-        .text('중립');
-
-    var legendShift2 = yPadding * 3.4;
-    legend.append('rect')
-        .attr('x', legendShift2)
-        .attr('y', yPadding / 2)
-        .attr('width', yPadding / 3)
-        .attr('height', yPadding / 3)
-        .attr('fill', 'red')
-        .attr('opacity', '40%')
-
-    legend.append('text')
-        .attr('transform', 'translate(' + (yPadding / 2.5 + legendShift2) + ',' + (3 * yPadding / 4) + ")")
-        .attr('alignment-baseline', 'middle')
-        .attr('text-anchor', 'left')
-        .style('font-size', '12px')
-        .text('긍정');
-
-    var legendWidth = document.getElementById('sentimentBoxLegend').getBoundingClientRect().width;
-
-
-    legend.attr('transform', 'translate(' + (divWidth - xPadding - legendWidth) + ',0)')
-
-
-
-
-
-
-
-
-    function zoom() {
-        xScale.range([xPadding, divWidth - xPadding].map((d, i) => {
-            if (i == 0) {
-                if (d3.event.transform.applyX(d) > xPadding) {
-                    return xPadding
-                }
-                else {
-                    return d3.event.transform.applyX(d)
-                }
-            }
-            else if (i == 1) {
-                if (d3.event.transform.applyX(d) < (divWidth - xPadding)) {
-                    return divWidth - xPadding
-                }
-                else {
-                    return d3.event.transform.applyX(d)
-                }
-            }
-            else {
-            }
-        }));
-        gX.call(xAxis.scale(xScale))
-
-        svg.selectAll(".meanLine")
+            .append('line')
+            .attr('class', 'meanLine')
             .attr('x1', function (d) { return xScale(dateParser(d.date)) })
-            .attr('x2', function (d, i) { return xScale(dateParser(d.date)) + xScale.bandwidth() })
-
-        svg.selectAll(".firstQuartLine")
-            .attr('x1', function (d) { return xScale(dateParser(d.date)) })
-            .attr('x2', function (d, i) { return xScale(dateParser(d.date)) + xScale.bandwidth() })
-
-        svg.selectAll(".thirdQuartLine")
-            .attr('x1', function (d) { return xScale(dateParser(d.date)) })
-            .attr('x2', function (d, i) { return xScale(dateParser(d.date)) + xScale.bandwidth() })
-
-        svg.selectAll('.iqrBoxEnlarged')
-            .attr('width', function (d, i) {
-                return xScale.bandwidth();
+            .attr('y1', function (d) { return ySentScale(d.median) })
+            .attr('x2', function (d, i) {
+                return xScale(dateParser(d.date)) + xScale.bandwidth()
             })
-            .attr('x', function (d, i) {
-                var tempDate = dateParser(d.date)
-                return xScale(tempDate);
-            });
+            .attr('y2', function (d, i) {
+                return ySentScale(d.median)
+            })
+            .attr('stroke', 'black')
+            .attr('stroke-width', 1);
 
-        svg.selectAll(".centerLine")
+        var meanLines = clippedsvg.selectAll('.firstQuartLine')
+            .data(sentimentData)
+            .enter()
+            .append('line')
+            .attr('class', 'firstQuartLine')
+            .attr('x1', function (d) { return xScale(dateParser(d.date)) })
+            .attr('y1', function (d) { return ySentScale(d.min) })
+            .attr('x2', function (d, i) {
+                return xScale(dateParser(d.date)) + xScale.bandwidth()
+            })
+            .attr('y2', function (d, i) {
+                return ySentScale(d.min)
+            })
+            .attr('stroke', '#990000')
+            .attr('stroke-width', 1);
+
+        var meanLines = clippedsvg.selectAll('.thirdQuartLine')
+            .data(sentimentData)
+            .enter()
+            .append('line')
+            .attr('class', 'thirdQuartLine')
+            .attr('x1', function (d) { return xScale(dateParser(d.date)) })
+            .attr('y1', function (d) { return ySentScale(d.max) })
+            .attr('x2', function (d, i) {
+                return xScale(dateParser(d.date)) + xScale.bandwidth()
+            })
+            .attr('y2', function (d, i) {
+                return ySentScale(d.max)
+            })
+            .attr('stroke', '#990000')
+            .attr('stroke-width', 1);
+
+        var meanLines = clippedsvg.selectAll('.centerLine')
+            .data(sentimentData)
+            .enter()
+            .append('line')
+            .attr('class', 'centerLine')
             .attr('x1', function (d) { return xScale(dateParser(d.date)) + xScale.bandwidth() / 2 })
+            .attr('y1', function (d) { return ySentScale(d.min) })
             .attr('x2', function (d, i) { return xScale(dateParser(d.date)) + xScale.bandwidth() / 2 })
-    }
-    if (divID == 'enlargedChart') {
-        window.SVG = svg;
-    }
+            .attr('y2', function (d) { return ySentScale(d.max) })
+            .attr('stroke', '#990000')
+            .attr('stroke-width', 1);
 
-    svg.attr('transform', 'translate(10,0)')
+
+        /* MAKE LEGEND */
+
+        var legend = svg.append('g')
+            .attr('width', (divWidth / 2) + 'px')
+            .attr('height', '30px')
+            .attr('id', 'sentimentBoxLegend');
+
+        legend.append('rect')
+            .attr('x', 0)
+            .attr('y', yPadding / 2)
+            .attr('width', yPadding / 3)
+            .attr('height', yPadding / 3)
+            .attr('fill', 'blue')
+            .attr('opacity', '40%')
+
+        legend.append('text')
+            .attr('transform', 'translate(' + (yPadding / 2.5) + ',' + (3 * yPadding / 4) + ")")
+            .attr('alignment-baseline', 'middle')
+            .attr('text-anchor', 'left')
+            .style('font-size', '12px')
+            .text('부정');
+
+        var legendShift1 = yPadding * 1.7;
+        legend.append('rect')
+            .attr('x', legendShift1)
+            .attr('y', yPadding / 2)
+            .attr('width', yPadding / 3)
+            .attr('height', yPadding / 3)
+            .attr('fill', 'green')
+            .attr('opacity', '40%')
+
+        legend.append('text')
+            .attr('transform', 'translate(' + (yPadding / 2.5 + legendShift1) + ',' + (3 * yPadding / 4) + ")")
+            .attr('alignment-baseline', 'middle')
+            .attr('text-anchor', 'left')
+            .style('font-size', '12px')
+            .text('중립');
+
+        var legendShift2 = yPadding * 3.4;
+        legend.append('rect')
+            .attr('x', legendShift2)
+            .attr('y', yPadding / 2)
+            .attr('width', yPadding / 3)
+            .attr('height', yPadding / 3)
+            .attr('fill', 'red')
+            .attr('opacity', '40%')
+
+        legend.append('text')
+            .attr('transform', 'translate(' + (yPadding / 2.5 + legendShift2) + ',' + (3 * yPadding / 4) + ")")
+            .attr('alignment-baseline', 'middle')
+            .attr('text-anchor', 'left')
+            .style('font-size', '12px')
+            .text('긍정');
+
+        var legendWidth = document.getElementById('sentimentBoxLegend').getBoundingClientRect().width;
+
+
+        legend.attr('transform', 'translate(' + (divWidth - xPadding - legendWidth) + ',0)')
+
+
+
+
+
+
+
+
+        function zoom() {
+            xScale.range([xPadding, divWidth - xPadding].map((d, i) => {
+                if (i == 0) {
+                    if (d3.event.transform.applyX(d) > xPadding) {
+                        return xPadding
+                    }
+                    else {
+                        return d3.event.transform.applyX(d)
+                    }
+                }
+                else if (i == 1) {
+                    if (d3.event.transform.applyX(d) < (divWidth - xPadding)) {
+                        return divWidth - xPadding
+                    }
+                    else {
+                        return d3.event.transform.applyX(d)
+                    }
+                }
+                else {
+                }
+            }));
+            gX.call(xAxis.scale(xScale))
+
+            svg.selectAll(".meanLine")
+                .attr('x1', function (d) { return xScale(dateParser(d.date)) })
+                .attr('x2', function (d, i) { return xScale(dateParser(d.date)) + xScale.bandwidth() })
+
+            svg.selectAll(".firstQuartLine")
+                .attr('x1', function (d) { return xScale(dateParser(d.date)) })
+                .attr('x2', function (d, i) { return xScale(dateParser(d.date)) + xScale.bandwidth() })
+
+            svg.selectAll(".thirdQuartLine")
+                .attr('x1', function (d) { return xScale(dateParser(d.date)) })
+                .attr('x2', function (d, i) { return xScale(dateParser(d.date)) + xScale.bandwidth() })
+
+            svg.selectAll('.iqrBoxEnlarged')
+                .attr('width', function (d, i) {
+                    return xScale.bandwidth();
+                })
+                .attr('height', function (d, i) {
+                    return Math.max(0, Math.min(ySentScale(60), ySentScale(d.lower)) - ySentScale(d.upper))
+                })
+                .attr('x', function (d, i) {
+                    var tempDate = dateParser(d.date)
+                    return xScale(tempDate);
+                })
+                .attr('y', function (d, i) {
+                    return ySentScale(d.upper)
+                })
+                .attr('fill', 'red')
+                .style('opacity', '40%')
+                .on("mouseover", onMouseOver)
+                .on("mousemove", onMouseMove)
+                .on("mouseout", onMouseOut);
+
+            var iqrBoxes = clippedsvg.selectAll('.iqrBox .center')
+                .data(sentimentData)
+                .enter()
+                .append('rect')
+                .attr('class', 'iqrBox center')
+                .attr('width', function (d, i) {
+                    return xScale.bandwidth();
+                })
+                .attr('height', function (d, i) {
+                    return Math.max(0, Math.min(ySentScale(40), ySentScale(d.lower)) - Math.max(ySentScale(60), ySentScale(d.upper)))
+                })
+                .attr('x', function (d, i) {
+                    var tempDate = dateParser(d.date)
+                    return xScale(tempDate);
+                })
+                .attr('y', function (d, i) {
+                    return Math.max(ySentScale(60), ySentScale(d.upper))
+                })
+                .attr('fill', 'green')
+                .style('opacity', '40%')
+                .on("mouseover", onMouseOver)
+                .on("mousemove", onMouseMove)
+                .on("mouseout", onMouseOut);
+
+            var iqrBoxes = clippedsvg.selectAll('.iqrBox .lower')
+                .data(sentimentData)
+                .enter()
+                .append('rect')
+                .attr('class', 'iqrBox lower')
+                .attr('width', function (d, i) {
+                    return xScale.bandwidth();
+                })
+                .attr('height', function (d, i) {
+                    return Math.max(0, ySentScale(d.lower) - Math.max(ySentScale(40), ySentScale(d.upper)))
+                })
+                .attr('x', function (d, i) {
+                    var tempDate = dateParser(d.date)
+                    return xScale(tempDate);
+                })
+                .attr('y', function (d, i) {
+                    return Math.max(ySentScale(d.upper), ySentScale(40))
+                })
+                .attr('fill', 'blue')
+                .style('opacity', '40%')
+                .on("mouseover", onMouseOver)
+                .on("mousemove", onMouseMove)
+                .on("mouseout", onMouseOut);
+
+
+            var meanLines = clippedsvg.selectAll('.meanLine')
+                .data(sentimentData)
+                .enter()
+                .append('line')
+                .attr('class', 'meanLine')
+                .attr('x1', function (d) { return xScale(dateParser(d.date)) })
+                .attr('y1', function (d) { return ySentScale(d.median) })
+                .attr('x2', function (d, i) {
+                    return xScale(dateParser(d.date)) + xScale.bandwidth()
+                })
+                .attr('y2', function (d, i) {
+                    return ySentScale(d.median)
+                })
+                .attr('stroke', 'black')
+                .attr('stroke-width', 1);
+
+            var meanLines = clippedsvg.selectAll('.firstQuartLine')
+                .data(sentimentData)
+                .enter()
+                .append('line')
+                .attr('class', 'firstQuartLine')
+                .attr('x1', function (d) { return xScale(dateParser(d.date)) })
+                .attr('y1', function (d) { return ySentScale(d.min) })
+                .attr('x2', function (d, i) {
+                    return xScale(dateParser(d.date)) + xScale.bandwidth()
+                })
+                .attr('y2', function (d, i) {
+                    return ySentScale(d.min)
+                })
+                .attr('stroke', '#990000')
+                .attr('stroke-width', 1);
+
+            var meanLines = clippedsvg.selectAll('.thirdQuartLine')
+                .data(sentimentData)
+                .enter()
+                .append('line')
+                .attr('class', 'thirdQuartLine')
+                .attr('x1', function (d) { return xScale(dateParser(d.date)) })
+                .attr('y1', function (d) { return ySentScale(d.max) })
+                .attr('x2', function (d, i) {
+                    return xScale(dateParser(d.date)) + xScale.bandwidth()
+                })
+                .attr('y2', function (d, i) {
+                    return ySentScale(d.max)
+                })
+                .attr('stroke', '#990000')
+                .attr('stroke-width', 1);
+
+            var meanLines = clippedsvg.selectAll('.centerLine')
+                .data(sentimentData)
+                .enter()
+                .append('line')
+                .attr('class', 'centerLine')
+                .attr('x1', function (d) { return xScale(dateParser(d.date)) + xScale.bandwidth() / 2 })
+                .attr('y1', function (d) { return ySentScale(d.min) })
+                .attr('x2', function (d, i) { return xScale(dateParser(d.date)) + xScale.bandwidth() / 2 })
+                .attr('y2', function (d) { return ySentScale(d.max) })
+                .attr('stroke', '#990000')
+                .attr('stroke-width', 1);
+
+
+            /* MAKE LEGEND */
+
+            var legend = svg.append('g')
+                .attr('width', (divWidth / 2) + 'px')
+                .attr('height', '30px')
+                .attr('id', 'sentimentBoxLegend');
+
+            legend.append('rect')
+                .attr('x', 0)
+                .attr('y', yPadding / 2)
+                .attr('width', yPadding / 3)
+                .attr('height', yPadding / 3)
+                .attr('fill', 'blue')
+                .attr('opacity', '40%')
+
+            legend.append('text')
+                .attr('transform', 'translate(' + (yPadding / 2.5) + ',' + (3 * yPadding / 4) + ")")
+                .attr('alignment-baseline', 'middle')
+                .attr('text-anchor', 'left')
+                .style('font-size', '12px')
+                .text('부정');
+
+            var legendShift1 = yPadding * 1.7;
+            legend.append('rect')
+                .attr('x', legendShift1)
+                .attr('y', yPadding / 2)
+                .attr('width', yPadding / 3)
+                .attr('height', yPadding / 3)
+                .attr('fill', 'green')
+                .attr('opacity', '40%')
+
+            legend.append('text')
+                .attr('transform', 'translate(' + (yPadding / 2.5 + legendShift1) + ',' + (3 * yPadding / 4) + ")")
+                .attr('alignment-baseline', 'middle')
+                .attr('text-anchor', 'left')
+                .style('font-size', '12px')
+                .text('중립');
+
+            var legendShift2 = yPadding * 3.4;
+            legend.append('rect')
+                .attr('x', legendShift2)
+                .attr('y', yPadding / 2)
+                .attr('width', yPadding / 3)
+                .attr('height', yPadding / 3)
+                .attr('fill', 'red')
+                .attr('opacity', '40%')
+
+            legend.append('text')
+                .attr('transform', 'translate(' + (yPadding / 2.5 + legendShift2) + ',' + (3 * yPadding / 4) + ")")
+                .attr('alignment-baseline', 'middle')
+                .attr('text-anchor', 'left')
+                .style('font-size', '12px')
+                .text('긍정');
+
+            var legendWidth = document.getElementById('sentimentBoxLegend').getBoundingClientRect().width;
+
+
+            legend.attr('transform', 'translate(' + (divWidth - xPadding - legendWidth) + ',0)')
+
+
+
+
+
+
+
+
+            function zoom() {
+                xScale.range([xPadding, divWidth - xPadding].map((d, i) => {
+                    if (i == 0) {
+                        if (d3.event.transform.applyX(d) > xPadding) {
+                            return xPadding
+                        }
+                        else {
+                            return d3.event.transform.applyX(d)
+                        }
+                    }
+                    else if (i == 1) {
+                        if (d3.event.transform.applyX(d) < (divWidth - xPadding)) {
+                            return divWidth - xPadding
+                        }
+                        else {
+                            return d3.event.transform.applyX(d)
+                        }
+                    }
+                    else {
+                    }
+                }));
+                gX.call(xAxis.scale(xScale))
+
+                svg.selectAll(".meanLine")
+                    .attr('x1', function (d) { return xScale(dateParser(d.date)) })
+                    .attr('x2', function (d, i) { return xScale(dateParser(d.date)) + xScale.bandwidth() })
+
+                svg.selectAll(".firstQuartLine")
+                    .attr('x1', function (d) { return xScale(dateParser(d.date)) })
+                    .attr('x2', function (d, i) { return xScale(dateParser(d.date)) + xScale.bandwidth() })
+
+                svg.selectAll(".thirdQuartLine")
+                    .attr('x1', function (d) { return xScale(dateParser(d.date)) })
+                    .attr('x2', function (d, i) { return xScale(dateParser(d.date)) + xScale.bandwidth() })
+
+                svg.selectAll('.iqrBox')
+                    .attr('width', function (d, i) {
+                        return xScale.bandwidth();
+                    })
+                    .attr('x', function (d, i) {
+                        var tempDate = dateParser(d.date)
+                        return xScale(tempDate);
+                    });
+
+                svg.selectAll(".centerLine")
+                    .attr('x1', function (d) { return xScale(dateParser(d.date)) + xScale.bandwidth() / 2 })
+                    .attr('x2', function (d, i) { return xScale(dateParser(d.date)) + xScale.bandwidth() / 2 })
+            }
+            if (divID == 'enlargedChart') {
+                window.SVG = svg;
+            }
+
+            svg.attr('transform', 'translate(10,0)')
+
+            if (divID == 'enlargedChart') {
+                window.SVG = svg;
+            }
+            $('#maximizeSentimentBoxSpan').show();
+            $('#resetDiv').show();
+
+        }
+    }
+    else {
+        var keywordBarContents = `
+                                    <div style="text-align:center;">
+                                        <img src="/img/no_gisa5.png" style="max-width:100%; max-height:80%"/>
+                                    </div>
+                                 `;
+        document.getElementById(divID).innerHTML = keywordBarContents;
+        $('#maximizeSentimentBoxSpan').hide();
+    }
 }
 
 function makeKeywordBarPlot(data, divID, nCutoff) {
@@ -919,6 +1170,7 @@ function dateParser(dateString) {
 }
 
 function makeCombinedGraph(sentimentData, articlesData, divID) {
+    console.log(sentimentData);
     if (sentimentData.length != 0 && articlesData.length != 0) {
         console.log(sentimentData)
         console.log(articlesData)
@@ -2753,6 +3005,7 @@ function onMouseOut(d, i) {
 }
 
 function drawWordcloud(words, divID) {
+    $('#resetDiv').hide();
     var graphDiv = document.getElementById(divID);
 
     var maxValue = Math.max.apply(Math, words.map(function (o) { return o.tf_idf }));
@@ -3237,39 +3490,52 @@ function getChartQuery(queryInput, queryType) {
 }
 
 function makeWordcloud(data) {
-    var words = data.sort(function (a, b) { return b.tf_idf - a.tf_idf });
-    var paddingSlide = document.getElementById('paddingSlider')
-    document.getElementById('paddingValue').innerHTML = paddingSlide.value;
-    paddingSlide.onchange = function () {
+    if (data.length > 0) {
+        $('#maximizeWordCloudSpan').show();
+        $('#resetDiv').hide();
+        var words = data.sort(function (a, b) { return b.tf_idf - a.tf_idf });
+        var paddingSlide = document.getElementById('paddingSlider')
         document.getElementById('paddingValue').innerHTML = paddingSlide.value;
-        drawWordcloud(words, 'enlargedChart');
-    }
+        paddingSlide.onchange = function () {
+            document.getElementById('paddingValue').innerHTML = paddingSlide.value;
+            drawWordcloud(words, 'enlargedChart');
+        }
 
-    var fontSizeSlide = document.getElementById('fontSizeSlider')
-    document.getElementById('fontSizeValue').innerHTML = fontSizeSlide.value;
-    fontSizeSlide.onchange = function () {
+        var fontSizeSlide = document.getElementById('fontSizeSlider')
         document.getElementById('fontSizeValue').innerHTML = fontSizeSlide.value;
-        drawWordcloud(words, 'enlargedChart');
-    }
+        fontSizeSlide.onchange = function () {
+            document.getElementById('fontSizeValue').innerHTML = fontSizeSlide.value;
+            drawWordcloud(words, 'enlargedChart');
+        }
 
-    var textNumberSlide = document.getElementById('textNumberSlider')
-    document.getElementById('textMaxValue').innerHTML = textNumberSlide.value;
-    textNumberSlide.onchange = function () {
+        var textNumberSlide = document.getElementById('textNumberSlider')
         document.getElementById('textMaxValue').innerHTML = textNumberSlide.value;
-        drawWordcloud(words, 'enlargedChart');
+        textNumberSlide.onchange = function () {
+            document.getElementById('textMaxValue').innerHTML = textNumberSlide.value;
+            drawWordcloud(words, 'enlargedChart');
+        }
+
+        wordCloud = document.getElementById('maximizeWordCloud')
+        wordCloud.addEventListener('click', () => clickFunction(), false);
+
+        async function clickFunction() {
+            document.getElementById('wordCloudSettings').style.display = 'inline';
+            drawWordcloud(words, 'enlargedChart');
+        }
+
+        async function f() {
+            drawWordcloud(words, 'wordCloud');
+        }
+
+        drawWordcloud(words, 'wordCloud')
+    } else {
+        var keywordBarContents = `
+                                    <div style="text-align:center;">
+                                        <img src="/img/no_cloud2.png" style="max-width:100%; max-height:80%"/>
+                                    </div>
+                                 `;
+        document.getElementById('wordCloud').innerHTML = keywordBarContents;
+        $('#maximizeWordCloudSpan').hide();
     }
 
-    wordCloud = document.getElementById('maximizeWordCloud')
-    wordCloud.addEventListener('click', () => clickFunction(), false);
-
-    async function clickFunction() {
-        document.getElementById('wordCloudSettings').style.display = 'inline';
-        drawWordcloud(words, 'enlargedChart');
-    }
-
-    async function f() {
-        drawWordcloud(words, 'wordCloud');
-    }
-
-    drawWordcloud(words, 'wordCloud')
 }
