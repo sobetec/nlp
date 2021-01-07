@@ -158,6 +158,8 @@ function makeGauge(divID, sentimentScore) {
         .attr("cx", divWidth / 2)
         .attr("cy", 3 * divHeight / 5);
 
+    //var lg = svgmain
+
     function appendArc(g, divWidth, divHeight, startAngle, endAngle, color, arcID) {
         var arc = d3.arc()
             .innerRadius(divHeight / 5 / 0.6377118)
