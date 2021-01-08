@@ -1788,13 +1788,13 @@ function makeStockBarGraph(data, divID) {
             .on("mousemove", onMouseMove)
             .on("mouseout", onMouseOut)
 
-        svg.selectAll('.linePointVis')
+        svg.selectAll('.fiveLinePointVis')
             .data(fiveDay)
             .enter()
             .append('circle')
-            .attr('class', 'linePointVis')
+            .attr('class', 'fiveLinePointVis')
             .attr('cx', function (d, i) {
-                return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
+                return xScale(d.time) + (xScale.bandwidth() / 2)
             })
             .attr('cy', function (d, i) {
                 return yScale(d.average)
@@ -1851,13 +1851,13 @@ function makeStockBarGraph(data, divID) {
             .on("mousemove", onMouseMove)
             .on("mouseout", onMouseOut);
 
-        svg.selectAll('.linePointVis')
+        svg.selectAll('.twentyLinePointVis')
             .data(twentyDay)
             .enter()
             .append('circle')
-            .attr('class', 'linePointVis')
+            .attr('class', 'twentyLinePointVis')
             .attr('cx', function (d, i) {
-                return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
+                return xScale(d.time) + (xScale.bandwidth() / 2)
             })
             .attr('cy', function (d, i) {
                 return yScale(d.average)
@@ -1959,9 +1959,13 @@ function makeStockBarGraph(data, divID) {
                     }
                 })
         }
-        svg.selectAll('linePointVis')
+        svg.selectAll('fiveLinePointVis')
             .attr('cx', function (d, i) {
-                return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
+                return xScale(d.time) + (xScale.bandwidth() / 2)
+            })
+        svg.selectAll('twentyLinePointVis')
+            .attr('cx', function (d, i) {
+                return xScale(d.time) + (xScale.bandwidth() / 2)
             })
     }
 
@@ -2697,7 +2701,7 @@ function onMouseOver(d, i) {
         tooltipEnlarged.style('visibility', 'visible');
         tooltipEnlarged.text(d.date + ': ' + d.mean);
     }
-    else if (elementClass == 'linePointVis') {
+    else if (elementClass.includes('PointVis')) {
         d3.select(this).style('opacity', '100%');
         var height = this.parentNode.parentNode.getBoundingClientRect().height
         var xPadding = this.parentNode.parentNode.getAttribute('xPadding')
@@ -2705,6 +2709,10 @@ function onMouseOver(d, i) {
         var svg = d3.select(this.parentNode.parentNode);
         var circle_x = this.getAttribute('cx')
         var circle_y = this.getAttribute('cy')
+        console.log(circle_x)
+        console.log(circle_y)
+        console.log(xPadding)
+        console.log(yPadding)
         svg.append('line')
             .attr('class', 'coordLine')
             .attr('x1', circle_x)
