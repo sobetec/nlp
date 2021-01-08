@@ -18,7 +18,14 @@ public class NewsService {
 
 	@Autowired
 	private NewsRepositoryImpl repository;
-    
+	
+	static Double a = 56.90020302862004;
+	static Double b = 30.06551590366119;
+	static Double c = 5.919497539989776;
+	static Double d = 47.54017840669978;
+	static Double z = 4.139;
+	
+	
 	/**
 	 * 
 	 * @param file
@@ -37,15 +44,28 @@ public class NewsService {
 
         		Double tempScore = Double.parseDouble(listNews.get(i).getTaScre());
         		
-        		if (tempScore > 60) {
+        		if (tempScore > 45) {
         			listNews.get(i).setTaScreWord("긍정");
         		}
-        		else if (tempScore < 40) {
+        		else if (tempScore < 20) {
         			listNews.get(i).setTaScreWord("부정");
         		}
         		else {	
         			listNews.get(i).setTaScreWord("중립");
         		}
+        		Double y = (a *( tempScore - b ) / (c + Math.abs(tempScore-b) )) +d;
+        		Double reverseUp;
+        		if (y > 50) {
+        			reverseUp = (((y-50)*(z-50))+(50*(50+z))) / (100 + z - y);
+        		}else if(y < 50){
+        			reverseUp = ((50+z)/(y+z))*y;
+        		}else {
+        			reverseUp = 50.0;
+        		}
+    			
+        		
+        		listNews.get(i).setTaScre(reverseUp.toString());
+        		
     		} else {
     		
     		listNews.get(i).setTaScreWord("없음");
@@ -68,15 +88,26 @@ public class NewsService {
 
         		Double tempScore = Double.parseDouble(listNews.get(i).getTaScre());
         		
-        		if (tempScore > 60) {
+        		if (tempScore > 45) {
         			listNews.get(i).setTaScreWord("긍정");
         		}
-        		else if (tempScore < 40) {
+        		else if (tempScore < 20) {
         			listNews.get(i).setTaScreWord("부정");
         		}
         		else {	
         			listNews.get(i).setTaScreWord("중립");
         		}
+        		Double y = (a *( tempScore - b ) / (c + Math.abs(tempScore-b) )) +d;
+        		Double reverseUp;
+        		
+        		if (y > 50) {
+        			reverseUp = (((y-50)*(z-50))+(50*(50+z))) / (100 + z - y);
+        		}else if(y < 50){
+        			reverseUp = ((50+z)/(y+z))*y;
+        		}else {
+        			reverseUp = 50.0;
+        		}
+        		listNews.get(i).setTaScre(reverseUp.toString());
     		} else {
     		
     		listNews.get(i).setTaScreWord("없음");
@@ -110,15 +141,27 @@ public class NewsService {
 
         		Double tempScore = Double.parseDouble(listNews.get(i).getTaScre());
         		
-        		if (tempScore > 60) {
+        		if (tempScore > 45) {
         			listNews.get(i).setTaScreWord("긍정");
         		}
-        		else if (tempScore < 40) {
+        		else if (tempScore < 20) {
         			listNews.get(i).setTaScreWord("부정");
         		}
         		else {	
         			listNews.get(i).setTaScreWord("중립");
         		}
+        		Double result = (a *( tempScore - b ) / (c + Math.abs(tempScore-b) )) +d;
+        		result = Math.round(result*100.0) / 100.0;
+        		Double y = (a *( tempScore - b ) / (c + Math.abs(tempScore-b) )) +d;
+        		Double reverseUp;
+        		if (y > 50) {
+        			reverseUp = (((y-50)*(z-50))+(50*(50+z))) / (100 + z - y);
+        		}else if(y < 50){
+        			reverseUp = ((50+z)/(y+z))*y;
+        		}else {
+        			reverseUp = 50.0;
+        		}
+        		listNews.get(i).setTaScre(reverseUp.toString());
     		} else {
     		
     		listNews.get(i).setTaScreWord("없음");
@@ -147,15 +190,27 @@ public class NewsService {
 
         		Double tempScore = Double.parseDouble(listNews.get(i).getTaScre());
         		
-        		if (tempScore > 60) {
+        		if (tempScore > 45) {
         			listNews.get(i).setTaScreWord("긍정");
         		}
-        		else if (tempScore < 40) {
+        		else if (tempScore < 20) {
         			listNews.get(i).setTaScreWord("부정");
         		}
         		else {	
         			listNews.get(i).setTaScreWord("중립");
         		}
+        		Double result = (a *( tempScore - b ) / (c + Math.abs(tempScore-b) )) +d;
+        		result = Math.round(result*100.0) / 100.0;
+        		Double y = (a *( tempScore - b ) / (c + Math.abs(tempScore-b) )) +d;
+        		Double reverseUp;
+        		if (y > 50) {
+        			reverseUp = (((y-50)*(z-50))+(50*(50+z))) / (100 + z - y);
+        		}else if(y < 50){
+        			reverseUp = ((50+z)/(y+z))*y;
+        		}else {
+        			reverseUp = 50.0;
+        		}
+        		listNews.get(i).setTaScre(reverseUp.toString());
     		} else {
     		
     		listNews.get(i).setTaScreWord("없음");

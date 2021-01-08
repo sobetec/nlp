@@ -1125,8 +1125,9 @@
                                 waitTime();
                                 async function waitTime() {
 
-                                    var yesNo = confirm('총 ' + datassss.rowCount + ' 건의 뉴스 기사가 검색되었습니다.\n'
-                                        + '해당 기업의 뉴스 목록이 30건 미만입니다. 상위 카테고리로 검색하시겠습니까?');
+                                    var yesNo = confirm('\n해당 기업의 뉴스 목록이 30건('+datassss.rowCount +') 미만입니다.\n'+
+                                        '상위 카테고리로 검색하시겠습니까?\n\n' +
+                                        '취소를 누르면 \"'+companyName+'\" (으)로 검색 됩니다.');
 
                                     
                                     if (yesNo == true) {
