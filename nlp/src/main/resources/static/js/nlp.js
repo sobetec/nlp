@@ -428,7 +428,8 @@ function makeSentimentBoxPlot(sentimentData, divID) {
                 .style('opacity', '40%')
                 .on("mouseover", onMouseOver)
                 .on("mousemove", onMouseMove)
-                .on("mouseout", onMouseOut);
+                .on("mouseout", onMouseOut)
+                .on('click', function (d) { searchKeyword(d.date, true) });
 
             var iqrBoxes = clippedsvg.selectAll('.iqrBoxEnlarged .center')
                 .data(sentimentData)
@@ -452,7 +453,8 @@ function makeSentimentBoxPlot(sentimentData, divID) {
                 .style('opacity', '40%')
                 .on("mouseover", onMouseOver)
                 .on("mousemove", onMouseMove)
-                .on("mouseout", onMouseOut);
+                .on("mouseout", onMouseOut)
+                .on('click', function (d) { searchKeyword(d.date, true) });
 
             var iqrBoxes = clippedsvg.selectAll('.iqrBoxEnlarged .lower')
                 .data(sentimentData)
@@ -476,7 +478,8 @@ function makeSentimentBoxPlot(sentimentData, divID) {
                 .style('opacity', '40%')
                 .on("mouseover", onMouseOver)
                 .on("mousemove", onMouseMove)
-                .on("mouseout", onMouseOut);
+                .on("mouseout", onMouseOut)
+                .on('click', function (d) { searchKeyword(d.date, true) });
         }
         else {
             var clip = svg.append("defs").append("svg:clipPath")
@@ -518,7 +521,8 @@ function makeSentimentBoxPlot(sentimentData, divID) {
                 .style('opacity', '40%')
                 .on("mouseover", onMouseOver)
                 .on("mousemove", onMouseMove)
-                .on("mouseout", onMouseOut);
+                .on("mouseout", onMouseOut)
+                .on('click', function (d) { searchKeyword(d.date, false) });
 
             var iqrBoxes = clippedsvg.selectAll('.iqrBox .center')
                 .data(sentimentData)
@@ -542,7 +546,8 @@ function makeSentimentBoxPlot(sentimentData, divID) {
                 .style('opacity', '40%')
                 .on("mouseover", onMouseOver)
                 .on("mousemove", onMouseMove)
-                .on("mouseout", onMouseOut);
+                .on("mouseout", onMouseOut)
+                .on('click', function (d) { searchKeyword(d.date, false) });
 
             var iqrBoxes = clippedsvg.selectAll('.iqrBox .lower')
                 .data(sentimentData)
@@ -566,7 +571,8 @@ function makeSentimentBoxPlot(sentimentData, divID) {
                 .style('opacity', '40%')
                 .on("mouseover", onMouseOver)
                 .on("mousemove", onMouseMove)
-                .on("mouseout", onMouseOut);
+                .on("mouseout", onMouseOut)
+                .on('click', function (d) { searchKeyword(d.date, false) });
         }
 
 
@@ -602,7 +608,7 @@ function makeSentimentBoxPlot(sentimentData, divID) {
             .attr('stroke', '#990000')
             .attr('stroke-width', 1);
 
-        var meanLines = clippedsvg.selectAll('.thirdQuartLine')
+        clippedsvg.selectAll('.thirdQuartLine')
             .data(sentimentData)
             .enter()
             .append('line')
@@ -618,7 +624,7 @@ function makeSentimentBoxPlot(sentimentData, divID) {
             .attr('stroke', '#990000')
             .attr('stroke-width', 1);
 
-        var meanLines = clippedsvg.selectAll('.centerLine')
+        clippedsvg.selectAll('.centerLine')
             .data(sentimentData)
             .enter()
             .append('line')
@@ -630,6 +636,65 @@ function makeSentimentBoxPlot(sentimentData, divID) {
             .attr('stroke', '#990000')
             .attr('stroke-width', 1);
 
+
+        /* MAKE LEGEND */
+
+        var legend = svg.append('g')
+            .attr('width', (divWidth / 2) + 'px')
+            .attr('height', '30px')
+            .attr('id', 'sentimentBoxLegend');
+
+        legend.append('rect')
+            .attr('x', 0)
+            .attr('y', yPadding / 2)
+            .attr('width', yPadding / 3)
+            .attr('height', yPadding / 3)
+            .attr('fill', 'blue')
+            .attr('opacity', '40%')
+
+        legend.append('text')
+            .attr('transform', 'translate(' + (yPadding / 2.5) + ',' + (3 * yPadding / 4) + ")")
+            .attr('alignment-baseline', 'middle')
+            .attr('text-anchor', 'left')
+            .style('font-size', '12px')
+            .text('부정');
+
+        var legendShift1 = yPadding * 1.7;
+        legend.append('rect')
+            .attr('x', legendShift1)
+            .attr('y', yPadding / 2)
+            .attr('width', yPadding / 3)
+            .attr('height', yPadding / 3)
+            .attr('fill', 'green')
+            .attr('opacity', '40%')
+
+        legend.append('text')
+            .attr('transform', 'translate(' + (yPadding / 2.5 + legendShift1) + ',' + (3 * yPadding / 4) + ")")
+            .attr('alignment-baseline', 'middle')
+            .attr('text-anchor', 'left')
+            .style('font-size', '12px')
+            .text('중립');
+
+        var legendShift2 = yPadding * 3.4;
+        legend.append('rect')
+            .attr('x', legendShift2)
+            .attr('y', yPadding / 2)
+            .attr('width', yPadding / 3)
+            .attr('height', yPadding / 3)
+            .attr('fill', 'red')
+            .attr('opacity', '40%')
+
+        legend.append('text')
+            .attr('transform', 'translate(' + (yPadding / 2.5 + legendShift2) + ',' + (3 * yPadding / 4) + ")")
+            .attr('alignment-baseline', 'middle')
+            .attr('text-anchor', 'left')
+            .style('font-size', '12px')
+            .text('긍정');
+
+        var legendWidth = document.getElementById('sentimentBoxLegend').getBoundingClientRect().width;
+
+
+        legend.attr('transform', 'translate(' + (divWidth - xPadding - legendWidth) + ',0)')
 
         /* MAKE LEGEND */
 
@@ -732,263 +797,30 @@ function makeSentimentBoxPlot(sentimentData, divID) {
                 .attr('x1', function (d) { return xScale(dateParser(d.date)) })
                 .attr('x2', function (d, i) { return xScale(dateParser(d.date)) + xScale.bandwidth() })
 
-            svg.selectAll('.iqrBoxEnlarged')
+            svg.selectAll('.iqrBox')
                 .attr('width', function (d, i) {
                     return xScale.bandwidth();
-                })
-                .attr('height', function (d, i) {
-                    return Math.max(0, Math.min(ySentScale(60), ySentScale(d.lower)) - ySentScale(d.upper))
                 })
                 .attr('x', function (d, i) {
                     var tempDate = dateParser(d.date)
                     return xScale(tempDate);
-                })
-                .attr('y', function (d, i) {
-                    return ySentScale(d.upper)
-                })
-                .attr('fill', 'red')
-                .style('opacity', '40%')
-                .on("mouseover", onMouseOver)
-                .on("mousemove", onMouseMove)
-                .on("mouseout", onMouseOut);
+                });
 
-            var iqrBoxes = clippedsvg.selectAll('.iqrBox .center')
-                .data(sentimentData)
-                .enter()
-                .append('rect')
-                .attr('class', 'iqrBox center')
-                .attr('width', function (d, i) {
-                    return xScale.bandwidth();
-                })
-                .attr('height', function (d, i) {
-                    return Math.max(0, Math.min(ySentScale(40), ySentScale(d.lower)) - Math.max(ySentScale(60), ySentScale(d.upper)))
-                })
-                .attr('x', function (d, i) {
-                    var tempDate = dateParser(d.date)
-                    return xScale(tempDate);
-                })
-                .attr('y', function (d, i) {
-                    return Math.max(ySentScale(60), ySentScale(d.upper))
-                })
-                .attr('fill', 'green')
-                .style('opacity', '40%')
-                .on("mouseover", onMouseOver)
-                .on("mousemove", onMouseMove)
-                .on("mouseout", onMouseOut);
-
-            var iqrBoxes = clippedsvg.selectAll('.iqrBox .lower')
-                .data(sentimentData)
-                .enter()
-                .append('rect')
-                .attr('class', 'iqrBox lower')
-                .attr('width', function (d, i) {
-                    return xScale.bandwidth();
-                })
-                .attr('height', function (d, i) {
-                    return Math.max(0, ySentScale(d.lower) - Math.max(ySentScale(40), ySentScale(d.upper)))
-                })
-                .attr('x', function (d, i) {
-                    var tempDate = dateParser(d.date)
-                    return xScale(tempDate);
-                })
-                .attr('y', function (d, i) {
-                    return Math.max(ySentScale(d.upper), ySentScale(40))
-                })
-                .attr('fill', 'blue')
-                .style('opacity', '40%')
-                .on("mouseover", onMouseOver)
-                .on("mousemove", onMouseMove)
-                .on("mouseout", onMouseOut);
-
-
-            var meanLines = clippedsvg.selectAll('.meanLine')
-                .data(sentimentData)
-                .enter()
-                .append('line')
-                .attr('class', 'meanLine')
-                .attr('x1', function (d) { return xScale(dateParser(d.date)) })
-                .attr('y1', function (d) { return ySentScale(d.median) })
-                .attr('x2', function (d, i) {
-                    return xScale(dateParser(d.date)) + xScale.bandwidth()
-                })
-                .attr('y2', function (d, i) {
-                    return ySentScale(d.median)
-                })
-                .attr('stroke', 'black')
-                .attr('stroke-width', 1);
-
-            var meanLines = clippedsvg.selectAll('.firstQuartLine')
-                .data(sentimentData)
-                .enter()
-                .append('line')
-                .attr('class', 'firstQuartLine')
-                .attr('x1', function (d) { return xScale(dateParser(d.date)) })
-                .attr('y1', function (d) { return ySentScale(d.min) })
-                .attr('x2', function (d, i) {
-                    return xScale(dateParser(d.date)) + xScale.bandwidth()
-                })
-                .attr('y2', function (d, i) {
-                    return ySentScale(d.min)
-                })
-                .attr('stroke', '#990000')
-                .attr('stroke-width', 1);
-
-            var meanLines = clippedsvg.selectAll('.thirdQuartLine')
-                .data(sentimentData)
-                .enter()
-                .append('line')
-                .attr('class', 'thirdQuartLine')
-                .attr('x1', function (d) { return xScale(dateParser(d.date)) })
-                .attr('y1', function (d) { return ySentScale(d.max) })
-                .attr('x2', function (d, i) {
-                    return xScale(dateParser(d.date)) + xScale.bandwidth()
-                })
-                .attr('y2', function (d, i) {
-                    return ySentScale(d.max)
-                })
-                .attr('stroke', '#990000')
-                .attr('stroke-width', 1);
-
-            var meanLines = clippedsvg.selectAll('.centerLine')
-                .data(sentimentData)
-                .enter()
-                .append('line')
-                .attr('class', 'centerLine')
+            svg.selectAll(".centerLine")
                 .attr('x1', function (d) { return xScale(dateParser(d.date)) + xScale.bandwidth() / 2 })
-                .attr('y1', function (d) { return ySentScale(d.min) })
                 .attr('x2', function (d, i) { return xScale(dateParser(d.date)) + xScale.bandwidth() / 2 })
-                .attr('y2', function (d) { return ySentScale(d.max) })
-                .attr('stroke', '#990000')
-                .attr('stroke-width', 1);
-
-
-            /* MAKE LEGEND */
-
-            var legend = svg.append('g')
-                .attr('width', (divWidth / 2) + 'px')
-                .attr('height', '30px')
-                .attr('id', 'sentimentBoxLegend');
-
-            legend.append('rect')
-                .attr('x', 0)
-                .attr('y', yPadding / 2)
-                .attr('width', yPadding / 3)
-                .attr('height', yPadding / 3)
-                .attr('fill', 'blue')
-                .attr('opacity', '40%')
-
-            legend.append('text')
-                .attr('transform', 'translate(' + (yPadding / 2.5) + ',' + (3 * yPadding / 4) + ")")
-                .attr('alignment-baseline', 'middle')
-                .attr('text-anchor', 'left')
-                .style('font-size', '12px')
-                .text('부정');
-
-            var legendShift1 = yPadding * 1.7;
-            legend.append('rect')
-                .attr('x', legendShift1)
-                .attr('y', yPadding / 2)
-                .attr('width', yPadding / 3)
-                .attr('height', yPadding / 3)
-                .attr('fill', 'green')
-                .attr('opacity', '40%')
-
-            legend.append('text')
-                .attr('transform', 'translate(' + (yPadding / 2.5 + legendShift1) + ',' + (3 * yPadding / 4) + ")")
-                .attr('alignment-baseline', 'middle')
-                .attr('text-anchor', 'left')
-                .style('font-size', '12px')
-                .text('중립');
-
-            var legendShift2 = yPadding * 3.4;
-            legend.append('rect')
-                .attr('x', legendShift2)
-                .attr('y', yPadding / 2)
-                .attr('width', yPadding / 3)
-                .attr('height', yPadding / 3)
-                .attr('fill', 'red')
-                .attr('opacity', '40%')
-
-            legend.append('text')
-                .attr('transform', 'translate(' + (yPadding / 2.5 + legendShift2) + ',' + (3 * yPadding / 4) + ")")
-                .attr('alignment-baseline', 'middle')
-                .attr('text-anchor', 'left')
-                .style('font-size', '12px')
-                .text('긍정');
-
-            var legendWidth = document.getElementById('sentimentBoxLegend').getBoundingClientRect().width;
-
-
-            legend.attr('transform', 'translate(' + (divWidth - xPadding - legendWidth) + ',0)')
-
-
-
-
-
-
-
-
-            function zoom() {
-                xScale.range([xPadding, divWidth - xPadding].map((d, i) => {
-                    if (i == 0) {
-                        if (d3.event.transform.applyX(d) > xPadding) {
-                            return xPadding
-                        }
-                        else {
-                            return d3.event.transform.applyX(d)
-                        }
-                    }
-                    else if (i == 1) {
-                        if (d3.event.transform.applyX(d) < (divWidth - xPadding)) {
-                            return divWidth - xPadding
-                        }
-                        else {
-                            return d3.event.transform.applyX(d)
-                        }
-                    }
-                    else {
-                    }
-                }));
-                gX.call(xAxis.scale(xScale))
-
-                svg.selectAll(".meanLine")
-                    .attr('x1', function (d) { return xScale(dateParser(d.date)) })
-                    .attr('x2', function (d, i) { return xScale(dateParser(d.date)) + xScale.bandwidth() })
-
-                svg.selectAll(".firstQuartLine")
-                    .attr('x1', function (d) { return xScale(dateParser(d.date)) })
-                    .attr('x2', function (d, i) { return xScale(dateParser(d.date)) + xScale.bandwidth() })
-
-                svg.selectAll(".thirdQuartLine")
-                    .attr('x1', function (d) { return xScale(dateParser(d.date)) })
-                    .attr('x2', function (d, i) { return xScale(dateParser(d.date)) + xScale.bandwidth() })
-
-                svg.selectAll('.iqrBox')
-                    .attr('width', function (d, i) {
-                        return xScale.bandwidth();
-                    })
-                    .attr('x', function (d, i) {
-                        var tempDate = dateParser(d.date)
-                        return xScale(tempDate);
-                    });
-
-                svg.selectAll(".centerLine")
-                    .attr('x1', function (d) { return xScale(dateParser(d.date)) + xScale.bandwidth() / 2 })
-                    .attr('x2', function (d, i) { return xScale(dateParser(d.date)) + xScale.bandwidth() / 2 })
-            }
-            if (divID == 'enlargedChart') {
-                window.SVG = svg;
-            }
-
-            svg.attr('transform', 'translate(10,0)')
-
-            if (divID == 'enlargedChart') {
-                window.SVG = svg;
-            }
-            $('#maximizeSentimentBoxSpan').show();
-            $('#resetDiv').show();
-
         }
+        if (divID == 'enlargedChart') {
+            window.SVG = svg;
+        }
+
+        svg.attr('transform', 'translate(10,0)')
+
+        if (divID == 'enlargedChart') {
+            window.SVG = svg;
+        }
+        $('#maximizeSentimentBoxSpan').show();
+        $('#resetDiv').show();
     }
     else {
         var keywordBarContents = `
@@ -1954,6 +1786,24 @@ function makeStockBarGraph(data, divID) {
             .attr('stroke-width', 1)
             .on("mouseover", onMouseOver)
             .on("mousemove", onMouseMove)
+            .on("mouseout", onMouseOut)
+
+        svg.selectAll('.linePointVis')
+            .data(fiveDay)
+            .enter()
+            .append('circle')
+            .attr('class', 'linePointVis')
+            .attr('cx', function (d, i) {
+                return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
+            })
+            .attr('cy', function (d, i) {
+                return yScale(d.average)
+            })
+            .attr('r', 6)
+            .attr('fill', '#990000')
+            .style('opacity', '0%')
+            .on("mouseover", onMouseOver)
+            .on("mousemove", onMouseMove)
             .on("mouseout", onMouseOut);
     }
 
@@ -1997,6 +1847,24 @@ function makeStockBarGraph(data, divID) {
             })
             .attr('stroke', '#664be8')
             .attr('stroke-width', 1)
+            .on("mouseover", onMouseOver)
+            .on("mousemove", onMouseMove)
+            .on("mouseout", onMouseOut);
+
+        svg.selectAll('.linePointVis')
+            .data(twentyDay)
+            .enter()
+            .append('circle')
+            .attr('class', 'linePointVis')
+            .attr('cx', function (d, i) {
+                return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
+            })
+            .attr('cy', function (d, i) {
+                return yScale(d.average)
+            })
+            .attr('r', 6)
+            .attr('fill', '#990000')
+            .style('opacity', '0%')
             .on("mouseover", onMouseOver)
             .on("mousemove", onMouseMove)
             .on("mouseout", onMouseOut);
@@ -2091,12 +1959,19 @@ function makeStockBarGraph(data, divID) {
                     }
                 })
         }
+        svg.selectAll('linePointVis')
+            .attr('cx', function (d, i) {
+                return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
+            })
     }
 
     if (divID == 'enlargedChart') {
         window.SVG = svg;
     }
     svg.attr('transform', 'translate(10,0)')
+
+    svg.attr('xPadding', xPadding)
+    svg.attr('yPadding', yPadding)
 }
 
 function makeLineGraph(data, divID) {
@@ -3191,7 +3066,7 @@ function getChartQuery(queryInput, queryType) {
                 <option value="stock">주가</option>
                 <option value="credit">신용공여</option>
                 <option value="sales">매출액</option>
-                <option value="grade">등급</option>
+                <option value="grade">재무위험등급</option>
                 <option value="grade2">신용평가등급</option>`
             }
 
