@@ -2703,10 +2703,19 @@ function onMouseOver(d, i) {
     }
     else if (elementClass.includes('PointVis')) {
         d3.select(this).style('opacity', '100%');
-        var height = this.parentNode.parentNode.getBoundingClientRect().height
-        var xPadding = this.parentNode.parentNode.getAttribute('xPadding')
-        var yPadding = this.parentNode.parentNode.getAttribute('yPadding')
-        var svg = d3.select(this.parentNode.parentNode);
+        if (elementClass == 'linePointVis') {
+            var svgNode = this.parentNode.parentNode
+            tooltip.text(d.date + ': ' + d.value);
+        }
+        else if (elementClass.includes('LinePointVis')) {
+            var svgNode = this.parentNode
+            var formatTime = d3.timeFormat('%Y년%B%d일')
+            tooltip.text(formatTime(d.time) + ': ' + d.average);
+        }
+        var height = svgNode.getBoundingClientRect().height
+        var xPadding = svgNode.getAttribute('xPadding')
+        var yPadding = svgNode.getAttribute('yPadding')
+        var svg = d3.select(svgNode);
         var circle_x = this.getAttribute('cx')
         var circle_y = this.getAttribute('cy')
         console.log(circle_x)
@@ -2734,7 +2743,6 @@ function onMouseOver(d, i) {
             .style("stroke-dasharray", ("3, 3"))
 
         tooltip.style('visibility', 'visible');
-        tooltip.text(d.date + ': ' + d.value);
     }
     else if (elementClass == 'linePointEnlarged') {
         d3.select(this).style('opacity', '60%');
@@ -2870,7 +2878,7 @@ function onMouseOut(d, i) {
         }
         tooltipEnlarged.style('visibility', 'hidden');
     }
-    else if (elementClass == 'linePointVis') {
+    else if (elementClass.includes('PointVis')) {
         d3.select(this).style('opacity', '0%');
         d3.selectAll('.coordLine').remove();
         tooltip.style('visibility', 'hidden');
