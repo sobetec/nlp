@@ -1060,7 +1060,7 @@
                     async: false,
                     // dataType: 'json',
                     success: function (dataaa) {
-                        alert('시스템 네임 조회 성공');
+                        // alert('시스템 네임 조회 성공');
                         console.log('시스템 네임 조회 성공했을시 리스펀스 데이타=  ' + dataaa);
                         systemName2 = dataaa;
 
@@ -1121,7 +1121,6 @@
                         default:
 
                             if (datassss.rowCount < 30) {
-                                alert('30개미만이라고!!');
                                 waitTime();
                                 async function waitTime() {
 
@@ -2495,7 +2494,7 @@
                             <span>패딩 선택: </span>
                             <span id='paddingValue'></span>
                             <input id="paddingSlider" type="range" min="1" max="4" step="0.25" value="1">
-                            <span>숫자 선택: </span>
+                            <span>키워드 개수: </span>
                             <span id='textMaxValue'></span>
                             <input id="textNumberSlider" type="range" min="1" max="200" step="1" value="50">
                             <span>글자 크기: </span>

@@ -51,13 +51,18 @@ function makeGauge(divID, sentimentScore) {
     feMerge.append("feMergeNode")
         .attr("in", "SourceGraphic");
 
-    appendArc(gaugeSVG, divWidth, divHeight, 240, 312, "#ef5d5d", 'negative' + divID);
-    appendArc(gaugeSVG, divWidth, divHeight, 312, 408, "#ffcf49", 'neutral' + divID);
-    appendArc(gaugeSVG, divWidth, divHeight, 48, 120, "#37b76a", 'positive' + divID);
+    var gaugeArcs = gaugeSVG.append('g')
+        .attr('id', 'gaugeShape');
 
-    appendArcLabel(gaugeSVG, divWidth, divHeight, 0.145 * divHeight, 0.14 * divHeight, '#negative' + divID, 'NEGATIVE')
-    appendArcLabel(gaugeSVG, divWidth, divHeight, 0.255 * divHeight, 0.14 * divHeight, '#neutral' + divID, 'NEUTRAL')
-    appendArcLabel(gaugeSVG, divWidth, divHeight, 0.17 * divHeight, 0.14 * divHeight, '#positive' + divID, 'POSITIVE')
+
+
+    appendArc(gaugeArcs, divWidth, divHeight, 240, 311, "#ef5d5d", 'negative' + divID);
+    appendArc(gaugeArcs, divWidth, divHeight, 313, 407, "#ffcf49", 'neutral' + divID);
+    appendArc(gaugeArcs, divWidth, divHeight, 49, 120, "#37b76a", 'positive' + divID);
+
+    appendArcLabel(gaugeArcs, divWidth, divHeight, 0.145 * divHeight, 0.14 * divHeight, '#negative' + divID, 'NEGATIVE')
+    appendArcLabel(gaugeArcs, divWidth, divHeight, 0.255 * divHeight, 0.14 * divHeight, '#neutral' + divID, 'NEUTRAL')
+    appendArcLabel(gaugeArcs, divWidth, divHeight, 0.17 * divHeight, 0.14 * divHeight, '#positive' + divID, 'POSITIVE')
 
     gaugeSVG.append('g')
         .attr('transform', 'translate(' + divWidth / 2 + ',' + 3 * divHeight / 5 + ")")
@@ -93,10 +98,10 @@ function makeGauge(divID, sentimentScore) {
                 return 'NO RESULT'
             }
             else {
-                if (rotation < 50) {
+                if (sentimentScore < 30) {
                     return 'Negative'
                 }
-                else if (rotation > 130) {
+                else if (sentimentScore > 70) {
                     return 'Positive'
                 }
                 else {
@@ -109,10 +114,10 @@ function makeGauge(divID, sentimentScore) {
         .style('font-weight', 'bold')
         .style('text-anchor', 'middle')
         .style('fill', function (d) {
-            if (rotation < 50) {
+            if (sentimentScore < 30) {
                 return '#ef5d5d'
             }
-            else if (rotation > 130) {
+            else if (sentimentScore > 70) {
                 return '#37b76a'
             }
             else {
@@ -158,7 +163,36 @@ function makeGauge(divID, sentimentScore) {
         .attr("cx", divWidth / 2)
         .attr("cy", 3 * divHeight / 5);
 
-    //var lg = svgmain
+    horizOffset = 104 / 323 * divWidth
+
+
+    var lg = gaugeSVG.append('defs').append('linearGradient')
+        .attr('id', 'gaugeGradient')
+        .attr('x1', (-8.2 * horizOffset / 8) + 'px')
+        .attr('x2', (divWidth / 2 + (divHeight / 3 / 0.6377118) - 12.5 * horizOffset / 8) + 'px')
+        .attr('y1', '0%')
+        .attr('y2', '0%')
+
+
+    console.log(horizOffset)
+    lg.append('stop')
+        .attr('offset', '0%')
+        .style('stop-color', '#EF5D5D')
+        .style('stop-opacity', '100%')
+    lg.append('stop')
+        .attr('offset', '30%')
+        .style('stop-color', '#ffcf49')
+        .style('stop-opacity', '100%')
+    lg.append('stop')
+        .attr('offset', '70%')
+        .style('stop-color', '#ffcf49')
+        .style('stop-opacity', '100%')
+    lg.append('stop')
+        .attr('offset', '100%')
+        .style('stop-color', '#37b76a')
+        .style('stop-opacity', '100%')
+
+    document.getElementById('gaugeGradient').setAttribute('gradientUnits', "userSpaceOnUse")
 
     function appendArc(g, divWidth, divHeight, startAngle, endAngle, color, arcID) {
         var arc = d3.arc()
@@ -192,7 +226,7 @@ function makeGauge(divID, sentimentScore) {
                 .attr('id', arcID)
                 .attr('class', 'shadowArc')
                 .attr("transform", "translate(" + divWidth / 2 + ',' + 3 * divHeight / 5 + ")")
-                .attr("fill", color)
+                .attr("fill", 'url(#gaugeGradient)')
                 .on('click', function () {
                     d3.select('#gaugeNeedle')
                         .transition()
@@ -371,6 +405,81 @@ function makeSentimentBoxPlot(sentimentData, divID) {
                 .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
                 .attr('clip-path', 'url(#articleClipEnlarged)')
                 .call(xAxis);
+
+            var iqrBoxes = clippedsvg.selectAll('.iqrBoxEnlarged .upper')
+                .data(sentimentData)
+                .enter()
+                .append('rect')
+                .attr('class', 'iqrBoxEnlarged upper')
+                .attr('width', function (d, i) {
+                    return xScale.bandwidth();
+                })
+                .attr('height', function (d, i) {
+                    return Math.max(0, Math.min(ySentScale(60), ySentScale(d.lower)) - ySentScale(d.upper))
+                })
+                .attr('x', function (d, i) {
+                    var tempDate = dateParser(d.date)
+                    return xScale(tempDate);
+                })
+                .attr('y', function (d, i) {
+                    return ySentScale(d.upper)
+                })
+                .attr('fill', 'red')
+                .style('opacity', '40%')
+                .on("mouseover", onMouseOver)
+                .on("mousemove", onMouseMove)
+                .on("mouseout", onMouseOut)
+                .on('click', function (d) { searchKeyword(d.date, true) });
+
+            var iqrBoxes = clippedsvg.selectAll('.iqrBoxEnlarged .center')
+                .data(sentimentData)
+                .enter()
+                .append('rect')
+                .attr('class', 'iqrBoxEnlarged center')
+                .attr('width', function (d, i) {
+                    return xScale.bandwidth();
+                })
+                .attr('height', function (d, i) {
+                    return Math.max(0, Math.min(ySentScale(40), ySentScale(d.lower)) - Math.max(ySentScale(60), ySentScale(d.upper)))
+                })
+                .attr('x', function (d, i) {
+                    var tempDate = dateParser(d.date)
+                    return xScale(tempDate);
+                })
+                .attr('y', function (d, i) {
+                    return Math.max(ySentScale(60), ySentScale(d.upper))
+                })
+                .attr('fill', 'green')
+                .style('opacity', '40%')
+                .on("mouseover", onMouseOver)
+                .on("mousemove", onMouseMove)
+                .on("mouseout", onMouseOut)
+                .on('click', function (d) { searchKeyword(d.date, true) });
+
+            var iqrBoxes = clippedsvg.selectAll('.iqrBoxEnlarged .lower')
+                .data(sentimentData)
+                .enter()
+                .append('rect')
+                .attr('class', 'iqrBoxEnlarged lower')
+                .attr('width', function (d, i) {
+                    return xScale.bandwidth();
+                })
+                .attr('height', function (d, i) {
+                    return Math.max(0, ySentScale(d.lower) - Math.max(ySentScale(40), ySentScale(d.upper)))
+                })
+                .attr('x', function (d, i) {
+                    var tempDate = dateParser(d.date)
+                    return xScale(tempDate);
+                })
+                .attr('y', function (d, i) {
+                    return Math.max(ySentScale(d.upper), ySentScale(40))
+                })
+                .attr('fill', 'blue')
+                .style('opacity', '40%')
+                .on("mouseover", onMouseOver)
+                .on("mousemove", onMouseMove)
+                .on("mouseout", onMouseOut)
+                .on('click', function (d) { searchKeyword(d.date, true) });
         }
         else {
             var clip = svg.append("defs").append("svg:clipPath")
@@ -389,79 +498,82 @@ function makeSentimentBoxPlot(sentimentData, divID) {
                 .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
                 .attr('clip-path', 'url(#articleClip)')
                 .call(xAxis);
+
+            var iqrBoxes = clippedsvg.selectAll('.iqrBox .upper')
+                .data(sentimentData)
+                .enter()
+                .append('rect')
+                .attr('class', 'iqrBox upper')
+                .attr('width', function (d, i) {
+                    return xScale.bandwidth();
+                })
+                .attr('height', function (d, i) {
+                    return Math.max(0, Math.min(ySentScale(60), ySentScale(d.lower)) - ySentScale(d.upper))
+                })
+                .attr('x', function (d, i) {
+                    var tempDate = dateParser(d.date)
+                    return xScale(tempDate);
+                })
+                .attr('y', function (d, i) {
+                    return ySentScale(d.upper)
+                })
+                .attr('fill', 'red')
+                .style('opacity', '40%')
+                .on("mouseover", onMouseOver)
+                .on("mousemove", onMouseMove)
+                .on("mouseout", onMouseOut)
+                .on('click', function (d) { searchKeyword(d.date, false) });
+
+            var iqrBoxes = clippedsvg.selectAll('.iqrBox .center')
+                .data(sentimentData)
+                .enter()
+                .append('rect')
+                .attr('class', 'iqrBox center')
+                .attr('width', function (d, i) {
+                    return xScale.bandwidth();
+                })
+                .attr('height', function (d, i) {
+                    return Math.max(0, Math.min(ySentScale(40), ySentScale(d.lower)) - Math.max(ySentScale(60), ySentScale(d.upper)))
+                })
+                .attr('x', function (d, i) {
+                    var tempDate = dateParser(d.date)
+                    return xScale(tempDate);
+                })
+                .attr('y', function (d, i) {
+                    return Math.max(ySentScale(60), ySentScale(d.upper))
+                })
+                .attr('fill', 'green')
+                .style('opacity', '40%')
+                .on("mouseover", onMouseOver)
+                .on("mousemove", onMouseMove)
+                .on("mouseout", onMouseOut)
+                .on('click', function (d) { searchKeyword(d.date, false) });
+
+            var iqrBoxes = clippedsvg.selectAll('.iqrBox .lower')
+                .data(sentimentData)
+                .enter()
+                .append('rect')
+                .attr('class', 'iqrBox lower')
+                .attr('width', function (d, i) {
+                    return xScale.bandwidth();
+                })
+                .attr('height', function (d, i) {
+                    return Math.max(0, ySentScale(d.lower) - Math.max(ySentScale(40), ySentScale(d.upper)))
+                })
+                .attr('x', function (d, i) {
+                    var tempDate = dateParser(d.date)
+                    return xScale(tempDate);
+                })
+                .attr('y', function (d, i) {
+                    return Math.max(ySentScale(d.upper), ySentScale(40))
+                })
+                .attr('fill', 'blue')
+                .style('opacity', '40%')
+                .on("mouseover", onMouseOver)
+                .on("mousemove", onMouseMove)
+                .on("mouseout", onMouseOut)
+                .on('click', function (d) { searchKeyword(d.date, false) });
         }
-
-        var iqrBoxes = clippedsvg.selectAll('.iqrBox .upper')
-            .data(sentimentData)
-            .enter()
-            .append('rect')
-            .attr('class', 'iqrBox upper')
-            .attr('width', function (d, i) {
-                return xScale.bandwidth();
-            })
-            .attr('height', function (d, i) {
-                return Math.max(0, Math.min(ySentScale(60), ySentScale(d.lower)) - ySentScale(d.upper))
-            })
-            .attr('x', function (d, i) {
-                var tempDate = dateParser(d.date)
-                return xScale(tempDate);
-            })
-            .attr('y', function (d, i) {
-                return ySentScale(d.upper)
-            })
-            .attr('fill', 'red')
-            .style('opacity', '40%')
-            .on("mouseover", onMouseOver)
-            .on("mousemove", onMouseMove)
-            .on("mouseout", onMouseOut);
-
-        var iqrBoxes = clippedsvg.selectAll('.iqrBox .center')
-            .data(sentimentData)
-            .enter()
-            .append('rect')
-            .attr('class', 'iqrBox center')
-            .attr('width', function (d, i) {
-                return xScale.bandwidth();
-            })
-            .attr('height', function (d, i) {
-                return Math.max(0, Math.min(ySentScale(40), ySentScale(d.lower)) - Math.max(ySentScale(60), ySentScale(d.upper)))
-            })
-            .attr('x', function (d, i) {
-                var tempDate = dateParser(d.date)
-                return xScale(tempDate);
-            })
-            .attr('y', function (d, i) {
-                return Math.max(ySentScale(60), ySentScale(d.upper))
-            })
-            .attr('fill', 'green')
-            .style('opacity', '40%')
-            .on("mouseover", onMouseOver)
-            .on("mousemove", onMouseMove)
-            .on("mouseout", onMouseOut);
-
-        var iqrBoxes = clippedsvg.selectAll('.iqrBox .lower')
-            .data(sentimentData)
-            .enter()
-            .append('rect')
-            .attr('class', 'iqrBox lower')
-            .attr('width', function (d, i) {
-                return xScale.bandwidth();
-            })
-            .attr('height', function (d, i) {
-                return Math.max(0, ySentScale(d.lower) - Math.max(ySentScale(40), ySentScale(d.upper)))
-            })
-            .attr('x', function (d, i) {
-                var tempDate = dateParser(d.date)
-                return xScale(tempDate);
-            })
-            .attr('y', function (d, i) {
-                return Math.max(ySentScale(d.upper), ySentScale(40))
-            })
-            .attr('fill', 'blue')
-            .style('opacity', '40%')
-            .on("mouseover", onMouseOver)
-            .on("mousemove", onMouseMove)
-            .on("mouseout", onMouseOut);
 
 
         var meanLines = clippedsvg.selectAll('.meanLine')
@@ -496,7 +608,7 @@ function makeSentimentBoxPlot(sentimentData, divID) {
             .attr('stroke', '#990000')
             .attr('stroke-width', 1);
 
-        var meanLines = clippedsvg.selectAll('.thirdQuartLine')
+        clippedsvg.selectAll('.thirdQuartLine')
             .data(sentimentData)
             .enter()
             .append('line')
@@ -512,7 +624,7 @@ function makeSentimentBoxPlot(sentimentData, divID) {
             .attr('stroke', '#990000')
             .attr('stroke-width', 1);
 
-        var meanLines = clippedsvg.selectAll('.centerLine')
+        clippedsvg.selectAll('.centerLine')
             .data(sentimentData)
             .enter()
             .append('line')
@@ -524,6 +636,65 @@ function makeSentimentBoxPlot(sentimentData, divID) {
             .attr('stroke', '#990000')
             .attr('stroke-width', 1);
 
+
+        /* MAKE LEGEND */
+
+        var legend = svg.append('g')
+            .attr('width', (divWidth / 2) + 'px')
+            .attr('height', '30px')
+            .attr('id', 'sentimentBoxLegend');
+
+        legend.append('rect')
+            .attr('x', 0)
+            .attr('y', yPadding / 2)
+            .attr('width', yPadding / 3)
+            .attr('height', yPadding / 3)
+            .attr('fill', 'blue')
+            .attr('opacity', '40%')
+
+        legend.append('text')
+            .attr('transform', 'translate(' + (yPadding / 2.5) + ',' + (3 * yPadding / 4) + ")")
+            .attr('alignment-baseline', 'middle')
+            .attr('text-anchor', 'left')
+            .style('font-size', '12px')
+            .text('부정');
+
+        var legendShift1 = yPadding * 1.7;
+        legend.append('rect')
+            .attr('x', legendShift1)
+            .attr('y', yPadding / 2)
+            .attr('width', yPadding / 3)
+            .attr('height', yPadding / 3)
+            .attr('fill', 'green')
+            .attr('opacity', '40%')
+
+        legend.append('text')
+            .attr('transform', 'translate(' + (yPadding / 2.5 + legendShift1) + ',' + (3 * yPadding / 4) + ")")
+            .attr('alignment-baseline', 'middle')
+            .attr('text-anchor', 'left')
+            .style('font-size', '12px')
+            .text('중립');
+
+        var legendShift2 = yPadding * 3.4;
+        legend.append('rect')
+            .attr('x', legendShift2)
+            .attr('y', yPadding / 2)
+            .attr('width', yPadding / 3)
+            .attr('height', yPadding / 3)
+            .attr('fill', 'red')
+            .attr('opacity', '40%')
+
+        legend.append('text')
+            .attr('transform', 'translate(' + (yPadding / 2.5 + legendShift2) + ',' + (3 * yPadding / 4) + ")")
+            .attr('alignment-baseline', 'middle')
+            .attr('text-anchor', 'left')
+            .style('font-size', '12px')
+            .text('긍정');
+
+        var legendWidth = document.getElementById('sentimentBoxLegend').getBoundingClientRect().width;
+
+
+        legend.attr('transform', 'translate(' + (divWidth - xPadding - legendWidth) + ',0)')
 
         /* MAKE LEGEND */
 
@@ -650,8 +821,8 @@ function makeSentimentBoxPlot(sentimentData, divID) {
         }
         $('#maximizeSentimentBoxSpan').show();
         $('#resetDiv').show();
-
-    } else {
+    }
+    else {
         var keywordBarContents = `
                                     <div style="text-align:center;">
                                         <img src="/img/no_gisa5.png" style="max-width:100%; max-height:80%"/>
@@ -1034,46 +1205,8 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
                 .on("mouseover", onMouseOver)
                 .on("mousemove", onMouseMove)
                 .on("mouseout", onMouseOut)
-                .on('click', function (d) {
-                    $('.layer_dimmed').removeClass('is_active');
-                    $('.enlargedChartSettings').css("display", "none");
-                    var selectItem = $("#fold").val();
+                .on('click', function (d) { searchKeyword(d.date, true) });
 
-                    dataTableSearch(d.date);
-                    if (selectItem == "company") {
-                        document.getElementById('dataTableSearchCompany').scrollIntoView();
-                    }
-                    else if (selectItem == "subsidiary") {
-                        document.getElementById('dataTableSearchSubsidiary').scrollIntoView();
-                    }
-                    else if (selectItem == "industry") {
-                        document.getElementById('dataTableSearchIndustry').scrollIntoView();
-                    }
-                    else if (selectItem == "keyword") {
-                        document.getElementById('dataTableSearchKeyword').scrollIntoView();
-                    }
-
-
-                    console.log(d.date);
-                });
-
-            var sentPoints = clippedsvg.selectAll('.sentimentPointEnlarged')
-                .data(sentimentData)
-                .enter()
-                .append('circle')
-                .attr('class', 'sentimentPointEnlarged')
-                .attr('cx', function (d, i) {
-                    return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
-                })
-                .attr('cy', function (d, i) {
-                    return ySentScale(d.mean)
-                })
-                .attr('r', 5)
-                .attr('fill', '#990000')
-                .style('opacity', '0%')
-                .on("mouseover", onMouseOver)
-                .on("mousemove", onMouseMove)
-                .on("mouseout", onMouseOut);
 
             var sentLines = clippedsvg.selectAll('.sentimentLineEnlarged')
                 .data(sentimentData)
@@ -1093,7 +1226,27 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
                     return ySentScale(sentimentData[i - 1].mean);
                 })
                 .attr('stroke', '#990000')
-                .attr('stroke-width', 3);
+                .attr('stroke-width', 1);
+
+
+            var sentPoints = clippedsvg.selectAll('.sentimentPointEnlarged')
+                .data(sentimentData)
+                .enter()
+                .append('circle')
+                .attr('class', 'sentimentPointEnlarged')
+                .attr('cx', function (d, i) {
+                    return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
+                })
+                .attr('cy', function (d, i) {
+                    return ySentScale(d.mean)
+                })
+                .attr('r', 5)
+                .attr('fill', '#990000')
+                .style('opacity', '0%')
+                .on("mouseover", onMouseOver)
+                .on("mousemove", onMouseMove)
+                .on("mouseout", onMouseOut)
+                .on('click', function (d) { searchKeyword(d.date, true) });
 
 
 
@@ -1139,44 +1292,9 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
                 .on("mouseover", onMouseOver)
                 .on("mousemove", onMouseMove)
                 .on("mouseout", onMouseOut)
-                .on('click', function (d) {
-                    var selectItem = $("#fold").val();
-
-                    dataTableSearch(d.date);
-                    if (selectItem == "company") {
-                        document.getElementById('dataTableSearchCompany').scrollIntoView();
-                    }
-                    else if (selectItem == "subsidiary") {
-                        document.getElementById('dataTableSearchSubsidiary').scrollIntoView();
-                    }
-                    else if (selectItem == "industry") {
-                        document.getElementById('dataTableSearchIndustry').scrollIntoView();
-                    }
-                    else if (selectItem == "keyword") {
-                        document.getElementById('dataTableSearchKeyword').scrollIntoView();
-                    }
+                .on('click', function (d) { searchKeyword(d.date, false) });
 
 
-                    console.log(d.date);
-                });
-
-            var sentPoints = clippedsvg.selectAll('.sentimentPoint')
-                .data(sentimentData)
-                .enter()
-                .append('circle')
-                .attr('class', 'sentimentPoint')
-                .attr('cx', function (d, i) {
-                    return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
-                })
-                .attr('cy', function (d, i) {
-                    return ySentScale(d.mean)
-                })
-                .attr('r', 5)
-                .attr('fill', 'black')
-                .style('opacity', '0%')
-                .on("mouseover", onMouseOver)
-                .on("mousemove", onMouseMove)
-                .on("mouseout", onMouseOut);
 
 
             /* var sentLines = clippedsvg.selectAll('.sentimentLine')
@@ -1213,6 +1331,25 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
                 .attr('stroke', '#990000')
                 .attr('stroke-width', 1)
                 .attr('fill', 'none');
+
+            var sentPoints = clippedsvg.selectAll('.sentimentPoint')
+                .data(sentimentData)
+                .enter()
+                .append('circle')
+                .attr('class', 'sentimentPoint')
+                .attr('cx', function (d, i) {
+                    return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
+                })
+                .attr('cy', function (d, i) {
+                    return ySentScale(d.mean)
+                })
+                .attr('r', 5)
+                .attr('fill', '#990000')
+                .style('opacity', '0%')
+                .on("mouseover", onMouseOver)
+                .on("mousemove", onMouseMove)
+                .on("mouseout", onMouseOut)
+                .on('click', function (d) { searchKeyword(d.date, false) });
 
 
 
@@ -1327,6 +1464,9 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
         }
 
         svg.attr('transform', 'translate(10,0)')
+
+        svg.attr('xPadding', xPadding)
+        svg.attr('yPadding', yPadding)
 
         if (divID == 'enlargedChart') {
             window.SVG = svg;
@@ -1646,6 +1786,24 @@ function makeStockBarGraph(data, divID) {
             .attr('stroke-width', 1)
             .on("mouseover", onMouseOver)
             .on("mousemove", onMouseMove)
+            .on("mouseout", onMouseOut)
+
+        svg.selectAll('.fiveLinePointVis')
+            .data(fiveDay)
+            .enter()
+            .append('circle')
+            .attr('class', 'fiveLinePointVis')
+            .attr('cx', function (d, i) {
+                return xScale(d.time) + (xScale.bandwidth() / 2)
+            })
+            .attr('cy', function (d, i) {
+                return yScale(d.average)
+            })
+            .attr('r', 6)
+            .attr('fill', '#990000')
+            .style('opacity', '0%')
+            .on("mouseover", onMouseOver)
+            .on("mousemove", onMouseMove)
             .on("mouseout", onMouseOut);
     }
 
@@ -1689,6 +1847,24 @@ function makeStockBarGraph(data, divID) {
             })
             .attr('stroke', '#664be8')
             .attr('stroke-width', 1)
+            .on("mouseover", onMouseOver)
+            .on("mousemove", onMouseMove)
+            .on("mouseout", onMouseOut);
+
+        svg.selectAll('.twentyLinePointVis')
+            .data(twentyDay)
+            .enter()
+            .append('circle')
+            .attr('class', 'twentyLinePointVis')
+            .attr('cx', function (d, i) {
+                return xScale(d.time) + (xScale.bandwidth() / 2)
+            })
+            .attr('cy', function (d, i) {
+                return yScale(d.average)
+            })
+            .attr('r', 6)
+            .attr('fill', '#990000')
+            .style('opacity', '0%')
             .on("mouseover", onMouseOver)
             .on("mousemove", onMouseMove)
             .on("mouseout", onMouseOut);
@@ -1783,12 +1959,23 @@ function makeStockBarGraph(data, divID) {
                     }
                 })
         }
+        svg.selectAll('fiveLinePointVis')
+            .attr('cx', function (d, i) {
+                return xScale(d.time) + (xScale.bandwidth() / 2)
+            })
+        svg.selectAll('twentyLinePointVis')
+            .attr('cx', function (d, i) {
+                return xScale(d.time) + (xScale.bandwidth() / 2)
+            })
     }
 
     if (divID == 'enlargedChart') {
         window.SVG = svg;
     }
     svg.attr('transform', 'translate(10,0)')
+
+    svg.attr('xPadding', xPadding)
+    svg.attr('yPadding', yPadding)
 }
 
 function makeLineGraph(data, divID) {
@@ -2026,7 +2213,7 @@ function makeLineGraph(data, divID) {
                 .attr('cy', function (d, i) {
                     return yScale(d.value)
                 })
-                .attr('r', 3)
+                .attr('r', 4)
                 .attr('fill', 'black')
                 .style('opacity', '100%')
                 .on("mouseover", onMouseOver)
@@ -2097,7 +2284,7 @@ function makeLineGraph(data, divID) {
                 .attr('fill', 'none'); */
 
 
-            var sentPoints = clippedsvg.selectAll('.linePoint')
+            clippedsvg.selectAll('.linePoint')
                 .data(toPlot)
                 .enter()
                 .append('circle')
@@ -2110,9 +2297,26 @@ function makeLineGraph(data, divID) {
                     console.log(yScale(d.value))
                     return yScale(d.value)
                 })
-                .attr('r', 2)
+                .attr('r', 4)
                 .attr('fill', 'black')
-                .style('opacity', '100%')
+                .style('opacity', '100%');
+
+            clippedsvg.selectAll('.linePointVis')
+                .data(toPlot)
+                .enter()
+                .append('circle')
+                .attr('class', 'linePointVis')
+                .attr('cx', function (d, i) {
+                    return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
+                })
+                .attr('cy', function (d, i) {
+                    console.log(d.value)
+                    console.log(yScale(d.value))
+                    return yScale(d.value)
+                })
+                .attr('r', 6)
+                .attr('fill', '#990000')
+                .style('opacity', '0%')
                 .on("mouseover", onMouseOver)
                 .on("mousemove", onMouseMove)
                 .on("mouseout", onMouseOut);
@@ -2229,6 +2433,8 @@ function makeLineGraph(data, divID) {
         if (divID == 'enlargedChart') {
             window.SVG = svg;
         }
+        svg.attr('xPadding', xPadding)
+        svg.attr('yPadding', yPadding)
         $('#maximizeCombinedSpan').show();
         $('#resetDiv').show();
     }
@@ -2270,6 +2476,45 @@ var tooltipEnlarged = d3.select('#entirePopupBox')
     .style('border-radius', '4px')
     .text("");
 
+function searchKeyword(keyword, enlarged) {
+    if (enlarged == true) {
+        console.log('enlarged')
+        $('.layer_dimmed').removeClass('is_active');
+        $('.enlargedChartSettings').css("display", "none");
+        var selectItem = $("#fold").val();
+
+        dataTableSearch(keyword);
+        if (selectItem == "company") {
+            document.getElementById('dataTableSearchCompany').scrollIntoView();
+        }
+        else if (selectItem == "subsidiary") {
+            document.getElementById('dataTableSearchSubsidiary').scrollIntoView();
+        }
+        else if (selectItem == "industry") {
+            document.getElementById('dataTableSearchIndustry').scrollIntoView();
+        }
+        else if (selectItem == "keyword") {
+            document.getElementById('dataTableSearchKeyword').scrollIntoView();
+        }
+    }
+    else {
+        var selectItem = $("#fold").val();
+
+        dataTableSearch(keyword);
+        if (selectItem == "company") {
+            document.getElementById('dataTableSearchCompany').scrollIntoView();
+        }
+        else if (selectItem == "subsidiary") {
+            document.getElementById('dataTableSearchSubsidiary').scrollIntoView();
+        }
+        else if (selectItem == "industry") {
+            document.getElementById('dataTableSearchIndustry').scrollIntoView();
+        }
+        else if (selectItem == "keyword") {
+            document.getElementById('dataTableSearchKeyword').scrollIntoView();
+        }
+    }
+}
 
 function onMouseOver(d, i) {
     var elementClass = this.getAttribute('class');
@@ -2397,16 +2642,44 @@ function onMouseOver(d, i) {
         tooltipEnlarged.style('visibility', 'visible');
         tooltipEnlarged.text(d.date + ': ' + d.count);
     }
-    else if (elementClass == 'sentimentPoint') {
-        tooltip.style('visibility', 'visible');
-        tooltip.text(d.date + ': ' + d.mean);
+    else if (elementClass.includes('sentimentPoint')) {
+        d3.select(this).style('opacity', '100%');
+        var height = this.parentNode.parentNode.getBoundingClientRect().height
+        var xPadding = this.parentNode.parentNode.getAttribute('xPadding')
+        var yPadding = this.parentNode.parentNode.getAttribute('yPadding')
+        var svg = d3.select(this.parentNode.parentNode);
+        var circle_x = this.getAttribute('cx')
+        var circle_y = this.getAttribute('cy')
+        svg.append('line')
+            .attr('class', 'coordLine')
+            .attr('x1', circle_x)
+            .attr('y1', height - yPadding)
+            .attr('x2', circle_x)
+            .attr('y2', circle_y)
+            .attr('stroke', 'black')
+            .attr('stroke-width', 1)
+            .style("stroke-dasharray", ("3, 3"))
+
+        svg.append('line')
+            .attr('class', 'coordLine')
+            .attr('x1', xPadding)
+            .attr('y1', circle_y)
+            .attr('x2', circle_x)
+            .attr('y2', circle_y)
+            .attr('stroke', 'black')
+            .attr('stroke-width', 1)
+            .style("stroke-dasharray", ("3, 3"))
+
+        if (elementClass == 'sentimentPoint') {
+            tooltip.style('visibility', 'visible');
+            tooltip.text(d.date + ': ' + d.mean);
+        }
+        else {
+            tooltipEnlarged.style('visibility', 'visible');
+            tooltipEnlarged.text(d.date + ': ' + d.mean);
+        }
     }
-    else if (elementClass == 'sentimentPointEnlarged') {
-        console.log('in sent point enlarged')
-        tooltipEnlarged.style('visibility', 'visible');
-        tooltipEnlarged.text(d.date + ': ' + d.mean);
-    }
-    else if (elementClass.includes('iqrBox')) {
+    else if (elementClass.includes('iqrBox ')) {
         if (elementClass == 'iqrBox upper') {
             d3.select(this).style('fill', '#820812')
             d3.select(this).style('opacity', '100%');
@@ -2417,12 +2690,61 @@ function onMouseOver(d, i) {
         tooltip.style('visibility', 'visible');
         tooltip.text(d.date + ': ' + d.mean);
     }
-    else if (elementClass == 'linePoint') {
-        d3.select(this).style('opacity', '60%');
-        tooltip.style('visibility', 'visible');
-        tooltip.text(d.date + ': ' + d.value);
+    else if (elementClass.includes('iqrBoxEnlarged')) {
+        if (elementClass == 'iqrBoxEnlarged upper') {
+            d3.select(this).style('fill', '#820812')
+            d3.select(this).style('opacity', '100%');
+        }
+        else {
+            d3.select(this).style('opacity', '100%');
+        }
+        tooltipEnlarged.style('visibility', 'visible');
+        tooltipEnlarged.text(d.date + ': ' + d.mean);
     }
-    else if (elementClass == 'linePoint') {
+    else if (elementClass.includes('PointVis')) {
+        d3.select(this).style('opacity', '100%');
+        if (elementClass == 'linePointVis') {
+            var svgNode = this.parentNode.parentNode
+            tooltip.text(d.date + ': ' + d.value);
+        }
+        else if (elementClass.includes('LinePointVis')) {
+            var svgNode = this.parentNode
+            var formatTime = d3.timeFormat('%Y년%B%d일')
+            tooltip.text(formatTime(d.time) + ': ' + d.average);
+        }
+        var height = svgNode.getBoundingClientRect().height
+        var xPadding = svgNode.getAttribute('xPadding')
+        var yPadding = svgNode.getAttribute('yPadding')
+        var svg = d3.select(svgNode);
+        var circle_x = this.getAttribute('cx')
+        var circle_y = this.getAttribute('cy')
+        console.log(circle_x)
+        console.log(circle_y)
+        console.log(xPadding)
+        console.log(yPadding)
+        svg.append('line')
+            .attr('class', 'coordLine')
+            .attr('x1', circle_x)
+            .attr('y1', height - yPadding)
+            .attr('x2', circle_x)
+            .attr('y2', circle_y)
+            .attr('stroke', 'black')
+            .attr('stroke-width', 1)
+            .style("stroke-dasharray", ("3, 3"))
+
+        svg.append('line')
+            .attr('class', 'coordLine')
+            .attr('x1', xPadding)
+            .attr('y1', circle_y)
+            .attr('x2', circle_x)
+            .attr('y2', circle_y)
+            .attr('stroke', 'black')
+            .attr('stroke-width', 1)
+            .style("stroke-dasharray", ("3, 3"))
+
+        tooltip.style('visibility', 'visible');
+    }
+    else if (elementClass == 'linePointEnlarged') {
         d3.select(this).style('opacity', '60%');
         tooltipEnlarged.style('visibility', 'visible');
         tooltipEnlarged.text(d.date + ': ' + d.value);
@@ -2526,13 +2848,17 @@ function onMouseOut(d, i) {
         d3.select(this).style('opacity', '40%');
         tooltipEnlarged.style('visibility', 'hidden');
     }
-    else if (elementClass == 'sentimentPoint') {
-        tooltip.style('visibility', 'hidden');
+    else if (elementClass.includes('sentimentPoint')) {
+        d3.select(this).style('opacity', '0%');
+        d3.selectAll('.coordLine').remove();
+        if (elementClass == 'sentimentPoint') {
+            tooltip.style('visibility', 'hidden');
+        }
+        else {
+            tooltipEnlarged.style('visibility', 'hidden');
+        }
     }
-    else if (elementClass == 'sentimentPointEnlarged') {
-        tooltipEnlarged.style('visibility', 'hidden');
-    }
-    else if (elementClass.includes('iqrBox')) {
+    else if (elementClass.includes('iqrBox ')) {
         if (elementClass == 'iqrBox upper') {
             d3.select(this).style('fill', 'red')
             d3.select(this).style('opacity', '40%');
@@ -2542,11 +2868,22 @@ function onMouseOut(d, i) {
         }
         tooltip.style('visibility', 'hidden');
     }
-    else if (elementClass == 'linePoint') {
-        d3.select(this).style('opacity', '100%');
+    else if (elementClass.includes('iqrBoxEnlarged')) {
+        if (elementClass == 'iqrBoxEnlarged upper') {
+            d3.select(this).style('fill', 'red')
+            d3.select(this).style('opacity', '40%');
+        }
+        else {
+            d3.select(this).style('opacity', '40%');
+        }
+        tooltipEnlarged.style('visibility', 'hidden');
+    }
+    else if (elementClass.includes('PointVis')) {
+        d3.select(this).style('opacity', '0%');
+        d3.selectAll('.coordLine').remove();
         tooltip.style('visibility', 'hidden');
     }
-    else if (elementClass == 'linePoint') {
+    else if (elementClass == 'linePointEnlarged') {
         d3.select(this).style('opacity', '100%');
         tooltipEnlarged.style('visibility', 'hidden');
     }
@@ -2559,6 +2896,7 @@ function onMouseOut(d, i) {
 }
 
 function drawWordcloud(words, divID) {
+    $('#resetDiv').hide();
     var graphDiv = document.getElementById(divID);
 
     var maxValue = Math.max.apply(Math, words.map(function (o) { return o.tf_idf }));
@@ -2744,7 +3082,7 @@ function getChartQuery(queryInput, queryType) {
                 <option value="stock">주가</option>
                 <option value="credit">신용공여</option>
                 <option value="sales">매출액</option>
-                <option value="grade">등급</option>
+                <option value="grade">재무위험등급</option>
                 <option value="grade2">신용평가등급</option>`
             }
 
