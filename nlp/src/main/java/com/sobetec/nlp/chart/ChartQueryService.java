@@ -304,15 +304,21 @@ public class ChartQueryService {
 				}
 			});
 			float taScore = 0;
+			System.out.println(date + "\t" + nTotalScores);
 			for (int i = 0; i < nTotalScores; i++) {
 				taScore = taScore + Float.parseFloat(scores[i]);
+				System.out.println(scores[i]);
 			}
+
+			System.out.println("--------------------------------");
 			// float min = Float.parseFloat(scores[0]);
-			int minPercentile = (int) Math.ceil(nTotalScores * 0.25);
-			int lowerPercentile = (int) Math.ceil(nTotalScores * 0.30);
-			int medianPercentile = (int) Math.ceil(nTotalScores * 0.5);
-			int upperPercentile = (int) Math.ceil(nTotalScores * 0.70);
-			int maxPercentile = (int) Math.ceil(nTotalScores * 0.75);
+			int minPercentile = (int) Math.ceil(nTotalScores * 0.25) - 1;
+//			int minPercentile = 0;
+			int lowerPercentile = (int) Math.ceil(nTotalScores * 0.37) - 1;
+			int medianPercentile = (int) Math.ceil(nTotalScores * 0.5) - 1;
+			int upperPercentile = (int) Math.ceil(nTotalScores * 0.68) - 1;
+			int maxPercentile = (int) Math.ceil(nTotalScores * 0.75) - 1;
+//			int maxPercentile = nTotalScores - 1;
 			float min, lower, median, upper, max;
 			if (scores.length < 5) {
 				float average = 0;
@@ -326,13 +332,14 @@ public class ChartQueryService {
 				upper = average;
 				max = average;
 			} else {
-				min = Float.parseFloat(scores[minPercentile - 1]);
-				lower = Float.parseFloat(scores[lowerPercentile - 1]);
-				median = Float.parseFloat(scores[medianPercentile - 1]);
-				upper = Float.parseFloat(scores[upperPercentile - 1]);
-				max = Float.parseFloat(scores[maxPercentile - 1]);
+				min = Float.parseFloat(scores[minPercentile]);
+				lower = Float.parseFloat(scores[lowerPercentile]);
+				median = Float.parseFloat(scores[medianPercentile]);
+				upper = Float.parseFloat(scores[upperPercentile]);
+				max = Float.parseFloat(scores[maxPercentile]);
 
 			}
+
 			SentimentDate tempSentDate = new SentimentDate(date, taScore / nTotalScores, min, lower, median, upper,
 					max);
 			sentimentDates.add(tempSentDate);

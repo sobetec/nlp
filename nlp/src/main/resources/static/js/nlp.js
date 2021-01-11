@@ -142,10 +142,10 @@ function makeGauge(divID, sentimentScore) {
         .style('font-weight', 'bold')
         .style('text-anchor', 'middle')
         .style('fill', function (d) {
-            if (rotation < 50) {
+            if (rotation < 30) {
                 return '#ef5d5d'
             }
-            else if (rotation > 130) {
+            else if (rotation > 70) {
                 return '#37b76a'
             }
             else {
@@ -324,7 +324,7 @@ function makeSentimentBoxPlot(sentimentData, divID) {
                 .ticks(5)
                 .tickSizeOuter(0)
                 .tickPadding(5)
-                .tickFormat(d3.timeFormat("%Y년%b%d일"))
+                .tickFormat(d3.timeFormat("%Y년%B%d일"))
         }
         else {
             var xAxis = d3.axisBottom()
@@ -342,14 +342,15 @@ function makeSentimentBoxPlot(sentimentData, divID) {
                 .ticks(5)
                 .tickSizeOuter(0)
                 .tickPadding(5)
-                .tickFormat(d3.timeFormat("%Y년%b"))
+                .tickFormat(d3.timeFormat("%Y년%B"))
         }
 
 
         var zoomBeh = d3.zoom()
-            .scaleExtent([0, 100])
+            .extent([[xPadding, yPadding], [xPadding + INNER_WIDTH, yPadding + INNER_HEIGHT]])
+            .scaleExtent([1, 500])
+            .translateExtent([[xPadding, yPadding], [xPadding + INNER_WIDTH, yPadding + INNER_HEIGHT]])
             .on("zoom", zoom);
-
 
 
         var svg = d3.select("#" + divID).append("svg")
@@ -357,6 +358,7 @@ function makeSentimentBoxPlot(sentimentData, divID) {
             .attr("width", "100%")
             .attr("height", "100%")
             .attr('pointer-events', 'all');
+
         if (divID == 'enlargedChart') {
             svg.call(zoomBeh);
         }
@@ -474,8 +476,8 @@ function makeSentimentBoxPlot(sentimentData, divID) {
                 .attr('y', function (d, i) {
                     return Math.max(ySentScale(d.upper), ySentScale(40))
                 })
-                .attr('fill', 'blue')
-                .style('opacity', '40%')
+                .attr('fill', '#1f79e0')
+                .style('opacity', '50%')
                 .on("mouseover", onMouseOver)
                 .on("mousemove", onMouseMove)
                 .on("mouseout", onMouseOut)
@@ -567,8 +569,8 @@ function makeSentimentBoxPlot(sentimentData, divID) {
                 .attr('y', function (d, i) {
                     return Math.max(ySentScale(d.upper), ySentScale(40))
                 })
-                .attr('fill', 'blue')
-                .style('opacity', '40%')
+                .attr('fill', '#1f79e0')
+                .style('opacity', '50%')
                 .on("mouseover", onMouseOver)
                 .on("mousemove", onMouseMove)
                 .on("mouseout", onMouseOut)
@@ -735,7 +737,7 @@ function makeSentimentBoxPlot(sentimentData, divID) {
             .style('font-size', '12px')
             .text('최대/최소값');
 
-        var legendShift4 = yPadding * 7.8;
+        var legendShift4 = yPadding * 8.4;
         legend.append('line')
             .attr('x1', legendShift4)
             .attr('y1', 2 * yPadding / 3)
@@ -757,29 +759,26 @@ function makeSentimentBoxPlot(sentimentData, divID) {
         legend.attr('transform', 'translate(' + (divWidth - xPadding - legendWidth) + ',0)')
 
         function zoom() {
-            xScale.range([xPadding, divWidth - xPadding].map((d, i) => {
-                if (i == 0) {
-                    if (d3.event.transform.applyX(d) > xPadding) {
-                        return xPadding
-                    }
-                    else {
-                        return d3.event.transform.applyX(d)
-                    }
-                }
-                else if (i == 1) {
-                    if (d3.event.transform.applyX(d) < (divWidth - xPadding)) {
-                        return divWidth - xPadding
-                    }
-                    else {
-                        return d3.event.transform.applyX(d)
-                    }
-                }
-                else {
-                }
-            }));
+            xScale.range([xPadding, xPadding + INNER_WIDTH].map(d => d3.event.transform.applyX(d)))
 
-            gX.call(xAxis.scale(xScale))
+            /* var inScope = xScale.domain().filter(function (d) {
+                return xScale(d) > xPadding && xScale(d) < (INNER_WIDTH - xPadding)
+            })
+            console.log(inScope)
+f
+            gX.call(xAxis.scale(xScale)
+                .tickValues(xScale.domain().filter(function (d, i) {
+                    if (gubun == 'quarter') {
+                        return !((i + Math.floor(articleCounts.length / 6)) % (Math.floor(articleCounts.length / 3)))
+                    }
+                    else if (gubun == 'year')
+                        return !((i + Math.floor(articleCounts.length / 12)) % (Math.floor(articleCounts.length / 6)))
+                    else {
+                        return !((i + Math.floor(articleCounts.length / 16)) % (Math.floor(articleCounts.length / 8)))
+                    }
+                }))) */
 
+            gX.call(xAxis.scale(xScale));
             svg.selectAll(".meanLine")
                 .attr('x1', function (d) { return xScale(dateParser(d.date)) })
                 .attr('x2', function (d, i) { return xScale(dateParser(d.date)) + xScale.bandwidth() })
@@ -804,7 +803,6 @@ function makeSentimentBoxPlot(sentimentData, divID) {
             console.log('zoom')
             svg.selectAll('.iqrBoxEnlarged')
                 .attr('width', function (d, i) {
-                    console.log(xScale.bandwidth());
                     return xScale.bandwidth();
                 })
                 .attr('x', function (d, i) {
@@ -830,6 +828,9 @@ function makeSentimentBoxPlot(sentimentData, divID) {
         }
         $('#maximizeSentimentBoxSpan').show();
         $('#resetDiv').show();
+        $('#resetChart').click(() => {
+            svg.call(zoomBeh.transform, d3.zoomIdentity)
+        })
     }
     else {
         var keywordBarContents = `
@@ -1416,7 +1417,7 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
             var inScope = xScale.domain().filter(function (d) {
                 return xScale(d) > xPadding && xScale(d) < (INNER_WIDTH - xPadding)
             })
-            console.log(inScope)
+            //console.log(inScope)
 
             gX.call(xAxis.scale(xScale)
                 .tickValues(xScale.domain().filter(function (d, i) {
@@ -1482,6 +1483,9 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
         }
         $('#maximizeCombinedSpan').show();
         $('#resetDiv').show();
+        $('#resetChart').click(() => {
+            svg.call(zoomBeh.transform, d3.zoomIdentity)
+        })
     }
     else {
         var keywordBarContents = `
@@ -1586,7 +1590,7 @@ function makeStockBarGraph(data, divID) {
             .ticks(5)
             .tickPadding(5)
             .tickSizeOuter(0)
-            .tickFormat(d3.timeFormat("%Y년%b%d일"))
+            .tickFormat(d3.timeFormat("%Y년%B%d일"))
     }
     else {
         var xAxis = d3.axisBottom()
@@ -1604,7 +1608,7 @@ function makeStockBarGraph(data, divID) {
             .ticks(5)
             .tickPadding(5)
             .tickSizeOuter(0)
-            .tickFormat(d3.timeFormat("%Y년%b"))
+            .tickFormat(d3.timeFormat("%Y년%B"))
     }
 
 
@@ -1711,7 +1715,17 @@ function makeStockBarGraph(data, divID) {
         .style('opacity', '100%')
         .on("mouseover", onMouseOver)
         .on("mousemove", onMouseMove)
-        .on("mouseout", onMouseOut);
+        .on("mouseout", onMouseOut)
+        .on('click', function (d) {
+            var formatTime = d3.timeFormat('%Y-%b-%d')
+            if (divID == 'enlargedChart') {
+                searchKeyword(formatTime(d.time), true)
+            }
+            else {
+                searchKeyword(formatTime(d.time), false)
+
+            }
+        });
 
     var sentLines = svg.append('g')
         .attr('class', 'barchartarea')
@@ -2001,6 +2015,10 @@ function makeStockBarGraph(data, divID) {
 
     svg.attr('xPadding', xPadding)
     svg.attr('yPadding', yPadding)
+
+    $('#resetChart').click(() => {
+        svg.call(zoomBeh.transform, d3.zoomIdentity)
+    })
 }
 
 function makeLineGraph(data, divID) {
@@ -2147,7 +2165,7 @@ function makeLineGraph(data, divID) {
                 .ticks(5)
                 .tickSizeOuter(0)
                 .tickPadding(5)
-                .tickFormat(d3.timeFormat("%Y년%b%d일"))
+                .tickFormat(d3.timeFormat("%Y년%B%d일"))
         }
         else {
             var xAxis = d3.axisBottom()
@@ -2165,7 +2183,7 @@ function makeLineGraph(data, divID) {
                 .ticks(5)
                 .tickSizeOuter(0)
                 .tickPadding(5)
-                .tickFormat(d3.timeFormat("%Y년%b"))
+                .tickFormat(d3.timeFormat("%Y년%B"))
         }
         var zoomBeh = d3.zoom()
             .extent([[xPadding, yPadding], [xPadding + INNER_WIDTH, yPadding + INNER_HEIGHT]])
@@ -2227,7 +2245,7 @@ function makeLineGraph(data, divID) {
                 .attr('stroke', '#2266a5')
                 .attr('stroke-width', 2);
 
-            var sentPoints = clippedsvg.selectAll('.linePointEnlarged')
+            clippedsvg.selectAll('.linePointEnlarged')
                 .data(toPlot)
                 .enter()
                 .append('circle')
@@ -2236,11 +2254,28 @@ function makeLineGraph(data, divID) {
                     return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
                 })
                 .attr('cy', function (d, i) {
+                    console.log(d.value)
+                    console.log(yScale(d.value))
                     return yScale(d.value)
                 })
-                .attr('r', 4)
+                .attr('r', 3)
                 .attr('fill', 'black')
-                .style('opacity', '100%')
+                .style('opacity', '100%');
+
+            clippedsvg.selectAll('.linePointVisEnlarged')
+                .data(toPlot)
+                .enter()
+                .append('circle')
+                .attr('class', 'linePointVisEnlarged')
+                .attr('cx', function (d, i) {
+                    return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
+                })
+                .attr('cy', function (d, i) {
+                    return yScale(d.value)
+                })
+                .attr('r', 5)
+                .attr('fill', '#990000')
+                .style('opacity', '0%')
                 .on("mouseover", onMouseOver)
                 .on("mousemove", onMouseMove)
                 .on("mouseout", onMouseOut);
@@ -2424,7 +2459,7 @@ function makeLineGraph(data, divID) {
             var inScope = xScale.domain().filter(function (d) {
                 return xScale(d) > xPadding && xScale(d) < (INNER_WIDTH - xPadding)
             })
-            console.log(inScope)
+            //console.log(inScope)
 
             gX.call(xAxis.scale(xScale)
                 .tickValues(xScale.domain().filter(function (d, i) {
@@ -2438,9 +2473,9 @@ function makeLineGraph(data, divID) {
                     }
                 })))
 
-            console.log(this);
+            //console.log(this);
 
-            svg.selectAll(".sentimentLine")
+            svg.selectAll(".sentimentLineEnlarged")
                 .attr('x1', function (d) { return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2) })
                 .attr('x2', function (d, i) {
                     if (i == 0) {
@@ -2448,7 +2483,11 @@ function makeLineGraph(data, divID) {
                     }
                     return xScale(dateParser(toPlot[i - 1].date)) + (xScale.bandwidth() / 2);
                 })
-            svg.selectAll(".sentimentPoint")
+            svg.selectAll(".linePointEnlarged")
+                .attr("cx", function (d) {
+                    return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
+                })
+            svg.selectAll(".linePointVisEnlarged")
                 .attr("cx", function (d) {
                     return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
                 })
@@ -2462,6 +2501,9 @@ function makeLineGraph(data, divID) {
         svg.attr('yPadding', yPadding)
         $('#maximizeCombinedSpan').show();
         $('#resetDiv').show();
+        $('#resetChart').click(() => {
+            svg.call(zoomBeh.transform, d3.zoomIdentity)
+        })
     }
     else {
         var keywordBarContents = `
@@ -2728,7 +2770,7 @@ function onMouseOver(d, i) {
     }
     else if (elementClass.includes('PointVis')) {
         d3.select(this).style('opacity', '100%');
-        if (elementClass == 'linePointVis') {
+        if (elementClass.includes('linePointVis')) {
             var svgNode = this.parentNode.parentNode
             tooltip.text(d.date + ': ' + d.value);
         }
@@ -3239,6 +3281,17 @@ function getChartQuery(queryInput, queryType) {
                             tempMax = d3.min([tempUpper + ((tempUpper - tempMedian) * (Math.random())), 100])
                         }
                     }
+                    else {
+                        if (tempMax - tempUpper < 5) {
+                            tempUpper = tempMedian + ((tempUpper - tempMedian) * (Math.random()))
+                            //tempMax = d3.min([tempUpper + ((tempUpper - tempMedian) * (Math.random())), 100])
+                        }
+
+                        if (tempLower - tempMin < 5) {
+                            tempLower = tempMedian - ((tempMedian - tempLower) * (Math.random()))
+                            //tempMin = d3.max([tempLower - ((tempMedian - tempLower) * (Math.random())), 0])
+                        }
+                    }
 
                     sentimentData.push({
                         date: tempDate,
@@ -3313,34 +3366,19 @@ function getChartQuery(queryInput, queryType) {
                     var selectItem = $("#chartFold").val();
                     console.log(selectItem)
                     if (selectItem == 'stock') {
-                        document.getElementById('resetChart').addEventListener('click', function () {
-                            makeStockBarGraph(window.newsChartData.allStockData, 'enlargedChart');
-                        })
                         makeStockBarGraph(window.newsChartData.allStockData, 'enlargedChart');
                     }
                     else if (selectItem == 'credit') {
-                        document.getElementById('resetChart').addEventListener('click', function () {
-                            makeLineGraph(window.newsChartData.creditData, 'enlargedChart');
-                        })
                         makeLineGraph(window.newsChartData.creditData, 'enlargedChart');
                     }
                     else if (selectItem == 'sales') {
-                        document.getElementById('resetChart').addEventListener('click', function () {
-                            makeLineGraph(window.newsChartData.salesData, 'enlargedChart');
-                        })
                         makeLineGraph(window.newsChartData.salesData, 'enlargedChart');
                     }
                     else if (selectItem == 'grade') {
-                        document.getElementById('resetChart').addEventListener('click', function () {
-                            makeLineGraph(window.newsChartData.gradeData, 'enlargedChart');
-                        })
                         makeLineGraph(window.newsChartData.gradeData, 'enlargedChart');
                     }
                     else if (selectItem == 'grade2') {
                         console.log(window.newsChartData.grade2Data)
-                        document.getElementById('resetChart').addEventListener('click', function () {
-                            makeLineGraph(window.newsChartData.grade2Data, 'enlargedChart');
-                        })
                         makeLineGraph(window.newsChartData.grade2Data, 'enlargedChart');
                     }
 
@@ -3371,15 +3409,8 @@ function getChartQuery(queryInput, queryType) {
 
             makeCombinedGraph(sentimentData, responseData.allNews, 'articleCounts');
             document.getElementById('maximizeCombined').addEventListener('click', function () {
-                document.getElementById('resetChart').addEventListener('click', function () {
-                    makeCombinedGraph(sentimentData, responseData.allNews, 'enlargedChart');
-                })
-                //console.log('clicked');
                 makeCombinedGraph(sentimentData, responseData.allNews, 'enlargedChart');
             })
-            // document.getElementById('articleCountRange').addEventListener('change', function () {
-            //     makeCombinedGraph(responseData.sentimentDates, responseData.allNews, 'articleCounts');
-            // })
 
             makeKeywordBarPlot(responseData.keywords, 'keywordBar', document.getElementById('keywordBarSlider').value)
             document.getElementById('maximizeKeywordBar').addEventListener('click', function () {
