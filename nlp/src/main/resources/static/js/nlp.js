@@ -258,7 +258,7 @@ function makeGauge(divID, sentimentScore) {
         window.SVG = gaugeSVG;
     }
 
-    if (sentimentScore < 0) {
+    if (sentimentScore == 0) {
         $('#maximizeGaugeSpan').hide();
     }
     else {
@@ -2967,7 +2967,7 @@ function drawWordcloud(words, divID) {
         })
         .on("end", function (output) {
             if (wordSlice.length != output.length) {
-                window.alert('Not all words fit into the word cloud--please try lowering font size')
+                // window.alert('Not all words fit into the word cloud--please try lowering font size')
             }
             draw(wordSlice)
         });
