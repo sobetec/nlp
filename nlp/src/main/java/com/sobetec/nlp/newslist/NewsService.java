@@ -71,8 +71,6 @@ public class NewsService {
     	List<News> listNews = new ArrayList<News>();
     	listNews = repository.getNewsListByCompany(cmpyNameOnly);
     	
-    	
-    	
         return calSobeScore(listNews);
     }
     
@@ -82,9 +80,7 @@ public class NewsService {
     	logger.debug("########## start Service getNewsListCondition");
     	List<News> listNews = new ArrayList<News>();
     	listNews = repository.getNewsListByCondition(newsCondition);
-    	
-    	
-    	
+        	
         return calSobeScore(listNews); 
     }
     
@@ -105,8 +101,6 @@ public class NewsService {
     		
     		listNews = repository.getNewsListByIndustry(newsCondition);
     	}
-    	
-    	
         	
         return calSobeScore(listNews);  
     }
@@ -116,6 +110,7 @@ public class NewsService {
     	List<Company> listCompany = new ArrayList<Company>();
     	listCompany = repository.getCompanyListByCompany(companyName);
         return listCompany; 
+        
     }
     
     public List<News> getNewsListByCompanyName(NewsCondition newsCondition) throws Exception {
@@ -123,9 +118,7 @@ public class NewsService {
     	logger.debug("########## start Service getNewsListByCompanyName");
     	List<News> listNews = new ArrayList<News>();
     	listNews = repository.getNewsListByCompanyName(newsCondition);
-    	
-    	
-    	
+    
         return calSobeScore(listNews); 
     }
 
