@@ -9,6 +9,7 @@ function makeGauge(divID, sentimentScore) {
     console.log(sentimentScore)
     var sentimentScore = sobeDangerScore(sentimentScore);
     var rotation = sentimentScore / 100 * 240 - 30;
+    console.log(rotation)
 
     var gauge = document.getElementById(divID);
     var divHeight = gauge.scrollHeight;
@@ -94,7 +95,7 @@ function makeGauge(divID, sentimentScore) {
         .attr('transform', 'translate(' + divWidth / 2 + ',' + divHeight / 1.27 + ")")
         .append('text')
         .text(function (d) {
-            if (rotation < -30) {
+            if (rotation == -30) {
                 return 'NO RESULT'
             }
             else {
@@ -124,13 +125,16 @@ function makeGauge(divID, sentimentScore) {
                 return '#ffcf49'
             }
         })
-        .style('font-size', 0.12 * divHeight);
+        .style('font-size', function(d) {
+            if (rotation == -30) {return 0.08 * divHeight}
+            else {return 0.12 * divHeight}
+        });
 
     gaugeSVG.append('g')
         .attr('transform', 'translate(' + divWidth / 2 + ',' + divHeight / 1.12 + ")")
         .append('text')
         .text(function (d) {
-            if (rotation < -30) {
+            if (rotation == -30) {
                 return ''
             }
             else {
@@ -142,10 +146,10 @@ function makeGauge(divID, sentimentScore) {
         .style('font-weight', 'bold')
         .style('text-anchor', 'middle')
         .style('fill', function (d) {
-            if (rotation < 30) {
+            if (sentimentScore < 30) {
                 return '#ef5d5d'
             }
-            else if (rotation > 70) {
+            else if (sentimentScore > 70) {
                 return '#37b76a'
             }
             else {
@@ -1217,8 +1221,22 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
                 .on("mouseout", onMouseOut)
                 .on('click', function (d) { searchKeyword(d.date, true) });
 
+            var sentLineMaker = d3.line()
+                .curve(d3.curveMonotoneX)
+                .x(function (d, i) {
+                    return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
+                })
+                .y(function (d, i) {
+                    return ySentScale(d.mean)
+                })
 
-            var sentLines = clippedsvg.selectAll('.sentimentLineEnlarged')
+            var sentLinePath = clippedsvg.append('svg:path')
+                .attr('d', sentLineMaker(sentimentData))
+                .attr('stroke', '#990000')
+                .attr('stroke-width', 1)
+                .attr('fill', 'none');
+
+            /* var sentLines = clippedsvg.selectAll('.sentimentLineEnlarged')
                 .data(sentimentData)
                 .enter()
                 .append('line')
@@ -1236,7 +1254,7 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
                     return ySentScale(sentimentData[i - 1].mean);
                 })
                 .attr('stroke', '#990000')
-                .attr('stroke-width', 1);
+                .attr('stroke-width', 1); */
 
 
             var sentPoints = clippedsvg.selectAll('.sentimentPointEnlarged')
@@ -1432,7 +1450,15 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
                 })))
 
             console.log(this);
+            console.log(sentLineMaker)
 
+            /* sentLineMaker.x(function (d, i) {
+                return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
+            })
+ */
+            sentLinePath.attr('d', sentLineMaker.x(function (d, i) {
+                return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
+            })(sentimentData))
             svg.selectAll(".articleCountRectEnlarged")
                 .attr("x", function (d) {
                     var tempDate = dateParser(d.date)
@@ -1449,25 +1475,6 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
                     return xScale(dateParser(sentimentData[i - 1].date)) + (xScale.bandwidth() / 2);
                 })
             svg.selectAll(".sentimentPointEnlarged")
-                .attr("cx", function (d) {
-                    return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
-                })
-            svg.selectAll(".articleCountRect")
-                .attr("x", function (d) {
-                    var tempDate = dateParser(d.date)
-                    return xScale(tempDate);
-                })
-                .attr("width", xScale.bandwidth())
-
-            svg.selectAll(".sentimentLine")
-                .attr('x1', function (d) { return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2) })
-                .attr('x2', function (d, i) {
-                    if (i == 0) {
-                        return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
-                    }
-                    return xScale(dateParser(sentimentData[i - 1].date)) + (xScale.bandwidth() / 2);
-                })
-            svg.selectAll(".sentimentPoint")
                 .attr("cx", function (d) {
                     return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
                 })
@@ -1835,7 +1842,17 @@ function makeStockBarGraph(data, divID) {
             .style('opacity', '0%')
             .on("mouseover", onMouseOver)
             .on("mousemove", onMouseMove)
-            .on("mouseout", onMouseOut);
+            .on("mouseout", onMouseOut)
+            .on('click', function (d) {
+                var formatTime = d3.timeFormat('%Y-%b-%d')
+                if (divID == 'enlargedChart') {
+                    searchKeyword(formatTime(d.time), true)
+                }
+                else {
+                    searchKeyword(formatTime(d.time), false)
+
+                }
+            });
     }
 
     if (stockData.length > 20) {
@@ -1880,7 +1897,7 @@ function makeStockBarGraph(data, divID) {
             .attr('stroke-width', 1)
             .on("mouseover", onMouseOver)
             .on("mousemove", onMouseMove)
-            .on("mouseout", onMouseOut);
+            .on("mouseout", onMouseOut)
 
         svg.selectAll('.twentyLinePointVis')
             .data(twentyDay)
@@ -1906,7 +1923,17 @@ function makeStockBarGraph(data, divID) {
             .style('opacity', '0%')
             .on("mouseover", onMouseOver)
             .on("mousemove", onMouseMove)
-            .on("mouseout", onMouseOut);
+            .on("mouseout", onMouseOut)
+            .on('click', function (d) {
+                var formatTime = d3.timeFormat('%Y-%b-%d')
+                if (divID == 'enlargedChart') {
+                    searchKeyword(formatTime(d.time), true)
+                }
+                else {
+                    searchKeyword(formatTime(d.time), false)
+
+                }
+            });
     }
 
     svg.append('text')
