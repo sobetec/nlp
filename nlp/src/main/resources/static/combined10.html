@@ -2036,10 +2036,10 @@
 
                             <div class="modal-list">
                                 
-                                <p style="text-align: right; margin-right: -4%; margin-top: -4%; font-style: italic; font-size: 10px;">＊계열 또는 산업을 선택하시면 해당 기업을 포함한 계열뉴스 또는 산업뉴스 분석 결과가 표시됩니다.</p>
+                                <p style="text-align: left; margin-left: 5%; margin-top: -2%; font-style: italic; font-size: 13px; color: #666666;">＊계열 또는 산업을 선택하시면 해당 기업을 포함한 계열뉴스 또는 산업뉴스 분석 결과가 표시됩니다.</p>
                                 <br>
                                 
-                                <table style="border-color:#ccc4c3; margin-left:auto; margin-right:auto;" width="90%" rules=cols>
+                                <table style="border-color:#ccc4c3; margin-left:auto; margin-right:auto; margin-top: -2%;" width="90%" rules=cols>
                                     <tr>
                                         <th class="th_list">기업</th>
                                         <th class="th_list" width: 20%;">계열</th>
@@ -2047,6 +2047,11 @@
                                     </tr>                                        
                                     
                             `;
+                        
+                        var tl = `<p style="text-align: left; margin-left: -4%; margin-top: -4%; font-style: italic; font-size: 10px;">＊계열 또는 산업을 선택하시면 해당 기업을 포함한 계열뉴스 또는 산업뉴스 분석 결과가 표시됩니다.</p>`;
+                        var tr = `<p style="text-align: right; margin-right: -4%; margin-top: -4%; font-style: italic; font-size: 10px;">＊계열 또는 산업을 선택하시면 해당 기업을 포함한 계열뉴스 또는 산업뉴스 분석 결과가 표시됩니다.</p>`;
+                        var bl = `<p style="text-align: left; margin-left: 5%; margin-top: -2%; font-style: italic; font-size: 10px;">＊계열 또는 산업을 선택하시면 해당 기업을 포함한 계열뉴스 또는 산업뉴스 분석 결과가 표시됩니다.</p>`;
+                        var br = `<p style="text-align: right; margin-right: 5%; margin-top: -2%; font-style: italic; font-size: 10px;">＊계열 또는 산업을 선택하시면 해당 기업을 포함한 계열뉴스 또는 산업뉴스 분석 결과가 표시됩니다.</p>`;
 
                         var modalContentsBody = ``;
                         for (let i = 0; i < responseData.length; i++) {
@@ -2477,7 +2482,7 @@
             <div class="layer_box" id='entirePopupBox'>
                 <div class="layer_body">
                     <div class="chart_detail">
-                        <div style="height: 30px; position: relative; top: -40px">
+                        <div style="height: 25px; position: relative; top: -40px">
                             <p style="text-align: center; font-size: 25px; font-weight: bold;" id=paramName></p>
                         </div>
                         <!-- <div id="resetDiv">
@@ -2772,7 +2777,8 @@
 
                                                 </div>
 
-
+                                                <p style ="font-size:0.5em;">검색 기간 뉴스데이터를 AI가 분석하여 긍정/중립/부정으로 정량화한</p>
+                                                <p style ="font-size:0.5em;">수치,낮을 수록 위험도가 높다</p>
 
                                             </div>
                                         </div>
@@ -2828,6 +2834,8 @@
                                                         </script>
                                                     </div>
                                                 </div>
+                                                <p style ="font-size:0.5em;">　</p>
+                                                <p style ="font-size:0.5em;">　</p>
                                             </div>
                                         </div>
                                     </div>
