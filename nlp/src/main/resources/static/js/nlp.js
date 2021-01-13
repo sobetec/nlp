@@ -125,9 +125,9 @@ function makeGauge(divID, sentimentScore) {
                 return '#ffcf49'
             }
         })
-        .style('font-size', function(d) {
-            if (rotation == -30) {return 0.08 * divHeight}
-            else {return 0.12 * divHeight}
+        .style('font-size', function (d) {
+            if (rotation == -30) { return 0.08 * divHeight }
+            else { return 0.12 * divHeight }
         });
 
     gaugeSVG.append('g')
@@ -393,6 +393,10 @@ function makeSentimentBoxPlot(sentimentData, divID) {
             .attr("transform", "translate(" + xPadding + ",0)")
             .call(yAxisGrid);
 
+
+
+        var minBand = 4;
+
         if (divID == 'enlargedChart') {
             var clip = svg.append("defs").append("svg:clipPath")
                 .attr('id', 'articleClipEnlarged')
@@ -411,6 +415,24 @@ function makeSentimentBoxPlot(sentimentData, divID) {
                 .attr("transform", "translate(0," + (divHeight - yPadding) + ")")
                 .attr('clip-path', 'url(#articleClipEnlarged)')
                 .call(xAxis);
+            clippedsvg.selectAll('.centerLine')
+                .data(sentimentData)
+                .enter()
+                .append('line')
+                .attr('class', 'centerLine')
+                .attr('x1', function (d) { return xScale(dateParser(d.date)) + xScale.bandwidth() / 2 })
+                .attr('y1', function (d) { return ySentScale(d.min) })
+                .attr('x2', function (d, i) { return xScale(dateParser(d.date)) + xScale.bandwidth() / 2 })
+                .attr('y2', function (d) { return ySentScale(d.max) })
+                .attr('stroke', '#990000')
+                .attr('stroke-width', function (d) {
+                    if (xScale.bandwidth() < minBand) {
+                        return 0;
+                    }
+                    else {
+                        return 0.5;
+                    }
+                });
 
             var iqrBoxes = clippedsvg.selectAll('.iqrBoxEnlarged .upper')
                 .data(sentimentData)
@@ -505,6 +527,24 @@ function makeSentimentBoxPlot(sentimentData, divID) {
                 .attr('clip-path', 'url(#articleClip)')
                 .call(xAxis);
 
+            clippedsvg.selectAll('.centerLine')
+                .data(sentimentData)
+                .enter()
+                .append('line')
+                .attr('class', 'centerLine')
+                .attr('x1', function (d) { return xScale(dateParser(d.date)) + xScale.bandwidth() / 2 })
+                .attr('y1', function (d) { return ySentScale(d.min) })
+                .attr('x2', function (d, i) { return xScale(dateParser(d.date)) + xScale.bandwidth() / 2 })
+                .attr('y2', function (d) { return ySentScale(d.max) })
+                .attr('stroke', '#990000')
+                .attr('stroke-width', function (d) {
+                    if (xScale.bandwidth() < minBand) {
+                        return 0;
+                    }
+                    else {
+                        return 0.5;
+                    }
+                });
             var iqrBoxes = clippedsvg.selectAll('.iqrBox .upper')
                 .data(sentimentData)
                 .enter()
@@ -581,7 +621,6 @@ function makeSentimentBoxPlot(sentimentData, divID) {
                 .on('click', function (d) { searchKeyword(d.date, false) });
         }
 
-
         var meanLines = clippedsvg.selectAll('.meanLine')
             .data(sentimentData)
             .enter()
@@ -597,11 +636,11 @@ function makeSentimentBoxPlot(sentimentData, divID) {
             })
             .attr('stroke', 'black')
             .attr('stroke-width', function (d) {
-                if (xScale.bandwidth() < 3) {
-                    return 0;
+                if (xScale.bandwidth() < minBand) {
+                    return 0.;
                 }
                 else {
-                    return 1;
+                    return 0.5;
                 }
             });
 
@@ -620,11 +659,11 @@ function makeSentimentBoxPlot(sentimentData, divID) {
             })
             .attr('stroke', '#990000')
             .attr('stroke-width', function (d) {
-                if (xScale.bandwidth() < 3) {
+                if (xScale.bandwidth() < minBand) {
                     return 0;
                 }
                 else {
-                    return 1;
+                    return 0.5;
                 }
             });
 
@@ -643,32 +682,15 @@ function makeSentimentBoxPlot(sentimentData, divID) {
             })
             .attr('stroke', '#990000')
             .attr('stroke-width', function (d) {
-                if (xScale.bandwidth() < 3) {
+                if (xScale.bandwidth() < minBand) {
                     return 0;
                 }
                 else {
-                    return 1;
+                    return 0.5;
                 }
             });
 
-        clippedsvg.selectAll('.centerLine')
-            .data(sentimentData)
-            .enter()
-            .append('line')
-            .attr('class', 'centerLine')
-            .attr('x1', function (d) { return xScale(dateParser(d.date)) + xScale.bandwidth() / 2 })
-            .attr('y1', function (d) { return ySentScale(d.min) })
-            .attr('x2', function (d, i) { return xScale(dateParser(d.date)) + xScale.bandwidth() / 2 })
-            .attr('y2', function (d) { return ySentScale(d.max) })
-            .attr('stroke', '#990000')
-            .attr('stroke-width', function (d) {
-                if (xScale.bandwidth() < 3) {
-                    return 0;
-                }
-                else {
-                    return 1;
-                }
-            });
+
 
 
         /* MAKE LEGEND */
@@ -787,21 +809,21 @@ f
                 .attr('x1', function (d) { return xScale(dateParser(d.date)) })
                 .attr('x2', function (d, i) { return xScale(dateParser(d.date)) + xScale.bandwidth() })
                 .attr('stroke-width', function (d) {
-                    if (xScale.bandwidth() < 3) { return 0; } else { return 1; }
+                    if (xScale.bandwidth() < minBand) { return 0; } else { return 0.5; }
                 })
 
             svg.selectAll(".firstQuartLine")
                 .attr('x1', function (d) { return xScale(dateParser(d.date)) })
                 .attr('x2', function (d, i) { return xScale(dateParser(d.date)) + xScale.bandwidth() })
                 .attr('stroke-width', function (d) {
-                    if (xScale.bandwidth() < 3) { return 0; } else { return 1; }
+                    if (xScale.bandwidth() < minBand) { return 0; } else { return 0.5; }
                 })
 
             svg.selectAll(".thirdQuartLine")
                 .attr('x1', function (d) { return xScale(dateParser(d.date)) })
                 .attr('x2', function (d, i) { return xScale(dateParser(d.date)) + xScale.bandwidth() })
                 .attr('stroke-width', function (d) {
-                    if (xScale.bandwidth() < 3) { return 0; } else { return 1; }
+                    if (xScale.bandwidth() < minBand) { return 0; } else { return 0.5; }
                 })
 
             console.log('zoom')
@@ -818,7 +840,7 @@ f
                 .attr('x1', function (d) { return xScale(dateParser(d.date)) + xScale.bandwidth() / 2 })
                 .attr('x2', function (d, i) { return xScale(dateParser(d.date)) + xScale.bandwidth() / 2 })
                 .attr('stroke-width', function (d) {
-                    if (xScale.bandwidth() < 3) { return 0; } else { return 1; }
+                    if (xScale.bandwidth() < minBand) { return 0; } else { return 0.5; }
                 })
         }
         if (divID == 'enlargedChart') {
@@ -3250,6 +3272,7 @@ function getChartQuery(queryInput, queryType) {
             var gradeData = [];
             var grade2Data = [];
             var sentimentData = [];
+            var diffCutoff = 2;
             for (var i = 0; i < allDates.length; i++) { //Build sentimentData, creditData, salesData, and gradeData
                 /* console.log(sentimentDates
                         .indexOf(allDates[i])) */
@@ -3287,8 +3310,23 @@ function getChartQuery(queryInput, queryType) {
                     var tempMedian = responseData.sentimentDates[j].median;
                     var tempUpper = responseData.sentimentDates[j].upper;
                     var tempMax = responseData.sentimentDates[j].max;
+                    var sentCount = responseData.sentimentDates[j].count;
 
-                    if ((tempUpper - tempLower) < 10) {
+                    if (tempUpper - tempMedian < diffCutoff || tempMedian - tempLower < diffCutoff) {
+                        var varChange = diffCutoff;
+                        tempUpper += varChange
+                        tempMax += varChange
+                        tempLower -= varChange
+                        tempMin -= varChange
+                    }
+
+                    if (tempMax - tempUpper < diffCutoff || tempLower - tempMin < diffCutoff) {
+                        var varChange = diffCutoff
+                        tempMin -= varChange
+                        tempMax += varChange
+                    }
+
+                    /* if ((tempUpper - tempLower) < 10) {
                         if (tempUpper >= 95) {
                             tempUpper = 100;
                             tempLower = 90;
@@ -3318,16 +3356,16 @@ function getChartQuery(queryInput, queryType) {
                             tempLower = tempMedian - ((tempMedian - tempLower) * (Math.random()))
                             //tempMin = d3.max([tempLower - ((tempMedian - tempLower) * (Math.random())), 0])
                         }
-                    }
+                    } */
 
                     sentimentData.push({
                         date: tempDate,
                         mean: tempMean,
-                        min: tempMin,
-                        lower: tempLower,
+                        min: d3.max([tempMin, 0]),
+                        lower: d3.max([tempLower, 0]),
                         median: tempMedian,
-                        upper: tempUpper,
-                        max: tempMax
+                        upper: d3.min([tempUpper, 100]),
+                        max: d3.min([tempMax, 100])
                     })
                 }
                 else {

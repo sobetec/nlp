@@ -26,7 +26,11 @@ public class ChartQueryService {
 	@SuppressWarnings("null")
 	public ChartQuery getChartQuery(String cmpyNameOnly) throws Exception {
 		System.out.println("########## start Service getChartQuery");
-
+		float a = 56.90020302862004f;
+		float b = 30.06551590366119f;
+		float c = 5.919497539989776f;
+		float d = 47.54017840669978f;
+		float z = 4.139f;
 		List<News> allNews = new ArrayList<News>();
 		List<Stocks> allStocks = new ArrayList<Stocks>();
 		List<NewsKeyword> allDocFreqs = new ArrayList<NewsKeyword>();
@@ -75,12 +79,21 @@ public class ChartQueryService {
 				currTaScore = Float.parseFloat(currNews.getTaScre());
 			} catch (Exception e) {
 			}
-			totalScore = totalScore + currTaScore;
+			float y = (a * (currTaScore - b) / (c + Math.abs(currTaScore - b))) + d;
+			float reverseUp;
+			if (y > 50) {
+				reverseUp = (((y - 50) * (z - 50)) + (50 * (50 + z))) / (100 + z - y);
+			} else if (y < 50) {
+				reverseUp = ((50 + z) / (y + z)) * y;
+			} else {
+				reverseUp = 50;
+			}
+			totalScore = totalScore + (float) reverseUp;
 			if (allDates.containsKey(currNews.getNewsDate())) {
 				allDates.put(currNews.getNewsDate(),
-						allDates.get(currNews.getNewsDate()) + "," + String.valueOf(currTaScore));
+						allDates.get(currNews.getNewsDate()) + "," + String.valueOf(reverseUp));
 			} else {
-				allDates.put(currNews.getNewsDate(), String.valueOf(currTaScore));
+				allDates.put(currNews.getNewsDate(), String.valueOf(reverseUp));
 			}
 		}
 
@@ -170,6 +183,11 @@ public class ChartQueryService {
 	}
 
 	public ChartQuery getChartQueryByCondition(ChartCondition chartCondition) throws Exception {
+		float a = 56.90020302862004f;
+		float b = 30.06551590366119f;
+		float c = 5.919497539989776f;
+		float d = 47.54017840669978f;
+		float z = 4.139f;
 		System.out.println("########## start Service getChartQueryCondition");
 		List<News> allNews = new ArrayList<News>();
 		List<Stocks> allStocks = new ArrayList<Stocks>();
@@ -250,12 +268,22 @@ public class ChartQueryService {
 				currTaScore = Float.parseFloat(currNews.getTaScre());
 			} catch (Exception e) {
 			}
-			totalScore = totalScore + currTaScore;
+			float y = (a * (currTaScore - b) / (c + Math.abs(currTaScore - b))) + d;
+//			float reverseUp;
+//			if (y > 50) {
+//				reverseUp = (((y - 50) * (z - 50)) + (50 * (50 + z))) / (100 + z - y);
+//			} else if (y < 50) {
+//				reverseUp = ((50 + z) / (y + z)) * y;
+//			} else {
+//				reverseUp = 50;
+//			}
+			float reverseUp = currTaScore;
+			totalScore = totalScore + reverseUp;
 			if (allDates.containsKey(currNews.getNewsDate())) {
 				allDates.put(currNews.getNewsDate(),
-						allDates.get(currNews.getNewsDate()) + "," + String.valueOf(currTaScore));
+						allDates.get(currNews.getNewsDate()) + "," + String.valueOf(reverseUp));
 			} else {
-				allDates.put(currNews.getNewsDate(), String.valueOf(currTaScore));
+				allDates.put(currNews.getNewsDate(), String.valueOf(reverseUp));
 			}
 		}
 		for (int i = 0; i < allDocFreqs.size(); i++) {
@@ -293,6 +321,8 @@ public class ChartQueryService {
 		List<SentimentDate> sentimentDates = new ArrayList<SentimentDate>();
 		Iterator<String> keys = allDates.keySet().iterator();
 		int nDates = 0;
+
+		int minDiff = 2;
 		while (keys.hasNext()) {
 			String date = keys.next();
 			String[] scores = allDates.get(date).split(",");
@@ -319,18 +349,38 @@ public class ChartQueryService {
 			int upperPercentile = (int) Math.ceil(nTotalScores * 0.68) - 1;
 			int maxPercentile = (int) Math.ceil(nTotalScores * 0.75) - 1;
 //			int maxPercentile = nTotalScores - 1;
+
+			float average = 0;
+			for (int i = 0; i < scores.length; i++) {
+				average += Float.parseFloat(scores[i]);
+			}
+			average = average / nTotalScores;
+
 			float min, lower, median, upper, max;
-			if (scores.length < 5) {
-				float average = 0;
-				for (int i = 0; i < scores.length; i++) {
-					average += Float.parseFloat(scores[i]);
-				}
-				average = average / scores.length;
-				min = average;
-				lower = average;
-				median = average;
-				upper = average;
-				max = average;
+			if (nTotalScores == 4) {
+				min = Float.parseFloat(scores[0]);
+				lower = Float.parseFloat(scores[1]);
+				median = (Float.parseFloat(scores[1]) + Float.parseFloat(scores[2])) / 2;
+				upper = Float.parseFloat(scores[2]);
+				max = Float.parseFloat(scores[3]);
+			} else if (nTotalScores == 3) {
+				min = Float.parseFloat(scores[0]);
+				lower = (Float.parseFloat(scores[1]) + Float.parseFloat(scores[0])) / 2;
+				median = Float.parseFloat(scores[1]);
+				upper = (Float.parseFloat(scores[1]) + Float.parseFloat(scores[2])) / 2;
+				max = Float.parseFloat(scores[2]);
+			} else if (nTotalScores == 2) {
+				min = Float.parseFloat(scores[0]);
+				max = Float.parseFloat(scores[1]);
+				median = (Float.parseFloat(scores[1]) + Float.parseFloat(scores[0])) / 2;
+				lower = (min + median) / 2;
+				upper = (max + median) / 2;
+			} else if (nTotalScores == 1) {
+				median = Float.parseFloat(scores[0]);
+				min = median - 2 * minDiff;
+				max = median + 2 * minDiff;
+				lower = median - minDiff;
+				upper = median + minDiff;
 			} else {
 				min = Float.parseFloat(scores[minPercentile]);
 				lower = Float.parseFloat(scores[lowerPercentile]);
@@ -340,8 +390,8 @@ public class ChartQueryService {
 
 			}
 
-			SentimentDate tempSentDate = new SentimentDate(date, taScore / nTotalScores, min, lower, median, upper,
-					max);
+			SentimentDate tempSentDate = new SentimentDate(date, taScore / nTotalScores, min, lower, median, upper, max,
+					nTotalScores);
 			sentimentDates.add(tempSentDate);
 			nDates += 1;
 		}

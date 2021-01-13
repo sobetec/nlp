@@ -8,6 +8,7 @@ public class SentimentDate {
 	private float median;
 	private float upper;
 	private float max;
+	private int count;
 
 	public float getMean() {
 		return mean;
@@ -63,6 +64,27 @@ public class SentimentDate {
 
 	public void setMax(float max) {
 		this.max = max;
+	}
+
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
+	}
+
+	public SentimentDate(String date, float mean, float min, float lower, float median, float upper, float max,
+			int count) {
+		super();
+		this.date = date;
+		this.mean = mean;
+		this.min = min;
+		this.lower = lower;
+		this.median = median;
+		this.upper = upper;
+		this.max = max;
+		this.count = count;
 	}
 
 	public SentimentDate(String date, float mean, float min, float lower, float median, float upper, float max) {
