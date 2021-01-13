@@ -3,10 +3,10 @@ package com.sobetec.sobescore;
 public class Sobescore {
 
 	public static void main(String[] args) {
-		Double a = 56.90020302862004;
-		Double b = 30.06551590366119;
-		Double c = 5.919497539989776;
-		Double d = 47.54017840669978;
+		Double a = 54.562081705365124;
+		Double b = 41.87451578313866;
+		Double c = 4.451449361711643;
+		Double d = 49.31922614866885;
 		//Double f = 0.0;
 		//Double x = 45.00;
 		

@@ -612,6 +612,7 @@
             $('#condition').hide();
             $('#condition_report').hide();
             $('#resetContentButton').hide();
+            $('#gaugeExp').css("visibility","hidden");
             // document.getElementById("articleCountRange").disabled = true;
             document.getElementById("scroll_button").onscroll = function () { scrollFunction() };
         });
@@ -1241,6 +1242,7 @@
                     document.getElementById('myModal').innerHTML = modalhtml2;
                     $('#myModal').show();
                     setTimeout(() => drawTable(result_area, table_id), 1000);
+                    $('#gaugeExp').css("visibility","visible");
 
                 },
                 error: function () {
@@ -1285,6 +1287,7 @@
                     document.getElementById('main_title').innerHTML = `뉴스 조회<h4 style="display:inline">(` + companyName + `)</h4>`;
                     $('#chartDiv').show();
                     setTimeout(() => drawTable(result_area, ''), 1000);
+                    $('#gaugeExp').css("visibility","visible");
                     topFunction();
 
                     document.getElementById('main_title').focus();
@@ -1638,6 +1641,7 @@
                     document.getElementById('myModal').innerHTML = modalhtml2;
                     $('#myModal').show();
                     setTimeout(() => drawTable(result_area, table_id), 1000);
+                    $('#gaugeExp').css("visibility","visible");
 
 
 
@@ -2140,6 +2144,7 @@
                     document.getElementById('myModal').innerHTML = modalhtml2;
                     $('#myModal').show();
                     setTimeout(() => drawTable(result_area, table_id), 1000);
+                    $('#gaugeExp').css("visibility","visible");
                     document.getElementById('main_title').innerHTML = `뉴스 목록 조회<h4 style="display:inline">(` + industryName + `)</h4>`;
 
                 },
@@ -2375,27 +2380,6 @@
             document.getElementById('result_area_report').innerHTML = reportTable;
             $('#example_report').DataTable();
         }
-
-        // modal
-        $(document).on('keydown', function (e) {
-            if (e.keyCode === 27) { // ESC
-                close_pop();
-            }
-        });
-
-        //close if click outside
-        $(document).mouseup(function (e) {
-            var containerTitle = $('.modal .modal-title');
-            var containerContent = $('.modal .modal-content');
-            var containerClose = $('.modal .modal-close');
-            if (!containerTitle.is(e.target) && containerTitle.has(e.target).length === 0
-                && !containerContent.is(e.target) && containerContent.has(e.target).length === 0
-                && !containerClose.is(e.target) && containerClose.has(e.target).length === 0) {
-                close_pop();
-            }
-        });
-
-
 
         //window.onscroll = function() {scrollFunction()
 
@@ -2777,8 +2761,10 @@
 
                                                 </div>
 
-                                                <p style ="font-size:0.5em;">검색 기간 뉴스데이터를 AI가 분석하여 긍정/중립/부정으로 정량화한</p>
-                                                <p style ="font-size:0.5em;">수치,낮을 수록 위험도가 높다</p>
+                                                <div id="gaugeExp">
+                                                    <p style ="font-size:0.5em;">검색 기간 뉴스데이터를 AI가 분석하여 긍정/중립/부정으로 정량화한</p>
+                                                    <p style ="font-size:0.5em;">수치,  낮을 수록 위험도가 높다</p>
+                                                </div>
 
                                             </div>
                                         </div>
@@ -3178,13 +3164,16 @@
             var chartEnlargedContainer = $('.layer_dimmed .layer_box');
             var articleTitle = $('.modal .modal-title');
             var articleContent = $('.modal .modal-content');
+            var companyListTitle = $('.modal .modal-list-head');
+            var companyList = $('.modal .modal-list');
             if (!chartEnlargedContainer.is(e.target) && chartEnlargedContainer.has(e.target).length === 0) {
                 $('.layer_dimmed').removeClass('is_active');
                 $('.enlargedChartSettings').css("display", "none");
                 document.getElementById('enlargedChart').innerHTML = ''
                 /*  $('.stockLine').attr('clip-path', 'url(#stockClip)'); */
             }
-            if (!articleContent.is(e.target) && !articleTitle.is(e.target) && articleContent.has(e.target).length === 0 && articleTitle.has(e.target).length === 0) {
+            if (!articleContent.is(e.target) && !articleTitle.is(e.target) && articleContent.has(e.target).length === 0 && articleTitle.has(e.target).length === 0 && 
+            !companyListTitle.is(e.target) && !companyList.is(e.target) && companyListTitle.has(e.target).length === 0 && companyList.has(e.target).length === 0) {
                 close_pop();
             }
         });
