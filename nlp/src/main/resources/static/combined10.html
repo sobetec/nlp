@@ -618,9 +618,9 @@
         });
 
         function viewNewsContents(i) {
-            // console.log(window.newsResponseData[i]);
-            // console.log(window.newsResponseData[i].indexNum);
-            // console.log(window.newsResponseData.length);
+            // //console.log(window.newsResponseData[i]);
+            // //console.log(window.newsResponseData[i].indexNum);
+            // //console.log(window.newsResponseData.length);
 
             var prev = ``;
             var next = ``;
@@ -800,7 +800,7 @@
                     } else {
                         sscore = tempSscore;
                     }
-                    //console.log(sscore);
+                    ////console.log(sscore);
                 };
 
 
@@ -910,7 +910,7 @@
                     } else {
                         sscore = tempSscore;
                     }
-                    //console.log(sscore);
+                    ////console.log(sscore);
                 };
 
 
@@ -940,7 +940,7 @@
                     rred = `<td style='color:black'>` + sscoreWord + `</td>`;
                 }
 
-                // console.log(window.reportResponseData[i].orgnFileName);
+                // //console.log(window.reportResponseData[i].orgnFileName);
                 var downImg = '';
                 var paramFileName = window.reportResponseData[i].orgnFileName;
 
@@ -959,7 +959,7 @@
                 paramFileName = paramFileName.replace(/\’/g, "%E2%80%99");
                 paramFileName = paramFileName.replace(/\•/g, "%E2%80%A2");
 
-                // console.log(paramFileName);
+                // //console.log(paramFileName);
 
                 if (window.reportResponseData[i].docCaty == 'pdf') {
                     downImg = `
@@ -1021,7 +1021,7 @@
         }
 
         function parameters() {
-            // console.log("CURRENTLY RUNNING PARAMETERSSSSSS")
+            // //console.log("CURRENTLY RUNNING PARAMETERSSSSSS")
             var data = new Object();
 
             data.newsYear = parseInt($("#newsYear").val());
@@ -1029,12 +1029,12 @@
 
             if ($("#gubunNews").val() == "month") {
                 var temp = $("#choicesNews").val().split("월")[0];
-                // console.log(temp);
+                // //console.log(temp);
                 data.gubunItem = parseInt(temp);
             }
             else if ($("#gubunNews").val() == "quarter") {
                 var temp = $("#choicesNews").val().split("분기")[0];
-                // console.log(temp);
+                // //console.log(temp);
                 data.gubunItem = parseInt(temp);
             }
 
@@ -1062,7 +1062,7 @@
                     // dataType: 'json',
                     success: function (dataaa) {
                         // alert('시스템 네임 조회 성공');
-                        console.log('시스템 네임 조회 성공했을시 리스펀스 데이타=  ' + dataaa);
+                        //console.log('시스템 네임 조회 성공했을시 리스펀스 데이타=  ' + dataaa);
                         systemName2 = dataaa;
 
                     },
@@ -1074,7 +1074,7 @@
                 });
 
                 resolve(systemName2);
-                console.log('함수내부' + systemName2);
+                //console.log('함수내부' + systemName2);
             });
             //  return systemName2;
         }
@@ -1084,7 +1084,7 @@
 
         function getRowCount() {
             let datassss = parameters();
-            console.log(parameters());
+            //console.log(parameters());
             let selectItem = $("#fold").val();
             let companyName = window.companyName;
             datassss.selectedName = companyName;
@@ -1097,7 +1097,7 @@
                 data: datassss,
                 dataType: 'json',
                 success: function (responseData) {
-                    // console.log(responseData);
+                    // //console.log(responseData);
                     datassss.rowCount = responseData;
 
                     switch (selectItem) {
@@ -1132,8 +1132,8 @@
                                     
                                     if (yesNo == true) {
                                         var systemName = await getSystemNameByCompany(companyName);
-                                        console.log('시스템이름 잘나오나 ?  = ' + systemName);
-                                        console.log('컨펌창에서 컴퍼니내임 잘받았나 ' + companyName);
+                                        //console.log('시스템이름 잘나오나 ?  = ' + systemName);
+                                        //console.log('컨펌창에서 컴퍼니내임 잘받았나 ' + companyName);
 
                                         systemName = systemName + '_system';
 
@@ -1141,7 +1141,7 @@
 
                                         if (systemName != null) {
 
-                                            console.log(systemName);
+                                            //console.log(systemName);
                                             getNewsListByIndustryAndSubsidiary('industry', systemName);
                                         } else {
                                             alert('상위 산업 Category가 없습니다. (system_code not found) ');
@@ -1206,7 +1206,7 @@
                     data.pageNum = pagination[0];
                     //window.data = data ;
                     //pageData = window.data ;
-                    console.log(pagination);
+                    //console.log(pagination);
                     getNewsList(data);
                 }
             });
@@ -1220,7 +1220,7 @@
             var result_area = "result_area_news";
             var table_id = "example_news";
             data.gubunJaName = "keyword";
-            console.log(data);
+            //console.log(data);
 
             keywordLoading1(data.rowCount);
 
@@ -1231,10 +1231,10 @@
                 dataType: 'json',
                 success: function (responseData) {
                     //alert('조회 성공');
-                    console.log(responseData.length);
+                    //console.log(responseData.length);
                     window.newsResponseData = responseData;
                     window.newsResponseData.selectedName = data.searchWord;
-                    // console.log(window.newsResponseData[0]);
+                    // //console.log(window.newsResponseData[0]);
                     $('#result_area_news').show();
 
                     $('#myModal').hide();
@@ -1260,7 +1260,7 @@
             data.searchWord = document.getElementById('search_company_news').value;
             data.selectedName = companyName;
             data.gubunJaName = 'company';
-            console.log(data);
+            //console.log(data);
             var result_area = 'result_area_news';
 
             loading1("뉴스");
@@ -1273,10 +1273,10 @@
                 success: function (responseData) {
                     //alert('조회 성공');
                     getChartQuery(companyName, 3);
-                    console.log(responseData.length);
+                    //console.log(responseData.length);
                     window.newsResponseData = responseData;
                     window.newsResponseData.selectedName = companyName;
-                    console.log(window.newsResponseData[0]);
+                    //console.log(window.newsResponseData[0]);
                     $('#result_area_news').show();
 
                     $('#myModal').hide();
@@ -1315,12 +1315,12 @@
 
             if ($("#gubunReport").val() == "month") {
                 var temp = $("#choicesReport").val().split("월")[0];
-                // console.log(temp);
+                // //console.log(temp);
                 data.gubunItem = parseInt(temp);
             }
             else if ($("#gubunReport").val() == "quarter") {
                 var temp = $("#choicesReport").val().split("분기")[0];
-                // console.log(temp);
+                // //console.log(temp);
                 data.gubunItem = parseInt(temp);
             }
 
@@ -1328,7 +1328,7 @@
             data.endDate = $("#date_to_report").val();
             data.searchWord = document.getElementById('search_company_report').value;
 
-            // console.log(data);
+            // //console.log(data);
 
             loading1("행내 보고서");
 
@@ -1339,10 +1339,10 @@
                 dataType: 'json',
                 success: function (responseData) {
                     //alert('조회 성공');
-                    console.log(responseData.length);
+                    //console.log(responseData.length);
                     if (responseData.length != 0) {
                         window.reportResponseData = responseData;
-                        // console.log(window.reportResponseData[0]);
+                        // //console.log(window.reportResponseData[0]);
 
                         $('#myModal').hide();
 
@@ -1433,7 +1433,7 @@
         function itemChangeNews() {
 
             var selectItem = $("#gubunNews").val();
-            console.log(selectItem);
+            //console.log(selectItem);
 
             var changeItem;
 
@@ -1486,7 +1486,7 @@
 
             $('#date_picker_div_Report').hide();
             var selectItem = $("#gubunReport").val();
-            console.log(selectItem);
+            //console.log(selectItem);
 
             var changeItem;
 
@@ -1595,7 +1595,7 @@
             $('#chartDiv').hide();
             $('#result_area_news').show();
 
-            console.log('산업명' + gubunJaName);
+            //console.log('산업명' + gubunJaName);
             loading1("뉴스");
 
             $.ajax({
@@ -1606,7 +1606,7 @@
                 success: function (responseData) {
                     //alert('조회 성공');
 
-                    console.log(responseData.length);
+                    //console.log(responseData.length);
                     window.newsResponseData = responseData;
                     window.newsResponseData.selectedName = dataIndSub.selectedName;
 
@@ -1622,7 +1622,7 @@
 
                     getChartQuery(dataIndSub, 4);
 
-                    console.log(window.newsResponseData[0]);
+                    //console.log(window.newsResponseData[0]);
                     $('#result_area_industry').hide();
                     $('#result_area_subsidiary').hide();
 
@@ -1679,9 +1679,9 @@
                 'responseData[i].hiEut',
                 'responseData[i].guiTar'];
 
-            console.log('구분자 자바스크립' + gubunJa);
-            console.log(industry_column_list[0]);
-            console.log(industry_column_list_java[0]);
+            //console.log('구분자 자바스크립' + gubunJa);
+            //console.log(industry_column_list[0]);
+            //console.log(industry_column_list_java[0]);
 
             $.ajax({
                 url: "/getIndustryAndSubsidiaryList/" + gubunJa,
@@ -1689,11 +1689,11 @@
                 dataType: 'json',
                 success: function (responseData) {
                     // alert('조회 성공');
-                    // console.log(responseData);
-                    //console.log(responseData[0]);
+                    // //console.log(responseData);
+                    ////console.log(responseData[0]);
 
                     //var gigi = eval(industry_column_list_java[0]);
-                    //				console.log(gigi);
+                    //				//console.log(gigi);
 
                     var tables = ``;
 
@@ -1723,7 +1723,7 @@
                         for (var j = m; j < r; j++) {
                             var colName = industry_column_list[j];
 
-                            //console.log(colJavaName);
+                            ////console.log(colJavaName);
                             var htmlhead =
                                 `
                             
@@ -1748,7 +1748,7 @@
                             k = 0;
                             for (var i = 0; i < responseData.length; i++) {
                                 var colJavaName = eval(industry_column_list_java[j]);
-                                //console.log('산업별이름 '+colJavaName);
+                                ////console.log('산업별이름 '+colJavaName);
                                 if (k < 5) {
                                     if (colJavaName != null) {
 
@@ -1889,7 +1889,7 @@
                             }
 
                         }
-                        console.log("im aclick in list");
+                        //console.log("im aclick in list");
 
                     });
 
@@ -1994,15 +1994,15 @@
             //setTimeout(function () {
             //	jQuery('#search_company').trigger('click');
             // }, 1000);
-            console.log('im trigger press enter')
+            //console.log('im trigger press enter')
         }
 
 
         //기업별 뉴스 가져오기
         function getCompanyListByCompany() {
             var companyName = document.getElementById('search_company_news').value;
-            console.log("@#@#@#@#@#@#");
-            console.log('기업명 ' + companyName);
+            //console.log("@#@#@#@#@#@#");
+            //console.log('기업명 ' + companyName);
             var result_area = 'result_area_news';
             var table_id = 'example_news';
             $.ajax({
@@ -2011,7 +2011,7 @@
                 dataType: 'json',
                 success: function (responseData) {
                     //alert('조회 성공');
-                    console.log(responseData.length);
+                    //console.log(responseData.length);
 
                     if (responseData.length == 0) {
                         var modalContents =
@@ -2125,7 +2125,7 @@
         //산업별 뉴스 가져오기
         function getNewsListByIndustry(industryName) {
 
-            console.log('산업명' + industryName);
+            //console.log('산업명' + industryName);
             loading1("뉴스");
             var result_area = 'result_area_news';
             var table_id = 'industry_news_list';
@@ -2135,9 +2135,9 @@
                 dataType: 'json',
                 success: function (responseData) {
                     //alert('조회 성공');
-                    console.log(responseData.length);
+                    //console.log(responseData.length);
                     window.newsResponseData = responseData;
-                    console.log(window.newsResponseData[0]);
+                    //console.log(window.newsResponseData[0]);
 
                     $('#myModal').hide();
 
@@ -2158,7 +2158,7 @@
 
         function itemChangeFold() {
             var selectItem = $("#fold").val();
-            console.log(selectItem);
+            //console.log(selectItem);
             var getFunction = ``;
             var gubunSelectHTML = ` <a style="margin-right: -10px; margin-left: 10px;">구분</a>
                                     <select name="gubun" id="gubunNews" class="select" style="width:120px;" onChange="itemChangeNews()">
@@ -2285,7 +2285,7 @@
 
         function itemChangeFoldChart() {
             var selectItem = $("#chartFold").val();
-            console.log(selectItem)
+            //console.log(selectItem)
             var divID = 'stockTime'
 
 
@@ -2386,18 +2386,18 @@
 
         function scrollFunction() {
             //var scrollBottom = $(document).height() - $(window).height() - $(window).scrollTop();
-            // console.log('im scroll $(document).height() =  ' + $(document).height());
-            // console.log('im scroll $(window).height() =  ' + $(window).height());
-            // console.log('im scroll $(window).scrollTop() =  ' + $(window).scrollTop());
+            // //console.log('im scroll $(document).height() =  ' + $(document).height());
+            // //console.log('im scroll $(window).height() =  ' + $(window).height());
+            // //console.log('im scroll $(window).scrollTop() =  ' + $(window).scrollTop());
             var mybutton = document.getElementById("myBtn");
             var mybutton2 = document.getElementById("myBtn2");
 
             var bott = document.getElementById("scroll_button").scrollHeight;
             var bott2 = document.getElementById("scroll_button").scrollTop;
-            // console.log('im document.body.scrollHeight= ' + document.getElementById("scroll_button").scrollHeight);
-            // console.log(document.getElementById("scroll_button").scrollTop);
-            //console.log('document.body.scrollTop=  ' + document.body.scrollTop)
-            //console.log('document.documentElement.scrollTop=  ' + document.documentElement.scrollTop)
+            // //console.log('im document.body.scrollHeight= ' + document.getElementById("scroll_button").scrollHeight);
+            // //console.log(document.getElementById("scroll_button").scrollTop);
+            ////console.log('document.body.scrollTop=  ' + document.body.scrollTop)
+            ////console.log('document.documentElement.scrollTop=  ' + document.documentElement.scrollTop)
 
             if (((document.getElementById("scroll_button").scrollHeight - $(window).height()) >= document.getElementById("scroll_button").scrollTop) && (document.getElementById("scroll_button").scrollTop > 20)) {
                 mybutton.style.display = "block";
@@ -2485,7 +2485,7 @@
                             <input id="paddingSlider" type="range" min="1" max="4" step="0.25" value="1">
                             <span>키워드 개수: </span>
                             <span id='textMaxValue'></span>
-                            <input id="textNumberSlider" type="range" min="1" max="200" step="1" value="50">
+                            <input id="textNumberSlider" type="range" min="1" max="300" step="1" value="50">
                             <span>글자 크기: </span>
                             <span id='fontSizeValue'></span>
                             <input id="fontSizeSlider" type="range" min="1" max="100" step="1" value="27">
@@ -3135,10 +3135,10 @@
             makeStockBarGraph(window.newsChartData.allStockData, 'stockTime');
             makeSentimentBoxPlot(window.newsChartData.sentimentData, 'sentimentBoxPlot');
             makeWordcloud(window.newsChartData.keywords);
-            console.log('resized')
+            //console.log('resized')
         });
         $('.stockPoint').on("scroll", function (e) {
-            console.log('scrolling on point')
+            //console.log('scrolling on point')
             $('.stocksScroller').trigger('scroll', e);
         })
         $("#keywordBarSlider").on("input", function () {
@@ -3147,7 +3147,7 @@
             //makeKeywordBarPlot(window.newsChartData.keywords, 'keywordBar', document.getElementById('keywordBarSlider').value)
         })
         $(".card_list").css('max-height', $(".contents_panel:first").height())
-        console.log($(".contents_panel:first").height());
+        //console.log($(".contents_panel:first").height());
 
         /* ------------------ ALL CLOSE MODAL FUNCTIONS ------------------ */
         // modal
@@ -3195,7 +3195,7 @@
             svgToImage(svgString, 1250, 550, 'png', save)
 
             var method = document.getElementById('fold').value;
-            console.log(method)
+            //console.log(method)
             var allParams = parameters()
 
             if (method == 'company') {
@@ -3222,7 +3222,7 @@
             function save(dataBlob, filesize) {
                 saveAs(dataBlob, fileName); // FileSaver.js function
             }
-            console.log('saved')
+            //console.log('saved')
         })
 
 

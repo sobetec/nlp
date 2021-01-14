@@ -6,10 +6,10 @@ function makeGauge(divID, sentimentScore) {
     function sobeDangerScore(x) {
         return (50 + sFactor) * ((x - 50) / (sFactor + Math.abs(50 - x))) + 50
     }
-    console.log(sentimentScore)
+    //console.log(sentimentScore)
     var sentimentScore = sobeDangerScore(sentimentScore);
     var rotation = sentimentScore / 100 * 240 - 30;
-    console.log(rotation)
+    //console.log(rotation)
 
     var gauge = document.getElementById(divID);
     var divHeight = gauge.scrollHeight;
@@ -169,34 +169,35 @@ function makeGauge(divID, sentimentScore) {
 
     horizOffset = 104 / 323 * divWidth
 
+    if (divID != 'enlargedChart') {
+        var lg = gaugeSVG.append('defs').append('linearGradient')
+            .attr('id', 'gaugeGradient')
+            .attr('x1', (-8.2 * horizOffset / 8) + 'px')
+            .attr('x2', (divWidth / 2 + (divHeight / 3 / 0.6377118) - 12.5 * horizOffset / 8) + 'px')
+            .attr('y1', '0%')
+            .attr('y2', '0%')
 
-    var lg = gaugeSVG.append('defs').append('linearGradient')
-        .attr('id', 'gaugeGradient')
-        .attr('x1', (-8.2 * horizOffset / 8) + 'px')
-        .attr('x2', (divWidth / 2 + (divHeight / 3 / 0.6377118) - 12.5 * horizOffset / 8) + 'px')
-        .attr('y1', '0%')
-        .attr('y2', '0%')
 
+        //console.log(horizOffset)
+        lg.append('stop')
+            .attr('offset', '0%')
+            .style('stop-color', '#EF5D5D')
+            .style('stop-opacity', '100%')
+        lg.append('stop')
+            .attr('offset', '30%')
+            .style('stop-color', '#ffcf49')
+            .style('stop-opacity', '100%')
+        lg.append('stop')
+            .attr('offset', '70%')
+            .style('stop-color', '#ffcf49')
+            .style('stop-opacity', '100%')
+        lg.append('stop')
+            .attr('offset', '100%')
+            .style('stop-color', '#37b76a')
+            .style('stop-opacity', '100%')
 
-    console.log(horizOffset)
-    lg.append('stop')
-        .attr('offset', '0%')
-        .style('stop-color', '#EF5D5D')
-        .style('stop-opacity', '100%')
-    lg.append('stop')
-        .attr('offset', '30%')
-        .style('stop-color', '#ffcf49')
-        .style('stop-opacity', '100%')
-    lg.append('stop')
-        .attr('offset', '70%')
-        .style('stop-color', '#ffcf49')
-        .style('stop-opacity', '100%')
-    lg.append('stop')
-        .attr('offset', '100%')
-        .style('stop-color', '#37b76a')
-        .style('stop-opacity', '100%')
-
-    document.getElementById('gaugeGradient').setAttribute('gradientUnits', "userSpaceOnUse")
+        document.getElementById('gaugeGradient').setAttribute('gradientUnits', "userSpaceOnUse")
+    }
 
     function appendArc(g, divWidth, divHeight, startAngle, endAngle, color, arcID) {
         var arc = d3.arc()
@@ -275,9 +276,9 @@ function makeGauge(divID, sentimentScore) {
 }
 
 function makeSentimentBoxPlot(sentimentData, divID) {
-    console.log('making sentiment box')
-    console.log(sentimentData)
-    console.log(sentimentData.length)
+    //console.log('making sentiment box')
+    //console.log(sentimentData)
+    //console.log(sentimentData.length)
     if (sentimentData.length > 0) {
         document.getElementById(divID).innerHTML = "";
 
@@ -790,7 +791,7 @@ function makeSentimentBoxPlot(sentimentData, divID) {
             /* var inScope = xScale.domain().filter(function (d) {
                 return xScale(d) > xPadding && xScale(d) < (INNER_WIDTH - xPadding)
             })
-            console.log(inScope)
+            //console.log(inScope)
 f
             gX.call(xAxis.scale(xScale)
                 .tickValues(xScale.domain().filter(function (d, i) {
@@ -826,7 +827,7 @@ f
                     if (xScale.bandwidth() < minBand) { return 0; } else { return 0.5; }
                 })
 
-            console.log('zoom')
+            //console.log('zoom')
             svg.selectAll('.iqrBoxEnlarged')
                 .attr('width', function (d, i) {
                     return xScale.bandwidth();
@@ -966,7 +967,7 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
                     }
 
 
-                    console.log(d.keyword);
+                    //console.log(d.keyword);
 
                 }
                 else {
@@ -987,7 +988,7 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
                     }
 
 
-                    console.log(d.keyword);
+                    //console.log(d.keyword);
                 }
             });
 
@@ -1038,12 +1039,12 @@ function dateParser(dateString) {
 }
 
 function makeCombinedGraph(sentimentData, articlesData, divID) {
-    console.log(sentimentData);
+    //console.log(sentimentData);
     if (sentimentData.length != 0 && articlesData.length != 0) {
-        console.log(sentimentData)
-        console.log(articlesData)
+        //console.log(sentimentData)
+        //console.log(articlesData)
         document.getElementById(divID).innerHTML = "";
-        console.log(window.newsResponseData.selectedName);
+        //console.log(window.newsResponseData.selectedName);
         if (window.newsResponseData.selectedName != null) {
             document.getElementById('paramName').innerHTML = window.newsResponseData.selectedName;
         }
@@ -1066,7 +1067,7 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
         }
         var graphDiv = document.getElementById(divID);
         sentimentData = sentimentData.filter((item) => item.mean > 0)
-        console.log(sentimentData)
+        //console.log(sentimentData)
 
 
 
@@ -1204,7 +1205,7 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
 
 
         if (divID == 'enlargedChart') {
-            console.log('making enlarged')
+            //console.log('making enlarged')
             var clip = svg.append("defs").append("svg:clipPath")
                 .attr('id', 'articleClipEnlarged')
                 .append('svg:rect')
@@ -1457,7 +1458,7 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
             var inScope = xScale.domain().filter(function (d) {
                 return xScale(d) > xPadding && xScale(d) < (INNER_WIDTH - xPadding)
             })
-            //console.log(inScope)
+            ////console.log(inScope)
 
             gX.call(xAxis.scale(xScale)
                 .tickValues(xScale.domain().filter(function (d, i) {
@@ -1471,8 +1472,8 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
                     }
                 })))
 
-            console.log(this);
-            console.log(sentLineMaker)
+            //console.log(this);
+            //console.log(sentLineMaker)
 
             /* sentLineMaker.x(function (d, i) {
                 return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
@@ -1528,9 +1529,9 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
 }
 
 function makeStockBarGraph(data, divID) {
-    console.log(data)
+    //console.log(data)
     var company = document.getElementById('stockRange').value;
-    console.log(company);
+    //console.log(company);
 
 
 
@@ -2007,7 +2008,7 @@ function makeStockBarGraph(data, divID) {
 
 
     function zoom() {
-        console.log('zooming')
+        //console.log('zooming')
         xScale.range([xPadding, xPadding + INNER_WIDTH].map(d => d3.event.transform.applyX(d)))
         gX.call(xAxis.scale(xScale))
 
@@ -2074,9 +2075,9 @@ function makeLineGraph(data, divID) {
     var type = $("#chartFold").val();
     var scope = $("#fold").val();
     if (data.length != 0) {
-        console.log(data)
+        //console.log(data)
         document.getElementById(divID).innerHTML = "";
-        console.log(window.newsResponseData.selectedName);
+        //console.log(window.newsResponseData.selectedName);
         if (window.newsResponseData.selectedName != null) {
             document.getElementById('paramName').innerHTML = window.newsResponseData.selectedName;
         }
@@ -2106,7 +2107,7 @@ function makeLineGraph(data, divID) {
             }
         }
         var graphDiv = document.getElementById(divID);
-        console.log(data)
+        //console.log(data)
 
 
 
@@ -2145,8 +2146,8 @@ function makeLineGraph(data, divID) {
                     .scale(yScale)
                     .tickSizeOuter(0);
                 for (var i = 0; i < domain.length; i++) {
-                    console.log(domain[i])
-                    console.log(yScale(domain[i]))
+                    //console.log(domain[i])
+                    //console.log(yScale(domain[i]))
                 }
             }
         }
@@ -2160,8 +2161,8 @@ function makeLineGraph(data, divID) {
                 .scale(yScale)
                 .tickSizeOuter(0);
             for (var i = 0; i < domain.length; i++) {
-                console.log(domain[i])
-                console.log(yScale(domain[i]))
+                //console.log(domain[i])
+                //console.log(yScale(domain[i]))
             }
         }
         else if (type == 'sales') {
@@ -2261,7 +2262,7 @@ function makeLineGraph(data, divID) {
             .call(yAxisGrid);
 
         if (divID == 'enlargedChart') {
-            console.log('making enlarged')
+            //console.log('making enlarged')
             var clip = svg.append("defs").append("svg:clipPath")
                 .attr('id', 'articleClipEnlarged')
                 .append('svg:rect')
@@ -2303,8 +2304,8 @@ function makeLineGraph(data, divID) {
                     return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
                 })
                 .attr('cy', function (d, i) {
-                    console.log(d.value)
-                    console.log(yScale(d.value))
+                    //console.log(d.value)
+                    //console.log(yScale(d.value))
                     return yScale(d.value)
                 })
                 .attr('r', 3)
@@ -2379,8 +2380,8 @@ function makeLineGraph(data, divID) {
                 .y(function (d, i) {
                     /* if (i == 0) { return yScale(d.mean) }
                     return yScale(data[i - 1].mean); 
-                    console.log(d.value)
-                    console.log(yScale(d.value))
+                    //console.log(d.value)
+                    //console.log(yScale(d.value))
                     return yScale(d.value)
                 })
 
@@ -2402,8 +2403,8 @@ function makeLineGraph(data, divID) {
                     return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
                 })
                 .attr('cy', function (d, i) {
-                    console.log(d.value)
-                    console.log(yScale(d.value))
+                    //console.log(d.value)
+                    //console.log(yScale(d.value))
                     return yScale(d.value)
                 })
                 .attr('r', 3)
@@ -2419,8 +2420,8 @@ function makeLineGraph(data, divID) {
                     return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
                 })
                 .attr('cy', function (d, i) {
-                    console.log(d.value)
-                    console.log(yScale(d.value))
+                    //console.log(d.value)
+                    //console.log(yScale(d.value))
                     return yScale(d.value)
                 })
                 .attr('r', 6)
@@ -2508,7 +2509,7 @@ function makeLineGraph(data, divID) {
             var inScope = xScale.domain().filter(function (d) {
                 return xScale(d) > xPadding && xScale(d) < (INNER_WIDTH - xPadding)
             })
-            //console.log(inScope)
+            ////console.log(inScope)
 
             gX.call(xAxis.scale(xScale)
                 .tickValues(xScale.domain().filter(function (d, i) {
@@ -2522,7 +2523,7 @@ function makeLineGraph(data, divID) {
                     }
                 })))
 
-            //console.log(this);
+            ////console.log(this);
 
             svg.selectAll(".sentimentLineEnlarged")
                 .attr('x1', function (d) { return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2) })
@@ -2594,7 +2595,7 @@ var tooltipEnlarged = d3.select('#entirePopupBox')
 
 function searchKeyword(keyword, enlarged) {
     if (enlarged == true) {
-        console.log('enlarged')
+        //console.log('enlarged')
         $('.layer_dimmed').removeClass('is_active');
         $('.enlargedChartSettings').css("display", "none");
         var selectItem = $("#fold").val();
@@ -2634,7 +2635,7 @@ function searchKeyword(keyword, enlarged) {
 
 function onMouseOver(d, i) {
     var elementClass = this.getAttribute('class');
-    console.log(elementClass)
+    //console.log(elementClass)
     if (elementClass == 'stockPoint') {
         var date = new Date(d.time)
         d3.select(this).style('fill', 'gray');
@@ -2835,10 +2836,10 @@ function onMouseOver(d, i) {
         var svg = d3.select(svgNode);
         var circle_x = this.getAttribute('cx')
         var circle_y = this.getAttribute('cy')
-        console.log(circle_x)
-        console.log(circle_y)
-        console.log(xPadding)
-        console.log(yPadding)
+        //console.log(circle_x)
+        //console.log(circle_y)
+        //console.log(xPadding)
+        //console.log(yPadding)
         svg.append('line')
             .attr('class', 'coordLine')
             .attr('x1', circle_x)
@@ -2872,7 +2873,7 @@ function onMouseOver(d, i) {
         tooltipEnlarged.text(d.date + ': ' + d.value);
     }
     else {
-        console.log('in else')
+        //console.log('in else')
         d3.select(this).style('fill', 'gray');
         tooltip.style('background-color', '#f0f0f0');
         tooltip.style('visibility', 'visible');
@@ -3027,7 +3028,7 @@ function drawWordcloud(words, divID) {
     var graphDiv = document.getElementById(divID);
 
     var maxValue = Math.max.apply(Math, words.map(function (o) { return o.tf_idf }));
-    console.log(maxValue)
+    //console.log(maxValue)
     var wordSlice = [];
     for (var i = 0; i < document.getElementById('textNumberSlider').value; i++) {
         wordSlice.push({ text: words[i].keyword, value: words[i].tf_idf });
@@ -3120,7 +3121,7 @@ function drawWordcloud(words, divID) {
                     }
 
 
-                    console.log(d.text);
+                    //console.log(d.text);
 
                 }
                 else {
@@ -3141,7 +3142,7 @@ function drawWordcloud(words, divID) {
                     }
 
 
-                    console.log(d.text);
+                    //console.log(d.text);
                 }
             })
             .transition()
@@ -3157,8 +3158,8 @@ function drawWordcloud(words, divID) {
 }
 
 function getChartQuery(queryInput, queryType) {
-    console.log('##########RUNNING CHART QUERY' + queryType)
-    console.log(queryInput)
+    //console.log('##########RUNNING CHART QUERY' + queryType)
+    //console.log(queryInput)
     d3.selectAll('.visSVG').remove();
     document.getElementById('chartFold').innerHTML = ""
 
@@ -3167,10 +3168,10 @@ function getChartQuery(queryInput, queryType) {
     document.getElementById('fontSizeSlider').value = 27;
     document.getElementById('textNumberSlider').value = 50;
 
-    console.log(document.getElementById('keywordBarSlider').value)
+    //console.log(document.getElementById('keywordBarSlider').value)
     document.getElementById('keywordMaxValueBar').innerHTML = document.getElementById('keywordBarSlider').value;
     // var search_company = document.getElementById('search_company_news').value;
-    //console.log(search_company);
+    ////console.log(search_company);
     document.getElementById('chartModal').innerHTML = modalhtml4;
     var data;
     var selectedName;
@@ -3180,14 +3181,14 @@ function getChartQuery(queryInput, queryType) {
         data.gubunJaName = $("#fold").val();
         data.selectedName = queryInput;
         selectedName = queryInput;
-        console.log(data)
+        //console.log(data)
     }
     else if (queryType == 4) {
         selectedName = queryInput.selectedName;
         data = queryInput;
         data.searchWord = selectedName;
     }
-    console.log(data)
+    //console.log(data)
 
     $.ajax({
         url: "/getChartQueryByCondition",
@@ -3196,7 +3197,7 @@ function getChartQuery(queryInput, queryType) {
         dataType: 'json',
         success: function (responseData) {
             var qType = $("#fold").val();
-            console.log(qType)
+            //console.log(qType)
             if (qType != 'company') {
                 document.getElementById('chartFold').innerHTML = `
                 <option value="stock">주가</option>
@@ -3213,7 +3214,7 @@ function getChartQuery(queryInput, queryType) {
                 <option value="grade2">신용평가등급</option>`
             }
 
-            console.log(responseData)
+            //console.log(responseData)
             var tempcreditData = [];
             for (var i = 1; i < 10; i++) {
                 tempcreditData.push({ date: '2020-0' + i + '-01', value: 3 * i + 10 });
@@ -3264,9 +3265,9 @@ function getChartQuery(queryInput, queryType) {
             allDates = allDates.concat(gradeDates.filter((item) => allDates.indexOf(item) < 0))
             allDates = [...new Set(allDates)]
 
-            console.log(allDates.length);
-            console.log(sentimentDates)
-            console.log(stockDates)
+            //console.log(allDates.length);
+            //console.log(sentimentDates)
+            //console.log(stockDates)
             var creditData = [];
             var salesData = [];
             var gradeData = [];
@@ -3274,7 +3275,7 @@ function getChartQuery(queryInput, queryType) {
             var sentimentData = [];
             var diffCutoff = 2;
             for (var i = 0; i < allDates.length; i++) { //Build sentimentData, creditData, salesData, and gradeData
-                /* console.log(sentimentDates
+                /* //console.log(sentimentDates
                         .indexOf(allDates[i])) */
                 if (creditDates.includes(allDates[i])) {
                     var j = creditDates.indexOf(allDates[i]);
@@ -3381,17 +3382,17 @@ function getChartQuery(queryInput, queryType) {
                 }
             }
 
-            console.log(sentimentData);
+            //console.log(sentimentData);
 
 
 
             if (responseData.stockData.length > 0) {
-                console.log('test')
+                //console.log('test')
             }
             var companies = [];
             var allStockData = {};
 
-            console.log("스톡 길이 :  " + responseData.stockData.length);
+            //console.log("스톡 길이 :  " + responseData.stockData.length);
             for (var i = 0; i < responseData.stockData.length; i++) {
                 var tempStock = responseData.stockData[i]
                 if (!companies.includes(tempStock.company)) {
@@ -3400,8 +3401,8 @@ function getChartQuery(queryInput, queryType) {
                 }
                 allStockData[tempStock.company].push({ date: tempStock.date, price: tempStock.price })
             }
-            console.log("스톡데이터");
-            console.log(allStockData)
+            //console.log("스톡데이터");
+            //console.log(allStockData)
 
             responseData['allStockData'] = allStockData;
             window.newsChartData = responseData;
@@ -3415,8 +3416,8 @@ function getChartQuery(queryInput, queryType) {
                     return a.length <= b.length ? a : b;
                 })
 
-                console.log("스톡옵션");
-                console.log(stockOptions);
+                //console.log("스톡옵션");
+                //console.log(stockOptions);
                 for (var i = 0; i < companies.length; i++) {
                     if (companies[i] == selectedName) {
                         var tempHTML = `<option value='${companies[i]}' selected>${companies[i]}</option>`;
@@ -3429,7 +3430,7 @@ function getChartQuery(queryInput, queryType) {
 
                 document.getElementById('maximizeStock').addEventListener('click', function () {
                     var selectItem = $("#chartFold").val();
-                    console.log(selectItem)
+                    //console.log(selectItem)
                     if (selectItem == 'stock') {
                         makeStockBarGraph(window.newsChartData.allStockData, 'enlargedChart');
                     }
@@ -3443,7 +3444,7 @@ function getChartQuery(queryInput, queryType) {
                         makeLineGraph(window.newsChartData.gradeData, 'enlargedChart');
                     }
                     else if (selectItem == 'grade2') {
-                        console.log(window.newsChartData.grade2Data)
+                        //console.log(window.newsChartData.grade2Data)
                         makeLineGraph(window.newsChartData.grade2Data, 'enlargedChart');
                     }
 
@@ -3468,7 +3469,7 @@ function getChartQuery(queryInput, queryType) {
 
             makeGauge('dangerGauge', responseData.averageScore)
             document.getElementById('maximizeGauge').addEventListener('click', function () {
-                //console.log('clicked');
+                ////console.log('clicked');
                 makeGauge('enlargedChart', responseData.averageScore);
             })
 
@@ -3487,7 +3488,7 @@ function getChartQuery(queryInput, queryType) {
 
             makeSentimentBoxPlot(sentimentData, 'sentimentBoxPlot');
             document.getElementById('maximizeSentimentBox').addEventListener('click', function () {
-                console.log('clicked');
+                //console.log('clicked');
                 makeSentimentBoxPlot(sentimentData, 'enlargedChart');
             })
 
@@ -3542,6 +3543,9 @@ function makeWordcloud(data) {
         wordCloud.addEventListener('click', () => clickFunction(), false);
 
         async function clickFunction() {
+            document.getElementById('fontSizeSlider').value = 60;
+            document.getElementById('textNumberSlider').value = 200;
+            document.getElementById('textMaxValue').innerHTML = 200;
             document.getElementById('wordCloudSettings').style.display = 'inline';
             drawWordcloud(words, 'enlargedChart');
         }

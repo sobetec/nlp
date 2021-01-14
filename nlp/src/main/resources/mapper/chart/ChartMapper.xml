@@ -10,7 +10,7 @@
 			 , "news_title"							AS "newsTtl"
 			 , "ext_morphs"							AS "extMorp"
 			 
-		 FROM NLP."nlp_news2"
+		 FROM NLP."nlp_news"
 		 where (company_name like concat('%',#{cmpyNameOnly},'%') or raw_data like concat('%',#{cmpyNameOnly},'%') or news_title like concat('%',#{cmpyNameOnly},'%') )
 		 AND (news_date between '2020-03-01' and '2020-12-31')
 		 order by news_date desc
@@ -30,7 +30,7 @@
 			 FROM NLP."df_counts"
 	</select>
 	<select id="getAllNewsCount" resultType="Integer">
-		SELECT COUNT(*) FROM NLP."nlp_news2"
+		SELECT COUNT(*) FROM NLP."nlp_news"
 	</select>
 	
 	<select id="selectChartNewsByCondition" parameterType="com.sobetec.nlp.chart.ChartCondition" resultType="com.sobetec.nlp.chart.News">
@@ -41,7 +41,7 @@
 			 , "news_title"							AS "newsTtl"
 			 , "ext_morphs"							AS "extMorp"
 			 
-		 FROM NLP."nlp_news2"
+		 FROM NLP."nlp_news"
 		 where (company_name like concat('%',#{searchWord},'%') or raw_data like concat('%',#{searchWord},'%') or news_title like concat('%',#{searchWord},'%') )
 		 <choose>
 		  	<when test="gubun == 'year'">
@@ -97,7 +97,7 @@
 			 , round(cast(ta_score as numeric),4)	AS "taScre"
 			 , "news_title"							AS "newsTtl"
 			 , "ext_morphs"							AS "extMorp"
-		 FROM NLP."nlp_news2"
+		 FROM NLP."nlp_news"
 		 where industry_code = (select industry_code from nlp.company_code where industry_name like concat('%',#{selectedName},'%') limit 1)
 		 <choose>
 		  	<when test="gubun == 'year'">
@@ -160,7 +160,7 @@
 			 , round(cast(ta_score as numeric),4)	AS "taScre"
 			 , "news_title"							AS "newsTtl"
 			 , "ext_morphs"							AS "extMorp"
-		 FROM NLP."nlp_news2"
+		 FROM NLP."nlp_news"
 		 where system_code = (select system_code from nlp.company_code where system_name like concat('%',#{selectedName},'%') limit 1)
 		 <choose>
 		  	<when test="gubun == 'year'">
@@ -223,7 +223,7 @@
 			 , round(cast(ta_score as numeric),4)	AS "taScre"
 			 , "news_title"							AS "newsTtl"
 			 , "ext_morphs"							AS "extMorp"
-		 FROM NLP."nlp_news2"
+		 FROM NLP."nlp_news"
 		 where company_name = #{selectedName}
 		 <choose>
 		  	<when test="gubun == 'year'">
@@ -280,7 +280,7 @@
 			 , round(cast(ta_score as numeric),4)	AS "taScre"
 			 , "news_title"							AS "newsTtl"
 			 , "ext_morphs"							AS "extMorp"
-		  FROM NLP."nlp_news2"
+		  FROM NLP."nlp_news"
 		  where subsidiary_code = (select subsidiary_code from nlp.company_code where subsidiary_name = #{selectedName} limit 1)
 		  <choose>
 		  	<when test="gubun == 'year'">
