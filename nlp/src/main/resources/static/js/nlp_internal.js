@@ -1245,7 +1245,7 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
                 .on('click', function (d) { searchKeyword(d.date, true) });
 
             var sentLineMaker = d3.line()
-                .curve(d3.curveMonotoneX)
+                .curve(d3.curveLinear)
                 .x(function (d, i) {
                     return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
                 })
@@ -1369,7 +1369,7 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
                 .attr('stroke-width', 1); */
 
             var sentLineMaker = d3.line()
-                .curve(d3.curveMonotoneX)
+                .curve(d3.curveLinear)
                 .x(function (d, i) {
                     return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
                 })
@@ -2373,7 +2373,7 @@ function makeLineGraph(data, divID) {
                 .attr('stroke-width', 1);
 
             /*     var sentLineMaker = d3.line()
-                .curve(d3.curveMonotoneX)
+                .curve(d3.curveLinear)
                 .x(function (d, i) {
                     return xScale(dateParser(d.date)) + (xScale.bandwidth() / 2)
                 })

@@ -268,17 +268,19 @@ public class ChartQueryService {
 				currTaScore = Float.parseFloat(currNews.getTaScre());
 			} catch (Exception e) {
 			}
+			totalScore = totalScore + currTaScore;
+
 			float y = (a * (currTaScore - b) / (c + Math.abs(currTaScore - b))) + d;
-//			float reverseUp;
-//			if (y > 50) {
-//				reverseUp = (((y - 50) * (z - 50)) + (50 * (50 + z))) / (100 + z - y);
-//			} else if (y < 50) {
-//				reverseUp = ((50 + z) / (y + z)) * y;
-//			} else {
-//				reverseUp = 50;
-//			}
-			float reverseUp = currTaScore;
-			totalScore = totalScore + reverseUp;
+			float reverseUp;
+			if (y > 50) {
+				reverseUp = (((y - 50) * (z - 50)) + (50 * (50 + z))) / (100 + z - y);
+			} else if (y < 50) {
+				reverseUp = ((50 + z) / (y + z)) * y;
+			} else {
+				reverseUp = 50;
+			}
+			// float reverseUp = currTaScore;
+			// totalScore = totalScore + reverseUp;
 			if (allDates.containsKey(currNews.getNewsDate())) {
 				allDates.put(currNews.getNewsDate(),
 						allDates.get(currNews.getNewsDate()) + "," + String.valueOf(reverseUp));
@@ -342,12 +344,12 @@ public class ChartQueryService {
 
 			System.out.println("--------------------------------");
 			// float min = Float.parseFloat(scores[0]);
-			int minPercentile = (int) Math.ceil(nTotalScores * 0.25) - 1;
+			int minPercentile = (int) Math.floor(nTotalScores * 0.0);// - 1;
 //			int minPercentile = 0;
-			int lowerPercentile = (int) Math.ceil(nTotalScores * 0.37) - 1;
-			int medianPercentile = (int) Math.ceil(nTotalScores * 0.5) - 1;
-			int upperPercentile = (int) Math.ceil(nTotalScores * 0.68) - 1;
-			int maxPercentile = (int) Math.ceil(nTotalScores * 0.75) - 1;
+			int lowerPercentile = (int) Math.floor(nTotalScores * 0.25) - 1;
+			int medianPercentile = (int) Math.floor(nTotalScores * 0.5) - 1;
+			int upperPercentile = (int) Math.floor(nTotalScores * 0.75) - 1;
+			int maxPercentile = (int) Math.floor(nTotalScores * 1) - 1;
 //			int maxPercentile = nTotalScores - 1;
 
 			float average = 0;
