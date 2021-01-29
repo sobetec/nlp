@@ -3281,25 +3281,25 @@ function getChartQuery(queryInput, queryType) {
                     var j = creditDates.indexOf(allDates[i]);
                     creditData.push({ date: responseData.creditData[j].date, value: responseData.creditData[j].value })
                 }
-                else { creditData.push({ date: allDates[i], value: 'na' }) }
+                else { /* creditData.push({ date: allDates[i], value: 'na' })  */}
 
                 if (salesDates.includes(allDates[i])) {
                     var j = salesDates.indexOf(allDates[i]);
                     salesData.push({ date: responseData.salesData[j].date, value: responseData.salesData[j].value })
                 }
-                else { salesData.push({ date: allDates[i], value: 'na' }) }
+                else { /* salesData.push({ date: allDates[i], value: 'na' }) */ }
 
                 if (gradeDates.includes(allDates[i])) {
                     var j = gradeDates.indexOf(allDates[i]);
                     gradeData.push({ date: responseData.gradeData[j].date, value: responseData.gradeData[j].value })
                 }
-                else { gradeData.push({ date: allDates[i], value: 'na' }) }
+                else { /* gradeData.push({ date: allDates[i], value: 'na' }) */ }
 
                 if (grade2Dates.includes(allDates[i])) {
                     var j = grade2Dates.indexOf(allDates[i]);
                     grade2Data.push({ date: responseData.grade2Data[j].date, value: responseData.grade2Data[j].value })
                 }
-                else { grade2Data.push({ date: allDates[i], value: 'na' }) }
+                else { /* grade2Data.push({ date: allDates[i], value: 'na' }) */ }
 
                 if (sentimentDates.includes(allDates[i])) {
                     var j = sentimentDates.indexOf(allDates[i]);
@@ -3370,7 +3370,7 @@ function getChartQuery(queryInput, queryType) {
                     })
                 }
                 else {
-                    sentimentData.push({
+                    /* sentimentData.push({
                         date: allDates[i],
                         mean: 0,
                         min: 0,
@@ -3378,7 +3378,7 @@ function getChartQuery(queryInput, queryType) {
                         median: 0,
                         upper: 0,
                         max: 0
-                    })
+                    }) */
                 }
             }
 
