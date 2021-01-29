@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReportController {
 
 	protected Log logger = LogFactory.getLog(ReportController.class);
-	private static final String EXTERNAL_FILE_PATH = "C:/Users/sdb/Documents/doc_down_test";
+//	private static final String EXTERNAL_FILE_PATH = "C:/Users/sdb/Documents/doc_down_test";
 	private final Path filePathpdf;
 	private final Path filePathhwp;
 	
@@ -86,9 +86,9 @@ public class ReportController {
 		System.out.println(filePathpdf);
 		System.out.println(filePathhwp);
 		
-		File file = new File(EXTERNAL_FILE_PATH + "/" + fileName);
-		
-		/*
+//		File file = new File(EXTERNAL_FILE_PATH + "/" + fileName);
+	
+//////////		
 		File file;
 		
 		if (fileName.substring(fileName.length()-3, fileName.length()).equals("hwp")) {
@@ -99,8 +99,8 @@ public class ReportController {
 			file = new File(filePathpdf + "/" + fileName);
 			System.out.println("pdf");
 		}
-		*/
 		
+////////////	
 		System.out.println(file);
 		System.out.println(fileName);
 		

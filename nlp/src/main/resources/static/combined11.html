@@ -891,7 +891,7 @@
                             <th>스코어</th>
                             <th>분류</th>
                             <th>타입</th>
-                            <th>　</th>
+                            <th>첨부</th>
                         </tr>
                         </thead>
                         <tbody id="tbodyReport">
@@ -1056,7 +1056,7 @@
             return new Promise(function (resolve, reject) {
                 let systemName2;
                 $.ajax({
-                    url: "/getSystemNameByCompany/" + companyName,
+                    url: "http://116.124.69.154:9898/getSystemNameByCompany/" + companyName,
                     method: 'GET',
                     async: false,
                     // dataType: 'json',
@@ -1092,7 +1092,7 @@
             loading1("뉴스");
 
             $.ajax({
-                url: "/getRowCount",
+                url: "http://116.124.69.154:9898/getRowCount",
                 method: 'POST',
                 data: datassss,
                 dataType: 'json',
@@ -1225,7 +1225,7 @@
             keywordLoading1(data.rowCount);
 
             $.ajax({
-                url: "/getNewsListByCondition",
+                url: "http://116.124.69.154:9898/getNewsListByCondition",
                 method: 'POST',
                 data: data,
                 dataType: 'json',
@@ -1266,7 +1266,7 @@
             loading1("뉴스");
 
             $.ajax({
-                url: "/getNewsListByCompanyName",
+                url: "http://116.124.69.154:9898/getNewsListByCompanyName",
                 method: 'POST',
                 data: data,
                 dataType: 'json',
@@ -1333,7 +1333,7 @@
             loading1("행내 보고서");
 
             $.ajax({
-                url: "/getReportListByCondition",
+                url: "http://116.124.69.154:9898/getReportListByCondition",
                 method: 'POST',
                 data: data,
                 dataType: 'json',
@@ -1599,7 +1599,7 @@
             loading1("뉴스");
 
             $.ajax({
-                url: "/getNewsListByIndustryAndSubsidiary",
+                url: "http://116.124.69.154:9898/getNewsListByIndustryAndSubsidiary",
                 method: 'POST',
                 dataType: 'json',
                 data: dataIndSub,
@@ -1684,7 +1684,7 @@
             //console.log(industry_column_list_java[0]);
 
             $.ajax({
-                url: "/getIndustryAndSubsidiaryList/" + gubunJa,
+                url: "http://116.124.69.154:9898/getIndustryAndSubsidiaryList/" + gubunJa,
                 method: 'GET',
                 dataType: 'json',
                 success: function (responseData) {
@@ -2006,7 +2006,7 @@
             var result_area = 'result_area_news';
             var table_id = 'example_news';
             $.ajax({
-                url: "/getCompanyListByCompany/" + companyName,
+                url: "http://116.124.69.154:9898/getCompanyListByCompany/" + companyName,
                 method: 'GET',
                 dataType: 'json',
                 success: function (responseData) {
@@ -2130,7 +2130,7 @@
             var result_area = 'result_area_news';
             var table_id = 'industry_news_list';
             $.ajax({
-                url: "/getNewsListByIndustry/" + industryName,
+                url: "http://116.124.69.154:9898/getNewsListByIndustry/" + industryName,
                 method: 'GET',
                 dataType: 'json',
                 success: function (responseData) {

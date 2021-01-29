@@ -3191,7 +3191,7 @@ function getChartQuery(queryInput, queryType) {
     //console.log(data)
 
     $.ajax({
-        url: "/getChartQueryByCondition",
+        url: "http://116.124.69.154:9898/getChartQueryByCondition",
         method: 'POST',
         data: data,
         dataType: 'json',

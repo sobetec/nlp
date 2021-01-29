@@ -37,21 +37,21 @@ public class NlpApplication {
     	
     	
     	
-    	File file = new File("/home/alex/nlp_encrypt_test/temp.txt");
-    	    	
-    	String passss = null;
-    	if(file.exists()) {
-			try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-	    		String line = null;
-	    	    while ((line = br.readLine()) != null) {
-	    	       // System.out.println("im encr yptorBean " + line);
-	    	        passss = line;
-	    	    }
-	    	} catch (IOException e) {
-	    	    e.printStackTrace();
-	    	    
-	    	}
-    	}
+//    	File file = new File("/home/alex/nlp_encrypt_test/temp.txt");
+//    	    	
+//    	String passss = null;
+//    	if(file.exists()) {
+//			try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+//	    		String line = null;
+//	    	    while ((line = br.readLine()) != null) {
+//	    	       // System.out.println("im encr yptorBean " + line);
+//	    	        passss = line;
+//	    	    }
+//	    	} catch (IOException e) {
+//	    	    e.printStackTrace();
+//	    	    
+//	    	}
+//    	}
     	
     	//file.delete();
     	
