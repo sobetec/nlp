@@ -120,5 +120,9 @@ public class NewsController {
 		return result;
 	}
 
+	@GetMapping(path = "/getNewsListByNewsDate/{newsCount}")
+	public List<News> getNewsListByNewsDate(@PathVariable int newsCount) throws Exception {
+		return repository.getNewsListByNewsDate(newsCount);
+	}
 	
 }

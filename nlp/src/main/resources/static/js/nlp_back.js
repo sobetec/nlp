@@ -182,19 +182,19 @@ function makeGauge(divID, sentimentScore) {
         lg.append('stop')
             .attr('offset', '0%')
             .style('stop-color', '#EF5D5D')
-            .style('stop-opacity', '100')
+            .style('stop-opacity', '100%')
         lg.append('stop')
             .attr('offset', '30%')
             .style('stop-color', '#ffcf49')
-            .style('stop-opacity', '100')
+            .style('stop-opacity', '100%')
         lg.append('stop')
             .attr('offset', '70%')
             .style('stop-color', '#ffcf49')
-            .style('stop-opacity', '100')
+            .style('stop-opacity', '100%')
         lg.append('stop')
             .attr('offset', '100%')
             .style('stop-color', '#37b76a')
-            .style('stop-opacity', '100')
+            .style('stop-opacity', '100%')
 
         document.getElementById('gaugeGradient').setAttribute('gradientUnits', "userSpaceOnUse")
     }
@@ -454,7 +454,7 @@ function makeSentimentBoxPlot(sentimentData, divID) {
                     return ySentScale(d.upper)
                 })
                 .attr('fill', 'red')
-                .style('opacity', '40')
+                .style('opacity', '40%')
                 .on("mouseover", onMouseOver)
                 .on("mousemove", onMouseMove)
                 .on("mouseout", onMouseOut)
@@ -479,7 +479,7 @@ function makeSentimentBoxPlot(sentimentData, divID) {
                     return Math.max(ySentScale(60), ySentScale(d.upper))
                 })
                 .attr('fill', 'green')
-                .style('opacity', '40')
+                .style('opacity', '40%')
                 .on("mouseover", onMouseOver)
                 .on("mousemove", onMouseMove)
                 .on("mouseout", onMouseOut)
@@ -504,7 +504,7 @@ function makeSentimentBoxPlot(sentimentData, divID) {
                     return Math.max(ySentScale(d.upper), ySentScale(40))
                 })
                 .attr('fill', '#1f79e0')
-                .style('opacity', '50')
+                .style('opacity', '50%')
                 .on("mouseover", onMouseOver)
                 .on("mousemove", onMouseMove)
                 .on("mouseout", onMouseOut)
@@ -565,7 +565,7 @@ function makeSentimentBoxPlot(sentimentData, divID) {
                     return ySentScale(d.upper)
                 })
                 .attr('fill', 'red')
-                .style('opacity', '40')
+                .style('opacity', '40%')
                 .on("mouseover", onMouseOver)
                 .on("mousemove", onMouseMove)
                 .on("mouseout", onMouseOut)
@@ -590,7 +590,7 @@ function makeSentimentBoxPlot(sentimentData, divID) {
                     return Math.max(ySentScale(60), ySentScale(d.upper))
                 })
                 .attr('fill', 'green')
-                .style('opacity', '40')
+                .style('opacity', '40%')
                 .on("mouseover", onMouseOver)
                 .on("mousemove", onMouseMove)
                 .on("mouseout", onMouseOut)
@@ -615,7 +615,7 @@ function makeSentimentBoxPlot(sentimentData, divID) {
                     return Math.max(ySentScale(d.upper), ySentScale(40))
                 })
                 .attr('fill', '#1f79e0')
-                .style('opacity', '50')
+                .style('opacity', '50%')
                 .on("mouseover", onMouseOver)
                 .on("mousemove", onMouseMove)
                 .on("mouseout", onMouseOut)
@@ -707,7 +707,7 @@ function makeSentimentBoxPlot(sentimentData, divID) {
             .attr('width', yPadding / 3)
             .attr('height', yPadding / 3)
             .attr('fill', 'blue')
-            .attr('opacity', '40')
+            .attr('opacity', '40%')
 
         legend.append('text')
             .attr('transform', 'translate(' + (yPadding / 2.5) + ',' + (3 * yPadding / 4) + ")")
@@ -723,7 +723,7 @@ function makeSentimentBoxPlot(sentimentData, divID) {
             .attr('width', yPadding / 3)
             .attr('height', yPadding / 3)
             .attr('fill', 'green')
-            .attr('opacity', '40')
+            .attr('opacity', '40%')
 
         legend.append('text')
             .attr('transform', 'translate(' + (yPadding / 2.5 + legendShift1) + ',' + (3 * yPadding / 4) + ")")
@@ -739,7 +739,7 @@ function makeSentimentBoxPlot(sentimentData, divID) {
             .attr('width', yPadding / 3)
             .attr('height', yPadding / 3)
             .attr('fill', 'red')
-            .attr('opacity', '40')
+            .attr('opacity', '40%')
 
         legend.append('text')
             .attr('transform', 'translate(' + (yPadding / 2.5 + legendShift2) + ',' + (3 * yPadding / 4) + ")")
@@ -1238,7 +1238,7 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
                 })
                 .attr('fill', '#ffa73b')
                 .attr('pointer-events', 'all')
-                .style('opacity', '40')
+                .style('opacity', '40%')
                 .on("mouseover", onMouseOver)
                 .on("mousemove", onMouseMove)
                 .on("mouseout", onMouseOut)
@@ -1293,7 +1293,7 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
                 })
                 .attr('r', 5)
                 .attr('fill', '#990000')
-                .style('opacity', '0')
+                .style('opacity', '0%')
                 .on("mouseover", onMouseOver)
                 .on("mousemove", onMouseMove)
                 .on("mouseout", onMouseOut)
@@ -1339,7 +1339,7 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
                     return yScale(d.count)
                 })
                 .attr('fill', '#ffa73b')
-                .style('opacity', '40')
+                .style('opacity', '40%')
                 .on("mouseover", onMouseOver)
                 .on("mousemove", onMouseMove)
                 .on("mouseout", onMouseOut)
@@ -1396,7 +1396,7 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
                 })
                 .attr('r', 5)
                 .attr('fill', '#990000')
-                .style('opacity', '0')
+                .style('opacity', '0%')
                 .on("mouseover", onMouseOver)
                 .on("mousemove", onMouseMove)
                 .on("mouseout", onMouseOut)
@@ -1441,7 +1441,7 @@ function makeCombinedGraph(sentimentData, articlesData, divID) {
             .attr('height', yPadding / 3)
             .attr('width', yPadding / 3)
             .style('fill', '#ffa73b')
-            .style('opacity', '50')
+            .style('opacity', '50%')
         legend.append('text')
             .attr('transform', 'translate(' + (legendOffset + yPadding / 3 + yPadding / 5) + ',' + (3 * yPadding / 4) + ")")
             .attr('alignment-baseline', 'middle')
@@ -1742,7 +1742,7 @@ function makeStockBarGraph(data, divID) {
                 return '#089ac9'
             }
         })
-        .style('opacity', '100')
+        .style('opacity', '100%')
         .on("mouseover", onMouseOver)
         .on("mousemove", onMouseMove)
         .on("mouseout", onMouseOut)
@@ -1862,7 +1862,7 @@ function makeStockBarGraph(data, divID) {
             })
             .attr('r', 6)
             .attr('fill', '#990000')
-            .style('opacity', '0')
+            .style('opacity', '0%')
             .on("mouseover", onMouseOver)
             .on("mousemove", onMouseMove)
             .on("mouseout", onMouseOut)
@@ -1943,7 +1943,7 @@ function makeStockBarGraph(data, divID) {
             })
             .attr('r', 6)
             .attr('fill', '#664be8')
-            .style('opacity', '0')
+            .style('opacity', '0%')
             .on("mouseover", onMouseOver)
             .on("mousemove", onMouseMove)
             .on("mouseout", onMouseOut)
@@ -2310,7 +2310,7 @@ function makeLineGraph(data, divID) {
                 })
                 .attr('r', 3)
                 .attr('fill', 'black')
-                .style('opacity', '100');
+                .style('opacity', '100%');
 
             clippedsvg.selectAll('.linePointVisEnlarged')
                 .data(toPlot)
@@ -2325,7 +2325,7 @@ function makeLineGraph(data, divID) {
                 })
                 .attr('r', 5)
                 .attr('fill', '#990000')
-                .style('opacity', '0')
+                .style('opacity', '0%')
                 .on("mouseover", onMouseOver)
                 .on("mousemove", onMouseMove)
                 .on("mouseout", onMouseOut);
@@ -2409,7 +2409,7 @@ function makeLineGraph(data, divID) {
                 })
                 .attr('r', 3)
                 .attr('fill', 'black')
-                .style('opacity', '100');
+                .style('opacity', '100%');
 
             clippedsvg.selectAll('.linePointVis')
                 .data(toPlot)
@@ -2426,7 +2426,7 @@ function makeLineGraph(data, divID) {
                 })
                 .attr('r', 6)
                 .attr('fill', '#990000')
-                .style('opacity', '0')
+                .style('opacity', '0%')
                 .on("mouseover", onMouseOver)
                 .on("mousemove", onMouseMove)
                 .on("mouseout", onMouseOut);
@@ -2654,7 +2654,7 @@ function onMouseOver(d, i) {
     }
     else if (elementClass == 'stockBar') {
         var date = new Date(d.time)
-        d3.select(this).style('opacity', '100');
+        d3.select(this).style('opacity', '100%');
         tooltip.style('visibility', 'visible');
         tooltip.html('날짜: ' + (date.getFullYear() + '년' + (date.getMonth() + 1)
             + '월' + date.getDate() + '일') + '<br />주가: ' + d.stock1)
@@ -2662,7 +2662,7 @@ function onMouseOver(d, i) {
     }
     else if (elementClass == 'stockBarEnlarged') {
         var date = new Date(d.time)
-        d3.select(this).style('opacity', '100');
+        d3.select(this).style('opacity', '100%');
         tooltipEnlarged.style('visibility', 'visible');
         tooltipEnlarged.html('날짜: ' + (date.getFullYear() + '년' + (date.getMonth() + 1)
             + '월' + date.getDate() + '일') + '<br />주가: ' + d.stock1)
@@ -2670,7 +2670,7 @@ function onMouseOver(d, i) {
     }
     else if (elementClass.includes('DayLine')) {
         var date = new Date(d.time)
-        d3.select(this).style('opacity', '100');
+        d3.select(this).style('opacity', '100%');
         if (elementClass.includes('Enlarged')) {
             tooltipEnlarged.style('visibility', 'visible');
             tooltipEnlarged.html('날짜: ' + (date.getFullYear() + '년' + (date.getMonth() + 1)
@@ -2687,7 +2687,7 @@ function onMouseOver(d, i) {
     }
     else if (elementClass == 'posSentimentCircle' || elementClass == 'negSentimentCircle') {
         var date = new Date(d.time)
-        d3.select(this).style('opacity', '50');
+        d3.select(this).style('opacity', '50%');
         tooltip.style('visibility', 'visible');
         tooltip.style('background-color', '#f0f0f0');
         tooltip.html('날짜: ' + (date.getFullYear() + '년' + (date.getMonth() + 1)
@@ -2695,26 +2695,26 @@ function onMouseOver(d, i) {
     }
     else if (elementClass == 'posSentimentCircleEnlarged' || elementClass == 'negSentimentCircleEnlarged') {
         var date = new Date(d.time)
-        d3.select(this).style('opacity', '50');
+        d3.select(this).style('opacity', '50%');
         tooltipEnlarged.style('visibility', 'visible');
         tooltipEnlarged.style('background-color', '#f0f0f0');
         tooltipEnlarged.html('날짜: ' + (date.getFullYear() + '년' + (date.getMonth() + 1)
             + '월' + date.getDate() + '일') + '<br />감성지수: ' + d.sentiment)
     }
     else if (elementClass == 'keywordBar') {
-        d3.select(this).style('opacity', '70');
+        d3.select(this).style('opacity', '70%');
         tooltip.style('visibility', 'visible');
         // tooltip.text(d.keyword + ': ' + d.tf_idf);
         tooltip.text(d.keyword);
     }
     else if (elementClass == 'keywordBarEnlarged') {
-        d3.select(this).style('opacity', '70');
+        d3.select(this).style('opacity', '70%');
         tooltipEnlarged.style('visibility', 'visible');
         // tooltipEnlarged.text(d.keyword + ': ' + d.tf_idf);
         tooltipEnlarged.text(d.keyword);
     }
     else if (elementClass == 'svgArc') {
-        d3.select(this).style('opacity', '70');
+        d3.select(this).style('opacity', '70%');
         var angle = (d.endAngle + d.startAngle) / 2;
         var xMove = /* innerRadius / */ 8 * Math.sin(angle);
         var yMove = -/* -innerRadius /  */8 * Math.cos(angle);
@@ -2729,7 +2729,7 @@ function onMouseOver(d, i) {
         document.getElementById('keywordPercentkeywordPie').innerHTML = (d.data.tf_idf * 100).toFixed(2) + '%'
     }
     else if (elementClass == 'svgArcEnlarged') {
-        d3.select(this).style('opacity', '70');
+        d3.select(this).style('opacity', '70%');
         var angle = (d.endAngle + d.startAngle) / 2;
         var xMove = /* innerRadius / */ 8 * Math.sin(angle);
         var yMove = -/* -innerRadius /  */8 * Math.cos(angle);
@@ -2744,23 +2744,23 @@ function onMouseOver(d, i) {
         document.getElementById('keywordPercentenlargedChart').innerHTML = (d.data.tf_idf * 100).toFixed(2) + '%'
     }
     else if (elementClass == 'wordCloudWord') {
-        d3.select(this).style('opacity', '100');
+        d3.select(this).style('opacity', '100%');
         d3.select(this)
             .style('font-size', this.style.fontSize * 1.1)
             .style('font-weight', 700)
     }
     else if (elementClass == 'articleCountRect') {
-        d3.select(this).style('opacity', '70');
+        d3.select(this).style('opacity', '70%');
         tooltip.style('visibility', 'visible');
         tooltip.text(d.date + ': ' + d.count);
     }
     else if (elementClass == 'articleCountRectEnlarged') {
-        d3.select(this).style('opacity', '70');
+        d3.select(this).style('opacity', '70%');
         tooltipEnlarged.style('visibility', 'visible');
         tooltipEnlarged.text(d.date + ': ' + d.count);
     }
     else if (elementClass.includes('sentimentPoint')) {
-        d3.select(this).style('opacity', '100');
+        d3.select(this).style('opacity', '100%');
         var height = this.parentNode.parentNode.getBoundingClientRect().height
         var xPadding = this.parentNode.parentNode.getAttribute('xPadding')
         var yPadding = this.parentNode.parentNode.getAttribute('yPadding')
@@ -2799,10 +2799,10 @@ function onMouseOver(d, i) {
     else if (elementClass.includes('iqrBox ')) {
         if (elementClass == 'iqrBox upper') {
             d3.select(this).style('fill', '#820812')
-            d3.select(this).style('opacity', '100');
+            d3.select(this).style('opacity', '100%');
         }
         else {
-            d3.select(this).style('opacity', '100');
+            d3.select(this).style('opacity', '100%');
         }
         tooltip.style('visibility', 'visible');
         tooltip.text(d.date + ': ' + d.mean);
@@ -2810,16 +2810,16 @@ function onMouseOver(d, i) {
     else if (elementClass.includes('iqrBoxEnlarged')) {
         if (elementClass == 'iqrBoxEnlarged upper') {
             d3.select(this).style('fill', '#820812')
-            d3.select(this).style('opacity', '100');
+            d3.select(this).style('opacity', '100%');
         }
         else {
-            d3.select(this).style('opacity', '100');
+            d3.select(this).style('opacity', '100%');
         }
         tooltipEnlarged.style('visibility', 'visible');
         tooltipEnlarged.text(d.date + ': ' + d.mean);
     }
     else if (elementClass.includes('PointVis')) {
-        d3.select(this).style('opacity', '100');
+        d3.select(this).style('opacity', '100%');
         if (elementClass.includes('linePointVis')) {
             var svgNode = this.parentNode.parentNode
             tooltip.text(d.date + ': ' + d.value);
@@ -2868,7 +2868,7 @@ function onMouseOver(d, i) {
         }
     }
     else if (elementClass == 'linePointEnlarged') {
-        d3.select(this).style('opacity', '60');
+        d3.select(this).style('opacity', '60%');
         tooltipEnlarged.style('visibility', 'visible');
         tooltipEnlarged.text(d.date + ': ' + d.value);
     }
@@ -2904,15 +2904,15 @@ function onMouseOut(d, i) {
         tooltipEnlarged.style('visibility', 'hidden');
     }
     else if (elementClass == 'stockBar') {
-        d3.select(this).style('opacity', '100');
+        d3.select(this).style('opacity', '100%');
         tooltip.style('visibility', 'hidden');
     }
     else if (elementClass == 'stockBarEnlarged') {
-        d3.select(this).style('opacity', '100');
+        d3.select(this).style('opacity', '100%');
         tooltipEnlarged.style('visibility', 'hidden');
     }
     else if (elementClass.includes('DayLine')) {
-        d3.select(this).style('opacity', '100');
+        d3.select(this).style('opacity', '100%');
         if (elementClass.includes('Enlarged')) {
             tooltipEnlarged.style('visibility', 'hidden');
         }
@@ -2922,23 +2922,23 @@ function onMouseOut(d, i) {
 
     }
     else if (elementClass == 'posSentimentCircle' || elementClass == 'negSentimentCircle') {
-        d3.select(this).style('opacity', '100');
+        d3.select(this).style('opacity', '100%');
         tooltip.style('visibility', 'hidden');
     }
     else if (elementClass == 'posSentimentCircleEnlarged' || elementClass == 'negSentimentCircleEnlarged') {
-        d3.select(this).style('opacity', '100');
+        d3.select(this).style('opacity', '100%');
         tooltipEnlarged.style('visibility', 'hidden');
     }
     else if (elementClass == 'keywordBar') {
-        d3.select(this).style('opacity', '100');
+        d3.select(this).style('opacity', '100%');
         tooltip.style('visibility', 'hidden');
     }
     else if (elementClass == 'keywordBarEnlarged') {
-        d3.select(this).style('opacity', '100');
+        d3.select(this).style('opacity', '100%');
         tooltipEnlarged.style('visibility', 'hidden');
     }
     else if (elementClass == 'svgArc') {
-        d3.select(this).style('opacity', '100');
+        d3.select(this).style('opacity', '100%');
         d3.select(this).style('stroke', 'None');
         d3.select(this)
             .transition()
@@ -2948,7 +2948,7 @@ function onMouseOut(d, i) {
         document.getElementById('keywordPercentkeywordPie').innerHTML = "중요도";
     }
     else if (elementClass == 'svgArcEnlarged') {
-        d3.select(this).style('opacity', '100');
+        d3.select(this).style('opacity', '100%');
         d3.select(this).style('stroke', 'None');
         d3.select(this)
             .transition()
@@ -2958,21 +2958,21 @@ function onMouseOut(d, i) {
         document.getElementById('keywordPercentenlargedChart').innerHTML = "중요도";
     }
     else if (elementClass == 'wordCloudWord') {
-        d3.select(this).style('opacity', '60')
+        d3.select(this).style('opacity', '60%')
         d3.select(this)
             .style('font-size', this.style.fontSize / 1.1)
             .style('font-weight', 400);
     }
     else if (elementClass == 'articleCountRect') {
-        d3.select(this).style('opacity', '40');
+        d3.select(this).style('opacity', '40%');
         tooltip.style('visibility', 'hidden');
     }
     else if (elementClass == 'articleCountRectEnlarged') {
-        d3.select(this).style('opacity', '40');
+        d3.select(this).style('opacity', '40%');
         tooltipEnlarged.style('visibility', 'hidden');
     }
     else if (elementClass.includes('sentimentPoint')) {
-        d3.select(this).style('opacity', '0');
+        d3.select(this).style('opacity', '0%');
         d3.selectAll('.coordLine').remove();
         if (elementClass == 'sentimentPoint') {
             tooltip.style('visibility', 'hidden');
@@ -2984,25 +2984,25 @@ function onMouseOut(d, i) {
     else if (elementClass.includes('iqrBox ')) {
         if (elementClass == 'iqrBox upper') {
             d3.select(this).style('fill', 'red')
-            d3.select(this).style('opacity', '40');
+            d3.select(this).style('opacity', '40%');
         }
         else {
-            d3.select(this).style('opacity', '40');
+            d3.select(this).style('opacity', '40%');
         }
         tooltip.style('visibility', 'hidden');
     }
     else if (elementClass.includes('iqrBoxEnlarged')) {
         if (elementClass == 'iqrBoxEnlarged upper') {
             d3.select(this).style('fill', 'red')
-            d3.select(this).style('opacity', '40');
+            d3.select(this).style('opacity', '40%');
         }
         else {
-            d3.select(this).style('opacity', '40');
+            d3.select(this).style('opacity', '40%');
         }
         tooltipEnlarged.style('visibility', 'hidden');
     }
     else if (elementClass.includes('PointVis')) {
-        d3.select(this).style('opacity', '0');
+        d3.select(this).style('opacity', '0%');
         d3.selectAll('.coordLine').remove();
         if (elementClass.includes('Enlarged')) {
             tooltipEnlarged.style('visibility', 'hidden');
@@ -3012,7 +3012,7 @@ function onMouseOut(d, i) {
         }
     }
     else if (elementClass == 'linePointEnlarged') {
-        d3.select(this).style('opacity', '100');
+        d3.select(this).style('opacity', '100%');
         tooltipEnlarged.style('visibility', 'hidden');
     }
     else {
@@ -3095,7 +3095,7 @@ function drawWordcloud(words, divID) {
                     "#F9C74F", "#90BE6D", "#43AA8B", "#3a34ed"];
                 return colors[Math.floor(Math.random() * colors.length)];
             })
-            .style('opacity', '60')
+            .style('opacity', '60%')
             .text(function (d) { return d.text; })
             .on("mouseover", onMouseOver)
             /* .on("mousemove", onMouseMove) */

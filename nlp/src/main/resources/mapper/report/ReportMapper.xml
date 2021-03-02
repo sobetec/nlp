@@ -24,7 +24,7 @@
 			 , "doc_category"		AS "docCaty"
 		  FROM NLP."nlp_report"
 		 
-		 limit 120
+		 <!-- limit 120 -->
 
 	</select>
 	
@@ -54,7 +54,7 @@
 			</choose>
 		group by report_date, org_name, org_file_path, doc_category
 		order by report_date desc
-		limit 2000 offset 0
+		<!-- limit 2000 offset 0 -->
 
 	</select>
 	
@@ -78,7 +78,7 @@
 			and report_mdate between to_date(#{startDate}, 'yyyy-mm-dd') and to_date(#{endDate}, 'yyyy-mm-dd') 
 		group by report_date, org_name, org_file_path, doc_category, report_mdate
 		order by report_mdate desc
-		limit 2000 offset 0
+		<!-- limit 2000 offset 0 -->
 
 	</select>
 	

@@ -30,7 +30,7 @@ public interface NewsRepositoryImpl {
 
 	String getSystemNameByCompany(String companyName) throws Exception;
 
-	
+	List<News> getNewsListByNewsDate(int newsCount) throws Exception;
 	
 	
 	

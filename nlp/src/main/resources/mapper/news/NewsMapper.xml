@@ -87,7 +87,7 @@
 			 , "raw_data"		AS "rawData"
 			 , "ext_morphs"		AS "extMorp"
 			 
-		  FROM NLP."nlp_news2_test"
+		  FROM NLP."nlp_news2"
 		 where company_name_only like concat('%',#{cmpyNameOnly},'%') or raw_data like concat('%',#{cmpyNameOnly},'%') or news_title like concat('%',#{cmpyNameOnly},'%') 
 		 limit 1000
 
@@ -318,5 +318,15 @@
 		FROM NLP."company_code"
 		where company = #{companyName} limit 1
  	</select>
+ 	
+	<select id="selectNewsListByNewsDate" parameterType="int" resultType="com.sobetec.nlp.newslist.News">
+		SELECT "composite_key"		AS "cmpyKey" 
+		 	 , "news_date"		AS "newsDate"
+			 , "company_name"		AS "cmpyName"
+			 , round(cast(ta_score as numeric),4)		AS "taScre"
+			 , "news_title"		AS "newsTtl"
+			 , "raw_data"		AS "rawData"
+		  FROM NLP."nlp_news2" order by news_date desc limit #{newsCount}
+	</select>
  	
 </mapper>

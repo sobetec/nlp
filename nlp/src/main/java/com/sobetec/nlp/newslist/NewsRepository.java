@@ -168,4 +168,9 @@ public class NewsRepository implements NewsRepositoryImpl {
 		return result;
 	}
 	
+	@Override
+	public List<News> getNewsListByNewsDate(int newsCount) throws Exception {
+		
+		return sqlSession.selectList("mapper.newsMapper.selectNewsListByNewsDate", newsCount);
+	}
 }
