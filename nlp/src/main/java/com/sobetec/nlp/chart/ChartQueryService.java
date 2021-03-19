@@ -26,10 +26,15 @@ public class ChartQueryService {
 	@SuppressWarnings("null")
 	public ChartQuery getChartQuery(String cmpyNameOnly) throws Exception {
 		System.out.println("########## start Service getChartQuery");
-		float a = 56.90020302862004f;
-		float b = 30.06551590366119f;
-		float c = 5.919497539989776f;
-		float d = 47.54017840669978f;
+//		float a = 56.90020302862004f;
+//		float b = 30.06551590366119f;
+//		float c = 5.919497539989776f;
+//		float d = 47.54017840669978f;
+//		float z = 4.139f;
+		float a = 54.562081705365124f;
+		float b = 41.87451578313866f;
+		float c = 4.451449361711643f;
+		float d = 49.31922614866885f;
 		float z = 4.139f;
 		List<News> allNews = new ArrayList<News>();
 		List<Stocks> allStocks = new ArrayList<Stocks>();
@@ -183,10 +188,15 @@ public class ChartQueryService {
 	}
 
 	public ChartQuery getChartQueryByCondition(ChartCondition chartCondition) throws Exception {
-		float a = 56.90020302862004f;
-		float b = 30.06551590366119f;
-		float c = 5.919497539989776f;
-		float d = 47.54017840669978f;
+//		float a = 56.90020302862004f;
+//		float b = 30.06551590366119f;
+//		float c = 5.919497539989776f;
+//		float d = 47.54017840669978f;
+//		float z = 4.139f;
+		float a = 54.562081705365124f;
+		float b = 41.87451578313866f;
+		float c = 4.451449361711643f;
+		float d = 49.31922614866885f;
 		float z = 4.139f;
 		System.out.println("########## start Service getChartQueryCondition");
 		List<News> allNews = new ArrayList<News>();

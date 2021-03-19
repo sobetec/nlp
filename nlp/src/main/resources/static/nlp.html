@@ -978,13 +978,26 @@
                 else {
                     downImg = `<img src="/img/document_download.png" style="width: auto; height: 14px;">`;
                 }
+                var splitOrgnFileName = window.reportResponseData[i].orgnFileName.split('_')[0];
+                // var sliceOrgnFileName = splitOrgnFileName.slice(1);
+                // var subPrefixOrgnFileName = sliceOrgnFileName.join('');
+                
+                let pattern = /^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[0-1])$/;
 
+                // pattern.test(splitOrgnFileName);
+
+                if (pattern.test(splitOrgnFileName)) {
+                    var substrOrgnFileName = window.reportResponseData[i].orgnFileName.substring(11);
+                }else {
+                    var substrOrgnFileName = window.reportResponseData[i].orgnFileName;
+                }
+                     
                 var htmlContents =
                     `
                     <tr>
                         <td>` + indexNum + `</td>
                         <td>` + window.reportResponseData[i].reportDate + `</td>
-                        <td>` + window.reportResponseData[i].orgnFileName + `</td>
+                        <td>` + substrOrgnFileName + `</td>
                         `+ procc + `
                         `+ rred + `
                         <td>` + window.reportResponseData[i].docCaty + `</td>
@@ -2763,8 +2776,8 @@
                                                 </div>
 
                                                 <div id="gaugeExp">
-                                                    <p style ="font-size:0.5em;">검색 기간 뉴스데이터를 AI가 분석하여 긍정/중립/부정으로 정량화한 &nbsp;수치,  낮을 수록 위험도가 높다</p>
-                                                    <!-- <p style ="font-size:0.5em;"></p> -->
+                                                    <p style ="font-size:0.5em;">검색 기간 뉴스데이터를 AI가 분석하여 긍정/중립/부정으로 정량화한</p>
+                                                    <p style ="font-size:0.5em;">수치,  낮을 수록 위험도가 높다</p>
                                                 </div>
 
                                             </div>
