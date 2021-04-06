@@ -346,13 +346,13 @@ public class ChartQueryService {
 				}
 			});
 			float taScore = 0;
-			System.out.println(date + "\t" + nTotalScores);
+//			System.out.println(date + "\t" + nTotalScores);
 			for (int i = 0; i < nTotalScores; i++) {
 				taScore = taScore + Float.parseFloat(scores[i]);
-				System.out.println(scores[i]);
+//				System.out.println(scores[i]);
 			}
 
-			System.out.println("--------------------------------");
+//			System.out.println("--------------------------------");
 			// float min = Float.parseFloat(scores[0]);
 			int minPercentile = (int) Math.floor(nTotalScores * 0.0);// - 1;
 //			int minPercentile = 0;
