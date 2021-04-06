@@ -12,7 +12,6 @@
 			 
 		 FROM NLP."nlp_news2"
 		 where (company_name like concat('%',#{cmpyNameOnly},'%') or raw_data like concat('%',#{cmpyNameOnly},'%') or news_title like concat('%',#{cmpyNameOnly},'%') )
-		 AND (news_date between '2020-03-01' and '2020-12-31')
 		 order by news_date desc
 	</select>
 	<select id="selectChartStocksByCompany" parameterType="String" resultType="com.sobetec.nlp.chart.Stocks">

@@ -3467,6 +3467,21 @@ function getChartQuery(queryInput, queryType) {
                 $('#maximizeStockSpan').hide();
             }
 
+            // Reformat keywords to account for any possible errors 
+            var keywords = [];
+            for (var i = 0; i < responseData.keywords.length; i++) {
+                if (responseData.keywords[i].keyword == '라니에리') {
+                    console.log(responseData.keywords[i])
+                }
+                if (isNaN(responseData.keywords[i].tf_idf) || typeof responseData.keywords[i].tf_idf != 'number') {
+                    console.log("WEHJFOIWEJFOWIEFJIOEW")
+                    continue;
+                }
+                else{
+                    keywords.push(responseData.keywords[i])
+                }
+            }
+
             makeGauge('dangerGauge', responseData.averageScore)
             document.getElementById('maximizeGauge').addEventListener('click', function () {
                 ////console.log('clicked');
@@ -3478,11 +3493,11 @@ function getChartQuery(queryInput, queryType) {
                 makeCombinedGraph(sentimentData, responseData.allNews, 'enlargedChart');
             })
 
-            makeKeywordBarPlot(responseData.keywords, 'keywordBar', document.getElementById('keywordBarSlider').value)
+            makeKeywordBarPlot(keywords, 'keywordBar', document.getElementById('keywordBarSlider').value)
             document.getElementById('maximizeKeywordBar').addEventListener('click', function () {
                 $('.layer_dimmed').addClass('is_active');
                 document.getElementById('keywordBarSettings').style.display = 'inline';
-                makeKeywordBarPlot(responseData.keywords, 'enlargedChart', document.getElementById('keywordBarSlider').value)
+                makeKeywordBarPlot(keywords, 'enlargedChart', document.getElementById('keywordBarSlider').value)
             })
 
 
@@ -3492,16 +3507,18 @@ function getChartQuery(queryInput, queryType) {
                 makeSentimentBoxPlot(sentimentData, 'enlargedChart');
             })
 
-            makeWordcloud(responseData.keywords);
+            makeWordcloud(keywords);
 
 
 
 
             window.newsChartData = {
-                keywords: responseData.keywords, averageScore: responseData.averageScore, sentimentData: sentimentData,
+                keywords: keywords, averageScore: responseData.averageScore, sentimentData: sentimentData,
                 allNews: responseData.allNews, allStockData: allStockData, creditData: creditData, salesData: salesData,
                 gradeData: gradeData, grade2Data: grade2Data
             };
+
+            console.log(window.newsChartData);
 
 
             $('#chartModal').hide();

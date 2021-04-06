@@ -941,7 +941,9 @@ function makeKeywordBarPlot(data, divID, nCutoff) {
             .style('fill', function (d, i) { return colorVec[i % colorVec.length] })
             .attr("x", function (d) { return xScale(0) })
             .attr("y", function (d) { return yScale(d.keyword) })
-            .attr("width", function (d) { return xScale(d.tf_idf) - xScale(0) })
+            .attr("width", function (d) { 
+                console.log(d);
+                return xScale(d.tf_idf) - xScale(0) })
             .attr("height", yScale.bandwidth)
             .on("mouseover", onMouseOver)
             .on("mousemove", onMouseMove)
@@ -3502,6 +3504,7 @@ function getChartQuery(queryInput, queryType) {
                 allNews: responseData.allNews, allStockData: allStockData, creditData: creditData, salesData: salesData,
                 gradeData: gradeData, grade2Data: grade2Data
             };
+            console.log(window.newsChartData);
 
 
             $('#chartModal').hide();
