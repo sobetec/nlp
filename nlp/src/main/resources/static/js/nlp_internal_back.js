@@ -3030,43 +3030,9 @@ function drawWordcloud(words, divID) {
     var maxValue = Math.max.apply(Math, words.map(function (o) { return o.tf_idf }));
     //console.log(maxValue)
     var wordSlice = [];
-    window.maxWordCloudValue = words.length;
-    console.log("window.maxWordCloudValue = " + window.maxWordCloudValue);
-
-    if (words.length < 50) {
-        for (var i = 0; i < words.length; i++) {
-            // console.log("1개일 경우 무한 뺑뺑이 - words[i].keyword = " + words[i].keyword);
-            // console.log("1개일 경우 무한 뺑뺑이 - words[i].tf_idf  = " + words[i].tf_idf);
-            // console.log("1개일 경우 무한 뺑뺑이 - 위에거숫자 = " + i);
-    
-            wordSlice.push({ text: words[i].keyword, value: words[i].tf_idf });
-    
-        }
-    
-    } else {
-        for (var i = 0; i < document.getElementById('textNumberSlider').value; i++) {
-            
-            // console.log("1개일 경우 무한 뺑뺑이 - 위에거숫자 = " + i);
-    
-            wordSlice.push({ text: words[i].keyword, value: words[i].tf_idf });
-    
-        }
-    
-
+    for (var i = 0; i < document.getElementById('textNumberSlider').value; i++) {
+        wordSlice.push({ text: words[i].keyword, value: words[i].tf_idf });
     }
-    // for (var i = 0; i < document.getElementById('textNumberSlider').value; i++) {
-    //     wordSlice.push({ text: words[i].keyword, value: words[i].tf_idf });
-    // }
-    
-    // if (words.length < 50) {
-    //     console.log("50이하인 경우 타냐? = " +words.length);
-    //     document.getElementById('textNumberSlider').value = words.length;
-    // } else {
-    //     document.getElementById('textNumberSlider').value = 50;
-    //     console.log("50이상인인 경우 타냐? = " +words.length);
-    // }
-
-    // console.log("document.getElementById('textNumberSlider').value = "+document.getElementById('textNumberSlider').value); 
     var xPadding = 20;
     var yPadding = 20;
 
@@ -3195,19 +3161,12 @@ function getChartQuery(queryInput, queryType) {
     //console.log('##########RUNNING CHART QUERY' + queryType)
     //console.log(queryInput)
     d3.selectAll('.visSVG').remove();
-    document.getElementById('chartFold').innerHTML = "";
+    document.getElementById('chartFold').innerHTML = ""
 
 
     document.getElementById('keywordBarSlider').value = 10;
     document.getElementById('fontSizeSlider').value = 27;
-    // document.getElementById('textNumberSlider').value = 50;
-
-    // if (words.length < 50) {
-    //     document.getElementById('textNumberSlider').value = words.length;
-    // }else {
-    //     document.getElementById('textNumberSlider').value = 50;
-    // }
-
+    document.getElementById('textNumberSlider').value = 50;
 
     //console.log(document.getElementById('keywordBarSlider').value)
     document.getElementById('keywordMaxValueBar').innerHTML = document.getElementById('keywordBarSlider').value;
@@ -3322,7 +3281,7 @@ function getChartQuery(queryInput, queryType) {
                     var j = creditDates.indexOf(allDates[i]);
                     creditData.push({ date: responseData.creditData[j].date, value: responseData.creditData[j].value })
                 }
-                else { /* creditData.push({ date: allDates[i], value: 'na' })  */ }
+                else { /* creditData.push({ date: allDates[i], value: 'na' })  */}
 
                 if (salesDates.includes(allDates[i])) {
                     var j = salesDates.indexOf(allDates[i]);
@@ -3512,14 +3471,14 @@ function getChartQuery(queryInput, queryType) {
             var keywords = [];
             for (var i = 0; i < responseData.keywords.length; i++) {
                 if (responseData.keywords[i].keyword == '라니에리') {
-                    console.log(responseData.keywords[i]);
+                    console.log(responseData.keywords[i])
                 }
                 if (isNaN(responseData.keywords[i].tf_idf) || typeof responseData.keywords[i].tf_idf != 'number') {
-                    console.log("WEHJFOIWEJFOWIEFJIOEW");
+                    console.log("WEHJFOIWEJFOWIEFJIOEW")
                     continue;
                 }
-                else {
-                    keywords.push(responseData.keywords[i]);
+                else{
+                    keywords.push(responseData.keywords[i])
                 }
             }
 
@@ -3560,15 +3519,8 @@ function getChartQuery(queryInput, queryType) {
             };
 
             console.log(window.newsChartData);
-            // document.getElementById('textNumberSlider').value = responseData.keywords.length;
-            if (responseData.keywords.length < 50) {
-                document.getElementById('textNumberSlider').value = responseData.keywords.length;
-            } else {
-                document.getElementById('textNumberSlider').value = 50;
-            }
-            
 
-            console.log("responseData.keywords.length = " + responseData.keywords.length);
+
             $('#chartModal').hide();
             window.scrollTo(0, 0);
         },
@@ -3609,17 +3561,8 @@ function makeWordcloud(data) {
 
         async function clickFunction() {
             document.getElementById('fontSizeSlider').value = 60;
-            document.getElementById('fontSizeValue').innerHTML = 60;
-            console.log(" words.length= " + words.length);
-            if (words.length < 200) {
-                document.getElementById('textNumberSlider').value = words.length;
-                document.getElementById('textMaxValue').innerHTML = words.length;
-            } else {
-
-                document.getElementById('textNumberSlider').value = 200;
-                document.getElementById('textMaxValue').innerHTML = 200;
-            }
-
+            document.getElementById('textNumberSlider').value = 200;
+            document.getElementById('textMaxValue').innerHTML = 200;
             document.getElementById('wordCloudSettings').style.display = 'inline';
             drawWordcloud(words, 'enlargedChart');
         }
